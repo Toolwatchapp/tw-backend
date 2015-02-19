@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Toolwatch - Your watch accuracy</title>
+        <title>Toolwatch • Easily measure and track the accuracy of your mechanical watch</title>
         <meta name="keywords" content="toolwatch, accuracy, precision, measure, mechanical watch, manual winding, automatic winding">
         <meta name="description" content="Easily measure and track the accuracy of your mechanical watch">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
           {lang: 'fr'}
         </script>
         <style type="text/css">
-body{background-color:#4d77a7;color:#fff;padding-top:20px}.logo{background:url(logo-lg.png) center top no-repeat;width:350px;height:70px;margin:auto}h1,p{text-align:center}.btn-default{color:#4d77a7;font-weight:700}.btn-default:hover{color:#4d77a7}.btn-primary{background-color:#4d77a7;color:#fff}.btn-primary:hover{color:#fff}strong{font-size:16px}.glyphicon{color:#4d77a7}.glyphContainer{text-align:center;border-radius:50%;background-color:#fff;width:35px;height:35px;line-height:38px;font-size:16px;margin:auto}.catTitle,.desc,.puce{text-align:center}.line{background:linear-gradient(to right,rgba(0,0,0,0) 0,rgba(255,255,255,.4) 50%,rgba(0,0,0,0) 100%);display:block;position:absolute;bottom:0;width:100%;height:1px}button,input{outline:0;border:none!important;-webkit-box-shadow:none!important;-moz-box-shadow:none!important;box-shadow:none!important}.row{margin-bottom:15px}form{margin-top:10px;margin-bottom:25px}.facebookContainer{bottom:5px;display:inline-block;position:relative}@media screen and (max-width:320px){.logo{background:url(logo-sm.png) center top no-repeat;width:250px;height:50px}}.modal-content{color:#333}
+body{background-color:#4d77a7;color:#fff;padding-top:20px}.logo{background:url(logo-lg.png) center top no-repeat;width:350px;height:70px;margin:auto}h1,p{text-align:center}.btn-default{color:#4d77a7;font-weight:700}.btn-default:hover{color:#4d77a7}.btn-primary{background-color:#4d77a7;color:#fff}.btn-primary:hover{color:#fff}strong{font-size:16px}.glyphicon{color:#4d77a7}.glyphContainer{text-align:center;border-radius:50%;background-color:#fff;width:35px;height:35px;line-height:38px;font-size:16px;margin:auto}.catTitle,.desc,.puce{text-align:center}.line{background:linear-gradient(to right,rgba(0,0,0,0) 0,rgba(255,255,255,.4) 50%,rgba(0,0,0,0) 100%);display:block;bottom:0;width:100%;height:1px}button,input{outline:0;border:none!important;-webkit-box-shadow:none!important;-moz-box-shadow:none!important;box-shadow:none!important}.row{margin-bottom:15px}form{margin-top:10px;margin-bottom:25px}.facebookContainer{bottom:5px;display:inline-block;position:relative}@media screen and (max-width:320px){.logo{background:url(logo-sm.png) center top no-repeat;width:250px;height:50px}}.modal-content{color:#333}
         </style>
 
     <head>
@@ -40,7 +40,7 @@ body{background-color:#4d77a7;color:#fff;padding-top:20px}.logo{background:url(l
         </script>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4 col-sm-12"><div class="logo"></div></div>
+                <div class="col-lg-12 col-md-12 col-sm-12"><div class="logo"></div></div>
             </div>
             <div class="row">
                 <div class="col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4 col-sm-12"><span class="line"></span></div>
