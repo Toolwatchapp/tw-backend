@@ -78,6 +78,7 @@ body{background-color:#4d77a7;color:#fff;padding-top:20px}.logo{background:url(l
                         </div> 
                         <div style="position: absolute; left: -5000px;"><input type="text" name="b_cf4ccc68cacf65d9d1ed31049_85780904a2" tabindex="-1" value=""></div>
                         <button type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn btn-default btn-lg btn-block" data-toggle="modal" data-target=".validateSubscription">Get Notified!</button>
+                        <center><small>(PS : Please check your spam folder in case you didn't receive your confirmation email. Thank you!)</small></center>
                         <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='UBPAGEID';ftypes[3]='text';fnames[4]='UBVARIANT';ftypes[4]='text';fnames[5]='UBDATE';ftypes[5]='date';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
                     </form>
                 </div>
