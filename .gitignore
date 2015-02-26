@@ -1,6 +1,0 @@
-# Ignore the default SQLite database.
-/db
-
-# Ignore all logfiles and tempfiles.
-/log
-/tmp
