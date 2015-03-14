@@ -2,4 +2,4 @@
 
 application/cache/*
 application/logs/*
-index.php
+/index.php
