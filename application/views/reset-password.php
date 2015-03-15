@@ -1,11 +1,35 @@
-<form>
-	<div class="form-group">
-		<input type="email" class="form-control" name="email" placeholder="Login (email)" autofocus="true">
-	</div>
-	<div class="form-group">
-		<center><button type="submit" name="login" class="btn btn-primary btn-lg">Reset password</button></center>
-	</div>
-	<div class="form-group">
-		  <center>Oops! I remember it now... <br>So, <a data-modal-update="true" data-href="/login/">log me in!</a></center>
-	</div>  
-</form>
+<div class="container container-fluid content first">
+    <div class="row">
+        <div class="col-md-12"><center><h1>Reset your password</h1></center></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <center>
+                <form method="post" class="col-md-6 col-md-offset-3" name="resetPassword">
+                    <div class="alert alert-danger alert-dismissible" role="alert" style="display: none";>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <span>We cannot reset the password for this token (<?php echo $resetToken;?>). Please, check the link you received or ask a reset again.</span>
+                    </div>
+                    <div class="alert alert-success alert-dismissible" role="alert" style="display: none";>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <span>Hurray, you've got your account back! You'll be redirected in 5 seconds to the home page. Happy toolwatching!</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="Set a password">
+                        <span class="signup-error password-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm your password">
+                        <span class="signup-error confirm-password-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <center>
+                            <input type="hidden" name="resetToken" value="<?php echo $resetToken; ?>">
+                            <button type="submit" class="btn btn-primary btn-lg">Reset password</button>
+                        </center>
+                    </div>
+                </form>
+            </center>
+        </div>
+    </div>
+</div>

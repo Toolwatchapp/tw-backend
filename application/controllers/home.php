@@ -13,28 +13,27 @@ class Home extends MY_Controller
 		$this->load->view('home');
 		$this->load->view('footer');
 	}
-	
-	public function login()
-	{
-		if($this->input->get('ajax'))
-		{
-			$this->load->view('login');
-		}
+	 
+    public function logout()
+    {
+        $this->user->logout();
+        redirect(base_url());
+    }
+    
+    public function resetPassword($resetToken='')
+	{    
+        $this->_headerData['headerClass'] = 'blue';
+        $this->load->view('header', $this->_headerData);
+
+        $this->_bodyData['resetToken'] = $resetToken;
+        $this->load->view('reset-password', $this->_bodyData);
+
+        $this->load->view('footer');  
 	}
-	
-	public function signUp()
-	{
-		if($this->input->get('ajax'))
-		{
-			$this->load->view('sign-up');
-		}
-	}
-	
-	public function resetPassword()
-	{
-		if($this->input->get('ajax'))
-		{
-			$this->load->view('reset-password');
-		}
-	}
+    
+    public function signupEmail()
+    {
+        $this->_bodyData['resetToken'] = 'a4f9g53F47gF';
+        $this->load->view('email/reset-password', $this->_bodyData);
+    }
 }

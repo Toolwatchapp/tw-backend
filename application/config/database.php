@@ -48,10 +48,23 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '';
-$db['default']['password'] = '';
-$db['default']['database'] = '';
+if((ENVIRONMENT == 'development') || (ENVIRONMENT == 'testing'))
+{
+    $db['default']['hostname'] = 'localhost';
+    $db['default']['username'] = 'root';
+    $db['default']['password'] = 'mysql';
+    $db['default']['database'] = 'toolwatch';
+}
+else
+{
+    $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+    $db['default']['hostname'] = $url["host"];
+    $db['default']['username'] = $url["user"]; 
+    $db['default']['password'] = $url["pass"];
+    $db['default']['database'] = substr($url["path"], 1);
+}
+
+
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

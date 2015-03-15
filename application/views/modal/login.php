@@ -1,5 +1,9 @@
-<form>
+<form method="post" name="login">
+    <div class="form-group">
+       <h1>Login</h1>
+    </div>
 	<div class="form-group">
+        <span class="signup-error login-error"></span>
 		<input type="email" class="form-control" name="email" placeholder="Login (email)" autofocus="true" required>
 	</div>
 	<div class="form-group input-group">
@@ -9,7 +13,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<center><button type="submit" name="login" class="btn btn-primary btn-lg">Log in</button></center>
+		<center><button type="submit" name="login" class="btn btn-primary btn-lg btn-spinner">Log in <i class="fa fa-spinner fa-pulse"></i></button></center>
 	</div>
 	<div class="form-group">
 		  <center>Not registered yet? <a data-href="/sign-up/" data-modal-update="true">Sign up here!</a></center>

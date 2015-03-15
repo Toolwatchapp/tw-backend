@@ -1,0 +1,67 @@
+<div class="container container-fluid content first">
+    <div class="row">
+        <div class="col-md-12"><h1>My measures</h1></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php 
+
+            if(isset($error))
+            {
+                echo '<div class="alert alert-danger alert-dismissible" role="alert" >
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <span>'.$error.'</span></div>';
+            
+            }
+            else if(isset($success))
+            {
+                echo '<div class="alert alert-success alert-dismissible" role="alert" >
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <span>'.$success.'</span></div>';
+            }
+            ?>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Watch brand</th>
+                            <th>Watch name</th>
+                            <th>Year of buy</th>
+                            <th>Serial</th>
+                            <th>Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                            if($allMeasure != NULL)
+                            {
+                               foreach($allMeasure as $measure)
+                               {
+                                    echo '<tr>';   
+                                    echo '<td>'.$measure['brand'].'</td>';
+                                    echo '<td>'.$measure['name'].'</td>';
+                                    echo '<td>'.$measure['yearOfBuy'].'</td>';
+                                    echo '<td>'.$measure['serial'].'</td>';
+                                    echo '<td>'.$measure['accuracy'].' seconds a day</td>';
+                                   echo '</tr>';
+                               }
+                            }
+                            else
+                            {
+                                echo '<tr><td colspan="6"><center>You don\'t have any measure yet!</center></td></tr>';   
+                            }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+     <div class="row">
+          <div class="col-md-12">
+              <center>
+                  <a class="btn btn-success btn-sm" href="/measures/new-watch/">Add a watch</a><br><br>
+                  <a class="btn btn-primary btn-lg" href="/measures/new-measure/">Start a new measure</a>
+              </center>
+         </div>
+    </div>
+</div>

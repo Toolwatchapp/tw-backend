@@ -41,9 +41,15 @@
 $route['default_controller'] = "home";
 $route['404_override'] = '';
 
-$route['login'] = "home/login";
-$route['sign-up'] = "home/signUp";
-$route['reset-password'] = "home/resetPassword";
+$route['login'] = "modal/login";
+$route['sign-up'] = "modal/signUp";
+$route['sign-up-success'] = "modal/signUpSuccess";
+$route['new-measure'] = "modal/newMeasure";
+$route['new-watch'] = "modal/newWatch";
+$route['reset-password'] = "modal/resetPassword";
+
+$route['reset-password/(:any)'] = "home/resetPassword/$1";
+$route['logout'] = "home/logout";
 
 
 /* End of file routes.php */
