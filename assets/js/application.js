@@ -10,6 +10,24 @@ $(document).ready(function()
     {
        resizeContent();
     });
+    
+    setInterval("changeBackground()", 30000);
+    
+    
+    $(window).scroll(function()
+    {
+        if(window.location.href == "")
+        {
+            if( $(window).scrollTop() >= '100')
+            {
+                $('header').addClass('blue');   
+            }
+            else
+            {
+                $('header').removeClass('blue');   
+            }
+        }
+    });
    
     
     /*
@@ -253,6 +271,31 @@ $(document).ready(function()
             $('.time-error').show();
         }
     });
+    
+    $('body').on('submit', 'form[name="contact"]', function(e)
+    {
+        e.preventDefault();
+        $('.alert').hide();
+        var name = $('input[name="name"]').val();
+        var email = $('input[name="email"]').val();
+        var message = $('textarea[name="message"]').val();
+        
+        $.post('/ajax/contact', {name: name, email: email, message: message}, function(data)
+        {
+            console.log(data);
+            if(data.indexOf('SUCCESS') >= 0)
+            {
+                $('.alert-success').show();
+                $('input[name="name"]').val('');
+                $('input[name="email"]').val('');
+                $('textarea[name="message"]').val('');
+            }
+            else
+            {
+                $('.alert-danger').show();
+            }
+        });
+    });
 });
 
 var syncInterval = 0;
@@ -294,4 +337,10 @@ function syncCountdown()
         
         $.post('/ajax/getReferenceTime');
     }
+}
+
+function changeBackground()
+{
+    var bgNumber = Math.floor(Math.random()*3)+1;
+    $('.home-intro').css('background-image', 'url("/assets/img/home_'+bgNumber+'.jpg")');
 }

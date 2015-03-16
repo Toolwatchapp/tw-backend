@@ -1,7 +1,7 @@
 <div class="container container-fluid content first">
     <div class="row">
         <div class="col-md-12">
-            <h1>New measure</h1>
+            <center><h1>New measure</h1></center>
         </div>
     </div>
     <div class="row">

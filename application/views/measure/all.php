@@ -1,6 +1,6 @@
 <div class="container container-fluid content first">
     <div class="row">
-        <div class="col-md-12"><h1>My measures</h1></div>
+        <div class="col-md-12"><center><h1>My measures</h1></center></div>
     </div>
     <div class="row">
         <div class="col-md-12">

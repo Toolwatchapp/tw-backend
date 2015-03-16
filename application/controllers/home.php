@@ -2,25 +2,25 @@
 
 class Home extends MY_Controller 
 {
-	public function __construct()
+	function __construct()
 	{
 		parent::__construct();
 	}
 	
-	public function index()
+	function index()
 	{
 		$this->load->view('header', $this->_headerData);
 		$this->load->view('home');
 		$this->load->view('footer');
 	}
 	 
-    public function logout()
+    function logout()
     {
         $this->user->logout();
         redirect(base_url());
     }
     
-    public function resetPassword($resetToken='')
+    function resetPassword($resetToken='')
 	{    
         $this->_headerData['headerClass'] = 'blue';
         $this->load->view('header', $this->_headerData);
@@ -31,9 +31,33 @@ class Home extends MY_Controller
         $this->load->view('footer');  
 	}
     
-    public function signupEmail()
+    function signupEmail()
     {
         $this->_bodyData['resetToken'] = 'a4f9g53F47gF';
         $this->load->view('email/reset-password', $this->_bodyData);
+    }
+    
+    function about()
+    {
+        $this->_headerData['headerClass'] = 'blue';
+        $this->load->view('header', $this->_headerData);
+		$this->load->view('about');
+		$this->load->view('footer');
+    }
+    
+    /*function help()
+    {
+        $this->_headerData['headerClass'] = 'blue';
+        $this->load->view('header', $this->_headerData);
+		$this->load->view('help');
+		$this->load->view('footer');
+    }*/
+    
+    function contact()
+    {
+        $this->_headerData['headerClass'] = 'blue';
+        $this->load->view('header', $this->_headerData);
+		$this->load->view('contact');
+		$this->load->view('footer');
     }
 }

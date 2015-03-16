@@ -10,7 +10,7 @@
 
 * 
 {
-  outline: none;
+  outline: 0px !important;
 }
 
 body 
@@ -37,7 +37,8 @@ h1
 
 input[type="text"],
 input[type="email"],
-input[type="password"] 
+input[type="password"],
+textarea
 {
   padding: 10px 15px;
 }
@@ -45,14 +46,17 @@ input[type="password"]
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
-select:focus
+select:focus,
+textarea:focus, textarea:hover, textarea:active
 {
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
   transition: none;
   -moz-transition: none;
   -webkit-transition: none;
+    -webkit-appearance:none;
+    
 }
 
 .modal-header 
@@ -327,13 +331,21 @@ footer p
   width: 100%;
   background: url("/assets/img/home_1.jpg") no-repeat center top;
   background-size: cover;
-color: white;
+  color: white;
+  transition: background 1s linear;
 }
 
-.home-intro h1, .home-intro h2
+.home-intro h1
 {
-    font-variant: small-caps;
-    margin: 100px auto;
+    text-transform: uppercase;
+    margin: 10% auto;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.home-intro h2
+{
+    margin: 10% auto;
 }
 
 .home-intro .btn
@@ -348,6 +360,41 @@ color: white;
   min-height: 768px;
 }
 
+.home-picto, .home-text
+{
+    margin-top: 5%;   
+    font-size: 18px;
+}
+
+.home-picto .row, .home-text .row
+{
+    margin-bottom: 5%;   
+}
+
+.home-picto .picto
+{
+    width: 200px;
+    height: 200px;
+    margin: 25px auto;
+}
+
+.home-picto .picto.chrono
+{
+    background: url("/assets/img/picto-chrono.png");   
+}
+
+.home-picto .picto.accuracy
+{
+    background: url("/assets/img/picto-accuracy.png");   
+}
+
+.home-picto .picto.light
+{
+    background: url("/assets/img/picto-light.png");   
+}
+
+
+
 .display-table
 {
     display: table;  
@@ -360,6 +407,55 @@ color: white;
     display: table-cell;
     text-align: center;
     vertical-align: middle
+}
+
+/********************************/
+/************ABOUT***************/
+/********************************/
+
+.row.pres
+{
+    border-radius: 5px;
+    background-color: #eaeaea;
+    margin: 5% auto;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+.row.pres .row
+{
+    padding: 30px 20px;   
+}
+
+.row.pres .row .fa
+{
+    background-color: #fff;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    color: #eaeaea;
+    font-size: 55px;
+    border-radius: 50%;
+    padding-top: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.row.pres .name
+{
+    color: #999;
+    font-weight: bold;
+}
+
+.row.pres .infos
+{
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #4d77a7;   
+    padding: 15px 5px;
+}
+
+.row.pres .infos > ul
+{
+    list-style: none;
 }
     
 

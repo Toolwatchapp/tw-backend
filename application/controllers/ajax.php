@@ -2,6 +2,12 @@
 
 class Ajax extends CI_Controller 
 {
+    function __construct()
+    {
+        parent::__construct();
+        
+        date_default_timezone_set('Europe/Paris');
+    }
     function login()
     {
         if($this->input->post('email') && $this->input->post('password'))
@@ -69,9 +75,14 @@ class Ajax extends CI_Controller
                 $message = $this->load->view('email/signup', '', true);
                 $this->email->message($message);
 
-                $this->email->send();
-                
-                echo 'SUCCESS';   
+                if($this->email->send())
+                {
+                   echo 'SUCCESS';   
+                }
+                else
+                {
+                    echo 'ERROR';   
+                } 
             }
             else
             {
@@ -114,10 +125,14 @@ class Ajax extends CI_Controller
                 $message = $this->load->view('email/reset-password', $data, true);
                 $this->email->message($message);
 
-                $this->email->send();
-                
-                
-                echo 'SUCCESS';   
+                if($this->email->send())
+                {
+                   echo 'SUCCESS';   
+                }
+                else
+                {
+                    echo 'ERROR';   
+                }                 
             }
             else
             {
@@ -159,7 +174,7 @@ class Ajax extends CI_Controller
                         
             $tempUserTime = preg_split('/:/', $this->input->post('userTime'));
             
-            date_default_timezone_set('Europe/Paris');
+            
             $userTime = mktime($tempUserTime[0], $tempUserTime[1], $tempUserTime[2], date("n"), date("j"), date("Y"));
             
             $this->load->model('measure');
@@ -172,6 +187,51 @@ class Ajax extends CI_Controller
             {
                 echo 'ERROR';   
             }
+        }
+    }
+    
+    function contact()
+    {
+        if($this->input->post('name'))
+        {
+            $name = $this->input->post('name');
+            $email = $this->input->post('email');
+            $message = $this->input->post('message');
+            
+            $this->load->library('email');
+                
+            $config['protocol'] = "smtp";
+            $config['smtp_host'] = "smtp.mandrillapp.com";
+            $config['smtp_port'] = "587";
+            $config['smtp_user'] = "marc@toolwatch.io"; 
+            $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+            $config['charset'] = "utf-8";
+            $config['mailtype'] = "html";
+            $config['newline'] = "\r\n";
+
+            $this->email->initialize($config);
+
+            $this->email->from('contact@toolwatch.io', 'Toolwatch contact');
+            $this->email->to('marc@toolwatch.io', 'Marc');
+            $this->email->reply_to($email, $name);
+
+            $this->email->subject('Contact Toolwatch from '.$name);
+
+            $bodyMessage ='<b>Name :</b> '.$name.'<br>';
+            $bodyMessage .= '<b>Email :</b> '.$email.'<br>';
+            $bodyMessage .= '<b>Message :</b> <br>';
+            $bodyMessage .= $message;
+            
+            $this->email->message($bodyMessage);
+
+            if($this->email->send())
+            {
+               echo 'SUCCESS';   
+            }
+            else
+            {
+                echo 'ERROR';   
+            }  
         }
     }
                 
