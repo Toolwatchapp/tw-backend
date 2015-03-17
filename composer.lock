@@ -4,9 +4,54 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b1fcd2097832393ca61f47e33f66e7af",
+    "hash": "6972c3a2f9d2df5c44d423554724cfc4",
     "packages": [],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "heroku/heroku-buildpack-php",
+            "version": "v66",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heroku/heroku-buildpack-php.git",
+                "reference": "f23729a3c42764b389f80a9d387c211d6061de4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/f23729a3c42764b389f80a9d387c211d6061de4f",
+                "reference": "f23729a3c42764b389f80a9d387c211d6061de4f",
+                "shasum": ""
+            },
+            "bin": [
+                "bin/heroku-hhvm-apache2",
+                "bin/heroku-hhvm-nginx",
+                "bin/heroku-php-apache2",
+                "bin/heroku-php-nginx"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Zuelke",
+                    "email": "dz@heroku.com"
+                }
+            ],
+            "description": "Toolkit for starting a PHP application locally, with or without foreman, using the same config for PHP/HHVM and Apache2/Nginx as on Heroku",
+            "homepage": "http://github.com/heroku/heroku-buildpack-php",
+            "keywords": [
+                "apache",
+                "apache2",
+                "foreman",
+                "heroku",
+                "hhvm",
+                "nginx",
+                "php"
+            ],
+            "time": "2015-03-05 20:37:15"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
