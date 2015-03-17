@@ -5,6 +5,8 @@
     <meta name="keywords" content="toolwatch, toolwatchapp, accuracy, precision, measure, mechanical watch, manual winding, automatic winding">
     <meta name="description" content="Easily measure and track the accuracy of your mechanical watch">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='//fonts.googleapis.com/css?family=Raleway:500,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Raleway:700,400' rel='stylesheet' type='text/css'>
 	<?php
 		foreach($styleSheets as $css) { echo '<link rel="stylesheet" href="'.css_url($css).'">'; }
 		foreach($javaScripts as $js) { echo '<script src="'.js_url($js).'"></script>'; }
