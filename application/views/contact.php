@@ -5,9 +5,9 @@
     <div class="row" style="margin-top: 50px;">
         <div class="col-md-2">
             <strong>
-            Toolwatch
-            Près du Lac
-            Lausanne 1006
+            Toolwatch<br>
+            Près du Lac<br>
+            Lausanne 1006<br>
             Switzerland
             </strong>
             <br><br>

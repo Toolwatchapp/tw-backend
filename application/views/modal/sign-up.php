@@ -31,7 +31,7 @@
 			<input type="text" class="form-control" name="name" placeholder="Enter your name">
 		</div>
 		<div class="form-group">
-            <small>And your localisation (you know, for data accuracy and stuffs)</small>
+            <small>And your localisation (you know, for data accuracy and stuff)</small>
 			<select name="timezone" size="1" data-placeholder="Select time zone" class="form-control">
 				<option value="">Select timezone</option>
                 <option value="Etc/GMT-11">GMT-11:00 International Date Line West</option>

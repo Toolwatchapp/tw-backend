@@ -24,12 +24,12 @@
                         <li>Movement:
                             <ul>
                                 <li>Jewels: 26 years old</li>
-                                <li>Dimensions: 180 cm</li>
+                                <li>Dimensions: 182 cm</li>
                             </ul>    
                         </li>
                         <li>Case: Marketing digital addict</li>
                         <li>Accuracy: Atomic</li>
-                        <li>Buckle: <a href="mailto:marc@toolwatch.io">marc@toolwatch.io</a></li>
+                        <li>Buckle: marc[at]toolwatch[dot]io</li>
                     </ul>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                         </li>
                         <li>Case: Business analysis lover</li>
                         <li>Accuracy: Always on time</li>
-                        <li>Buckle: <a href="mailto:vincent@toolwatch.io">vincent@toolwatch.io</a></li>
+                        <li>Buckle: vincent[at]toolwatch[dot]io</li>
                     </ul>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                         </li>
                         <li>Case: The geek</li>
                         <li>Accuracy: Smart connected</li>
-                        <li>Buckle: <a href="mailto:sylvain@toolwatch.io">sylvain@toolwatch.io</a></li>
+                        <li>Buckle: sylvain[at]toolwatch[dot]io</li>
                     </ul>
                 </div>
             </div>

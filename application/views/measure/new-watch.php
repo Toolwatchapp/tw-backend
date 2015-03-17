@@ -8,7 +8,7 @@
                 <div class="form-group">
                     <label for="brand" class="col-sm-3 control-label">Brand <i>*</i></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="brand" placeholder="Jaeger LeCoultre">
+                        <input type="text" class="form-control" name="brand" placeholder="Jaeger-LeCoultre">
                     </div>
                 </div>
                 <div class="form-group">

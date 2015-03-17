@@ -11,14 +11,18 @@ $(document).ready(function()
        resizeContent();
     });
     
-    setInterval("changeBackground()", 30000);
+    setInterval("changeBackground()", 7000);
     
     
     $(window).scroll(function()
     {
-        if(window.location.href == "")
+        console.log(document.location.href);
+        if(document.location.href == "")
         {
-            if( $(window).scrollTop() >= '100')
+            
+        }
+        
+        if( $(window).scrollTop() >= '100')
             {
                 $('header').addClass('blue');   
             }
@@ -26,7 +30,6 @@ $(document).ready(function()
             {
                 $('header').removeClass('blue');   
             }
-        }
     });
    
     
@@ -114,7 +117,7 @@ $(document).ready(function()
         {
             if(data.indexOf('SUCCESS') >= 0)
             {
-                setTimeout('window.location.replace("/")', 1000);
+                setTimeout('window.location.replace("/measures/")', 1000);
             }
             else
             {
@@ -339,8 +342,12 @@ function syncCountdown()
     }
 }
 
+var currentBg = 0;
+
 function changeBackground()
 {
-    var bgNumber = Math.floor(Math.random()*3)+1;
+    
+    currentBg = (currentBg+1)%3;
+    var bgNumber = currentBg+1;
     $('.home-intro').css('background-image', 'url("/assets/img/home_'+bgNumber+'.jpg")');
 }
