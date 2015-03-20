@@ -28,11 +28,11 @@
 			<input type="text" class="form-control" name="firstname" placeholder="Enter your firstname" autofocus="true">
 		</div>
 		<div class="form-group">
-			<input type="text" class="form-control" name="name" placeholder="Enter your name">
+			<input type="text" class="form-control" name="name" placeholder="Enter your lastname">
 		</div>
 		<div class="form-group">
             <small>And your localisation (you know, for data accuracy and stuff)</small>
-			<select name="timezone" size="1" data-placeholder="Select time zone" class="form-control">
+			<select name="timezone" data-placeholder="Select time zone" class="form-control">
 				<option value="">Select timezone</option>
                 <option value="Etc/GMT-11">GMT-11:00 International Date Line West</option>
                 <option value="Pacific/Midway">GMT-11:00 Midway Island</option>

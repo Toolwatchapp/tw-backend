@@ -78,6 +78,7 @@ class Ajax extends CI_Controller
                 if($this->email->send())
                 {
                    echo 'SUCCESS';   
+                    $this->user->login($email, $password);
                 }
                 else
                 {

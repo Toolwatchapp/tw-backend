@@ -26,7 +26,7 @@
     <![endif]-->
 </head>
 <body>
-	<div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="pageModal" aria-hidden="true">
+	<div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="pageModal" aria-hidden="true" data-keyboard="true" data-backdrop="static">
 		<div class="modal-dialog  modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">

@@ -26,8 +26,6 @@
                         <tr>
                             <th>Watch brand</th>
                             <th>Watch name</th>
-                            <th>Year of buy</th>
-                            <th>Serial</th>
                             <th>Accuracy</th>
                         </tr>
                     </thead>
@@ -40,8 +38,6 @@
                                     echo '<tr>';   
                                     echo '<td>'.$measure['brand'].'</td>';
                                     echo '<td>'.$measure['name'].'</td>';
-                                    echo '<td>'.$measure['yearOfBuy'].'</td>';
-                                    echo '<td>'.$measure['serial'].'</td>';
                                     echo '<td>'.$measure['accuracy'].' seconds a day</td>';
                                    echo '</tr>';
                                }
@@ -59,8 +55,8 @@
      <div class="row">
           <div class="col-md-12">
               <center>
-                  <a class="btn btn-success btn-sm" href="/measures/new-watch/">Add a watch</a><br><br>
-                  <a class="btn btn-primary btn-lg" href="/measures/new-measure/">Start a new measure</a>
+                  <a class="btn btn-success btn-lg col-sm-2 col-sm-offset-5" href="/measures/new-watch/">Add a watch</a><br><br>
+                  <a class="btn btn-primary btn-lg col-sm-2 col-sm-offset-5" href="/measures/new-measure/">Start a new measure</a>
               </center>
          </div>
     </div>

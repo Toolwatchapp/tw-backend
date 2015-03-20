@@ -11,10 +11,10 @@
             Switzerland
             </strong>
             <br><br>
-            <span class="fa fa-instagram"></span> <a href="https://instagram.com/toolwatchapp/" title="Instagram">Toolwatchapp</a><br>
-            <span class="fa fa-pinterest-p"></span> <a href="https://www.pinterest.com/toolwatch/" title="Pinterest">Toolwatch</a><br>
-            <span class="fa fa-facebook-square"></span> <a href="https://www.facebook.com/Toolwatch" title="Facebook">Toolwatch</a><br>
-            <span class="fa fa-twitter"></span> <a href="https://twitter.com/ToolwatchApp" title="Twitter">@ToolwatchApp</a><br>
+            <span class="fa fa-instagram"></span> <a href="https://instagram.com/toolwatchapp/" target="_blank" title="Instagram">Toolwatchapp</a><br>
+            <span class="fa fa-pinterest-p"></span> <a href="https://www.pinterest.com/toolwatch/" target="_blank" title="Pinterest">Toolwatch</a><br>
+            <span class="fa fa-facebook-square"></span> <a href="https://www.facebook.com/Toolwatch" target="_blank" title="Facebook">Toolwatch</a><br>
+            <span class="fa fa-twitter"></span> <a href="https://twitter.com/ToolwatchApp" target="_blank" title="Twitter">@ToolwatchApp</a><br>
         </div>
         <div class="col-md-6 col-md-offset-4">
             <div class="alert alert-success alert-dismissible" role="alert" style="display: none;">

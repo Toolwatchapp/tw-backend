@@ -16,13 +16,9 @@ $(document).ready(function()
     
     $(window).scroll(function()
     {
-        console.log(document.location.href);
-        if(document.location.href == "")
+        if(window.location.pathname == "/")
         {
-            
-        }
-        
-        if( $(window).scrollTop() >= '100')
+             if( $(window).scrollTop() >= '100')
             {
                 $('header').addClass('blue');   
             }
@@ -30,6 +26,8 @@ $(document).ready(function()
             {
                 $('header').removeClass('blue');   
             }
+        }
+        
     });
    
     
@@ -152,6 +150,7 @@ $(document).ready(function()
                $.post('/sign-up-success/', {ajax: true}, function(data)
                 {
                     $('#pageModal .modal-body').html(data);
+                    setTimeout('window.location.replace("/measures/")', 5000);
                 });
             }
             else
@@ -174,7 +173,6 @@ $(document).ready(function()
         
         $.post('/ajax/askResetPassword', {email: email}, function(data)
         {
-            console.log(data);
             if(data.indexOf('SUCCESS') >= 0)
             {
                $('.askReset').hide();
@@ -235,6 +233,7 @@ $(document).ready(function()
         $('button[name="startSync"]').hide();
         $('button[name="syncDone"]').show();
         $('.sync-time').show();
+        $('button[name="restartCountdown"]').show();
         $('.watch-select').hide();
         
         syncInterval = setInterval("syncCountdown()", 1000);
@@ -259,14 +258,16 @@ $(document).ready(function()
                 {
                     $('.userTime').hide();
                     $('button[name="syncDone"]').hide();
-                    $('.sync-time').css('font-size', '14px').html('Congratulations, you watch is now synchronized. Please come back in a few days so we can measure if your watch is still accurate.<br><br>Caution : Your watch must NOT stop running until then!');
+                    $('.sync-time').hide();
+                    $('button[name="restartCountdown"]').hide();
+                    $('.sync-success').show();
+                    $('.backToMeasure').show();
                 }  
                 else
                 {
                     $('.measure-error').show();
                 }
                 
-                console.log(data);
             });        
         }
         else
@@ -285,7 +286,6 @@ $(document).ready(function()
         
         $.post('/ajax/contact', {name: name, email: email, message: message}, function(data)
         {
-            console.log(data);
             if(data.indexOf('SUCCESS') >= 0)
             {
                 $('.alert-success').show();
@@ -299,6 +299,25 @@ $(document).ready(function()
             }
         });
     });
+    
+    $('body').on('click', '.home-intro .continue', function(e)
+     {
+        var pictoScroll = $('.home-picto').offset();
+        $('html, body').animate({scrollTop: pictoScroll.top-100}, 1000);
+    });
+        
+    $('body').on('click', 'button[name="restartCountdown"]', function(e)
+    {
+        e.preventDefault();
+        if($('.sync-time').html() == 'Go!')
+        {
+            $('.userTime').hide();
+            $('button[name="startSync"]').trigger('click');
+        }
+        
+        $('.sync-time').html('5');
+    });
+        
 });
 
 var syncInterval = 0;
@@ -315,9 +334,10 @@ function validateEmail(email)
 function resizeContent()
 {
     var windowHeight = $(window).height();   
+    var windowWidth = $(window).width();   
     var headerHeight = $('header').height();   
     var footerHeight = $('footer').height();   
-    
+        
     $('.content').css('min-height', (windowHeight-(headerHeight-30)-footerHeight)+'px');
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
@@ -347,7 +367,7 @@ var currentBg = 0;
 function changeBackground()
 {
     
-    currentBg = (currentBg+1)%3;
+    currentBg = (currentBg+1)%4;
     var bgNumber = currentBg+1;
     $('.home-intro').css('background-image', 'url("/assets/img/home_'+bgNumber+'.jpg")');
 }

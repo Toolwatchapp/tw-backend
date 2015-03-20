@@ -5,8 +5,27 @@
                 <div class="col-md-12">
                     <center>
                         <h1>Mechanical watch lover's favorite tool</h1>
+                    </center>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <center>
                         <h2>Easily measure and track the accuracy of your mechanical watch</h2>
+                    </center>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <center>
                         <a class="btn btn-lg btn-default" href="#" title="Signup" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/sign-up/">Measure your watch now!</a>
+                    </center>
+                </div>
+            </div>
+            <div class="row continue">
+                <div class="col-md-12">
+                    <center>
+                        <span class="fa fa-chevron-down"></span>
                     </center>
                 </div>
             </div>

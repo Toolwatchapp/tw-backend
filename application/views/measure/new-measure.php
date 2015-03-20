@@ -29,7 +29,18 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <center class="sync-time">10</center>
+                        <center class="sync-time">5</center>
+                    </div>
+                </div>
+                <div class="form-group sync-success" style="display:none;">
+                    <div class="col-sm-12">
+                        <div class="alert alert-success">
+                            <center>
+                            Congratulations, you watch is now synchronized. 
+                            For a better accuracy of the measurement, you must wait at least 12 hours before coming back. 
+                            Do not worry, we will send you an email when you should come back and check your results.
+                            </center>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group userTime">
@@ -48,6 +59,8 @@
                     <div class="col-sm-12">
                         <center>
                             <button class="btn btn-primary btn-lg" name="startSync">Start now!</button>
+                            <a class="btn btn-success btn-lg no-display backToMeasure" href="/measures/">Back to measures</a>
+                            <button class="btn btn-primary btn-lg no-display" name="restartCountdown">Resart countdown</button>
                             <button type="submit" class="btn btn-success btn-lg" name="syncDone" disabled>I'm synchronized!</button>
                         </center>
                     </div>

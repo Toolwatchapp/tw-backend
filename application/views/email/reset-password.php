@@ -1,6 +1,6 @@
 <div style="background-color: #F4F4F4; width: 100%; height: 100%; margin: 0px; display: table;">
     <div style="max-width: 700px; background-color: white; border-radius: 5px; margin: 25px auto; box-shadow: 0px 0px 10px 0px rgba(0, 0, 0,.15); padding: 15px">
-        <div style="text-align: center"><img src="http://www.toolwatch.io/assets/img/logo-blue.png" alt="Toolwatch"></div>
+        <div style="text-align: center"><?php echo img('logo-blue.png', 'Toolwatch'); ?></div>
         <div style="margin-top: 20px; font-family: 'Open Sans', arial,sans-serif;">
         Hey there,<br>
         We saw that you've forgotten your password. No worries, we got you covered !<br>

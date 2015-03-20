@@ -82,13 +82,18 @@ textarea:focus, textarea:hover, textarea:active
 .btn 
 {
   font-family: "Raleway";
-  font-size: 12px;
+  font-size: 14px;
   border: none;
   text-transform: uppercase;
   transition: background 0.4s ease, color 0.4s ease;
   -webkit-transition: background 0.4s ease, color 0.4s ease;
   -moz-transition: background 0.4s ease, color 0.4s ease;
   -ms-transition: background 0.4s ease, color 0.4s ease;
+}
+
+.btn-lg
+{
+    padding: 10px 15px;   
 }
 
 .btn:focus 
@@ -348,6 +353,18 @@ footer p
     margin: 10% auto;
 }
 
+
+.home-intro .continue
+{
+    font-size: 30px;   
+    position: absolute;
+    bottom: 0px;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+    cursor: pointer;
+}
 .home-intro .btn
 {
     font-size: 18px;   
@@ -467,7 +484,8 @@ footer p
 }
 
 button[name=syncDone],
-.userTime
+.userTime,
+.no-display
 {
     display: none;
 }
@@ -498,9 +516,24 @@ button[name=syncDone],
 		display: block;
 	}
     
-    .home-intro h1, .home-intro h2
+    /*.home-intro h1, .home-intro h2
     {
         margin: 70px auto;
+    }*/
+    
+    .home-intro h1
+    {
+        font-size: 28px;   
+    }
+    
+    .home-intro h2
+    {
+        font-size: 22px;   
     }
 
+    .home-intro .btn
+    {
+        
+        margin-top: 50px;
+    }
 }
