@@ -1,7 +1,7 @@
 <div class="container container-fluid content first">
     <div class="row">
         <div class="col-md-12">
-            <center><h1>New measure</h1></center>
+            <center><h1>Check the accuracy</h1></center>
         </div>
     </div>
     <div class="row">
@@ -9,21 +9,14 @@
             <form class="form-horizontal" method="post" name="newMeasure">
                 <div class="form-group">
                      <center>
-                         To begin measuring the accuracy of your watch, we must first synchronize your watch with Toolwatch’s accuracy system. 
-                         Start clicking on « Start now! » to start the countdown then look at your watch.<br><br> 
                          At the end of the countdown, please enter below the exact time as it is on your watch. Let’s start measuring!
                     </center>
                 </div>
                 <div class="form-group watch-select">
-                    <label for="brand" class="col-sm-4 control-label">Select your watch </label>
+                    <label for="brand" class="col-sm-4 control-label">Selected watch </label>
                     <div class="col-sm-8">
-                        <select class="form-control" data-placeholder="Select your watch" name="watchId">
-                            <?php
-                                foreach($watches as $watch)
-                                {
-                                    echo '<option value="'.$watch->watchId.'">'.$watch->brand.' - '.$watch->name.'</option>';   
-                                }
-                            ?>
+                        <select class="form-control" name="watchId">
+                            <?php echo '<option value="'.$selectedWatch->watchId.'" selected>'.$selectedWatch->brand.' - '.$selectedWatch->name.'</option>'; ?>
                         </select>
                     </div>
                 </div>
@@ -36,9 +29,7 @@
                     <div class="col-sm-12">
                         <div class="alert alert-success">
                             <center>
-                            Congratulations, you watch is now synchronized. 
-                            For a better accuracy of the measurement, you must wait at least 12 hours before coming back. 
-                            Do not worry, we will send you an email when you should come back and check your results.
+                            Congratulations, your watch accuracy is <strong><span class="watch-accuracy"></span> seconds a day!</strong> 
                             </center>
                         </div>
                     </div>
@@ -59,10 +50,10 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <center>
-                            <button class="btn btn-primary btn-lg" name="startSync">Start now!</button>
+                            <button class="btn btn-primary btn-lg" name="startSync">Check now!</button>
                             <a class="btn btn-success btn-lg no-display backToMeasure" href="/measures/">Back to measures</a>
                             <button class="btn btn-primary btn-lg no-display" name="restartCountdown">Resart countdown</button>
-                            <button type="submit" class="btn btn-success btn-lg" name="syncDone" disabled>I'm synchronized!</button>
+                            <button type="submit" class="btn btn-success btn-lg" name="syncDone" disabled>Check the accuracy!</button>
                         </center>
                     </div>
                 </div>

@@ -7,12 +7,24 @@ class Measure extends CI_Model
         parent::__construct();
     }
     
-    function getMeasure($userId)
+    /*function getMeasure($userId)
     {
         $this->db->select('watch.*, measure.measureId, measure.referenceTime, measure.userTime')
                  ->from('watch, measure')
-                 ->where('`watch`.`watchId`=`measure`.`watchId`')
+                 //->where('`watch`.`watchId`=`measure`.`watchId`')
                  ->where('watch.userId', $userId);
+        
+        $query = $this->db->get();
+        $data = $query->result();
+                
+        return $data;
+    }*/
+    
+    function getMeasures($watchId)
+    {
+        $this->db->select('*')
+                 ->from('measure')
+                 ->where('watchId', $watchId);
         
         $query = $this->db->get();
         $data = $query->result();
@@ -20,71 +32,39 @@ class Measure extends CI_Model
         return $data;
     }
     
+    
     function computeMeasure($userId)
     {
-        $rawData = $this->getMeasure($userId); 
+        $userWatches = $this->watch->getWatches($userId);
         
         $data = array();
-        $currentWatchId = 0;
         $savedWatchId = 0;
         $dataPushing = 0;
         
-        $i = 0;
-        $j = 0;
-        
-        while($i < sizeof($rawData))
+        foreach($userWatches as $watch)
         {
-            // Reset of deltas
-            $savedRefTime = array();
-            $savedUserTime = array();
-            $refDelta = 0;
-            $userDelta = 0;
-            
-            // Get the watch id
-            $currentWatchId =  $rawData[$i]->watchId;
-            //echo $currentWatchId.'<br>';
-            
+        
             // Save of the watch data
-            $data[$dataPushing]['brand'] = $rawData[$i]->brand;
-            $data[$dataPushing]['name'] = $rawData[$i]->name;
-            $data[$dataPushing]['yearOfBuy'] = $rawData[$i]->yearOfBuy;
-            $data[$dataPushing]['serial'] = $rawData[$i]->serial;
+            $data[$dataPushing]['watchId'] = $watch->watchId;
+            $data[$dataPushing]['brand'] = $watch->brand;
+            $data[$dataPushing]['name'] = $watch->name;
+            $data[$dataPushing]['yearOfBuy'] = $watch->yearOfBuy;
+            $data[$dataPushing]['serial'] = $watch->serial;
             
-            // Now, we need to compute the data
-            while(($i+$j < sizeof($rawData)) && ($rawData[$i+$j]->watchId == $currentWatchId))
+            // Getting watch accuracy
+            $accuracy = $this->getWatchAccuracy($watch->watchId);
+            if((strcmp($accuracy, 'newMeasure') == 0) || (strcmp($accuracy, 'getAccuracy') == 0))
             {
-                $savedRefTime[$j] = $rawData[$i+$j]->referenceTime;
-                $savedUserTime[$j] = $rawData[$i+$j]->userTime;
-                //echo $savedRefTime[$j].' - '.$savedUserTime[$j].'<br>';
-                
-                if($j > 0)
-                {            
-                    $refDelta += $savedRefTime[$j] - $savedRefTime[$j-1];
-                    $userDelta += $savedUserTime[$j] - $savedUserTime[$j-1];
-                }
-                
-                $j++;
-            }
-            
-            if($j > 1)
-            {
-                $val = ($userDelta*86400/$refDelta)-86400;
-                $val = floor($val*10.0)/10.0;
+                $data[$dataPushing]['accuracy'] = $accuracy;
             }
             else
-            {
-                $val = 0;
-            }
-            
-            $data[$dataPushing]['accuracy'] = sprintf("%.1f", $val);;
+            {               
+                $data[$dataPushing]['accuracy'] = sprintf("%.1f", $accuracy);
+            }            
             
             $dataPushing++;  
-            $i += $j;
-            $j=0;
         }
-        
-        
-        //var_dump($data);
+
         return $data;
     }
     
@@ -105,5 +85,47 @@ class Measure extends CI_Model
         }
         
         return $res;
+    }
+    
+    function getWatchAccuracy($watchId)
+    {
+        $accuracy = 0;
+        $watchMeasures = $this->getMeasures($watchId); 
+        
+        // Reset of deltas
+        $savedRefTime = array();
+        $savedUserTime = array();
+        $refDelta = 0;
+        $userDelta = 0;
+            
+        // Now, we need to compute the data
+        for($i=0; $i < sizeof($watchMeasures); $i++)
+        {
+            $savedRefTime[$i] = $watchMeasures[$i]->referenceTime;
+            $savedUserTime[$i] = $watchMeasures[$i]->userTime;
+            
+            if($i > 0)
+            {            
+                $refDelta += $savedRefTime[$i] - $savedRefTime[$i-1];
+                $userDelta += $savedUserTime[$i] - $savedUserTime[$i-1];
+            } 
+        }
+        
+        if(sizeof($watchMeasures) > 1)
+        {
+            $accuracy = ($userDelta*86400/$refDelta)-86400;
+            $accuracy = floor($accuracy*10.0)/10.0;
+           
+        }
+        else if(sizeof($watchMeasures) == 1)
+        {
+            $accuracy = 'getAccuracy';
+        }
+        else
+        {
+            $accuracy = 'newMeasure';
+        }
+        
+        return $accuracy;
     }
 }

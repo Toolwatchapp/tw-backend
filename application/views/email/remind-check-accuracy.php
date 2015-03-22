@@ -3,11 +3,11 @@
         <div style="text-align: center"><?php echo img('logo-blue.png', 'Toolwatch'); ?></div>
         <div style="margin-top: 20px; font-family: 'Open Sans', arial,sans-serif;">
         Hey there,<br>
-        We saw that you've forgotten your password. No worries, we got you covered !<br>
+        You’ve synchronized your <?php echo $watchBrand.' '.$watchName; ?> with Toolwatch one day ago and now is the time to see the results of your watch’s accuracy !<br>
         <br>
-        Simply click on the following link and you’ll be asked to chose a new one : <a href="http://www.toolwatch.io/reset-password/<?php echo $resetToken; ?>">http://www.toolwatch.io/reset-password/<?php echo $resetToken; ?></a><br>
+        Just make sure your have your watch near you (it should already be on your wrist ;) ) and go the the <a href="http://www.toolwatch.io/measures/">measure page</a>.<br>
         <br>
-        Happy toolwatching !<br>
+        See you there !
         <br>
         The Toolwatch Team<br>
         <br>

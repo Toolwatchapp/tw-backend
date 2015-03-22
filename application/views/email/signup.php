@@ -18,7 +18,5 @@
         <small>P.S. The whole team is always around, almost 24/7, to reply to your emails. In fact, you can just hit reply to this email or any others you receive from us. Whether you need help, have ideas or just want to say "hello," we'll get back to you within a few hours.</small>
 
         </div>
-        <div></div>
-        <div></div>
     </div>
 </div>

@@ -28,6 +28,33 @@ class Measures extends MY_Controller
                $this->_bodyData['error'] = 'An error occured while adding your watch.';
             }
         }
+        else if($this->input->post('deleteMeasures'))
+        {
+            $watchId = $this->input->post('deleteMeasures');
+            
+            if($this->watch->deleteMeasures($watchId))
+            {
+                $this->_bodyData['success'] = 'Measures successfully deleted!';
+            }
+            else
+            {
+               $this->_bodyData['error'] = 'An error occured while deleting your measures.';
+            }
+            
+        }
+        else if($this->input->post('deleteWatch'))
+        {
+            $watchId = $this->input->post('deleteWatch');
+            
+            if($this->watch->deleteWatch($watchId))
+            {
+                $this->_bodyData['success'] = 'Watch successfully deleted!';
+            }
+            else
+            {
+               $this->_bodyData['error'] = 'An error occured while deleting your watch.';
+            }
+        }
         
         $this->_headerData['headerClass'] = 'blue';
         $this->load->view('header', $this->_headerData);
@@ -57,5 +84,23 @@ class Measures extends MY_Controller
         $this->load->view('measure/new-measure', $this->_bodyData);    
         
         $this->load->view('footer');  
-    }   
+    }  
+    
+    public function get_accuracy()
+    {
+        if($this->input->post('watchId'))
+        {
+            $this->_headerData['headerClass'] = 'blue';
+            $this->load->view('header', $this->_headerData);
+        
+            $this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
+            $this->load->view('measure/get-accuracy', $this->_bodyData);    
+        
+            $this->load->view('footer');  
+        }
+        else
+        {
+            redirect('/measures/');
+        }
+    }
 }

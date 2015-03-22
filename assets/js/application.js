@@ -18,7 +18,7 @@ $(document).ready(function()
     {
         if(window.location.pathname == "/")
         {
-             if( $(window).scrollTop() >= '100')
+             if( $(window).scrollTop() >= '70')
             {
                 $('header').addClass('blue');   
             }
@@ -316,6 +316,36 @@ $(document).ready(function()
         }
         
         $('.sync-time').html('5');
+    });
+    
+    $('body').on('click', '.submitGetAccuracy', function(e)
+    {
+        e.preventDefault();
+        var watchId = $(this).attr('data-watch');
+        
+        $('form[name="get-accuracy-'+watchId+'"]').submit();
+    });
+    
+    $('body').on('click', '.submitDeleteWatch', function(e)
+    {
+        e.preventDefault();
+        var watchId = $(this).attr('data-watch');
+        
+        if(confirm('Are you sure you want to delete this watch?'))
+        {
+            $('form[name="delete-watch-'+watchId+'"]').submit();
+        }
+    });
+    
+    $('body').on('click', '.submitDeleteMeasures', function(e)
+    {
+        e.preventDefault();
+        var watchId = $(this).attr('data-watch');
+        
+        if(confirm('Are you sure you want to delete this measures?'))
+        {
+            $('form[name="delete-measures-'+watchId+'"]').submit();
+        }
     });
         
 });

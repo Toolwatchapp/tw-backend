@@ -39,5 +39,56 @@ class Watch extends CI_Model
         $data = $query->result();
                 
         return $data;
-    }    
+    }  
+    
+    
+    function getWatch($watchId)
+    {
+         $this->db->select('*')
+                 ->from('watch')
+                 ->where('watchId', $watchId);
+        
+        $query = $this->db->get();
+        $data = $query->result();
+                
+        return $data[0];
+    } 
+    
+    function deleteMeasures($watchId)
+    {
+        $res = false;
+        
+        $this->db->delete('measure', array('watchId' => $watchId));    
+        
+        if($this->db->affected_rows() > 0)
+        {
+            $res = true;
+        }
+        
+        return $res;
+    }
+    
+    function deleteWatch($watchId)
+    {
+        $res = false;
+        
+        /*if($this->deleteMeasures($watchId))
+        {
+            $this->db->delete('watch', array('watchId' => $watchId));    
+            
+            if($this->db->affected_rows() > 0)
+            {
+                $res = true;
+            }
+        }*/
+        
+        $this->db->delete('watch', array('watchId' => $watchId));    
+            
+        if($this->db->affected_rows() > 0)
+        {
+            $res = true;
+        }
+        
+        return $res;
+    }
 }

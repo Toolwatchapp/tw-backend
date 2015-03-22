@@ -182,6 +182,37 @@ class Ajax extends CI_Controller
             
             if($this->measure->newMeasure($watchId, $referenceTime, $userTime))
             {
+                /*$this->load->library('email');
+                
+                $config['protocol'] = "smtp";
+                $config['smtp_host'] = "smtp.mandrillapp.com";
+                $config['smtp_port'] = "587";
+                $config['smtp_user'] = "marc@toolwatch.io"; 
+                $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                $config['charset'] = "utf-8";
+                $config['mailtype'] = "html";
+                $config['newline'] = "\r\n";
+
+                $this->email->initialize($config);
+                
+                $this->email->from('hello@toolwatch.io', 'Toolwatch');
+                $this->email->to($email, $name.' '.$firstname);
+                $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+
+                $this->email->subject('It\'s time to check your watch\'s accuracy !');
+                                
+                $message = $this->load->view('email/reset-password', $data, true);
+                $this->email->message($message);
+
+                if($this->email->send())
+                {
+                   echo 'SUCCESS';   
+                }
+                else
+                {
+                    echo 'ERROR';   
+                }  */
+                
                 echo 'SUCCESS';
             }
             else

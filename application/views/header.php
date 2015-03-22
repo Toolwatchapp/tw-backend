@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Toolwatch - Easily measure and track the accuracy of your mechanical watch</title>
+    <title>Toolwatch • Easily measure and track the accuracy of your mechanical watch</title>
     <meta name="keywords" content="toolwatch, toolwatchapp, accuracy, precision, measure, mechanical watch, manual winding, automatic winding">
     <meta name="description" content="Easily measure and track the accuracy of your mechanical watch">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -1,17 +1,40 @@
 <div class="container container-fluid first about">
     <div class="row">
-        <div class="col-md-12"><center><h1>About us</h1></center></div>
+        <div class="col-md-12"><center><h1>About us</h1></center><span class="line black"></span></div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <center>
-                <span class="line black"></span>
-                Swissmade with love!<br>
+                <strong>About Toolwatch</strong>
+                <br>
+                Toolwatch is the most convenient and easy way to measure the accuracy of your mechanical watch. 
+                <br>
+                Accuracy has always been the holy grail of watchmaking. 
+                Throughout the ages, watchmakers have been competing for building the most accurate and precise watch movement but the consumers do not have the tools to appreciate that effort. 
+                Now, with Toolwatch, every watch enthusiast is able to keep an eye on the accuracy of his watch(es)!<br><br>
+            </center>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-md-12">
+            <center>
+                <strong>Why using Toolwatch ?</strong>
+                <br><br>
+                Professional tools used by watchmakers are expensive (Toolwatch is free!) and heavy (Toolwatch is light!) and measure the watch in different positions 
+                (up, down, on a side etc) that do not reflect the actual way the watch is worn by its possessor. With Toolwatch, the accuracy is measured following your lifestyle. 
+                Unlike measuring by yourself, Toolwatch calculates for you the accuracy of your watch anytime and anywhere in an easy to use and reliable way.<br><br>
+            </center>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-md-12">
+            <center>
+                <strong>The Toolwatch Team </strong><br>
+                Toolwatch is Swissmade with love!<br>
                 We are three watch aficionados, passionate about mechanical watches, and willing to share our watchmaking enthusiasm.<br>
                 <br>
-                We’ve worked inside the most prestigious watchmaking Manufactures and we are now ready to provide you a brand new watch experience with <strong>Toolwatch!</strong><br>
+                We’ve worked inside the most prestigious watchmaking Manufacturesin Switzerland and are happy to provide the best watch experience for enthusiasts all around the world.
                 <br>
-                Here is the team<br>
             </center>
         </div>
     </div>

@@ -17,6 +17,7 @@ body
     font-weight: 400;
 }
 
+
 a 
 {
   color: #4d77a7;
@@ -83,6 +84,7 @@ textarea:focus, textarea:hover, textarea:active
 {
   font-family: "Raleway";
   font-size: 14px;
+    font-weight: bold;
   border: none;
   text-transform: uppercase;
   transition: background 0.4s ease, color 0.4s ease;
@@ -103,12 +105,26 @@ textarea:focus, textarea:hover, textarea:active
 
 .btn-default 
 {
+    color: #4d77a7;
+    background-color: transparent;
+    border: 1px solid #4d77a7;
+}
+
+.btn-default:hover, .btn-default:focus 
+{
   color: white;
+  background-color: #4d77a7;
+    border: 1px solid #4d77a7;
+}
+
+.btn-white
+{
+    color: white;
     background-color: transparent;
     border: 1px solid white;
 }
 
-.btn-default:hover, .btn-default:focus 
+.btn-white:hover, .btn-white:focus 
 {
   color: #999999;
   background-color: white;
@@ -137,9 +153,19 @@ textarea:focus, textarea:hover, textarea:active
     display: none;   
 }
 
+.btn-sm
+{
+    font-size: 12px;   
+}
+
 .container.first, .container-fluid.first 
 {
   padding-top: 100px;
+}
+
+.content .row:last-child
+{
+    margin-bottom: 30px;
 }
 
 .line 
@@ -227,6 +253,7 @@ header .navbar-toggle
   -moz-transition: transform 0.5s ease, -moz-transform 0.5s ease;
   -ms-transition: transform 0.5s ease, -ms-transform 0.5s ease;
 }
+
 header .navbar-toggle.collapsed 
 {
   transform: rotate(180deg);
@@ -343,14 +370,14 @@ footer p
 .home-intro h1
 {
     text-transform: uppercase;
-    margin: 10% auto;
+    margin: 100px auto;
     font-weight: 700;
     letter-spacing: 3px;
 }
 
 .home-intro h2
 {
-    margin: 10% auto;
+    margin: 100px auto;
 }
 
 
@@ -390,8 +417,8 @@ footer p
 
 .home-picto .picto
 {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 99px;
     margin: 25px auto;
 }
 
@@ -524,16 +551,39 @@ button[name=syncDone],
     .home-intro h1
     {
         font-size: 28px;   
+        margin: 40px auto;
     }
     
     .home-intro h2
     {
         font-size: 22px;   
+        margin: 40px auto;
     }
 
     .home-intro .btn
     {
         
-        margin-top: 50px;
+        margin-top: 30px;
+    }
+}
+
+@media (max-height: 480px)
+{
+        .home-intro h1
+    {
+        font-size: 26px;   
+        margin: 30px auto;
+    }
+    
+    .home-intro h2
+    {
+        font-size: 20px;   
+        margin: 30px auto;
+    }
+
+    .home-intro .btn
+    {
+        
+        margin-top: 10px;
     }
 }
