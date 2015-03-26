@@ -110,7 +110,7 @@ textarea:focus, textarea:hover, textarea:active
     border: 1px solid #4d77a7;
 }
 
-.btn-default:hover, .btn-default:focus 
+.btn-default:hover, .btn-default:focus  
 {
   color: white;
   background-color: #4d77a7;
@@ -457,11 +457,22 @@ footer p
 /************ABOUT***************/
 /********************************/
 
-.row.pres
+.about
+{
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+.about .line
+{
+    margin: 20px auto;   
+}
+
+.row.pres > div
 {
     border-radius: 5px;
     background-color: #eaeaea;
-    margin: 5% auto;
+    margin-top: 25px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
 }
 
@@ -517,6 +528,29 @@ button[name=syncDone],
     display: none;
 }
 
+/********************************/
+
+.step-measure
+{
+    margin-bottom: 20px;
+    text-align: center;
+    display: block;
+}
+
+.step-measure .fa
+{
+    font-size: 55px;
+    color: #ddd;
+    margin-top: 20px;
+}
+
+.show-steps
+{
+    margin-bottom: 20px;
+    text-align: center;
+    display: none;
+}
+
 @media (max-width: 768px)
 {
 	header 
@@ -565,11 +599,28 @@ button[name=syncDone],
         
         margin-top: 30px;
     }
+    
+    .step-measure .fa
+    {
+        font-size: 45px;
+        margin: 15px auto;
+        transform: rotate(90deg);
+    }  
+    
+    .show-steps
+    {
+        display: block;
+    }
+    
+    .step-measure
+    {
+        display:none;
+    }
 }
 
 @media (max-height: 480px)
 {
-        .home-intro h1
+    .home-intro h1
     {
         font-size: 26px;   
         margin: 30px auto;

@@ -15,6 +15,9 @@
 			<input type="password" class="form-control" name="confirmPassword" placeholder="Confirm your password">
 			<span class="signup-error confirm-password-error"></span>
 		</div>
+        <div class="form-group">
+            <center><input type="checkbox" name="malingList" checked><br>I would like to receive emails on Toolwatch</center>
+        </div>
 		<div class="form-group">
 			<center><a class="btn btn-primary btn-lg signupNextStep">Continue</a></center>
 		</div>

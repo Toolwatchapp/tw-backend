@@ -61,6 +61,7 @@ $(document).ready(function()
         var userEmail = $('input[name="email"]').val();
         var password = $('input[name="password"]').val();
         var confirmPassword = $('input[name="confirmPassword"]').val();
+        var mailingList = $('input[name="malingList"]').is(':checked');
         
         if(validateEmail(userEmail))
         {
@@ -70,7 +71,8 @@ $(document).ready(function()
                 {
                     $.post('/ajax/checkEmail', {email: userEmail}, function(data)
                     {
-                        if(data.indexOf('SUCCESS') >= 0)
+                        var result = $.parseJSON(data);
+                        if(result.success == true)
                         {
                             $('.stepOne').hide();
                             $('.stepTwo').show();
@@ -113,7 +115,8 @@ $(document).ready(function()
         
         $.post('/ajax/login', {email: email, password: password}, function(data)
         {
-            if(data.indexOf('SUCCESS') >= 0)
+            var result = $.parseJSON(data);
+            if(result.success == true)
             {
                 setTimeout('window.location.replace("/measures/")', 1000);
             }
@@ -138,14 +141,16 @@ $(document).ready(function()
         var firstname = $('input[name="firstname"]').val();
         var timezone = $('select[name="timezone"]').val();
         var country = $('select[name="country"]').val();
+        var mailingList = $('input[name="malingList"]').is(':checked');
         
         $(this).addClass('active');
         $('.btn-spinner i').css('display', 'inline-block');
         $('.signup-error').hide();
         
-        $.post('/ajax/signup', {email: email, password: password, name: name, firstname: firstname, timezone: timezone, country: country}, function(data)
+        $.post('/ajax/signup', {email: email, password: password, name: name, firstname: firstname, timezone: timezone, country: country, mailingList: mailingList}, function(data)
         {
-            if(data.indexOf('SUCCESS') >= 0)
+            var result = $.parseJSON(data);
+            if(result.success == true)
             {
                $.post('/sign-up-success/', {ajax: true}, function(data)
                 {
@@ -168,21 +173,34 @@ $(document).ready(function()
     $('body').on('submit', 'form[name="askResetPassword"]', function(e)
     {
         e.preventDefault();
+        
         $('.signup-error').hide();
         var email = $('input[name="email"]').val(); 
         
-        $.post('/ajax/askResetPassword', {email: email}, function(data)
+        if(validateEmail(email))
         {
-            if(data.indexOf('SUCCESS') >= 0)
+            $('.btn-spinner i').css('display', 'inline-block');
+            
+            $.post('/ajax/askResetPassword', {email: email}, function(data)
             {
-               $('.askReset').hide();
-               $('.confirmAskReset').show();
-            }  
-            else
-            {
-                 $('.reset-error').html('Something went wrong. Did you miss spell your email?').show();
-            }
-        });
+                var result = $.parseJSON(data);
+                if(result.success == true)
+                {
+                    $('.askReset').hide();
+                    $('.confirmAskReset').show();
+                }
+                else
+                {
+                    $('.reset-error').html('Something went wrong. Did you miss spell your email?').show();
+                    $('.btn-spinner i').css('display', 'none');
+                }
+                
+            });
+        }
+        else
+        {
+            $('.reset-error').html('It seems that you\'ve entered a wrong email.').show();   
+        }
     });
     
     
@@ -205,7 +223,8 @@ $(document).ready(function()
             {
                 $.post('/ajax/resetPassword', {resetToken: resetToken, password: password}, function(data)
                 {
-                    if(data.indexOf('SUCCESS') >= 0)
+                    var result = $.parseJSON(data);
+                    if(result.success == true)
                     {
                         $('.alert-success').show();
                         setTimeout('window.location.replace("/")', 5000);
@@ -230,13 +249,26 @@ $(document).ready(function()
     $('body').on('click', 'button[name="startSync"]', function(e)
     {
         e.preventDefault();
-        $('button[name="startSync"]').hide();
-        $('button[name="syncDone"]').show();
-        $('.sync-time').show();
-        $('button[name="restartCountdown"]').show();
-        $('.watch-select').hide();
+        var watchId = $('select[name="watchId"]').val();
+        $('.watch-error').hide(); 
+
+        if(watchId != null)
+        {
+            $('button[name="startSync"]').hide();
+            $('button[name="syncDone"]').show();
+            $('.sync-time').show();
+            $('button[name="restartCountdown"]').show();
+            $('.watch-select').hide();
+
+            syncInterval = setInterval("syncCountdown()", 1000);
+            var audio = new Audio('/assets/audio/bips.mp3');
+            audio.play();
+        }
+        else
+        {
+           $('.watch-error').show(); 
+        }
         
-        syncInterval = setInterval("syncCountdown()", 1000);
     });
     
     $('body').on('submit', 'form[name="newMeasure"]', function(e)
@@ -246,15 +278,20 @@ $(document).ready(function()
         
         var watchId = $('select[name="watchId"]').val();
         var userTime = $('input[name="userTime"]').val();
+        var getAccuracy = $('input[name="getAccuracy"]').val();
+        
         var myDate = new Date();
         // Timezone difference from Europe/Paris
         var userTimezone= (myDate.getTimezoneOffset()/60)+1;
                 
         if(/\d+:\d+:\d+/.test(userTime))
         {
-            $.post('/ajax/newMeasure', {watchId: watchId, userTime: userTime, userTimezone: userTimezone}, function(data)
+            $('.btn-spinner i').css('display', 'inline-block');
+            
+            $.post('/ajax/newMeasure', {watchId: watchId, userTime: userTime, userTimezone: userTimezone, getAccuracy: getAccuracy}, function(data)
             { 
-                if(data.indexOf('SUCCESS') >= 0)
+                var result = $.parseJSON(data);
+                if(result.success == true)
                 {
                     $('.userTime').hide();
                     $('button[name="syncDone"]').hide();
@@ -262,10 +299,19 @@ $(document).ready(function()
                     $('button[name="restartCountdown"]').hide();
                     $('.sync-success').show();
                     $('.backToMeasure').show();
+                    
+                    if(result.data.accuracy != null)
+                    {
+                        if(result.data.accuracy > 0)
+                            result.data.accuracy = '+'+result.data.accuracy;
+                        
+                        $('.watch-accuracy').html(result.data.accuracy);
+                    }
                 }  
                 else
                 {
                     $('.measure-error').show();
+                    $('.btn-spinner i').css('display', 'none');
                 }
                 
             });        
@@ -286,7 +332,8 @@ $(document).ready(function()
         
         $.post('/ajax/contact', {name: name, email: email, message: message}, function(data)
         {
-            if(data.indexOf('SUCCESS') >= 0)
+            var result = $.parseJSON(data);
+            if(result.success == true)
             {
                 $('.alert-success').show();
                 $('input[name="name"]').val('');
@@ -347,6 +394,23 @@ $(document).ready(function()
             $('form[name="delete-measures-'+watchId+'"]').submit();
         }
     });
+    
+    $('body').on('click', '[data-trigger="slideDown"]', function(e)
+    {
+        e.preventDefault();
+        var target = $(this).attr('data-target');
+        
+        if($(target).css('display') == 'none')
+        {
+            $(target).slideDown();
+            $(this).html('Hide Steps');
+        }
+        else
+        {
+            $(target).slideUp();
+            $(this).html('Show Steps');
+        }
+    });
         
 });
 
@@ -377,10 +441,14 @@ function syncCountdown()
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
+        var audio = new Audio('/assets/audio/bips.mp3');
+        audio.play();
         $('.sync-time').html(countdown-1);
     }
     else
     {
+        var audio = new Audio('/assets/audio/last-bip.mp3');
+        audio.play();
         clearInterval(syncInterval);
         syncInterval = 0;
         

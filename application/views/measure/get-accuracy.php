@@ -9,7 +9,7 @@
             <form class="form-horizontal" method="post" name="newMeasure">
                 <div class="form-group">
                      <center>
-                         At the end of the countdown, please enter below the exact time as it is on your watch. Let’s start measuring!
+                         At the end of the countdown, please enter below the exact time as it is on your watch. <br>Let's check the accuracy of your watch!
                     </center>
                 </div>
                 <div class="form-group watch-select">
@@ -50,10 +50,11 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <center>
+                            <input type="hidden" name="getAccuracy" value="true">
                             <button class="btn btn-primary btn-lg" name="startSync">Check now!</button>
                             <a class="btn btn-success btn-lg no-display backToMeasure" href="/measures/">Back to measures</a>
-                            <button class="btn btn-primary btn-lg no-display" name="restartCountdown">Resart countdown</button>
-                            <button type="submit" class="btn btn-success btn-lg" name="syncDone" disabled>Check the accuracy!</button>
+                            <button class="btn btn-primary btn-lg no-display" name="restartCountdown">Restart countdown</button>
+                            <button type="submit" class="btn btn-success btn-lg btn-spinner" name="syncDone" disabled>Check the accuracy! <i class="fa fa-spinner fa-pulse"></i></button>
                         </center>
                     </div>
                 </div>

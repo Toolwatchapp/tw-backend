@@ -25,6 +25,7 @@
                                 }
                             ?>
                         </select>
+                        <span class="signup-error watch-error">Please, select a watch.</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -61,8 +62,8 @@
                         <center>
                             <button class="btn btn-primary btn-lg" name="startSync">Start now!</button>
                             <a class="btn btn-success btn-lg no-display backToMeasure" href="/measures/">Back to measures</a>
-                            <button class="btn btn-primary btn-lg no-display" name="restartCountdown">Resart countdown</button>
-                            <button type="submit" class="btn btn-success btn-lg" name="syncDone" disabled>I'm synchronized!</button>
+                            <button class="btn btn-primary btn-lg no-display" name="restartCountdown">Restart countdown</button>
+                            <button type="submit" class="btn btn-success btn-lg btn-spinner" name="syncDone" disabled>I'm synchronized! <i class="fa fa-spinner fa-pulse"></i></button>
                         </center>
                     </div>
                 </div>

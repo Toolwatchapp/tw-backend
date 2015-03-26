@@ -53,6 +53,7 @@ $route['logout'] = "home/logout";
 $route['about'] = "home/about";
 $route['help'] = "home/help";
 $route['contact'] = "home/contact";
+$route['watch-tips'] = "home/watchTips";
 
 
 /* End of file routes.php */

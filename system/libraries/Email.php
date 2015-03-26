@@ -133,6 +133,13 @@ class CI_Email {
 
 		return $this;
 	}
+public function add_custom_header($header,$content)
+	  {  
+		//$this->_headers[$header] = $content;
+		$this->_set_header($header,$content);
+		return $this;
+	   // store in table $this->_recipients, $this->_subject, $this->_finalbody, $this->_header_str
+	  }
 
 	// --------------------------------------------------------------------
 

@@ -8,35 +8,44 @@ class Ajax extends CI_Controller
         
         date_default_timezone_set('Europe/Paris');
     }
+    
     function login()
-    {
+    {        
         if($this->input->post('email') && $this->input->post('password'))
         {
+            $result = array();
+            
             $email = $this->input->post('email');   
             $password = $this->input->post('password');   
             if($this->user->login($email, $password))
             {
-                echo 'SUCCESS';
+                $result['success'] = true;
             }
             else
             {
-                echo 'ERROR';
+                $result['success'] = false;
             }
-        }
+            
+            echo json_encode($result);
+        }   
     }
     
     function checkEmail()
     {
         if($this->input->post('email'))
         {
+            $result = array();
+            
             if(!$this->user->checkUserEmail($this->input->post('email')))
             {
-                echo 'SUCCESS';
+                $result['success'] = true;
             }
             else
             {
-                echo 'ERROR';
+                $result['success'] = false;
             }
+            
+            echo json_encode($result);
         }
     }
     
@@ -44,15 +53,28 @@ class Ajax extends CI_Controller
     {
         if($this->input->post('email'))
         {
+            $result = array();
+            
             $email = $this->input->post('email');
             $password = $this->input->post('password');
             $name = $this->input->post('name');
             $firstname = $this->input->post('firstname');
             $timezone = $this->input->post('timezone');
             $country = $this->input->post('country');
+            $mailingList = $this->input->post('mailingList');
             
             if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
             {
+                
+                if(true == $mailingList)
+                {
+                    $this->load->helper('mcapi');
+                    
+                    $api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
+                    $api->listSubscribe('7f94c4aa71', $email, ''); 
+                }
+                
+                
                 $this->load->library('email');
                 
                 $config['protocol'] = "smtp";
@@ -77,18 +99,20 @@ class Ajax extends CI_Controller
 
                 if($this->email->send())
                 {
-                   echo 'SUCCESS';   
+                    $result['success'] = true;   
                     $this->user->login($email, $password);
                 }
                 else
                 {
-                    echo 'ERROR';   
+                    $result['success'] = false;   
                 } 
             }
             else
             {
-                echo 'ERROR';
+                $result['success'] = false;
             }
+            
+            echo json_encode($result);
         }
     }
     
@@ -97,6 +121,9 @@ class Ajax extends CI_Controller
         if($this->input->post('email'))
         {
             $email = $this->input->post('email');
+            
+            $result = array();
+            $data = array();
             
             $resetToken = $this->user->askResetPassword($email);
             
@@ -116,7 +143,7 @@ class Ajax extends CI_Controller
                 $this->email->initialize($config);
                 
                 $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                $this->email->to($email, $name.' '.$firstname);
+                $this->email->to($email, '');
                 $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
 
                 $this->email->subject('Your Toolwatch password');
@@ -128,17 +155,19 @@ class Ajax extends CI_Controller
 
                 if($this->email->send())
                 {
-                   echo 'SUCCESS';   
+                   $result['success'] = true;  
                 }
                 else
                 {
-                    echo 'ERROR';   
-                }                 
+                    $result['success'] = false; 
+                }     
             }
             else
             {
-                echo 'ERROR';   
+                $result['success'] = false;   
             }
+            
+            echo json_encode($result);
         }
     }
     
@@ -146,17 +175,21 @@ class Ajax extends CI_Controller
     {
         if($this->input->post('resetToken'))
         {
+            $result = array();
+            
             $resetToken = $this->input->post('resetToken');
             $password = $this->input->post('password');
             
             if($this->user->resetPassword($resetToken, $password))
             {
-                echo 'SUCCESS';
+                $result['success'] = true;
             }
             else
             {
-               echo 'ERROR';
+               $result['success'] = false;
             }
+            
+            echo json_encode($result);
         }   
     }
     
@@ -169,9 +202,12 @@ class Ajax extends CI_Controller
     {
         if($this->input->post('watchId'))
         {
+            $result = array();
+            
             $watchId = $this->input->post('watchId');
             $referenceTime = $this->session->userdata('referenceTime');
             $userTimezone = $this->input->post('userTimezone');
+            $getAccuracy = $this->input->post('getAccuracy');
                         
             $tempUserTime = preg_split('/:/', $this->input->post('userTime'));
             
@@ -182,7 +218,9 @@ class Ajax extends CI_Controller
             
             if($this->measure->newMeasure($watchId, $referenceTime, $userTime))
             {
-                /*$this->load->library('email');
+                $user = $this->user->getUserFromWatchId($watchId);
+                
+                $this->load->library('email');
                 
                 $config['protocol'] = "smtp";
                 $config['smtp_host'] = "smtp.mandrillapp.com";
@@ -196,29 +234,42 @@ class Ajax extends CI_Controller
                 $this->email->initialize($config);
                 
                 $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                $this->email->to($email, $name.' '.$firstname);
+                $this->email->to($user->email, $user->name.' '.$user->firstname);
                 $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+                
+                //$scheduleTime = time()+86400;
+                $scheduleTime = time()+60*60;
+                $sentAt = date('Y-', $scheduleTime).date('m-', $scheduleTime).(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'.(date('i', $scheduleTime)).date(':s', $scheduleTime);
+                $this->email->add_custom_header('X-MC-SendAt',$sentAt); 
 
                 $this->email->subject('It\'s time to check your watch\'s accuracy !');
-                                
-                $message = $this->load->view('email/reset-password', $data, true);
+                 
+                $data['watchBrand'] = $user->brand;
+                $data['watchName'] = $user->name;
+                
+                $message = $this->load->view('email/remind-check-accuracy', $data, true);
                 $this->email->message($message);
 
                 if($this->email->send())
                 {
-                   echo 'SUCCESS';   
+                   $result['success'] = true; 
                 }
                 else
                 {
-                    echo 'ERROR';   
-                }  */
+                    $result['success'] = false;   
+                }  
                 
-                echo 'SUCCESS';
+                if($getAccuracy == 'true')
+                {
+                    $result['data']['accuracy'] = $this->measure->getWatchAccuracy($watchId);   
+                }
             }
             else
             {
-                echo 'ERROR';   
+                $result['success'] = false;   
             }
+            
+            echo json_encode($result);
         }
     }
     
@@ -226,6 +277,8 @@ class Ajax extends CI_Controller
     {
         if($this->input->post('name'))
         {
+            $result = array();
+            
             $name = $this->input->post('name');
             $email = $this->input->post('email');
             $message = $this->input->post('message');
@@ -258,12 +311,14 @@ class Ajax extends CI_Controller
 
             if($this->email->send())
             {
-               echo 'SUCCESS';   
+               $result['success'] = true;   
             }
             else
             {
-                echo 'ERROR';   
+                $result['success'] = false;   
             }  
+            
+            echo json_encode($result);
         }
     }
                 

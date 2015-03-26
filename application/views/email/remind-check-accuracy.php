@@ -5,7 +5,7 @@
         Hey there,<br>
         You’ve synchronized your <?php echo $watchBrand.' '.$watchName; ?> with Toolwatch one day ago and now is the time to see the results of your watch’s accuracy !<br>
         <br>
-        Just make sure your have your watch near you (it should already be on your wrist ;) ) and go the the <a href="http://www.toolwatch.io/measures/">measure page</a>.<br>
+        Just make sure your have your watch near you (it should already be on your wrist ;) ) and go to the <a href="http://www.toolwatch.io/measures/">measure page</a>.<br>
         <br>
         See you there !
         <br>

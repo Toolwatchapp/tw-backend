@@ -123,10 +123,15 @@ class User extends CI_Model
         $this->db->where('email', $email);
         $this->db->update('user', $update); 
         
-        /*if($this->db->affected_rows() <= 0)
+        $this->db->select('*')
+                 ->from('user')
+                 ->where('resetToken', $resetToken);
+        
+        $query = $this->db->get();
+        if($query->num_rows() <= 0)
         {
             $resetToken = '';
-        }*/
+        }
         
         return $resetToken;
     }
@@ -140,11 +145,35 @@ class User extends CI_Model
         $this->db->where('resetToken', $resetToken);
         $this->db->update('user', $update); 
         
-        if($this->db->affected_rows() > 0)
+        $this->db->select('*')
+                 ->from('user')
+                 ->where('password', hash('sha256', $password));
+        
+        $query = $this->db->get();
+        if($query->num_rows() > 0)
         {
             $res = true;
         }
         
         return $res;
+    }
+    
+    function getUserFromWatchId($watchId)
+    {
+        $data = array();
+        
+        $this->db->select('*')
+                 ->from('user, watch')
+                 ->where('`user`.`userId`=`watch`.`userId`')
+                 ->where('watchId', $watchId);
+        
+       
+        $query = $this->db->get();
+        if($query->num_rows() > 0)
+        {
+            $data = $query->row();
+        }
+        
+        return $data;
     }
 }

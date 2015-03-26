@@ -114,8 +114,7 @@ class Measure extends CI_Model
         if(sizeof($watchMeasures) > 1)
         {
             $accuracy = ($userDelta*86400/$refDelta)-86400;
-            $accuracy = floor($accuracy*10.0)/10.0;
-           
+            $accuracy = floor($accuracy*10.0)/10.0;   
         }
         else if(sizeof($watchMeasures) == 1)
         {

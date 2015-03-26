@@ -8,7 +8,7 @@
             <span class="signup-error reset-error"></span>
         </div>
         <div class="form-group">
-            <center><button type="submit" class="btn btn-primary btn-lg">Reset password</button></center>
+            <center><button type="submit" class="btn btn-primary btn-lg btn-spinner">Reset password <i class="fa fa-spinner fa-pulse"></i></button></center>
         </div>
     </fieldset>
     <fieldset class="confirmAskReset">
