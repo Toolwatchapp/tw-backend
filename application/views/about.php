@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
                 <strong>Why using Toolwatch?</strong>
-                <br><br>
+                <br>
                 Professional tools used by watchmakers are expensive (Toolwatch is free!) and heavy (Toolwatch is light!) and measure the watch in different positions 
                 (up, down, on a side etc) that do not reflect the actual way the watch is worn by its possessor. With Toolwatch, the accuracy is measured following your lifestyle. 
                 Unlike measuring by yourself, Toolwatch calculates for you the accuracy of your watch anytime and anywhere in an easy to use and reliable way.<br><br>
@@ -28,7 +28,7 @@
                 Toolwatch is Swiss made with love!<br>
                 We are three watch aficionados, passionate about mechanical watches, and willing to share our watchmaking enthusiasm.<br>
                 <br>
-                We’ve worked inside the most prestigious watchmaking Manufacturesin Switzerland and are happy to provide the best watch experience for enthusiasts all around the world.
+                We’ve worked inside the most prestigious watchmaking Manufactures in Switzerland and are happy to provide the best watch experience for enthusiasts all around the world.
                 <br>
         </div>
     </div>

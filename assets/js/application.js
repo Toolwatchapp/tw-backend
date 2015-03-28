@@ -436,19 +436,21 @@ function resizeContent()
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
 
+
+var bips = new Audio('/assets/audio/bips.mp3');
+var lastBip = new Audio('/assets/audio/last-bip.mp3');
+
 function syncCountdown()
 {
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
-        var audio = new Audio('/assets/audio/bips.mp3');
-        audio.play();
+        bips.play();
         $('.sync-time').html(countdown-1);
     }
     else
     {
-        var audio = new Audio('/assets/audio/last-bip.mp3');
-        audio.play();
+        lastBip.play();
         clearInterval(syncInterval);
         syncInterval = 0;
         

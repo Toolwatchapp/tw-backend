@@ -64,7 +64,8 @@
                                           <ul class="dropdown-menu" role="menu">
                                             <li>
                                                 <a href="#" class="submitDeleteWatch" data-watch="'.$measure['watchId'].'">Delete watch</a>
-                                                <form method="post" action="/measures/" name="delete-watch-'.$measure['watchId'].'" class="no-display"><input type="hidden" name="deleteWatch" value="'.$measure['watchId'].'"></form>
+                                                <form method="post" action="/measures/" name="delete-watch-'.$measure['watchId'].'" class="no-display">
+                                                <input type="hidden" name="deleteWatch" value="'.$measure['watchId'].'"></form>
                                             </li>
                                           </ul>
                                         </div></td>';

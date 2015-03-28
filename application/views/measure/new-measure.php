@@ -37,7 +37,7 @@
                     <div class="col-sm-12">
                         <div class="alert alert-success">
                             <center>
-                            Congratulations, you watch is now synchronized. 
+                            Congratulations, your watch is now synchronized. 
                             For a better accuracy of the measurement, you must wait at least 12 hours before coming back. 
                             Do not worry, we will send you an email when you should come back and check your results.
                             </center>

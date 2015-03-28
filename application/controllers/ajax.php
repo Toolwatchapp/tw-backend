@@ -66,7 +66,7 @@ class Ajax extends CI_Controller
             if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
             {
                 
-                if(true == $mailingList)
+                if('true' == $mailingList)
                 {
                     $this->load->helper('mcapi');
                     
@@ -218,46 +218,54 @@ class Ajax extends CI_Controller
             
             if($this->measure->newMeasure($watchId, $referenceTime, $userTime))
             {
-                $user = $this->user->getUserFromWatchId($watchId);
-                
-                $this->load->library('email');
-                
-                $config['protocol'] = "smtp";
-                $config['smtp_host'] = "smtp.mandrillapp.com";
-                $config['smtp_port'] = "587";
-                $config['smtp_user'] = "marc@toolwatch.io"; 
-                $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-                $config['charset'] = "utf-8";
-                $config['mailtype'] = "html";
-                $config['newline'] = "\r\n";
-
-                $this->email->initialize($config);
-                
-                $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                $this->email->to($user->email, $user->name.' '.$user->firstname);
-                $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
-                
-                //$scheduleTime = time()+86400;
-                $scheduleTime = time()+60*60;
-                $sentAt = date('Y-', $scheduleTime).date('m-', $scheduleTime).(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'.(date('i', $scheduleTime)).date(':s', $scheduleTime);
-                $this->email->add_custom_header('X-MC-SendAt',$sentAt); 
-
-                $this->email->subject('It\'s time to check your watch\'s accuracy !');
-                 
-                $data['watchBrand'] = $user->brand;
-                $data['watchName'] = $user->name;
-                
-                $message = $this->load->view('email/remind-check-accuracy', $data, true);
-                $this->email->message($message);
-
-                if($this->email->send())
+                $watchMeasures = $this->measure->getMeasures($watchId);
+                if(sizeof($watchMeasures) == 1)
                 {
-                   $result['success'] = true; 
+                    
+                    $user = $this->user->getUserFromWatchId($watchId);
+
+                    $this->load->library('email');
+
+                    $config['protocol'] = "smtp";
+                    $config['smtp_host'] = "smtp.mandrillapp.com";
+                    $config['smtp_port'] = "587";
+                    $config['smtp_user'] = "marc@toolwatch.io"; 
+                    $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                    $config['charset'] = "utf-8";
+                    $config['mailtype'] = "html";
+                    $config['newline'] = "\r\n";
+
+                    $this->email->initialize($config);
+
+                    $this->email->from('hello@toolwatch.io', 'Toolwatch');
+                    $this->email->to($user->email, $user->name.' '.$user->firstname);
+                    $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+
+                    $scheduleTime = time()+86400;
+                    $sentAt = date('Y-', $scheduleTime).date('m-', $scheduleTime).(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'.(date('i', $scheduleTime)).date(':s', $scheduleTime);
+                    $this->email->add_custom_header('X-MC-SendAt',$sentAt); 
+
+                    $this->email->subject('It\'s time to check your watch\'s accuracy !');
+
+                    $data['watchBrand'] = $user->brand;
+                    $data['watchName'] = $user->name;
+
+                    $message = $this->load->view('email/remind-check-accuracy', $data, true);
+                    $this->email->message($message);
+
+                    if($this->email->send())
+                    {
+                       $result['success'] = true; 
+                    }
+                    else
+                    {
+                        $result['success'] = false;   
+                    } 
                 }
                 else
                 {
-                    $result['success'] = false;   
-                }  
+                    $result['success'] = true;
+                }
                 
                 if($getAccuracy == 'true')
                 {
