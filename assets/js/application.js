@@ -37,6 +37,7 @@ $(document).ready(function()
 	$('body').on('click', 'a[data-modal-update="true"]', function()
 	{
 		var dataHref = $(this).attr("data-href");
+        debugger;
 		$.post(dataHref, {ajax: true}, function(data)
 		{
 			$('#pageModal .modal-body').html(data);

@@ -124,6 +124,11 @@ textarea:focus, textarea:hover, textarea:active
     border: 1px solid white;
 }
 
+.warning:hover{
+  color:#4d77a7;
+  cursor: pointer;
+}
+
 .btn-white:hover, .btn-white:focus 
 {
   color: #999999;

@@ -52,8 +52,6 @@
                                 echo '<td>'.$measure['brand'].'</td>';
                                 echo '<td>'.$measure['name'].'</td>';
 
-
-
                                if($measure['accuracy'] == 'newMeasure')
                                {
                                    echo '<td><a href="/measures/new-measure/">Measure me!</a></td>';
@@ -83,6 +81,29 @@
                                             <form method="post" action="/measures/get-accuracy/" name="get-accuracy-'.$measure['watchId'].'"><input type="hidden" name="watchId" value="'.$measure['watchId'].'">
                                             </form></li>
                                           <li class="divider"></li>
+                                            <li>
+                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['watchId'].'">Delete all measures</a>
+                                                <form method="post" action="/measures/" name="delete-measures-'.$measure['watchId'].'" class="no-display">
+                                                <input type="hidden" name="deleteMeasures" value="'.$measure['watchId'].'">
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="submitDeleteWatch" data-watch="'.$measure['watchId'].'">Delete watch</a>
+                                                <form method="post" action="/measures/" name="delete-watch-'.$measure['watchId'].'" class="no-display">
+                                                <input type="hidden" name="deleteWatch" value="'.$measure['watchId'].'"></form>
+                                            </li>
+                                          </ul>
+                                        </div></td>';
+                                    echo '</tr>';
+                               }
+                               else if(strpos($measure['accuracy'], 'Check') !== false)
+                               {
+                                  echo '<td><a href="#" title="Warning" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/modal/accuracyWarning/">'.$measure['accuracy'].' <i class="warning fa fa-info-circle"></i></a></td>';
+                                   echo '<td><div class="btn-group">
+                                          <button type="button" class="btn btn-default btn-sm dropdown-toggle dropdown-menu-right" data-toggle="dropdown" aria-expanded="false">
+                                            Action <span class="caret"></span>
+                                          </button>
+                                          <ul class="dropdown-menu" role="menu">
                                             <li>
                                                 <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['watchId'].'">Delete all measures</a>
                                                 <form method="post" action="/measures/" name="delete-measures-'.$measure['watchId'].'" class="no-display">

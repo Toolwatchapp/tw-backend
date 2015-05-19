@@ -3,6 +3,17 @@
 class Modal extends MY_Controller 
 {
 
+    public function accuracyWarning(){
+        if($this->input->post('ajax'))
+        {
+            $this->load->view('modal/accuracy-warning');
+        }
+        else
+        {
+            redirect(base_url());
+        }
+    }
+
 	public function login()
 	{
 		if($this->input->post('ajax'))

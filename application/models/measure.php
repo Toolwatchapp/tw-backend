@@ -53,7 +53,8 @@ class Measure extends CI_Model
             
             // Getting watch accuracy
             $accuracy = $this->getWatchAccuracy($watch->watchId);
-            if((strcmp($accuracy, 'newMeasure') == 0) || (strcmp($accuracy, 'getAccuracy') == 0))
+            if((strcmp($accuracy, 'newMeasure') == 0) || (strcmp($accuracy, 'getAccuracy') == 0) 
+                || (strpos($accuracy, 'Check') !== false))
             {
                 $data[$dataPushing]['accuracy'] = $accuracy;
             }
@@ -118,7 +119,13 @@ class Measure extends CI_Model
         }
         else if(sizeof($watchMeasures) == 1)
         {
-            $accuracy = 'getAccuracy';
+            $timeElapsed = (time() - $watchMeasures[0]->referenceTime)/3600;
+            if($timeElapsed < 12){
+                $accuracy = 'Check the accuracy in ' . (12 - round($timeElapsed, 1)) . ' hours';
+            }else{
+                $accuracy = 'getAccuracy';
+            }
+
         }
         else
         {
@@ -127,4 +134,5 @@ class Measure extends CI_Model
         
         return $accuracy;
     }
+
 }

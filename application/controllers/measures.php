@@ -92,15 +92,24 @@ class Measures extends MY_Controller
         if($this->input->post('watchId'))
         {
 
-            
+            $measures = $this->measure->getMeasures($this->input->post('watchId'));
 
-            $this->_headerData['headerClass'] = 'blue';
-            $this->load->view('header', $this->_headerData);
-        
-            $this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
-            $this->load->view('measure/get-accuracy', $this->_bodyData);    
-        
-            $this->load->view('footer');  
+            if(sizeof($measures) == 1){
+                $hourdiff = round(round(time() - $measures[0]->referenceTime)/3600, 1);
+                if($hourdiff < 12){
+                    redirect('/measures/');
+                }else{
+                    $this->_headerData['headerClass'] = 'blue';
+                    $this->load->view('header', $this->_headerData);
+                
+                    $this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
+                    $this->load->view('measure/get-accuracy', $this->_bodyData);    
+                
+                    $this->load->view('footer');  
+                }
+            }
+
+
         }
         else
         {
