@@ -277,21 +277,11 @@ $(document).ready(function()
         $('.watch-error').hide();
 
         var brand = $('input[name="brand"]').val();
-        var model = $('input[name="name"]').val();
 
-
-        if(brand == "" || model == ""){
-            if(brand == ""){
-                $('.brand-error').show();
-            }
-
-             if(model == ""){
-                $('.name-error').show();
-            }
-
-            e.preventDefault();
+        if(brand == ""){
+            $('.brand-error').show();
+             e.preventDefault();
         }
-
 
      });
     
