@@ -328,7 +328,7 @@ footer p
   font-size: 12px;
 }
 
-.signup-error 
+.signup-error, .watch-error
 {
   display: none;
   font-style: italic;

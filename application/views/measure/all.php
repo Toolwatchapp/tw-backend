@@ -154,8 +154,14 @@
     <div class="row">
         <div class="col-md-12">
             <center>
-              <a class="btn btn-success btn-lg col-md-2 col-md-offset-5" href="/measures/new-watch/">Add a watch</a><br><br>
-              <a class="btn btn-primary btn-lg col-md-2 col-md-offset-5" href="/measures/new-measure/">Start a new measure</a>
+            <a class="btn btn-success btn-lg col-md-2 col-md-offset-5" href="/measures/new-watch/">Add a watch</a><br><br>
+            <?php if($watches != null) { ?>
+                
+                <a class="btn btn-primary btn-lg col-md-2 col-md-offset-5" href="/measures/new-measure/">Start a new measure</a>
+
+             <?php } ?>
+              
+            
             </center>
         </div>
     </div>

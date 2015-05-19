@@ -60,6 +60,7 @@ class Measures extends MY_Controller
         $this->load->view('header', $this->_headerData);
         
         $this->_bodyData['allMeasure'] = $this->measure->computeMeasure($this->session->userdata('userId'));
+        $this->_bodyData['watches'] = $this->watch->getWatches($this->session->userdata('userId'));
         $this->load->view('measure/all', $this->_bodyData);    
         
         $this->load->view('footer');  

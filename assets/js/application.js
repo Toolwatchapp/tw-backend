@@ -270,6 +270,30 @@ $(document).ready(function()
         }
         
     });
+
+    $('body').on('submit', 'form[name="addWatch"]', function(e)
+    {
+        
+        $('.watch-error').hide();
+
+        var brand = $('input[name="brand"]').val();
+        var model = $('input[name="name"]').val();
+
+
+        if(brand == "" || model == ""){
+            if(brand == ""){
+                $('.brand-error').show();
+            }
+
+             if(model == ""){
+                $('.name-error').show();
+            }
+
+            e.preventDefault();
+        }
+
+
+     });
     
     $('body').on('submit', 'form[name="newMeasure"]', function(e)
     {

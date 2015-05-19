@@ -9,12 +9,14 @@
                     <label for="brand" class="col-sm-3 control-label">Brand <i>*</i></label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="brand" placeholder="Jaeger-LeCoultre">
+                        <span class="watch-error brand-error">This field is required.</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="name" class="col-sm-3 control-label">Model <i>*</i></label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="name" placeholder="Duometre">
+                        <span class="watch-error name-error">This field is required.</span>
                     </div>
                 </div>
                 <div class="form-group">
