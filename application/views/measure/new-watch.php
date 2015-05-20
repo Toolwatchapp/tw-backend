@@ -19,6 +19,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="caliber" class="col-sm-3 control-label">Caliber</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="caliber" placeholder="Calibre Jaeger-LeCoultre 381">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="yearOfBuy" class="col-sm-3 control-label">Year of buy</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="yearOfBuy" placeholder="1998">

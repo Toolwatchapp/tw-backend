@@ -18,8 +18,9 @@ class Measures extends MY_Controller
             $name = $this->input->post('name');
             $yearOfBuy = $this->input->post('yearOfBuy');
             $serial = $this->input->post('serial');
+            $caliber = $this->input->post('caliber');
             
-            if($this->watch->addWatch($this->session->userdata('userId'), $brand, $name, $yearOfBuy, $serial))
+            if($this->watch->addWatch($this->session->userdata('userId'), $brand, $name, $yearOfBuy, $serial, $caliber))
             {
                 $this->_bodyData['success'] = 'Watch successfully added!';
             }

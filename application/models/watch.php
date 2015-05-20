@@ -7,7 +7,7 @@ class Watch extends CI_Model
         parent::__construct();
     }
     
-    function addWatch($userId, $brand, $name, $yearOfBuy, $serial)
+    function addWatch($userId, $brand, $name, $yearOfBuy, $serial, $caliber)
     {
         $res = false;
         
@@ -16,7 +16,8 @@ class Watch extends CI_Model
             'brand' => $brand, 
             'name' => $name,
             'yearOfBuy' => $yearOfBuy,
-            'serial' => $serial);
+            'serial' => $serial,
+            'caliber' => $caliber);
         
         $this->db->insert('watch', $data);
         
