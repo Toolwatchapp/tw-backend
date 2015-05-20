@@ -457,23 +457,32 @@ var lastBip = new Audio('/assets/audio/last-bip.mp3');
 
 function syncCountdown()
 {
+    bips.load();
+    lastBip.load();
+
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
         bips.play();
-        $('.sync-time').html(countdown-1);
+
+        bips.onplay = function(){
+            $('.sync-time').html(countdown-1);
+        }
     }
     else
     {
         lastBip.play();
-        clearInterval(syncInterval);
-        syncInterval = 0;
-        
-        $('.sync-time').html('Go!');
-        $('.userTime').show();
-        $('button[name="syncDone"]').removeAttr('disabled');
-        
-        $.post('/ajax/getReferenceTime');
+
+        lastBip.onplay = function(){
+            clearInterval(syncInterval);
+            syncInterval = 0;
+            $('.sync-time').html('Go!');
+            $('.userTime').show();
+            $('button[name="syncDone"]').removeAttr('disabled');
+            
+            $.post('/ajax/getReferenceTime');
+        }
+       
     }
 }
 
