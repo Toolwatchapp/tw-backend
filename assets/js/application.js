@@ -513,9 +513,9 @@ function syncCountdown()
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
-        $("audio")[0].load();
-        $("audio")[0].play();
-        $("audio")[0].currentTime=0;
+        $("audio")[1].load();
+        $("audio")[1].play();
+        $("audio")[1].currentTime=0;
         $('.userTime').show();
         $('button[name="syncDone"]').removeAttr('disabled');        
         $.post('/ajax/getReferenceTime');
