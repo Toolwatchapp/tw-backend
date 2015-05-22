@@ -245,7 +245,7 @@ $(document).ready(function()
            $('.password-error').html('Your password should be at least 6 characters long.').show();
         }
     });
-    
+
     $('body').on('click', 'button[name="startSync"]', function(e)
     {
         e.preventDefault();
@@ -261,8 +261,6 @@ $(document).ready(function()
             $('.watch-select').hide();
 
             syncInterval = setInterval("syncCountdown()", 1000);
-            var audio = new Audio('/assets/audio/bips.mp3');
-            audio.play();
         }
         else
         {
@@ -495,11 +493,9 @@ function resizeContent()
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
 
-
-var bips = new Audio('/assets/audio/bips.mp3');
 var lastBip = new Audio('/assets/audio/last-bip.mp3');
-
-bips.load();
+var audio = new Audio('/assets/audio/bips.mp3');
+audio.load();
 lastBip.load();
 
 function syncCountdown()
@@ -508,11 +504,8 @@ function syncCountdown()
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
-        bips.play();
-
-        bips.onplay = function(){
-            $('.sync-time').html(countdown-1);
-        }
+        audio.play();
+        $('.sync-time').html(countdown-1);
     }
     else
     {
