@@ -497,6 +497,8 @@ function resizeContent()
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
 
+var lastBip = new Audio("/assets/audio/last-bip.mp3");
+lastBip.load();
 
 function syncCountdown()
 {
@@ -511,7 +513,7 @@ function syncCountdown()
     }
     else
     {
-        new Audio("/assets/audio/last-bip.mp3").play();
+        lastBip.play();
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
