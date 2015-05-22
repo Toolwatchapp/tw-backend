@@ -500,12 +500,16 @@ function syncCountdown()
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
+        $("audio")[0].load();
         $("audio")[0].play();
+        $("audio")[0].currentTime=0;
         $('.sync-time').html(countdown-1);
     }
     else
     {
+        $("audio")[1].load();
         $("audio")[1].play();
+        $("audio")[1].currentTime=0;
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
