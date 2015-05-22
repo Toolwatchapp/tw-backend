@@ -82,7 +82,7 @@
                                             </form></li>
                                           <li class="divider"></li>
                                             <li>
-                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['measureId'].'">Delete all measures</a>
+                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['measureId'].'">Delete this measure</a>
                                                 <form method="post" action="/measures/" name="delete-measures-'.$measure['measureId'].'" class="no-display">
                                                 <input type="hidden" name="deleteMeasures" value="'.$measure['measureId'].'">
                                                 </form>
@@ -105,7 +105,7 @@
                                           </button>
                                           <ul class="dropdown-menu" role="menu">
                                             <li>
-                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['measureId'].'">Delete all measures</a>
+                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['measureId'].'">Delete this measure</a>
                                                 <form method="post" action="/measures/" name="delete-measures-'.$measure['measureId'].'" class="no-display">
                                                 <input type="hidden" name="deleteMeasures" value="'.$measure['measureId'].'">
                                                 </form>

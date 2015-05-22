@@ -748,7 +748,7 @@ class MY_Model extends CI_Model
             }
         }
 
-        if ( ! is_array($where)) {
+        if ( ! is_array($where) && $where!==null) {
             $where = array($this->key => $where);
         }
 

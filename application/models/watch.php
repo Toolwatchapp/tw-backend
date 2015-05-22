@@ -42,7 +42,7 @@ class Watch extends MY_Model
 
     function deleteWatch($watchId)
     {
-        $data = array('status' => 3);
+        $data = array('status' => 4);
         return $this->update($watchId, $data) !== false;
     }
 }

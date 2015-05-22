@@ -137,6 +137,15 @@ class Measure extends MY_Model
 
     function addBaseMesure($watchId, $referenceTime, $userTime)
     {
+
+        //Archive previous measure couples
+        $data = array('statusId' => 3);
+
+        $this->where('watchId', $watchId)
+            ->where('(`statusId` = 1 OR `statusId` = 2)', null, false)
+            ->update(null, $data);
+
+        //Create new couple
         $data = array(
             'watchId' => $watchId,
             'measureReferenceTime' => $referenceTime,
@@ -167,7 +176,7 @@ class Measure extends MY_Model
 
     function deleteMesure($measureId){
         
-        $data = array('statusId' => 3);
+        $data = array('statusId' => 4);
         return $this->update($measureId, $data) !== false;
     }
 
