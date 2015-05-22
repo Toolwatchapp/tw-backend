@@ -497,9 +497,6 @@ function resizeContent()
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
 
-var lastBip = new Audio("/assets/audio/last-bip.mp3");
-lastBip.load();
-
 function syncCountdown()
 {
 
@@ -513,10 +510,12 @@ function syncCountdown()
     }
     else
     {
-        lastBip.play();
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
+        $("audio")[0].load();
+        $("audio")[0].play();
+        $("audio")[0].currentTime=0;
         $('.userTime').show();
         $('button[name="syncDone"]').removeAttr('disabled');        
         $.post('/ajax/getReferenceTime');
