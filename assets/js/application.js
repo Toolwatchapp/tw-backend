@@ -495,8 +495,6 @@ function resizeContent()
 
 var lastBip = new Audio('/assets/audio/last-bip.mp3');
 var audio = new Audio('/assets/audio/bips.mp3');
-audio.load();
-lastBip.load();
 
 function syncCountdown()
 {
@@ -510,17 +508,12 @@ function syncCountdown()
     else
     {
         lastBip.play();
-
-        lastBip.onplay = function(){
-            clearInterval(syncInterval);
-            syncInterval = 0;
-            $('.sync-time').html('Go!');
-            $('.userTime').show();
-            $('button[name="syncDone"]').removeAttr('disabled');
-            
-            $.post('/ajax/getReferenceTime');
-        }
-       
+        clearInterval(syncInterval);
+        syncInterval = 0;
+        $('.sync-time').html('Go!');
+        $('.userTime').show();
+        $('button[name="syncDone"]').removeAttr('disabled');        
+        $.post('/ajax/getReferenceTime');
     }
 }
 
