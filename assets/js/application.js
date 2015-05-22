@@ -494,20 +494,18 @@ function resizeContent()
 }
 
 
-
-
 function syncCountdown()
 {
 
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
-        new Audio('/assets/audio/bips.mp3').play();
+        $("audio")[0].play();
         $('.sync-time').html(countdown-1);
     }
     else
     {
-        new Audio('/assets/audio/last-bip.mp3').play();
+        $("audio")[1].play();
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
