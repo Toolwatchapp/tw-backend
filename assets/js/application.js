@@ -261,6 +261,10 @@ $(document).ready(function()
             $('.watch-select').hide();
 
             syncInterval = setInterval("syncCountdown()", 1000);
+
+            $("audio")[0].load();
+            $("audio")[0].play();
+            $("audio")[0].currentTime=0;
         }
         else
         {
@@ -507,9 +511,7 @@ function syncCountdown()
     }
     else
     {
-        $("audio")[1].load();
-        $("audio")[1].play();
-        $("audio")[1].currentTime=0;
+        new Audio("/assets/audio/last-bip.mp3").play();
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
