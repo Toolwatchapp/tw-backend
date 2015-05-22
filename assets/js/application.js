@@ -493,8 +493,8 @@ function resizeContent()
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
 
-var lastBip = new Audio('/assets/audio/last-bip.mp3');
-var audio = new Audio('/assets/audio/bips.mp3');
+
+
 
 function syncCountdown()
 {
@@ -502,12 +502,12 @@ function syncCountdown()
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
-        audio.play();
+        new Audio('/assets/audio/bips.mp3').play();
         $('.sync-time').html(countdown-1);
     }
     else
     {
-        lastBip.play();
+        new Audio('/assets/audio/last-bip.mp3').play();
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
