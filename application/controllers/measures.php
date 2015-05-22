@@ -9,6 +9,14 @@ class Measures extends MY_Controller
         $this->load->model('watch');
         $this->load->model('measure');
 	}
+
+    public function removeDuplicate($key){
+        if($key === "TMGfrXeb6WvCgNAjeKd4"){
+            $this->measure->removeDuplicate();
+        }else{
+            echo "Unauthorized";
+        }
+    }
 	
     public function index()
     {       
@@ -31,9 +39,9 @@ class Measures extends MY_Controller
         }
         else if($this->input->post('deleteMeasures'))
         {
-            $watchId = $this->input->post('deleteMeasures');
+            $measureId = $this->input->post('deleteMeasures');
             
-            if($this->watch->deleteMeasures($watchId))
+            if($this->measure->deleteMesure($measureId))
             {
                 $this->_bodyData['success'] = 'Measures successfully deleted!';
             }
@@ -60,8 +68,10 @@ class Measures extends MY_Controller
         $this->_headerData['headerClass'] = 'blue';
         $this->load->view('header', $this->_headerData);
         
-        $this->_bodyData['allMeasure'] = $this->measure->computeMeasure($this->session->userdata('userId'));
         $this->_bodyData['watches'] = $this->watch->getWatches($this->session->userdata('userId'));
+        $this->_bodyData['allMeasure'] = $this->measure->getMeasuresByUser($this->session->userdata('userId'), 
+            $this->_bodyData['watches']);
+        
         $this->load->view('measure/all', $this->_bodyData);    
         
         $this->load->view('footer');  
@@ -79,6 +89,7 @@ class Measures extends MY_Controller
     
     public function new_measure()
     {
+
         $this->_headerData['headerClass'] = 'blue';
         $this->load->view('header', $this->_headerData);
         
@@ -90,27 +101,18 @@ class Measures extends MY_Controller
     
     public function get_accuracy()
     {
-        if($this->input->post('watchId'))
+        if($this->input->post('measureId') && $this->input->post('watchId'))
         {
 
-            $measures = $this->measure->getMeasures($this->input->post('watchId'));
-
-            if(sizeof($measures) == 1){
-                $hourdiff = round(round(time() - $measures[0]->referenceTime)/3600, 1);
-                if($hourdiff < 12){
-                    redirect('/measures/');
-                }else{
-                    $this->_headerData['headerClass'] = 'blue';
-                    $this->load->view('header', $this->_headerData);
-                
-                    $this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
-                    $this->load->view('measure/get-accuracy', $this->_bodyData);    
-                
-                    $this->load->view('footer');  
-                }
-            }
-
-
+            $this->_headerData['headerClass'] = 'blue';
+            $this->load->view('header', $this->_headerData);
+        
+            $this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
+            $this->_bodyData['measureId'] = $this->input->post('measureId');
+            $this->load->view('measure/get-accuracy', $this->_bodyData);    
+        
+            $this->load->view('footer');  
+                            
         }
         else
         {

@@ -1,10 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Watch extends CI_Model 
+class Watch extends MY_Model 
 {
     function __construct()
     {
         parent::__construct();
+        $this->table_name = "watch";
+        $this->key = "watchId";
     }
     
     function addWatch($userId, $brand, $name, $yearOfBuy, $serial, $caliber)
@@ -19,77 +21,28 @@ class Watch extends CI_Model
             'serial' => $serial,
             'caliber' => $caliber);
         
-        $this->db->insert('watch', $data);
-        
-        if($this->db->affected_rows() > 0)
-        {
-            $res = true;
-        }
-        
-        return $res;
+        return $this->insert($data);
     }
     
     function getWatches($userId)
     {
-         $this->db->select('*')
-                 ->from('watch')
-                 ->where('watch.userId', $userId)
-                 ->order_by('brand', 'asc');
-        
-        $query = $this->db->get();
-        $data = $query->result();
-                
-        return $data;
+        return $this->select()
+                ->where('watch.userId', $userId)
+                ->where('status', 1)
+                ->order_by('brand', 'asc')
+                ->find_all();
+
     }  
     
     
     function getWatch($watchId)
-    {
-         $this->db->select('*')
-                 ->from('watch')
-                 ->where('watchId', $watchId);
-        
-        $query = $this->db->get();
-        $data = $query->result();
-                
-        return $data[0];
+    {           
+        return $this->select()->find_by("watchId", $watchId);
     } 
-    
-    function deleteMeasures($watchId)
-    {
-        $res = false;
-        
-        $this->db->delete('measure', array('watchId' => $watchId));    
-        
-        if($this->db->affected_rows() > 0)
-        {
-            $res = true;
-        }
-        
-        return $res;
-    }
-    
+
     function deleteWatch($watchId)
     {
-        $res = false;
-        
-        /*if($this->deleteMeasures($watchId))
-        {
-            $this->db->delete('watch', array('watchId' => $watchId));    
-            
-            if($this->db->affected_rows() > 0)
-            {
-                $res = true;
-            }
-        }*/
-        
-        $this->db->delete('watch', array('watchId' => $watchId));    
-            
-        if($this->db->affected_rows() > 0)
-        {
-            $res = true;
-        }
-        
-        return $res;
+        $data = array('status' => 3);
+        return $this->update($watchId, $data) !== false;
     }
 }

@@ -6,7 +6,8 @@
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" method="post" name="newMeasure">
+            <form class="form-horizontal" method="post" name="newAccuracy">
+
                 <div class="form-group">
                      <center>
                          At the end of the countdown, please enter below the exact time as it is on your watch. <br>Let's check the accuracy of your watch!
@@ -50,7 +51,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <center>
-                            <input type="hidden" name="getAccuracy" value="true">
+                            <input type="hidden" name="measureId" value="<?php echo $measureId;?>">
                             <button class="btn btn-primary btn-lg" name="startSync">Check now!</button>
                             <a class="btn btn-success btn-lg no-display backToMeasure" href="/measures/">Back to measures</a>
                             <button class="btn btn-primary btn-lg no-display" name="restartCountdown">Restart countdown</button>

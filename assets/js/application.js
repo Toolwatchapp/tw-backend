@@ -37,7 +37,6 @@ $(document).ready(function()
 	$('body').on('click', 'a[data-modal-update="true"]', function()
 	{
 		var dataHref = $(this).attr("data-href");
-        debugger;
 		$.post(dataHref, {ajax: true}, function(data)
 		{
 			$('#pageModal .modal-body').html(data);
@@ -285,6 +284,58 @@ $(document).ready(function()
         }
 
      });
+
+
+    $('body').on('submit', 'form[name="newAccuracy"]', function(e)
+    {
+        e.preventDefault();
+        var watchId = $('select[name="watchId"]').val();
+        var userTime = $('input[name="userTime"]').val();
+        var myDate = new Date();
+        // Timezone difference from Europe/Paris
+        var userTimezone= (myDate.getTimezoneOffset()/60)+1;
+        var measureId = $('input[name="measureId"]').val();
+
+        if(/\d+:\d+:\d+/.test(userTime))
+        {
+            $('.btn-spinner i').css('display', 'inline-block');
+            
+            $.post('/ajax/accuracyMeasure', {watchId: watchId, userTime: userTime, userTimezone: userTimezone, measureId: measureId}, function(data)
+            { 
+                var result = $.parseJSON(data);
+                if(result.success == true)
+                {
+                    $('.userTime').hide();
+                    $('button[name="syncDone"]').hide();
+                    $('.sync-time').hide();
+                    $('button[name="restartCountdown"]').hide();
+                    $('.sync-success').show();
+                    $('.backToMeasure').show();
+                    
+                    if(result.accuracy != null)
+                    {
+                        if(result.accuracy > 0)
+                            result.accuracy = '+'+result.accuracy;
+                        
+                        $('.watch-accuracy').html(result.accuracy);
+                    }
+                }  
+                else
+                {
+                    $('.measure-error').show();
+                    $('.btn-spinner i').css('display', 'none');
+                }
+                
+            });        
+        }
+        else
+        {
+            $('.time-error').show();
+        }
+
+    });
+
+
     
     $('body').on('submit', 'form[name="newMeasure"]', function(e)
     {
@@ -303,7 +354,7 @@ $(document).ready(function()
         {
             $('.btn-spinner i').css('display', 'inline-block');
             
-            $.post('/ajax/newMeasure', {watchId: watchId, userTime: userTime, userTimezone: userTimezone, getAccuracy: getAccuracy}, function(data)
+            $.post('/ajax/baseMeasure', {watchId: watchId, userTime: userTime, userTimezone: userTimezone, getAccuracy: getAccuracy}, function(data)
             { 
                 var result = $.parseJSON(data);
                 if(result.success == true)
@@ -315,13 +366,6 @@ $(document).ready(function()
                     $('.sync-success').show();
                     $('.backToMeasure').show();
                     
-                    if(result.data.accuracy != null)
-                    {
-                        if(result.data.accuracy > 0)
-                            result.data.accuracy = '+'+result.data.accuracy;
-                        
-                        $('.watch-accuracy').html(result.data.accuracy);
-                    }
                 }  
                 else
                 {
@@ -383,9 +427,9 @@ $(document).ready(function()
     $('body').on('click', '.submitGetAccuracy', function(e)
     {
         e.preventDefault();
-        var watchId = $(this).attr('data-watch');
+        var measureId = $(this).attr('data-watch');
         
-        $('form[name="get-accuracy-'+watchId+'"]').submit();
+        $('form[name="get-accuracy-'+measureId+'"]').submit();
     });
     
     $('body').on('click', '.submitDeleteWatch', function(e)
@@ -402,11 +446,11 @@ $(document).ready(function()
     $('body').on('click', '.submitDeleteMeasures', function(e)
     {
         e.preventDefault();
-        var watchId = $(this).attr('data-watch');
+        var measureId = $(this).attr('data-watch');
         
         if(confirm('Are you sure you want to delete this measures?'))
         {
-            $('form[name="delete-measures-'+watchId+'"]').submit();
+            $('form[name="delete-measures-'+measureId+'"]').submit();
         }
     });
     
@@ -455,10 +499,11 @@ function resizeContent()
 var bips = new Audio('/assets/audio/bips.mp3');
 var lastBip = new Audio('/assets/audio/last-bip.mp3');
 
+bips.load();
+lastBip.load();
+
 function syncCountdown()
 {
-    bips.load();
-    lastBip.load();
 
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)

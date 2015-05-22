@@ -197,8 +197,35 @@ class Ajax extends CI_Controller
     {
         $this->session->set_userdata('referenceTime', time());   
     }
+
+    function accuracyMeasure(){
+        if($this->input->post('measureId'))
+        {
+            $referenceTime = $this->session->userdata('referenceTime');
+            $userTimezone = $this->input->post('userTimezone');
+                        
+            $tempUserTime = preg_split('/:/', $this->input->post('userTime'));
+            
+            $userTime = mktime($tempUserTime[0], $tempUserTime[1], $tempUserTime[2], date("n"), date("j"), date("Y"));
+            
+            $this->load->model('measure');
+
+            $watchMeasure = $this->measure->addAccuracyMesure($this->input->post('measureId'), $referenceTime, $userTime);
+
+            $result['accuracy'] = $watchMeasure->accuracy;
+
+            if($watchMeasure->accuracy)
+            {
+                $result['success'] = true;
+            }else{
+                $result['success'] = false;
+            }
+
+            echo json_encode($result);
+        }
+    }
     
-    function newMeasure()
+    function baseMeasure()
     {
         if($this->input->post('watchId'))
         {
@@ -207,74 +234,58 @@ class Ajax extends CI_Controller
             $watchId = $this->input->post('watchId');
             $referenceTime = $this->session->userdata('referenceTime');
             $userTimezone = $this->input->post('userTimezone');
-            $getAccuracy = $this->input->post('getAccuracy');
                         
             $tempUserTime = preg_split('/:/', $this->input->post('userTime'));
-            
             
             $userTime = mktime($tempUserTime[0], $tempUserTime[1], $tempUserTime[2], date("n"), date("j"), date("Y"));
             
             $this->load->model('measure');
             
-            if($this->measure->newMeasure($watchId, $referenceTime, $userTime))
+            if($this->measure->addBaseMesure($watchId, $referenceTime, $userTime))
             {
-                $watchMeasures = $this->measure->getMeasures($watchId);
-                if(sizeof($watchMeasures) == 1)
+                $user = $this->user->getUserFromWatchId($watchId);
+
+                $this->load->library('email');
+
+                $config['protocol'] = "smtp";
+                $config['smtp_host'] = "smtp.mandrillapp.com";
+                $config['smtp_port'] = "587";
+                $config['smtp_user'] = "marc@toolwatch.io"; 
+                $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                $config['charset'] = "utf-8";
+                $config['mailtype'] = "html";
+                $config['newline'] = "\r\n";
+
+                $this->email->initialize($config);
+
+                $this->email->from('hello@toolwatch.io', 'Toolwatch');
+                $this->email->to($user->email, $user->name.' '.$user->firstname);
+                $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+
+                $scheduleTime = time()+86400;
+                $sentAt = date('Y-', $scheduleTime).date('m-', $scheduleTime).(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'.(date('i', $scheduleTime)).date(':s', $scheduleTime);
+                $this->email->add_custom_header('X-MC-SendAt',$sentAt); 
+
+                $this->email->subject('It\'s time to check your watch\'s accuracy !');
+
+                $data['watchBrand'] = $user->brand;
+                $data['watchName'] = $user->name;
+
+                $message = $this->load->view('email/remind-check-accuracy', $data, true);
+                $this->email->message($message);
+
+                if($this->email->send())
                 {
-                    
-                    $user = $this->user->getUserFromWatchId($watchId);
-
-                    $this->load->library('email');
-
-                    $config['protocol'] = "smtp";
-                    $config['smtp_host'] = "smtp.mandrillapp.com";
-                    $config['smtp_port'] = "587";
-                    $config['smtp_user'] = "marc@toolwatch.io"; 
-                    $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-                    $config['charset'] = "utf-8";
-                    $config['mailtype'] = "html";
-                    $config['newline'] = "\r\n";
-
-                    $this->email->initialize($config);
-
-                    $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                    $this->email->to($user->email, $user->name.' '.$user->firstname);
-                    $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
-
-                    $scheduleTime = time()+86400;
-                    $sentAt = date('Y-', $scheduleTime).date('m-', $scheduleTime).(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'.(date('i', $scheduleTime)).date(':s', $scheduleTime);
-                    $this->email->add_custom_header('X-MC-SendAt',$sentAt); 
-
-                    $this->email->subject('It\'s time to check your watch\'s accuracy !');
-
-                    $data['watchBrand'] = $user->brand;
-                    $data['watchName'] = $user->name;
-
-                    $message = $this->load->view('email/remind-check-accuracy', $data, true);
-                    $this->email->message($message);
-
-                    if($this->email->send())
-                    {
-                       $result['success'] = true; 
-                    }
-                    else
-                    {
-                        $result['success'] = false;   
-                    } 
+                   $result['success'] = true; 
                 }
                 else
                 {
-                    $result['success'] = true;
-                }
-                
-                if($getAccuracy == 'true')
-                {
-                    $result['data']['accuracy'] = $this->measure->getWatchAccuracy($watchId);   
-                }
+                    $result['success'] = false;   
+                } 
             }
             else
             {
-                $result['success'] = false;   
+                $result['success'] = true;
             }
             
             echo json_encode($result);

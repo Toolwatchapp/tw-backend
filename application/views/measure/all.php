@@ -52,7 +52,7 @@
                                 echo '<td>'.$measure['brand'].'</td>';
                                 echo '<td>'.$measure['name'].'</td>';
 
-                               if($measure['accuracy'] == 'newMeasure')
+                               if($measure['statusId'] == '0')
                                {
                                    echo '<td><a href="/measures/new-measure/">Measure me!</a></td>';
                                    echo '<td><div class="btn-group">
@@ -69,22 +69,22 @@
                                         </div></td>';
                                     echo '</tr>';
                                }
-                               else if($measure['accuracy'] == 'getAccuracy')
+                               else if($measure['statusId'] == '1')
                                {
-                                   echo '<td><a href="#" class="submitGetAccuracy" data-watch="'.$measure['watchId'].'">Check the accuracy</a></td>';
+                                   echo '<td><a href="#" class="submitGetAccuracy" data-watch="'.$measure['measureId'].'">Check the accuracy</a></td>';
                                    echo '<td><div class="btn-group">
                                           <button type="button" class="btn btn-default btn-sm dropdown-toggle dropdown-menu-right" data-toggle="dropdown" aria-expanded="false">
                                             Action <span class="caret"></span>
                                           </button>
                                           <ul class="dropdown-menu" role="menu">
-                                          <li><a href="#" class="submitGetAccuracy" data-watch="'.$measure['watchId'].'">Check the accuracy</a>
-                                            <form method="post" action="/measures/get-accuracy/" name="get-accuracy-'.$measure['watchId'].'"><input type="hidden" name="watchId" value="'.$measure['watchId'].'">
+                                          <li><a href="#" class="submitGetAccuracy" data-watch="'.$measure['measureId'].'">Check the accuracy</a>
+                                            <form method="post" action="/measures/get-accuracy/" name="get-accuracy-'.$measure['measureId'].'"><input type="hidden" name="measureId" value="'.$measure['measureId'].'"><input type="hidden" name="watchId" value="'.$measure['watchId'].'">
                                             </form></li>
                                           <li class="divider"></li>
                                             <li>
-                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['watchId'].'">Delete all measures</a>
-                                                <form method="post" action="/measures/" name="delete-measures-'.$measure['watchId'].'" class="no-display">
-                                                <input type="hidden" name="deleteMeasures" value="'.$measure['watchId'].'">
+                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['measureId'].'">Delete all measures</a>
+                                                <form method="post" action="/measures/" name="delete-measures-'.$measure['measureId'].'" class="no-display">
+                                                <input type="hidden" name="deleteMeasures" value="'.$measure['measureId'].'">
                                                 </form>
                                             </li>
                                             <li>
@@ -96,18 +96,18 @@
                                         </div></td>';
                                     echo '</tr>';
                                }
-                               else if(strpos($measure['accuracy'], 'Check') !== false)
+                               else if($measure['statusId'] == '1.5')
                                {
-                                  echo '<td><a href="#" title="Warning" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/modal/accuracyWarning/">'.$measure['accuracy'].' <i class="warning fa fa-info-circle"></i></a></td>';
+                                  echo '<td><a href="#" title="Warning" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/modal/accuracyWarning/">Check the accuracy in '.$measure['accuracy'].' hours <i class="warning fa fa-info-circle"></i></a></td>';
                                    echo '<td><div class="btn-group">
                                           <button type="button" class="btn btn-default btn-sm dropdown-toggle dropdown-menu-right" data-toggle="dropdown" aria-expanded="false">
                                             Action <span class="caret"></span>
                                           </button>
                                           <ul class="dropdown-menu" role="menu">
                                             <li>
-                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['watchId'].'">Delete all measures</a>
-                                                <form method="post" action="/measures/" name="delete-measures-'.$measure['watchId'].'" class="no-display">
-                                                <input type="hidden" name="deleteMeasures" value="'.$measure['watchId'].'">
+                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['measureId'].'">Delete all measures</a>
+                                                <form method="post" action="/measures/" name="delete-measures-'.$measure['measureId'].'" class="no-display">
+                                                <input type="hidden" name="deleteMeasures" value="'.$measure['measureId'].'">
                                                 </form>
                                             </li>
                                             <li>
@@ -118,9 +118,9 @@
                                           </ul>
                                         </div></td>';
                                     echo '</tr>';
-                               }
-                              else
-                               {
+                              }
+                              else if($measure['statusId'] == '2')
+                              {
                                   if($measure['accuracy'] > 0) 
                                       $accuracy = "+".$measure['accuracy'];
                                   else
@@ -142,9 +142,9 @@
                                           </button>
                                           <ul class="dropdown-menu" role="menu">
                                             <li>
-                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['watchId'].'">Delete all measures</a>
-                                                <form method="post" action="/measures/" name="delete-measures-'.$measure['watchId'].'" class="no-display">
-                                                <input type="hidden" name="deleteMeasures" value="'.$measure['watchId'].'">
+                                                <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['measureId'].'">Delete all measures</a>
+                                                <form method="post" action="/measures/" name="delete-measures-'.$measure['measureId'].'" class="no-display">
+                                                <input type="hidden" name="deleteMeasures" value="'.$measure['measureId'].'">
                                                 </form>
                                             </li>
                                             <li>
