@@ -11,9 +11,6 @@ $( document ).ready(function() {
   bip =	new MediaElement(document.getElementById("bip"));
   lastBip = new MediaElement(document.getElementById("last-bip"));
 
-  bip.load();
-  lastBip.load();
-
 });
 
 function playBip(){
