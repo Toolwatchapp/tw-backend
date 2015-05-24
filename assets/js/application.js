@@ -472,8 +472,6 @@ $(document).ready(function()
         
 });
 
-var syncInterval = 0;
-
 /*
  * Validate email format
  */
@@ -492,25 +490,6 @@ function resizeContent()
         
     $('.content').css('min-height', (windowHeight-(headerHeight-30)-footerHeight)+'px');
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
-}
-
-function syncCountdown()
-{
-
-    var countdown = $('.sync-time').html();
-    if((countdown-1) > 0)
-    {
-        $('.sync-time').html(countdown-1);
-    }
-    else
-    {
-        clearInterval(syncInterval);
-        syncInterval = 0;
-        $('.sync-time').html('Go!');
-        $('.userTime').show();
-        $('button[name="syncDone"]').removeAttr('disabled');        
-        $.post('/ajax/getReferenceTime');
-    }
 }
 
 var currentBg = 0;
