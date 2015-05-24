@@ -261,8 +261,10 @@ $(document).ready(function()
             $('.watch-select').hide();
 
             new MediaElement(document.getElementById("bip"), {success: function(media) {
-                media.play();
-                syncInterval = setInterval("syncCountdown()", 1000);
+                media.addEventListener('loadeddata', function(){
+                    media.play();
+                    syncInterval = setInterval("syncCountdown()", 1000);
+                }, false);
             }});
         }
         else
