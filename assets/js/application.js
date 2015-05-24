@@ -261,7 +261,7 @@ $(document).ready(function()
             $('.watch-select').hide();
 
             syncInterval = setInterval("syncCountdown()", 1000);
-            playMediaElement("bip");
+            playBip();
         }
         else
         {
@@ -500,26 +500,19 @@ function syncCountdown()
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
-        playMediaElement("bip");
+        playBip();
         $('.sync-time').html(countdown-1);
     }
     else
     {
+        playLastBip();
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
-        playMediaElement("last-bip");
         $('.userTime').show();
         $('button[name="syncDone"]').removeAttr('disabled');        
         $.post('/ajax/getReferenceTime');
     }
-}
-
-function playMediaElement(idOfElement){
-    var v = document.getElementById(idOfElement);
-    new MediaElement(v, {success: function(media) {
-        media.play();
-    }});
 }
 
 var currentBg = 0;
