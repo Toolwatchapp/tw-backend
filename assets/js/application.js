@@ -261,7 +261,6 @@ $(document).ready(function()
             $('.watch-select').hide();
 
             bips.play();
-            syncInterval = setInterval("syncCountdown()", 1000);
 
         }
         else
