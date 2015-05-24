@@ -260,12 +260,9 @@ $(document).ready(function()
             $('button[name="restartCountdown"]').show();
             $('.watch-select').hide();
 
-            new MediaElement(document.getElementById("bip"), {success: function(media) {
-                media.addEventListener('loadeddata', function(){
-                    media.play();
-                    syncInterval = setInterval("syncCountdown()", 1000);
-                }, false);
-            }});
+            bips.play();
+            syncInterval = setInterval("syncCountdown()", 1000);
+
         }
         else
         {
