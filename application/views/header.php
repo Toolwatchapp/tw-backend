@@ -23,6 +23,7 @@
     <link rel="icon" type="image/png" sizes="96x96" href="<?php echo ico_url('favicon-96x96.png')?>">
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo ico_url('favicon-16x16.png')?>">
     <link rel="manifest" href="<?php echo ico_url('manifest.json')?>">
+    <link rel="stylesheet" href="<?php echo base_url();?>/assets/js/MediaElement/mediaelementplayer.css" />
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="<?php echo ico_url('ms-icon-144x144.png')?>">
     <meta name="theme-color" content="#ffffff">

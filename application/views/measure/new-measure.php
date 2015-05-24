@@ -1,10 +1,4 @@
 <div class="container container-fluid content first">
-<audio>
-    <source src="<?php echo base_url();?>assets/audio/bips.mp3"></source>
-</audio>
-<audio>
-    <source src="<?php echo base_url();?>assets/audio/last-bip.mp3"></source>
-</audio>
     <div class="row">
         <div class="col-md-12">
             <center><h1>New measure</h1></center>

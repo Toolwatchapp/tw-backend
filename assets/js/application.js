@@ -261,10 +261,7 @@ $(document).ready(function()
             $('.watch-select').hide();
 
             syncInterval = setInterval("syncCountdown()", 1000);
-
-            $("audio")[0].load();
-            $("audio")[0].play();
-            $("audio")[0].currentTime=0;
+            playMediaElement("bip");
         }
         else
         {
@@ -503,9 +500,7 @@ function syncCountdown()
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
-        $("audio")[0].load();
-        $("audio")[0].play();
-        $("audio")[0].currentTime=0;
+        playMediaElement("bip");
         $('.sync-time').html(countdown-1);
     }
     else
@@ -513,13 +508,18 @@ function syncCountdown()
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
-        $("audio")[1].load();
-        $("audio")[1].play();
-        $("audio")[1].currentTime=0;
+        playMediaElement("last-bip");
         $('.userTime').show();
         $('button[name="syncDone"]').removeAttr('disabled');        
         $.post('/ajax/getReferenceTime');
     }
+}
+
+function playMediaElement(idOfElement){
+    var v = document.getElementById(idOfElement);
+    new MediaElement(v, {success: function(media) {
+        media.play();
+    }});
 }
 
 var currentBg = 0;

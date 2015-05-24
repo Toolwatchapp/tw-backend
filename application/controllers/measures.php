@@ -94,7 +94,9 @@ class Measures extends MY_Controller
         $this->load->view('header', $this->_headerData);
         
         $this->_bodyData['watches'] = $this->watch->getWatches($this->session->userdata('userId'));
-        $this->load->view('measure/new-measure', $this->_bodyData);    
+        $this->load->view('measure/new-measure', $this->_bodyData);
+        $this->load->view('measure/audio.php');
+
         
         $this->load->view('footer');  
     }  
@@ -109,7 +111,8 @@ class Measures extends MY_Controller
         
             $this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
             $this->_bodyData['measureId'] = $this->input->post('measureId');
-            $this->load->view('measure/get-accuracy', $this->_bodyData);    
+            $this->load->view('measure/get-accuracy', $this->_bodyData);  
+            $this->load->view('measure/audio.php');  
         
             $this->load->view('footer');  
                             
