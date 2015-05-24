@@ -260,8 +260,10 @@ $(document).ready(function()
             $('button[name="restartCountdown"]').show();
             $('.watch-select').hide();
 
-            syncInterval = setInterval("syncCountdown()", 1000);
-            playBip();
+            new MediaElement(document.getElementById("bip"), {success: function(media) {
+                media.play();
+                syncInterval = setInterval("syncCountdown()", 1000);
+            }});
         }
         else
         {
@@ -500,12 +502,10 @@ function syncCountdown()
     var countdown = $('.sync-time').html();
     if((countdown-1) > 0)
     {
-        playBip();
         $('.sync-time').html(countdown-1);
     }
     else
     {
-        playLastBip();
         clearInterval(syncInterval);
         syncInterval = 0;
         $('.sync-time').html('Go!');
