@@ -59,29 +59,34 @@ $(document).ready(function()
 		$('.signup-error').hide();
         
         var userEmail = $('input[name="email"]').val();
+        var confirmEmail = $('input[name="confirmEmail"]').val();
         var password = $('input[name="password"]').val();
         var confirmPassword = $('input[name="confirmPassword"]').val();
         var mailingList = $('input[name="malingList"]').is(':checked');
         
         if(validateEmail(userEmail))
         {
-            if((password.length >= 6) && (password != '')) 
+            if(userEmail == confirmEmail) 
             {
                 if(confirmPassword == password)
                 {
-                    $.post('/ajax/checkEmail', {email: userEmail}, function(data)
-                    {
-                        var result = $.parseJSON(data);
-                        if(result.success == true)
+                    if((password.length >= 6) && (password != '')){
+                        $.post('/ajax/checkEmail', {email: userEmail}, function(data)
                         {
-                            $('.stepOne').hide();
-                            $('.stepTwo').show();
-                        }
-                        else
-                        {
-                            $('.email-error').html('This email is already taken.').show();
-                        }
-                    });
+                            var result = $.parseJSON(data);
+                            if(result.success == true)
+                            {
+                                $('.stepOne').hide();
+                                $('.stepTwo').show();
+                            }
+                            else
+                            {
+                                $('.confirm-email-error').html('This email is already taken.').show();
+                            }
+                        });
+                    }else{
+                         $('.password-error').html('Your password should be at least 6 characters long.').show();
+                    }
                 }
                 else
                 {
@@ -90,7 +95,7 @@ $(document).ready(function()
             }
             else
             {
-               $('.password-error').html('Your password should be at least 6 characters long.').show();
+                $('.confirm-email-error').html('Your email doesn\'t match.').show();
             }
             
         }
@@ -387,6 +392,7 @@ $(document).ready(function()
         var name = $('input[name="name"]').val();
         var email = $('input[name="email"]').val();
         var message = $('textarea[name="message"]').val();
+        var confirmEmail = $('textarea[name="confirmEmail"]').val();
         var error = false;
 
         $('.contact-error').hide();
@@ -403,6 +409,11 @@ $(document).ready(function()
 
         if(message == ""){
             $('.text-error').show();
+            error = true;
+        }
+
+        if(confirmEmail == "" || confirmEmail != email){
+            $('.confirm-email-error').show();
             error = true;
         }
         

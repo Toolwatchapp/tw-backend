@@ -36,6 +36,10 @@
                     <span class="contact-error email-error">This field is required.</span>
                 </div>
                 <div class="form-group">
+                    <input type="email" class="form-control" name="confirmEmail" placeholder="Confirm your email *">
+                    <span class="contact-error confirm-email-error">Your email doesn't match.</span>
+                </div>
+                <div class="form-group">
                     <textarea class="form-control" name="message" rows="10"></textarea>
                     <span class="contact-error text-error">This field is required.</span>
                 </div>

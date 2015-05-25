@@ -8,6 +8,10 @@
 			<span class="signup-error email-error"></span>
 		</div>
 		<div class="form-group">
+			<input type="email" class="form-control" name="confirmEmail" placeholder="Confirm your email">
+			<span class="signup-error confirm-email-error"></span>
+		</div>
+		<div class="form-group">
 			<input type="password" class="form-control" name="password" placeholder="Set a password">
 			<span class="signup-error password-error"></span>
 		</div>
