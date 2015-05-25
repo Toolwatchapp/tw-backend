@@ -1,3 +1,8 @@
+<script type="text/javascript">
+	$( document ).ready(function() {
+    	fbAsyncInit();
+	});
+</script>
 <form method="post" name="login">
     <div class="form-group">
        <h1>Login</h1>
@@ -16,6 +21,9 @@
 		<center><button type="submit" name="login" class="btn btn-primary btn-lg btn-spinner">Log in <i class="fa fa-spinner fa-pulse"></i></button></center>
 	</div>
 	<div class="form-group">
-		  <center>Not registered yet? <a data-href="/sign-up/" data-modal-update="true">Sign up here!</a></center>
+		  <center>Not registered yet? <a data-href="/sign-up/" data-modal-update="true">Sign up here!</a> or <br />
+			<fb:login-button size="xlarge" style="margin-top:15px" scope="public_profile,email" onlogin="checkLoginState();">
+			</fb:login-button>
+		</center>
 	</div>  
 </form>

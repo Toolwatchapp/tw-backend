@@ -25,6 +25,8 @@
 		<div class="form-group">
 			<center><a class="btn btn-primary btn-lg signupNextStep">Continue</a></center>
 		</div>
+		<div id="status">
+		</div>
 	</fieldset>
 	<fieldset class="stepTwo">
         <div class="form-group">
