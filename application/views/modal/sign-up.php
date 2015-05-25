@@ -62,6 +62,7 @@
                 <option value="America/La_Paz">GMT-04:00 La Paz</option>
                 <option value="America/Santiago">GMT-04:00 Santiago</option>
                 <option value="Canada/Newfoundland">GMT-03:30 Newfoundland</option>
+                <option value="America/Sao_Paulo">GMT-03:00 Sao Paulo</option>
                 <option value="America/Buenos_Aires">GMT-03:00 Buenos Aires</option>
                 <option value="Etc/GMT+3">GMT-03:00 Greenland</option>
                 <option value="Etc/GMT+2">GMT-02:00 Mid-Atlantic</option>
