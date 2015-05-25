@@ -333,7 +333,7 @@ footer p
   font-size: 12px;
 }
 
-.signup-error, .watch-error
+.signup-error, .watch-error, .contact-error
 {
   display: none;
   font-style: italic;

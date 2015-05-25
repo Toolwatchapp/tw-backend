@@ -387,7 +387,29 @@ $(document).ready(function()
         var name = $('input[name="name"]').val();
         var email = $('input[name="email"]').val();
         var message = $('textarea[name="message"]').val();
+        var error = false;
+
+        $('.contact-error').hide();
+
+        if(name == ""){
+            $('.name-error').show();
+            error = true;
+        }
+
+        if(email == ""){
+            $('.email-error').show();
+            error = true;
+        }
+
+        if(message == ""){
+            $('.text-error').show();
+            error = true;
+        }
         
+        if(error === true){
+            return;
+        }
+
         $.post('/ajax/contact', {name: name, email: email, message: message}, function(data)
         {
             var result = $.parseJSON(data);
