@@ -48,6 +48,60 @@ class Ajax extends CI_Controller
             echo json_encode($result);
         }
     }
+
+    function facebookSignup()
+    {
+        if($this->input->post('email'))
+        {
+            $result = array();
+
+            $password = "FB_"+$this->input->post('id');
+            $name = $this->input->post('name');
+            $firstname = $this->input->post('firstname');
+            $timezone = $this->input->post('timezone');
+            $country = $this->input->post('country');
+
+            if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
+            {
+                $this->load->helper('mcapi');                    
+                $api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
+                $api->listSubscribe('7f94c4aa71', $email, ''); 
+
+                $this->load->library('email');
+                
+                $config['protocol'] = "smtp";
+                $config['smtp_host'] = "smtp.mandrillapp.com";
+                $config['smtp_port'] = "587";
+                $config['smtp_user'] = "marc@toolwatch.io"; 
+                $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                $config['charset'] = "utf-8";
+                $config['mailtype'] = "html";
+                $config['newline'] = "\r\n";
+
+                $this->email->initialize($config);
+                
+                $this->email->from('hello@toolwatch.io', 'Toolwatch');
+                $this->email->to($email, $name.' '.$firstname);
+                $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+
+                $this->email->subject('Welcome to Toolwatch!');
+                
+                $message = $this->load->view('email/signup', '', true);
+                $this->email->message($message);
+
+                if($this->email->send())
+                {
+                    $result['success'] = "signup";   
+                    $this->user->login($email, $password);
+                }
+            }else if($this->user->login($email, $password)){
+                $result['success'] = "signin";   
+            }else {
+                $result['success'] = false;
+            }
+            echo json_encode($result);
+        }
+    }
     
     function signup()
     {

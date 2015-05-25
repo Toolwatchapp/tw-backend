@@ -53,8 +53,24 @@
   function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
+
+      $.post('/ajax/signup', {email: response.email, name: response.name, firstname: response.first_name, timezone: response.timezone, country: response.country}, function(data)
+      {
+            var result = $.parseJSON(data);
+            if(result.success == "signup")
+            {
+               $.post('/sign-up-success/', {ajax: true}, function(data)
+                {
+                    $('#pageModal .modal-body').html(data);
+                    setTimeout('window.location.replace("/measures/")', 5000);
+                });
+            }else if(result.success == "signin"){
+                setTimeout('window.location.replace("/measures/")', 1000);
+                
+            } else {
+                $('.global-error').html('Something went wrong... Try again later.').show();
+            }
+      });
+      console.log(response);
     });
   }
