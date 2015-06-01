@@ -98,6 +98,11 @@ textarea:focus, textarea:hover, textarea:active
     padding: 10px 15px;   
 }
 
+.btn-full
+{
+    width: 100%;   
+}
+
 .btn:focus 
 {
   border: none;
@@ -171,6 +176,38 @@ textarea:focus, textarea:hover, textarea:active
 .content .row:last-child
 {
     margin-bottom: 30px;
+}
+
+.line-thru {
+  display: block;
+  font-size: .875em;
+  margin-bottom: 1em;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+}
+
+.line-thru:before {
+  width: 40px;
+  height: 10px;
+  background-color: #fff;
+  content: '';
+  margin: -5px 0 0 -20px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  z-index: -1;
+}
+
+.line-thru:after {
+  border-bottom: 1px solid #dfe0e6;
+  content: '';
+  display: block;
+  position: absolute;
+  top: 49%;
+  width: 100%;
+  z-index: -2;
 }
 
 .line 
@@ -554,6 +591,10 @@ button[name=syncDone],
     margin-bottom: 20px;
     text-align: center;
     display: none;
+}
+
+#hiden_fb_button{
+  display: none;
 }
 
 @media (max-width: 768px)

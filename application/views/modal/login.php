@@ -1,11 +1,11 @@
-<script type="text/javascript">
-	$( document ).ready(function() {
-    	fbAsyncInit();
-	});
-</script>
+<div class="form-group">
+   <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">Log in with Facebook<i class="fa fa-spinner fa-pulse"></i></button></center>
+</div>
+
 <form method="post" name="login">
+
     <div class="form-group">
-       <h1>Login</h1>
+       <strong class="line-thru">or</strong>
     </div>
 	<div class="form-group">
         <span class="signup-error login-error"></span>
@@ -18,12 +18,10 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<center><button type="submit" name="login" class="btn btn-primary btn-lg btn-spinner">Log in <i class="fa fa-spinner fa-pulse"></i></button></center>
+		<center><button type="submit" name="login" class="btn btn-primary btn-lg btn-spinner btn-full">Log in <i class="fa fa-spinner fa-pulse"></i></button></center>
 	</div>
 	<div class="form-group">
 		  <center>Not registered yet? <a data-href="/sign-up/" data-modal-update="true">Sign up here!</a> or <br />
-			<fb:login-button size="xlarge" style="margin-top:15px" scope="public_profile,email" onlogin="checkLoginState();">
-			</fb:login-button>
 		</center>
 	</div>  
 </form>

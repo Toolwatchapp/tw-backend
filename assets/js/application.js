@@ -49,7 +49,7 @@ $(document).ready(function()
 		{
 			$('#pageModal .modal-body').html(data);
 		});
-	})
+	});
 	
     /*
      * Next step on signup form
@@ -70,11 +70,11 @@ $(document).ready(function()
             {
                 if(confirmPassword == password)
                 {
-                    if((password.length >= 6) && (password != '')){
+                    if((password.length >= 6) && (password !== '')){
                         $.post('/ajax/checkEmail', {email: userEmail}, function(data)
                         {
                             var result = $.parseJSON(data);
-                            if(result.success == true)
+                            if(result.success === true)
                             {
                                 $('.stepOne').hide();
                                 $('.stepTwo').show();
@@ -121,7 +121,7 @@ $(document).ready(function()
         $.post('/ajax/login', {email: email, password: password}, function(data)
         {
             var result = $.parseJSON(data);
-            if(result.success == true)
+            if(result.success === true)
             {
                 setTimeout('window.location.replace("/measures/")', 1000);
             }
