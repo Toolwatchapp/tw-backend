@@ -91,7 +91,7 @@
                                 echo '<li><a href="#" title="Measures" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a></li>';
                             }
                         ?>
-						<li><a href="/watch-tips/">Watch Tips</a></li>
+						<li><a href="/blog/watch-tips/">Watch Tips</a></li>
 						<li><a href="/about/">About</a></li>
 						<li><a href="/contact/">Contact</a></li>
                     </ul>

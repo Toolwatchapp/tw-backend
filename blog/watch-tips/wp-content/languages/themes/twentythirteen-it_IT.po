@@ -1,0 +1,319 @@
+# Translation of Twenty Thirteen in Italian
+# This file is distributed under the same license as the Twenty Thirteen package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2015-03-27 13:21:10+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/1.0-alpha-1000\n"
+"Project-Id-Version: Twenty Thirteen\n"
+
+#. Author URI of the plugin/theme
+msgid "https://wordpress.org/"
+msgstr "https://wordpress.org/"
+
+#. Theme URI of the plugin/theme
+msgid "https://wordpress.org/themes/twentythirteen/"
+msgstr "https://wordpress.org/themes/twentythirteen/"
+
+#. translators: %s: Name of current post
+#: content-aside.php:16 content-audio.php:27 content-chat.php:26
+#: content-gallery.php:27 content-image.php:26 content-link.php:27
+#: content-quote.php:16 content-status.php:16 content-video.php:26
+#: content.php:44 functions.php:478
+msgid "Continue reading %s <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Continua la lettura di %s <span class=\"meta-nav\">&rarr;</span>"
+
+#: 404.php:16
+msgid "Not Found"
+msgstr "Non trovato"
+
+#. Description of the plugin/theme
+msgid "The 2013 theme for WordPress takes us back to the blog, featuring a full range of post formats, each displayed beautifully in their own unique way. Design details abound, starting with a vibrant color scheme and matching header images, beautiful typography and icons, and a flexible layout that looks great on any device, big or small."
+msgstr "Il tema per il 2013 per WordPress ci riporta al blog, fornendo un'ampia gamma di formati di articolo, ciascuno dei quali viene visualizzato in maniera unica ed originale. I dettagli del design abbondano, ad iniziare dallo schema colore vivido e brillante, dalle corrispondenti immagini della testata, da tipografia e icone splendide e dal layout flessibile che appare ottimamente su qualsiasi periferica, grande o piccola che sia."
+
+#: functions.php:233
+msgid "Appears in the footer section of the site."
+msgstr "Appare nel piè di pagina del sito."
+
+#: inc/back-compat.php:37 inc/back-compat.php:47 inc/back-compat.php:60
+msgid "Twenty Thirteen requires at least WordPress version 3.6. You are running version %s. Please upgrade and try again."
+msgstr "Twenty Thirteen richiede almeno WordPress versione 3.6. Tu stai utilizzando la versione %s. Per favore aggiorna e riprova."
+
+#: functions.php:231
+msgid "Main Widget Area"
+msgstr "Area principale dei Widget"
+
+#: functions.php:241
+msgid "Secondary Widget Area"
+msgstr "Area secondaria dei Widget"
+
+#: image.php:38
+msgid "Link to full-size image"
+msgstr "Link all'immagine a dimensioni reali"
+
+#: functions.php:243
+msgid "Appears on posts and pages in the sidebar."
+msgstr "Appare nella sidebar degli articoli e delle pagine"
+
+#: image.php:39
+msgid "Full resolution"
+msgstr "Risoluzione piena"
+
+#: archive.php:31
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: archive.php:33
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: archive.php:35
+msgid "Archives"
+msgstr "Archivi"
+
+#: content-aside.php:20 content-audio.php:31 content-chat.php:30
+#: content-gallery.php:31 content-image.php:30 content-link.php:31
+#: content-quote.php:20 content-status.php:20 content-video.php:30
+#: content.php:48 image.php:70 page.php:35
+msgid "Pages:"
+msgstr "Pagine:"
+
+#: content-aside.php:27 content-aside.php:35 content-audio.php:38
+#: content-chat.php:36 content-gallery.php:46 content-image.php:42
+#: content-link.php:19 content-quote.php:32 content-status.php:26
+#: content-video.php:42 content.php:31 image.php:44 page.php:39
+msgid "Edit"
+msgstr "Modifica"
+
+#: functions.php:369
+msgid "Permalink to %s"
+msgstr "Permalink a %s"
+
+#: content-gallery.php:43 content-image.php:39 content-quote.php:29
+#: content-video.php:39 content.php:56
+msgid "Leave a comment"
+msgstr "Lascia un commento"
+
+#: footer.php:19
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#. Translators: If there are characters in your language that are not supported
+#. by Bitter, translate this to 'off'. Do not translate into your own language.
+#: functions.php:134
+msgctxt "Bitter font: on or off"
+msgid "on"
+msgstr "on"
+
+#. Translators: If there are characters in your language that are not supported
+#. by Source Sans Pro, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:128
+msgctxt "Source Sans Pro font: on or off"
+msgid "on"
+msgstr "on"
+
+#: functions.php:218
+msgid "Page %s"
+msgstr "Pagina %s"
+
+#: functions.php:303
+msgctxt "Previous post link"
+msgid "<span class=\"meta-nav\">&larr;</span> %title"
+msgstr "<span class=\"meta-nav\">&larr;</span> %title"
+
+#. Translators: used between list items, there is a space after the comma.
+#: functions.php:328 functions.php:334
+msgid ", "
+msgstr ", "
+
+#: header.php:43
+msgid "Menu"
+msgstr "Menu"
+
+#: inc/custom-header.php:59
+msgctxt "header image description"
+msgid "Star"
+msgstr "Stella"
+
+#: inc/custom-header.php:54
+msgctxt "header image description"
+msgid "Diamond"
+msgstr "Diamante"
+
+#: search.php:18
+msgid "Search Results for: %s"
+msgstr "Risultati ricerca per: %s"
+
+#. Theme Name of the plugin/theme
+msgid "Twenty Thirteen"
+msgstr "Twenty Thirteen"
+
+#: tag.php:21
+msgid "Tag Archives: %s"
+msgstr "Archivi tag: %s"
+
+#: content-gallery.php:43 content-image.php:39 content-quote.php:29
+#: content-video.php:39 content.php:56
+msgid "View all % comments"
+msgstr "Vedi tutti i % commenti"
+
+#: comments.php:52
+msgid "Comments are closed."
+msgstr "I commenti sono chiusi."
+
+#: category.php:19
+msgid "Category Archives: %s"
+msgstr "Archivi categoria: %s"
+
+#: archive.php:29
+msgid "Daily Archives: %s"
+msgstr "Archivi del giorno: %s"
+
+#: archive.php:31
+msgid "Monthly Archives: %s"
+msgstr "Archivi del mese: %s"
+
+#: archive.php:33
+msgid "Yearly Archives: %s"
+msgstr "Archivi annuali: %s"
+
+#: author.php:31
+msgid "All posts by %s"
+msgstr "Tutti gli articoli di  %s"
+
+#: functions.php:322
+msgid "Sticky"
+msgstr "In evidenza"
+
+#: functions.php:343
+msgid "View all posts by %s"
+msgstr "Vedi tutti gli articoli di %s"
+
+#. Author of the plugin/theme
+msgid "the WordPress team"
+msgstr "il team di WordPress"
+
+#: comments.php:46
+msgid "&larr; Older Comments"
+msgstr "&larr; Vecchi commenti"
+
+#: comments.php:47
+msgid "Newer Comments &rarr;"
+msgstr "Nuovi commenti &rarr;"
+
+#: content-gallery.php:43 content-image.php:39 content-quote.php:29
+#: content-video.php:39 content.php:56
+msgid "One comment so far"
+msgstr "Un solo commento, per ora"
+
+#: content-none.php:12
+msgid "Nothing Found"
+msgstr "Nessun risultato"
+
+#: content-none.php:18
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr "Sei pronto a pubblicare il tuo primo articolo? <a href=\"%1$s\">Comincia da qui</a>."
+
+#: 404.php:21
+msgid "This is somewhat embarrassing, isn&rsquo;t it?"
+msgstr "Questa cosa è imbarazzante non è vero?"
+
+#: author-bio.php:26
+msgid "About %s"
+msgstr "Informazioni su %s"
+
+#: comments.php:45
+msgid "Comment navigation"
+msgstr "Navigazione commenti"
+
+#: footer.php:19
+msgid "Proudly powered by %s"
+msgstr "Orgogliosamente motorizzato da %s"
+
+#: functions.php:97
+msgid "Navigation Menu"
+msgstr "Menu di navigazione"
+
+#: functions.php:266
+msgid "Posts navigation"
+msgstr "Navigazione articoli"
+
+#: functions.php:270
+msgid "<span class=\"meta-nav\">&larr;</span> Older posts"
+msgstr "<span class=\"meta-nav\">&larr;</span> Articoli più vecchi"
+
+#: taxonomy-post_format.php:23
+msgid "%s Archives"
+msgstr "Archivi %s"
+
+#: inc/custom-header.php:49
+msgctxt "header image description"
+msgid "Circle"
+msgstr "Cerchi"
+
+#: functions.php:300
+msgid "Post navigation"
+msgstr "Navigazione articolo"
+
+#: functions.php:304
+msgctxt "Next post link"
+msgid "%title <span class=\"meta-nav\">&rarr;</span>"
+msgstr "%title <span class=\"meta-nav\">&rarr;</span>"
+
+#: functions.php:363
+msgctxt "1: post format name. 2: date"
+msgid "%1$s on %2$s"
+msgstr "%1$s del %2$s"
+
+#: header.php:44
+msgid "Skip to content"
+msgstr "Vai al contenuto"
+
+#: image.php:22
+msgid "<span class=\"attachment-meta\">Published on <time class=\"entry-date\" datetime=\"%1$s\">%2$s</time> in <a href=\"%3$s\" title=\"Return to %4$s\" rel=\"gallery\">%5$s</a></span>"
+msgstr "<span class=\"attachment-meta\">Pubblicato il <time class=\"entry-date\" datetime=\"%1$s\">%2$s</time> in <a href=\"%3$s\" title=\"Return to %4$s\" rel=\"gallery\">%5$s</a></span>"
+
+#: image.php:51
+msgid "<span class=\"meta-nav\">&larr;</span> Previous"
+msgstr "<span class=\"meta-nav\">&larr;</span> Precedenti"
+
+#: image.php:52
+msgid "Next <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Successivi <span class=\"meta-nav\">&rarr;</span>"
+
+#: footer.php:19
+msgid "Semantic Personal Publishing Platform"
+msgstr "Piattaforma semantica di pubblicazione personale"
+
+#: author-bio.php:30
+msgid "View all posts by %s <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Visualizza tutti gli articoli di %s <span class=\"meta-nav\">&rarr;</span>"
+
+#: comments.php:25
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "Un pensiero su &ldquo;%2$s&rdquo;"
+msgstr[1] "%1$s pensieri su &ldquo;%2$s&rdquo;"
+
+#: content-none.php:27
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Non riusciamo a trovare quello che cerchi. Forse eseguire una ricerca potrebbe essere di aiuto."
+
+#: functions.php:274
+msgid "Newer posts <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Articoli più recenti <span class=\"meta-nav\">&rarr;</span>"
+
+#: 404.php:22
+msgid "It looks like nothing was found at this location. Maybe try a search?"
+msgstr "Pare che non sia stato trovato nulla nel posto in cui stavi cercando. Forse potresti provare con una ricerca?"
+
+#: content-none.php:22
+msgid "Sorry, but nothing matched your search terms. Please try again with different keywords."
+msgstr "Spiacente, nessuna corrispondenza con i termini di ricerca che hai indicato. Per favore, prova con termini diversi."
