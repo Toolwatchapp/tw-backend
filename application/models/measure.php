@@ -130,7 +130,7 @@ class Measure extends MY_Model
         $userDelta = $watchMeasure->measureUserTime + $watchMeasure->accuracyUserTime;
         $refDelta = $watchMeasure->measureReferenceTime + $watchMeasure->accuracyReferenceTime;
         $accuracy = ($userDelta*86400/$refDelta)-86400;
-        $accuracy = floor($accuracy*10.0)/10.0;  
+        $accuracy = sprintf("%.2f", $accuracy);
         return $accuracy;
     }
 
@@ -164,7 +164,7 @@ class Measure extends MY_Model
         if($this->update($measureId, $data) !== false){
 
             $watchMeasure = $this->find($measureId);
-            $this->computeAccuracy($watchMeasure);
+            $watchMeasure->accuracy = $this->computeAccuracy($watchMeasure);
 
            return $watchMeasure;
         }
