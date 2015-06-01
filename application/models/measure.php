@@ -99,10 +99,9 @@ class Measure extends MY_Model
                     foreach ($watchMeasures as $watchMeasure) {
                         //Compute accuracy
                         if( $watchMeasure->statusId == 2 ){
-                            $this->computeAccuracy($watchMeasure);
-                            $data[$dataPushing]['accuracy'] = sprintf("%.1f", $watchMeasure->accuracy);
+                            $data[$dataPushing]['accuracy'] = sprintf("%.2f", $this->computeAccuracy($watchMeasure));
                             $data[$dataPushing]['statusId'] = $watchMeasure->statusId;
-                        //Check if the measure was made more than 12 hours ago
+                        //Check if the measure was made less than 12 hours ago
                         } else if ( ((time() - $watchMeasure->measureReferenceTime)/3600 ) < 12 ){
                             $data[$dataPushing]['statusId'] = 1.5;
                             $watchMeasure->statusId = 1.5;
@@ -127,12 +126,12 @@ class Measure extends MY_Model
         return $data;
     }
 
-    private function computeAccuracy(&$watchMeasure){
+    private function computeAccuracy($watchMeasure){
         $userDelta = $watchMeasure->measureUserTime + $watchMeasure->accuracyUserTime;
         $refDelta = $watchMeasure->measureReferenceTime + $watchMeasure->accuracyReferenceTime;
         $accuracy = ($userDelta*86400/$refDelta)-86400;
         $accuracy = floor($accuracy*10.0)/10.0;  
-        $watchMeasure->accuracy = $accuracy;
+        return $accuracy;
     }
 
     function addBaseMesure($watchId, $referenceTime, $userTime)
