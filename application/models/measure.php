@@ -165,7 +165,7 @@ class Measure extends MY_Model
         if($this->update($measureId, $data) !== false){
 
             $watchMeasure = $this->find($measureId);
-            $this->computeAccuracy($watchMeasure);
+            $watchMeasure->accuracy = $this->computeAccuracy($watchMeasure);
 
            return $watchMeasure;
         }
