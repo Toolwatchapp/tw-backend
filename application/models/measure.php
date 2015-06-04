@@ -102,14 +102,14 @@ class Measure extends MY_Model
                             $data[$dataPushing]['accuracy'] = sprintf("%.2f", $this->computeAccuracy($watchMeasure));
                             $data[$dataPushing]['statusId'] = $watchMeasure->statusId;
                         //Check if the measure was made less than 12 hours ago
-                        } else if ( ((time() - $watchMeasure->measureReferenceTime)/3600 ) < 12 ){
-                            $data[$dataPushing]['statusId'] = 1.5;
-                            $watchMeasure->statusId = 1.5;
-                            $ellapsedTime = ((time() - $watchMeasure->measureReferenceTime)/3600 );
-                            $watchMeasure->accuracy = 12 - round($ellapsedTime, 1);
-                            $data[$dataPushing]['statusId'] = $watchMeasure->statusId;
-                            $data[$dataPushing]['accuracy'] = $watchMeasure->accuracy;
-                        // If not, the baseMeasure is here and we are ready for the accuracy
+                        // } else if ( ((time() - $watchMeasure->measureReferenceTime)/3600 ) < 12 ){
+                        //     $data[$dataPushing]['statusId'] = 1.5;
+                        //     $watchMeasure->statusId = 1.5;
+                        //     $ellapsedTime = ((time() - $watchMeasure->measureReferenceTime)/3600 );
+                        //     $watchMeasure->accuracy = 12 - round($ellapsedTime, 1);
+                        //     $data[$dataPushing]['statusId'] = $watchMeasure->statusId;
+                        //     $data[$dataPushing]['accuracy'] = $watchMeasure->accuracy;
+                        // // If not, the baseMeasure is here and we are ready for the accuracy
                         } else {
                             $data[$dataPushing]['statusId'] = 1;
                         }
