@@ -326,8 +326,10 @@ $(document).ready(function()
                         
                         $('.watch-accuracy').html(result.accuracy);
 
-                        $('.share-button').attr("data-text", 
-                            $('.share-button').attr("data-text").replace("{WatchAccuracy}", result.accuracy));
+
+                        $('.share-button').each(function(index){
+                            $(this).attr("data-text", $(this).attr("data-text").replace("{WatchAccuracy}", result.accuracy));
+                        });
 
                     }
                 }  
