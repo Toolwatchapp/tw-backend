@@ -1,6 +1,9 @@
+<div class="form-group">
+   <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">Sign up with Facebook<i class="fa fa-spinner fa-pulse"></i></button></center>
+</div>
 <form method="post" name="signup">
     <div class="form-group">
-       <h1>Sign up</h1>
+       <strong class="line-thru">or</strong>
     </div>
 	<fieldset class="stepOne">
 		<div class="form-group">
@@ -19,11 +22,8 @@
 			<input type="password" class="form-control" name="confirmPassword" placeholder="Confirm your password">
 			<span class="signup-error confirm-password-error"></span>
 		</div>
-        <div class="form-group">
-            <center><input type="checkbox" name="malingList" checked><br>I would like to receive emails on Toolwatch</center>
-        </div>
 		<div class="form-group">
-			<center><a class="btn btn-primary btn-lg signupNextStep">Continue</a></center>
+			<center><a class="btn btn-primary btn-lg signupNextStep btn-full">Sign up</a></center>
 		</div>
 		<div id="status">
 		</div>
@@ -402,7 +402,7 @@
 			<span class="signup-error global-error"></span>
 		</div>
 		<div class="form-group">
-			<center><button type="submit" class="btn btn-primary btn-lg btn-spinner">Sign up <i class="fa fa-spinner fa-pulse"></i></button></center>
+			<center><button type="submit" class="btn btn-primary btn-lg btn-spinner btn-full">Sign up <i class="fa fa-spinner fa-pulse"></i></button></center>
 		</div>
 	</fieldset>
 	<div class="form-group">
