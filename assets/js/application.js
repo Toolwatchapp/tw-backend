@@ -315,13 +315,20 @@ $(document).ready(function()
                     $('button[name="restartCountdown"]').hide();
                     $('.sync-success').show();
                     $('.backToMeasure').show();
+                    $('#mainTitle').hide();
+                    $('#mainExplanation').hide();
                     
                     if(result.accuracy != null)
                     {
-                        if(result.accuracy > 0)
+                        if(result.accuracy > 0){
                             result.accuracy = '+'+result.accuracy;
+                        }
                         
                         $('.watch-accuracy').html(result.accuracy);
+
+                        $('.share-button').attr("data-text", 
+                            $('.share-button').attr("data-text").replace("{WatchAccuracy}", result.accuracy));
+
                     }
                 }  
                 else

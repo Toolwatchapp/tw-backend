@@ -107,10 +107,12 @@ class Measures extends MY_Controller
         {
 
             $this->_headerData['headerClass'] = 'blue';
+            array_push($this->_headerData['javaScripts'], "jquery.sharrre.min", "sharrre.logic", "watch.animation");
             $this->load->view('header', $this->_headerData);
         
             $this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
             $this->_bodyData['measureId'] = $this->input->post('measureId');
+
             $this->load->view('measure/get-accuracy', $this->_bodyData);  
             $this->load->view('measure/audio.php');  
         
