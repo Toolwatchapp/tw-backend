@@ -127,12 +127,12 @@ class Measure extends MY_Model
         return $data;
     }
 
-    private function computeAccuracy(&$watchMeasure){
-        $userDelta = $watchMeasure->measureUserTime + $watchMeasure->accuracyUserTime;
-        $refDelta = $watchMeasure->measureReferenceTime + $watchMeasure->accuracyReferenceTime;
+   private function computeAccuracy($watchMeasure){
+        $userDelta = $watchMeasure->accuracyUserTime - $watchMeasure->measureUserTime + ;
+        $refDelta =  $watchMeasure->accuracyReferenceTime - $watchMeasure->measureReferenceTime
         $accuracy = ($userDelta*86400/$refDelta)-86400;
-        $accuracy = floor($accuracy*10.0)/10.0;  
-        $watchMeasure->accuracy = $accuracy;
+        $accuracy = sprintf("%.2f", $accuracy);
+        return $accuracy;
     }
 
     function addBaseMesure($watchId, $referenceTime, $userTime)
