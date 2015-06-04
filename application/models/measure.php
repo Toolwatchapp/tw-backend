@@ -127,8 +127,8 @@ class Measure extends MY_Model
     }
 
    private function computeAccuracy($watchMeasure){
-        $userDelta = $watchMeasure->accuracyUserTime - $watchMeasure->measureUserTime + ;
-        $refDelta =  $watchMeasure->accuracyReferenceTime - $watchMeasure->measureReferenceTime
+        $userDelta = $watchMeasure->accuracyUserTime - $watchMeasure->measureUserTime;
+        $refDelta =  $watchMeasure->accuracyReferenceTime - $watchMeasure->measureReferenceTime;
         $accuracy = ($userDelta*86400/$refDelta)-86400;
         $accuracy = sprintf("%.2f", $accuracy);
         return $accuracy;
