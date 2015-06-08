@@ -141,6 +141,10 @@
                                             Action <span class="caret"></span>
                                           </button>
                                           <ul class="dropdown-menu" role="menu">
+                                           <li><a href="/measures/new-measure/">New measure</a>
+                                            <form method="post" action="/measures/get-accuracy/" name="get-accuracy-'.$measure['measureId'].'"><input type="hidden" name="measureId" value="'.$measure['measureId'].'"><input type="hidden" name="watchId" value="'.$measure['watchId'].'">
+                                            </form></li>
+                                          <li class="divider"></li>
                                             <li>
                                                 <a href="#" class="submitDeleteMeasures" data-watch="'.$measure['measureId'].'">Delete all measures</a>
                                                 <form method="post" action="/measures/" name="delete-measures-'.$measure['measureId'].'" class="no-display">
