@@ -98,7 +98,7 @@
                                }
                                else if($measure['statusId'] == '1.5')
                                {
-                                  echo '<td><a href="#" title="Warning" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/modal/accuracyWarning/">Check the accuracy in '.$measure['accuracy'].' hours <i class="warning fa fa-info-circle"></i></a></td>';
+                                  echo '<td><a href="#" title="Warning" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/modal/accuracyWarning/">Check the accuracy in '.$measure['accuracy'].' hour(s) <i class="warning fa fa-info-circle"></i></a></td>';
                                    echo '<td><div class="btn-group">
                                           <button type="button" class="btn btn-default btn-sm dropdown-toggle dropdown-menu-right" data-toggle="dropdown" aria-expanded="false">
                                             Action <span class="caret"></span>
