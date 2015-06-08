@@ -97,7 +97,7 @@ $( document ).ready(function() {
 
     var windowHeight = $(window).height();   
     var headerHeight = $('header').height();   
-    $(".slogan-home").css("margin-top", -windowHeight+headerHeight+70);
+    $(".slogan-home").css("margin-top", -windowHeight+headerHeight+100);
 
 
     $('video,audio').mediaelementplayer({features: []});
@@ -130,7 +130,7 @@ $( document ).ready(function() {
     });
 
     $( ".slogan-home" ).animate({
-        marginTop: "-=70"
+        marginTop: "-=100"
     }, 2000);
 });
 

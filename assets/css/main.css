@@ -780,10 +780,14 @@ button[name=syncDone],
 }
 
 .mejs-container{
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 .mejs-container .mejs-controls { visibility:hidden !important; }
+
+.slogan-home{
+  margin-left: 25%;
+}
 
 .slogan-home h1{
   color: #FFFFFF;
