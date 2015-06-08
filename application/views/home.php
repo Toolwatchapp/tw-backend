@@ -95,6 +95,11 @@ $( document ).ready(function() {
     $("#demo-third-step").hide();
     $("#demo-fourth-step").hide();
 
+    var windowHeight = $(window).height();   
+    var headerHeight = $('header').height();   
+    $(".slogan-home").css("margin-top", -windowHeight+headerHeight+70);
+
+
     $('video,audio').mediaelementplayer({features: []});
 
     $(".continue").click(function(){

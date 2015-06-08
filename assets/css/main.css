@@ -785,10 +785,6 @@ button[name=syncDone],
 
 .mejs-container .mejs-controls { visibility:hidden !important; }
 
-.slogan-home {
-  margin-top: -630px
-}
-
 .slogan-home h1{
   color: #FFFFFF;
   font-size: 40px;
