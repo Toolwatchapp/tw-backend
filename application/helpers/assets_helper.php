@@ -8,6 +8,14 @@ if ( ! function_exists('css_url'))
     }
 }
 
+if ( ! function_exists('vid_url'))
+{
+    function vid_url($nom)
+    {
+        return base_url() . 'assets/videos/' . $nom;
+    }
+}
+
 if ( ! function_exists('ico_url'))
 {
     function ico_url($nom)

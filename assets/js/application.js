@@ -531,6 +531,7 @@ function resizeContent()
     var footerHeight = $('footer').height();   
         
     $('.content').css('min-height', (windowHeight-(headerHeight-30)-footerHeight)+'px');
+    $('.content').css('min-height', (windowHeight-(headerHeight-30)-footerHeight)+'px');
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
 
@@ -541,5 +542,5 @@ function changeBackground()
     
     currentBg = (currentBg+1)%4;
     var bgNumber = currentBg+1;
-    $('.home-intro').css('background-image', 'url("/assets/img/home_'+bgNumber+'.jpg")');
+    //$('.home-intro').css('background-image', 'url("/assets/img/home_'+bgNumber+'.jpg")');
 }

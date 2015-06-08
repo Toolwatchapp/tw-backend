@@ -72,29 +72,33 @@
 	</div>
     <header class="navbar <?php echo $headerClass; ?>">
         <div class="container container-fluid">
-            <div class="row">
-               <div class="col-md-12"><a href="<?php echo base_url(); ?>"><div class="logo"></div></a></div>
-            </div>
             <div class="row collapse navbar-collapse" id="nav-menu">
                 <div class="col-md-12">
-                    <ul class="nav navbar-nav">
+                    <div class="nav navbar-nav">
+
+                        <div class="col-md-2">
+                            <a href="<?php echo base_url(); ?>"><div class="logo"></div></a>
+                        </div>
+                        <div style="margin-top: 10px" class="col-md-1 col-md-offset-5 text-center">
+						  <a href="/blog/watch-tips/">Features</a>
+                        </div>
+                        <div style="margin-top: 10px" class="col-md-1  text-center">
+						  <a href="/about/">Blog</a>
+                        </div>
                         <?php 
                             if($userIsLoggedIn)
                             {
-                                echo '<li><a href="/logout/" title="Logout">Logout</a></li>';
-                                echo '<li><a href="/measures/" title="Measures">Measures</a></li>';
+                                echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="/logout/" title="Logout">Logout</a></div>';
+                                echo '<div class="col-md-1 "><a class="btn btn-lg btn-white"" href="/measures/" title="Measures">Measures</a></div>';
                             }
                             else
                             {
                                 
-                                echo '<li><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></li>';
-                                echo '<li><a href="#" title="Measures" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a></li>';
+                                echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></div>';
+                                echo '<div class="col-md-1 "><a href="#" title="Measures" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a></div>';
                             }
                         ?>
-						<li><a href="/blog/watch-tips/">Watch Tips</a></li>
-						<li><a href="/about/">About</a></li>
-						<li><a href="/contact/">Contact</a></li>
-                    </ul>
+                    </div>
                 </div>
             </div>
             <div class="row">
