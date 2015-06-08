@@ -95,7 +95,7 @@
                             {
                                 
                                 echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></div>';
-                                echo '<div class="col-md-1 "><a href="btn btn-lg btn-white" title="Measures" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a></div>';
+                                echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" title="Measures" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a></div>';
                             }
                         ?>
                     </div>
