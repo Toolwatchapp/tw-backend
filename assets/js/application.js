@@ -532,6 +532,7 @@ function resizeContent()
         
     $('.content').css('min-height', (windowHeight-(headerHeight-30)-footerHeight)+'px');
     $('.content').css('min-height', (windowHeight-(headerHeight-30)-footerHeight)+'px');
+    $('.content').css('margin-top', (headerHeight+50)+'px');
     $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
 

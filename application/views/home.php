@@ -124,27 +124,18 @@ the accuracy of your mechanical watch.</p>
 var delta =  Math.floor((Math.random() * 10) + 1) - 5;
 var d;
 
+$( window ).resize(function() {
+  initSize();
+});
 
 $( document ).ready(function() {
 
     $("#demo-third-step").hide();
     $("#demo-fourth-step").hide();
 
-    var windowHeight = $(window).height();   
-    var headerHeight = $('header').height();   
-    var sloganHeight = $(".slogan-home");
-    var windowRealHeight = windowHeight - headerHeight;
-    //var align = dispoDisplay / 2 - sloganHeight / 2;
+    initSize();
 
-    $(".slogan-home").css("margin-top", -windowRealHeight + windowRealHeight/2);
-
-    var ratio = $("#mosa-picture-1").width() / 800 ;
-
-    $(".home-mosa").css("height", 450*ratio*2);
-
-    $(".home-mosa-stats").css("left", $(window).width()/2-$(".home-mosa-stats").width()/2 - 20);
-    $(".home-mosa-stats").css("marginTop", (450*ratio*2)/2 - $(".home-mosa-stats").height()/2 - 20);
-
+    
     $('video,audio').mediaelementplayer({features: []});
 
     $(".continue").click(function(){
@@ -162,10 +153,31 @@ $( document ).ready(function() {
         $(".watch-accuracy").html(result.toFixed(0));
     });
 
+
+});
+
+function initSize(){
+
+    var windowHeight = $(window).height();   
+    var headerHeight = $('header').height();   
+    var sloganHeight = $(".slogan-home");
+    var windowRealHeight = windowHeight - headerHeight;
+    //var align = dispoDisplay / 2 - sloganHeight / 2;
+
+    $(".slogan-home").css("margin-top", -windowRealHeight + windowRealHeight/2);
+
+    var ratio = $("#mosa-picture-1").width() / 800 ;
+
+    $(".home-mosa").css("height", 450*ratio*2);
+
+    $(".home-mosa-stats").css("left", $(window).width()/2-$(".home-mosa-stats").width()/2 - 20);
+    $(".home-mosa-stats").css("marginTop", (450*ratio*2)/2 - $(".home-mosa-stats").height()/2 - 20);
+
     $( ".slogan-home" ).animate({
         marginTop: "-=300"
     }, 2000);
-});
+
+}
 
 function countDownDisplay(){
     var countdown = $("#demo-sync-time").html();
