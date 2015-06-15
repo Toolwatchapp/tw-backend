@@ -45,7 +45,7 @@
           ga('send', 'pageview');
     </script>
     <?php
-        foreach($styleSheets as $css) { echo '<link rel="stylesheet" href="'.css_url($css).'">'; }
+        foreach($styleSheets as $css) { echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">'; }
         foreach($javaScripts as $js) { echo '<script src="'.js_url($js).'"></script>'; }
     ?>
     <!--[if lt IE 8]>

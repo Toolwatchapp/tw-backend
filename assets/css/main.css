@@ -15,6 +15,7 @@ body
 {
     font-family: "Open Sans", sans-serif;
     font-weight: 400;
+    background-color: #ededed;
 }
 
 
@@ -336,13 +337,24 @@ footer
   min-height: 100px;
   background-color: #4d77a7;
   color: white;
+  font-size: 17px;
   text-align: center;
-  padding: 20px 0;
 }
+
+footer .social
+{
+  text-align: right;
+}
+
+footer .copyright{
+  margin-top: 20px;
+  font-size: 15px;
+}
+
 footer .fa 
 {
   font-size: 30px;
-  margin: 0px 20px;
+  margin: 0px 10px;
 }
 footer a 
 {
@@ -401,7 +413,7 @@ footer p
 {
     font-size: 30px;   
     position: absolute;
-    bottom: 0px;
+    bottom: 40px;
     left:0;
     right:0;
     margin-left:auto;
@@ -779,15 +791,7 @@ button[name=syncDone],
   box-shadow: 0 1px 4px #DDDDDD, 0 1px 0 #929292 inset;
 }
 
-.mejs-container{
-    opacity: 0.7;
-}
-
 .mejs-container .mejs-controls { visibility:hidden !important; }
-
-.slogan-home{
-  margin-left: 25%;
-}
 
 .slogan-home h1{
   color: #FFFFFF;
@@ -805,6 +809,7 @@ button[name=syncDone],
 }  
 
 #demo-sync-time{
+  margin-top: 25px;
   color: #4d77a7;
   font-size: 150px;
 }
@@ -817,5 +822,99 @@ button[name=syncDone],
 
 .home-picto{
   min-height: 500px;
-  padding-top: 100px;
 }
+
+.home-mosa-picture{
+   z-index: 1;
+}
+
+.home-mosa-picture{
+  width: 50%;
+  height: auto;
+  float: left;
+  text-align: center;
+  color: #fff;
+  font-size: 26px;
+  line-height: 1.2;
+  padding: 28% 0 0;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  z-index: 1;
+}
+
+.home-mosa-stats{
+  position: absolute;
+  background: #fff;
+  width: 324px;
+  height: 318px;
+  text-align: center;
+  padding: 38px 23px;
+  z-index: 10;
+}
+
+.home-mosa-stats h2{
+  height: 130px;
+  margin-top: 40px;
+}
+
+
+.home-mosa-stats p{
+  bottom: 0px;
+}
+
+.home-mosa-picture-content{
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 70%;
+  padding: 0 162px;
+}
+
+.home-mosa-picture-content footer{
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: transparent;
+}
+
+.home-picto #toolwatch-explained{
+  text-align: center;
+}
+
+.btn-xlarge {
+    margin-top: 20px;
+    padding: 18px 28px;
+    font-size: 30px;
+    line-height: normal;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+}
+
+.publication{
+  padding-top: 20px;
+  width: 100%;
+  background-color: white;
+  height: 95px;
+}
+
+.publication img{
+  margin-top: 10px;
+  height: 40px;
+}
+
+footer .container{
+  padding-top: 20px;
+}
+
+footer .links{
+  margin-top: 10px;
+}
+
+ footer .social{
+  margin-top: 5px;
+ }
+
+ #demo-fourth-step{
+  margin-top: 50px;
+ }

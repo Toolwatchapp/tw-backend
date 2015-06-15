@@ -1,6 +1,6 @@
 <div class="home-intro">
     <div class="home-intro-overlay">
-      <video id="home-video" src="<?php echo vid_url('home.mp4');?>" width="100%" height="90%" autoplay loop></video>
+      <video id="home-video" src="<?php echo vid_url('home.mp4');?>" width="100%" height="100%" autoplay loop muted></video>
         <div class="container container-fluid first slogan-home">
 
             <div class="row">
@@ -40,55 +40,90 @@
 <div class="home-picto">
     <div class="container container-fluid">
 
-     <div class="row">
+         <div class="row">
 
-            <div id="demo" class="col-sm-12">
+                <div id="demo" class="col-sm-12">
 
-               <div class=" col-sm-offset-2 col-sm-3" >
-                    <canvas id="canvas_animated_watch" width="250" height="250"></canvas>
-                    <img style="display:none" id="watch" src="<?php echo img_url('flatwatch-blank.png');?>">
-               </div>
+                   <div class=" col-sm-offset-2 col-sm-3" >
+                        <canvas id="canvas_animated_watch" width="250" height="250"></canvas>
+                        <img style="display:none" id="watch" src="<?php echo img_url('flatwatch-blank.png');?>">
+                   </div>
 
-                <div id="demo-second-step" class="col-sm-5" >
-                    <center id="demo-sync-time">5</center>
-                </div>
-
-                <div id="demo-third-step" class="col-sm-5" >
-                    <br />
-                    <br />
-                    <br />
-                    <input type="text" id="inputUserTime" name="userTime" class="form-control" placeholder="ex: 12:34:56">
-                    <br>Please use the 24-hour clock format
-                    <span class="signup-error time-error">Your time should be hours:minutes:seconds (like 11:22:33).</span>
-                    <button id="demo-cta" class="btn btn-primary btn-lg" name="startSync">Check now!</button>
-                    <img id='demo-pointer' src="<?php echo img_url('pointer.png');?>">
-
-                </div>
-
-              
-                <div id="demo-fourth-step" class="col-sm-5" >
-                    <div class="col-sm-12">
-                        <h1>Congratulations!</h1> <br/> <p class="accuracy-subtitle"> The accuracy of your <strong><span class="watch-brand">watch</span></strong> is </p>
+                    <div id="demo-second-step" class="col-sm-5" >
+                        <center id="demo-sync-time">5</center>
                     </div>
-                    <div class="col-sm-12">
-                        <strong><span class="watch-accuracy"></span> seconds a day!</strong> 
+
+                    <div id="demo-third-step" class="col-sm-5" >
+                        <br />
+                        <br />
+                        <br />
+                        <input type="text" id="inputUserTime" name="userTime" class="form-control" placeholder="ex: 12:34:56">
+                        <br>Please use the 24-hour clock format
+                        <span class="signup-error time-error">Your time should be hours:minutes:seconds (like 11:22:33).</span>
+                        <button id="demo-cta" class="btn btn-primary btn-lg" name="startSync">Check now!</button>
+                        <img id='demo-pointer' src="<?php echo img_url('pointer.png');?>">
+
                     </div>
-                    <button style="margin-left:50px;margin-top:20px" id="demo-new" class="btn btn-primary btn-lg" name="startSync">New measure</button>
+
+                  
+                    <div id="demo-fourth-step" class="col-sm-5" >
+                        <div class="col-sm-12">
+                            <h1>Congratulations!</h1> <br/> <p class="accuracy-subtitle"> The accuracy of your <strong><span class="watch-brand">watch</span></strong> is </p>
+                        </div>
+                        <div class="col-sm-12">
+                            <strong><span class="watch-accuracy"></span> seconds a day!</strong> 
+                        </div>
+                    </div>
+
                 </div>
 
+         </div>
+
+         <div class="row">
+            <div id="toolwatch-explained" class="col-sm-offset-2 col-sm-8">
+                <h1>MECHANICAL WATCH LOVER'S FAVORITE TOOL. IT'S INSANELY SIMPLE.</h1>
+                <p>Toolwatch's accuracy measure is built for speed and ease to use. Measuring the accuracy of your mechanical watch is so simple that you'll actually use it. 
+                Toolwatch helps you keep your loved ones on time.</p>
+                <center>
+                    <a class="btn btn-default btn-xlarge" href="#" title="Signup" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/sign-up/">GET STARTED <i class="fa fa-arrow-right"></i></a>
+                </center>
             </div>
-
-     </div>
+         </div>
 
     </div>
+</div>
+
+<div class="home-mosa">
+
+        <div class="home-mosa-stats">
+            <img src="<?php echo img_url('logo-blue.png');?>">
+            <h2>XXX Followers on Instagram.</h2>
+            <p>The most convenient way to measure 
+the accuracy of your mechanical watch.</p>
+        </div>
+
+
+    <div class="home-mosa-pictures">
+        <div id="mosa-picture-1" style="background-image: url('https://www.toggl.com/photos/makeable.jpg');" class="home-mosa-picture">
+        </div>
+        <div id="mosa-picture-2" style="background-image: url('https://www.toggl.com/photos/webhomes.jpg');" class="home-mosa-picture">
+        </div>
+        <div id="mosa-picture-3" style="background-image: url('https://www.toggl.com/photos/offerpop.jpg?1');" class="home-mosa-picture">
+        </div>
+        <div id="mosa-picture-4" style="background-image: url('https://www.toggl.com/photos/matt_alexander.jpg');" class="home-mosa-picture">
+        </div>
+    </div>
+
+
 </div>
 
 <script>
 // using jQuery
 
 
-var delta =  Math.round((Math.random() * (-5 - 5) + -5));
+var delta =  Math.floor((Math.random() * 10) + 1) - 5;
 var d;
+
 
 $( document ).ready(function() {
 
@@ -97,8 +132,18 @@ $( document ).ready(function() {
 
     var windowHeight = $(window).height();   
     var headerHeight = $('header').height();   
-    $(".slogan-home").css("margin-top", -windowHeight+headerHeight+100);
+    var sloganHeight = $(".slogan-home");
+    var windowRealHeight = windowHeight - headerHeight;
+    //var align = dispoDisplay / 2 - sloganHeight / 2;
 
+    $(".slogan-home").css("margin-top", -windowRealHeight + windowRealHeight/2);
+
+    var ratio = $("#mosa-picture-1").width() / 800 ;
+
+    $(".home-mosa").css("height", 450*ratio*2);
+
+    $(".home-mosa-stats").css("left", $(window).width()/2-$(".home-mosa-stats").width()/2 - 20);
+    $(".home-mosa-stats").css("marginTop", (450*ratio*2)/2 - $(".home-mosa-stats").height()/2 - 20);
 
     $('video,audio').mediaelementplayer({features: []});
 
@@ -106,31 +151,19 @@ $( document ).ready(function() {
         setTimeout(countDownDisplay, 1000);
     });
 
-    $ ("#demo-new").click(function (){
-        $("#demo-third-step").hide();
-        $("#demo-fourth-step").hide();
-        $("#demo-second-step").show();
-        $("#inputUserTime").val("");
-        $("#demo-sync-time").html("5");
-        
-        similateInput = function(){ 
-
-            $("#demo-second-step").hide();
-            $("#demo-third-step").fadeToggle();
-        };
-
-        setTimeout(countDownDisplay, 1000);
-    });
-
     $( "#demo-cta" ).click(function() {
-        $( "#demo-pointer" ).hide();
+
+        var result = delta;
+
+        $("#demo-pointer").hide();
         $("#demo-third-step").hide();
         $("#demo-fourth-step").fadeToggle();
-        $(".watch-accuracy").html(delta);
+        console.log();
+        $(".watch-accuracy").html(result.toFixed(0));
     });
 
     $( ".slogan-home" ).animate({
-        marginTop: "-=100"
+        marginTop: "-=300"
     }, 2000);
 });
 
@@ -141,7 +174,7 @@ function countDownDisplay(){
     if(countdown > 1){
         setTimeout(countDownDisplay, 1000);
     }else{
-        d = new Date();
+        d = new Date(new Date().getTime());
         similateInput();
     }
 }
@@ -163,7 +196,7 @@ function similateInput(){
 
             $("#inputUserTime").focus();
 
-            var seconds = (d.getSeconds() + delta);
+            var seconds = (d.getSeconds() + Math.abs(delta));
             if(seconds <= 9){
                 seconds = "0"+seconds;
             }
