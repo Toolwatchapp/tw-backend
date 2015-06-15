@@ -9,7 +9,6 @@ $( document ).ready(function() {
     enableTracking: true,
     urlCurl: '',
     click: function(api, options){
-      generateImage();
       api.simulateClick();
       api.openPopup('googlePlus');
     }
@@ -22,7 +21,6 @@ $( document ).ready(function() {
     enableHover: false,
     enableTracking: true,
     click: function(api, options){
-      generateImage();
       api.simulateClick();
       api.openPopup('twitter');
     }
@@ -35,7 +33,6 @@ $( document ).ready(function() {
     enableHover: false,
     enableTracking: true,
     click: function(api, options){
-      generateImage();
       api.simulateClick();
       api.openPopup('facebook');
     }

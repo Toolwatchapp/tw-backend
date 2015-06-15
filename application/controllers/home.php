@@ -9,7 +9,12 @@ class Home extends MY_Controller
 	
 	function index()
 	{
-        array_push($this->_headerData['javaScripts'], "watch.animation");
+        if(!$this->agent->is_mobile()){
+            array_push($this->_headerData['javaScripts'], "home.logic", "watch.animation");
+        }else{
+             array_push($this->_headerData['javaScripts'], "home.logic.mobile");
+        }
+
 		$this->load->view('header', $this->_headerData);
 		$this->load->view('home');
 		$this->load->view('footer');

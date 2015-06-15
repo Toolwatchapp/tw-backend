@@ -341,11 +341,6 @@ footer
   text-align: center;
 }
 
-footer .social
-{
-  text-align: right;
-}
-
 footer .copyright{
   margin-top: 20px;
   font-size: 15px;
@@ -428,7 +423,6 @@ footer p
 .home-intro-overlay 
 {
   width: 100%;
-  min-height: 768px;
 }
 
 .home-picto, .home-text

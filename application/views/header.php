@@ -64,9 +64,6 @@
 				</div>
             <div class="modal-body">
             </div>
-            <div class="modal-footer">
-			     <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright 2015.</p>
-            </div>
 		</div>
 	  </div>
 	</div>
@@ -80,10 +77,10 @@
                             <a href="<?php echo base_url(); ?>"><div class="logo"></div></a>
                         </div>
                         <div style="margin-top: 10px" class="col-md-1 col-md-offset-5 text-center">
-						  <a href="/blog/watch-tips/">Features</a>
+						  <a href="#features">Features</a>
                         </div>
                         <div style="margin-top: 10px" class="col-md-1  text-center">
-						  <a href="/about/">Blog</a>
+						  <a href="/blog/watch-tips/">Blog</a>
                         </div>
                         <?php 
                             if($userIsLoggedIn)
