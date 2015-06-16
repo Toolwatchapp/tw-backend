@@ -29,15 +29,15 @@ $(document).ready(function()
         }
         
     });
-   
-    
+
     /*
      * Modal Update
      */
 	$('body').on('click', 'a[data-modal-update="true"]', function()
 	{
 		var dataHref = $(this).attr("data-href");
-		$.post(dataHref, {ajax: true}, function(data)
+        var dataCta = $(this).attr("data-cta");
+		$.post(dataHref, {ajax: true, cta:dataCta}, function(data)
 		{
 			$('#pageModal .modal-body').html(data);
 		});

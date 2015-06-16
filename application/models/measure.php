@@ -12,63 +12,6 @@ class Measure extends MY_Model
     {
         return $this->select()->find_by('watchId', $watchId);
     }
-
-    function removeDuplicate()
-    {
-
-        $this->db->select('*')
-                 ->from('watch');
-
-        $query = $this->db->get();
-        $watches = $query->result();
-
-        foreach ($watches as $watch) {
-            
-            $watchMeasures = $this->select()->find_all_by('watchId', $watch->watchId);
-
-            echo $this->db->last_query();
-
-            var_dump($watchMeasures);
-
-            echo '<br /><br />';
-
-            if(sizeof($watchMeasures) % 2 === 0){
-
-                for ($i=1; $i < sizeof($watchMeasures); $i++) { 
-                       
-                    $data = array(
-                        'accuracyReferenceTime' => $watchMeasures[$i]->measureReferenceTime,
-                        'accuracyUserTime' => $watchMeasures[$i]->measureUserTime,
-                        'statusId' => 2
-                    );
-
-                    $this->update($watchMeasures[$i-1]->id, $data);
-                    echo '   ' . $this->db->last_query() . '<br />';
-                    $this->delete($watchMeasures[$i]->id);
-                    echo '   ' . $this->db->last_query() . '<br />';
-
-                }
-
-            }else if(sizeof($watchMeasures) % 2 === 1 && sizeof($watchMeasures) > 2){
-
-                for ($i=1; $i < sizeof($watchMeasures)-1; $i++) { 
-                       
-                    $data = array(
-                        'accuracyReferenceTime' => $watchMeasures[$i]->measureReferenceTime,
-                        'accuracyUserTime' => $watchMeasures[$i]->measureUserTime,
-                        'statusId' => 2
-                    );
-
-                    $this->update($watchMeasures[$i-1]->id, $data);
-                    echo '   ' . $this->db->last_query() . '<br />';
-                    $this->delete($watchMeasures[$i]->id);
-                    echo '   ' . $this->db->last_query() . '<br />';
-
-                }
-
-            }
-        }
-    }
     
     
     function getMeasuresByUser($userId, $userWatches)
@@ -129,7 +72,7 @@ class Measure extends MY_Model
         return $data;
     }
 
-   private function computeAccuracy($watchMeasure){
+    private function computeAccuracy($watchMeasure){
         $userDelta = $watchMeasure->accuracyUserTime - $watchMeasure->measureUserTime;
         $refDelta =  $watchMeasure->accuracyReferenceTime - $watchMeasure->measureReferenceTime;
         $accuracy = ($userDelta*86400/$refDelta)-86400;
@@ -181,6 +124,5 @@ class Measure extends MY_Model
         $data = array('statusId' => 4);
         return $this->update($measureId, $data) !== false;
     }
-
 
 }

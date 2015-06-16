@@ -19,10 +19,12 @@ class Ajax extends CI_Controller
             $password = $this->input->post('password');   
             if($this->user->login($email, $password))
             {
+                $this->event->add($this->event->LOGIN_EMAIL);
                 $result['success'] = true;
             }
             else
             {
+                $this->event->add($this->event->LOGIN_FAIL);
                 $result['success'] = false;
             }
             
@@ -63,6 +65,8 @@ class Ajax extends CI_Controller
 
             if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
             {
+                $this->event->add($this->event->LOGIN_FB);
+
                 $this->load->helper('mcapi');                    
                 $api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
                 $api->listSubscribe('7f94c4aa71', $email, ''); 
@@ -95,6 +99,9 @@ class Ajax extends CI_Controller
                     $this->user->login($email, $password);
                 }
             }else if($this->user->login($email, $password)){
+
+                $this->event->add($this->event->SIGN_UP_FB);
+
                 $result['success'] = "signin";   
             }else {
                 $result['success'] = false;
@@ -119,6 +126,8 @@ class Ajax extends CI_Controller
             
             if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
             {
+
+                $this->event->add($this->event->SIGN_UP);
                 
                 if('true' == $mailingList)
                 {
@@ -163,6 +172,8 @@ class Ajax extends CI_Controller
             }
             else
             {
+                $this->event->add($this->event->SIGN_UP_FAIL);
+
                 $result['success'] = false;
             }
             
@@ -183,6 +194,8 @@ class Ajax extends CI_Controller
             
             if($resetToken != '')
             {
+                $this->event->add($this->event->RESET_PASSWORD);
+
                 $this->load->library('email');
                 
                 $config['protocol'] = "smtp";
@@ -229,6 +242,9 @@ class Ajax extends CI_Controller
     {
         if($this->input->post('resetToken'))
         {
+
+            $this->event->add($this->event->RESET_PASSWORD_USE);
+
             $result = array();
             
             $resetToken = $this->input->post('resetToken');
@@ -255,6 +271,9 @@ class Ajax extends CI_Controller
     function accuracyMeasure(){
         if($this->input->post('measureId'))
         {
+
+            $this->event->add($this->event->NEW_ACCURACY);
+
             $referenceTime = $this->session->userdata('referenceTime');
             $userTimezone = $this->input->post('userTimezone');
                         
@@ -283,6 +302,8 @@ class Ajax extends CI_Controller
     {
         if($this->input->post('watchId'))
         {
+            $this->event->add($this->event->NEW_MEASURE);
+            
             $result = array();
             
             $watchId = $this->input->post('watchId');

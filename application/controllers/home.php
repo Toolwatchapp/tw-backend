@@ -9,6 +9,7 @@ class Home extends MY_Controller
 	
 	function index()
 	{
+
         if(!$this->agent->is_mobile()){
             array_push($this->_headerData['javaScripts'], "home.logic", "watch.animation");
         }else{
@@ -22,6 +23,8 @@ class Home extends MY_Controller
 	 
     function logout()
     {
+        $this->event->add($this->event->LOGOUT);
+
         $this->user->logout();
         redirect(base_url());
     }
