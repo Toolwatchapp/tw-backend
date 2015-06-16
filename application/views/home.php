@@ -111,13 +111,13 @@ the accuracy of your mechanical watch.</p>
 
 
     <div class="home-mosa-pictures">
-        <div id="mosa-picture-1" style="background-image: url('https://www.toggl.com/photos/makeable.jpg');" class="home-mosa-picture">
+        <div id="mosa-picture-1" style="background-image: url('<?php echo img_url('1.1.jpg'); ?>');" class="home-mosa-picture">
         </div>
-        <div id="mosa-picture-2" style="background-image: url('https://www.toggl.com/photos/webhomes.jpg');" class="home-mosa-picture">
+        <div id="mosa-picture-2" style="background-image: url('<?php echo img_url('2.1.jpg'); ?>');" class="home-mosa-picture">
         </div>
-        <div id="mosa-picture-3" style="background-image: url('https://www.toggl.com/photos/offerpop.jpg?1');" class="home-mosa-picture">
+        <div id="mosa-picture-3" style="background-image: url('<?php echo img_url('3.1.jpg'); ?>');" class="home-mosa-picture">
         </div>
-        <div id="mosa-picture-4" style="background-image: url('https://www.toggl.com/photos/matt_alexander.jpg');" class="home-mosa-picture">
+        <div id="mosa-picture-4" style="background-image: url('<?php echo img_url('4.1.jpg'); ?>');" class="home-mosa-picture">
         </div>
     </div>
 
