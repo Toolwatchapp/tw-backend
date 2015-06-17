@@ -44,6 +44,19 @@
           ga('create', 'UA-59148878-1', 'auto');
           ga('send', 'pageview');
     </script>
+    <script type="application/ld+json">
+    { "@context" : "http://schema.org",
+      "@type" : "Organization",
+      "name" : "Toolwatch",
+      "url" : "http://toolwatch.io",
+      "logo": "http://toolwatch.io/assets/img/toolwatch-square.jpg"
+      "sameAs" : [ "https://www.facebook.com/Toolwatch",
+        "https://twitter.com/ToolwatchApp",
+        "https://www.pinterest.com/toolwatch/",
+        "https://instagram.com/toolwatchapp/",
+        "https://plus.google.com/104724190750629608501/"] 
+    }
+    </script>
     <?php
         foreach($styleSheets as $css) { echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">'; }
         foreach($javaScripts as $js) { echo '<script src="'.js_url($js).'"></script>'; }

@@ -355,7 +355,7 @@ footer a
 {
   color: white;
 }
-footer a:hover 
+footer a:hover, footer a:focus
 {
   color: rgba(255,255,255,.7);
 }
