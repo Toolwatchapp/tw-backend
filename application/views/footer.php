@@ -1,6 +1,6 @@
     <footer>
     <?php if(!$this->agent->is_mobile()){ ?>
-        <div class="publication">
+        <div id="publication_footer" class="publication">
                         
                 <a href="http://www.fratellowatches.com/toolwatch-measure-the-accuracy-of-your-watch/"><img src="<?php echo img_url('fratello_logos_transparant.png'); ?>"></a>
                 <a href="http://wristreview.com/?p=16698"><img src="http://wristreview.com/wp-content/uploads/2015/04/wr-logo-V21.png"></a>
@@ -16,22 +16,39 @@
                         <div class="logo"></div>
                     </div>
                     <div class="links col-md-offset-1 col-sm-1">
-                        <a href="#features">Features</a>
+                        <a href="<?php echo base_url(); ?>#demo-screen">Features</a>
                     </div>
                     <div class="links col-sm-1">
-                        <a href="#features">Blog</a>
+                        <a href="<?php echo base_url(); ?>/blog/watch-tips/">Blog</a>
                     </div>
-                    <div class="links col-sm-1">
-                        <a href="#features">Login</a>
-                    </div>
-                    <div class="links col-sm-1">
-                        <a href="/about/">Measures</a>
-                    </div>
+
+                    <?php 
+                        if($userIsLoggedIn)
+                        {
+                            echo '<div class="links col-sm-1">
+                                <a href="/logout">Logout</a>
+                            </div>
+                            <div class="links col-sm-1">
+                                <a href="/measures/">Measures</a>
+                            </div>';
+                        }
+                        else
+                        {
+                            echo '<div class="links col-sm-1">
+                                <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a>
+                            </div>
+                            <div class="links col-sm-1">
+                                <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a>
+                            </div>';
+                        }
+                    ?>
+
+
                     <div class="links col-sm-1">
                         <a href="/about/">About</a>
                     </div>
                     <div class="links col-sm-1">
-                        <a href="/about/">Contact</a>
+                        <a href="/contact/">Contact</a>
                     </div>
                     <div class="social col-sm-3">
                         <a href="https://instagram.com/toolwatchapp/" target="_blank" title="Instagram"><span class="fa fa-instagram"></span></a>

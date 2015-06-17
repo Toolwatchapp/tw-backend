@@ -16,8 +16,19 @@
             <div class="row">
                 <div class="col-md-12">
                     <center>
-                        <a class="btn btn-lg btn-white" href="#" title="Signup" data-toggle="modal" data-target="#pageModal" 
-                        data-modal-update="true" data-cta="MEASURE_NOW" data-href="/sign-up/">Measure your watch now!</a>
+
+                        <?php 
+                            if($userIsLoggedIn)
+                            {
+                                echo '<a class="btn btn-lg btn-white" href="/measures/">Measure your watch now!</a>';
+                            }
+                            else
+                            {
+                                
+                                echo '<a class="btn btn-lg btn-white" href="#" title="Signup" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-cta="MEASURE_NOW" data-href="/sign-up/">Measure your watch now!</a>';
+                            }
+                        ?>
+  
                     </center>
                 </div>
             </div>
@@ -85,7 +96,17 @@
                 <p>Toolwatch's accuracy measure is built for speed and ease to use. Measuring the accuracy of your mechanical watch is so simple that you'll actually use it. 
                 Toolwatch helps you keep your loved ones on time.</p>
                 <center>
-                    <a class="btn btn-default btn-xlarge" href="#" title="Signup" data-cta="GET_STARTED" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/sign-up/">GET STARTED <i class="fa fa-arrow-right"></i></a>
+
+                     <?php 
+                            if($userIsLoggedIn)
+                            {
+                                echo '<a class="btn btn-default btn-xlarge" href="/measures/">GET STARTED <i class="fa fa-arrow-right"></i></a>';
+                            }
+                            else
+                            {
+                                echo '<a class="btn btn-default btn-xlarge" href="#" title="Signup" data-cta="GET_STARTED" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/sign-up/">GET STARTED <i class="fa fa-arrow-right"></i></a>';
+                            }
+                        ?>
                 </center>
             </div>
          </div>

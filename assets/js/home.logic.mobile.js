@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 
-	$('video,audio').mediaelementplayer({features: []});
+	$('video,audio').mediaelementplayer();
 
     $( ".slogan-home" ).animate({
         marginTop: "-="+$("video").height()/2

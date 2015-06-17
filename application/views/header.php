@@ -93,7 +93,7 @@
                             <a href="<?php echo base_url(); ?>"><div class="logo"></div></a>
                         </div>
                         <div style="margin-top: 10px" class="col-md-1 col-md-offset-5 text-center">
-						  <a href="#features">Features</a>
+						  <a href="<?php echo base_url(); ?>#demo-screen">Features</a>
                         </div>
                         <div style="margin-top: 10px" class="col-md-1  text-center">
 						  <a href="/blog/watch-tips/">Blog</a>

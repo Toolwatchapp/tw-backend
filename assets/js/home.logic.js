@@ -3,7 +3,7 @@ var delta =  Math.floor((Math.random() * 10) + 1) - 5;
 var d;
 
 var activeIndex = 0;
-var possibleIndex = ["home-video", "demo-screen", "mosa-screen"];
+var possibleIndex = ["home-video", "demo-screen", "mosa-screen", "publication_footer"];
 var animationUnderWay = false;
 var timeouts = [];
 
@@ -44,6 +44,8 @@ $( document ).ready(function() {
 
             if(activeIndex === -1){
                 activeIndex = 0;
+            }else if(activeIndex === 4){
+                 activeIndex = 3;
             }
 
             if(activeIndex!==0){
