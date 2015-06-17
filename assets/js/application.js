@@ -11,25 +11,6 @@ $(document).ready(function()
        resizeContent();
     });
     
-    setInterval("changeBackground()", 7000);
-    
-    
-    $(window).scroll(function()
-    {
-        if(window.location.pathname == "/")
-        {
-             if( $(window).scrollTop() >= '70')
-            {
-                $('header').addClass('blue');   
-            }
-            else
-            {
-                $('header').removeClass('blue');   
-            }
-        }
-        
-    });
-
     /*
      * Modal Update
      */

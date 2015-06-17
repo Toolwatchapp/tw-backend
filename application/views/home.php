@@ -1,6 +1,7 @@
 <div class="home-intro">
     <div class="home-intro-overlay">
-      <video id="home-video" src="<?php echo vid_url('home.mp4');?>" width="100%" height="100%" autoplay loop muted></video>
+      <video id="home-video" src="<?php echo $video_url;?>" width="100%" height="100%" autoplay loop muted></video>
+        
         <div class="container container-fluid first slogan-home">
 
             <?php if(!$this->agent->is_mobile()){ ?>
@@ -29,13 +30,6 @@
                 </div>
             </div>
 
-            <div class="row continue">
-                <div class="col-md-12">
-                    <center>
-                        <span class="fa fa-chevron-down"></span>
-                    </center>
-                </div>
-            </div>
             <?php } ?>
 
 
@@ -44,7 +38,7 @@
 </div>
 
 <div class="home-picto">
-    <div class="container container-fluid">
+    <div id="demo-screen" class="container container-fluid">
 <?php if(!$this->agent->is_mobile()){ ?>
          <div class="row">
 
@@ -100,11 +94,11 @@
 </div>
 
 <?php if(!$this->agent->is_mobile()){ ?>
-<div class="home-mosa">
+<div id="mosa-screen" class="home-mosa">
 
         <div class="home-mosa-stats">
             <img src="<?php echo img_url('logo-blue.png');?>">
-            <h2>XXX Followers on Instagram.</h2>
+            <h2><?php echo $title; ?></h2>
             <p>The most convenient way to measure 
 the accuracy of your mechanical watch.</p>
         </div>

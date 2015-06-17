@@ -125,4 +125,29 @@ class Measure extends MY_Model
         return $this->update($measureId, $data) !== false;
     }
 
+    function getMeasuresCountByWatchBrand($watchBrand){
+        return $this->select("count(1) as cnt")
+             ->join("watch", "watch.watchId = measure.watchId")
+             ->find_by("UPPER(brand)", strtoupper($watchBrand))
+             ->cnt;
+    }
+
+    function getMeasuresWeeklyAverageAccuracy(){
+        
+        $totalAccuracy = 0;
+
+        $measures = $this->select()
+            ->where('statusId', 2)
+            ->where('accuracyReferenceTime >=', microtime() - 604800000)
+            ->find_all();
+
+        foreach ($measures as $measure) {
+            $totalAccuracy = $totalAccuracy + 
+                $this->computeAccuracy($measure);
+        }
+
+        return sprintf("%.2f", $totalAccuracy / sizeof($measures));
+
+    }
+
 }

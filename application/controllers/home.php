@@ -5,6 +5,7 @@ class Home extends MY_Controller
 	function __construct()
 	{
 		parent::__construct();
+        $this->load->model('measure');
 	}
 	
 	function index()
@@ -17,9 +18,29 @@ class Home extends MY_Controller
         }
 
 		$this->load->view('header', $this->_headerData);
-		$this->load->view('home');
+		$this->load->view('home', $this->homeMessage());
 		$this->load->view('footer');
 	}
+
+    private function homeMessage(){
+
+        $rand = rand ( 0 , 3 );
+
+        $watchBrands = array('Seiko', 'Rolex', 'Omega');
+        $videos = array('Omega.mp4', 'Rolex.mp4', 'Zenith.mp4');
+
+        $video = vid_url('Zenith.mp4');
+
+        if($rand >= 0 && $rand <= 2){
+            return array('title'=>$this->measure
+                ->getMeasuresCountByWatchBrand($watchBrands[$rand]) . 
+                ' ' . $watchBrands[$rand] . ' measured on Toolwatch.io',
+                'video_url'=>vid_url($videos[$rand]));
+        }else{
+            return array('title'=>$this->measure->getMeasuresWeeklyAverageAccuracy() .
+                ' spd average accuracy measured this week', 'video_url'=>$video);
+        }
+    }
 	 
     function logout()
     {
