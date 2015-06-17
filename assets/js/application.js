@@ -312,6 +312,8 @@ $(document).ready(function()
                             $(this).attr("data-text", $(this).attr("data-text").replace("{WatchAccuracy}", result.accuracy));
                         });
 
+                        initShareButton();
+
                     }
                 }  
                 else

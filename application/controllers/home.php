@@ -14,13 +14,28 @@ class Home extends MY_Controller
         if(!$this->agent->is_mobile()){
             array_push($this->_headerData['javaScripts'], "home.logic", "watch.animation");
         }else{
-             array_push($this->_headerData['javaScripts'], "home.logic.mobile");
+            array_push($this->_headerData['javaScripts'], "home.logic.mobile");
         }
 
 		$this->load->view('header', $this->_headerData);
 		$this->load->view('home', $this->homeMessage());
 		$this->load->view('footer');
 	}
+
+    function result(){
+
+        if(!$this->agent->is_mobile()){
+            array_push($this->_headerData['javaScripts'], "home.logic", "watch.animation");
+        }else{
+            array_push($this->_headerData['javaScripts'], "home.logic.mobile");
+        }
+
+        $this->_headerData["meta_img"] = img_url("accuracy.jpg");
+
+        $this->load->view('header', $this->_headerData);
+        $this->load->view('home', $this->homeMessage());
+        $this->load->view('footer');
+    }
 
     private function homeMessage(){
 
@@ -75,15 +90,7 @@ class Home extends MY_Controller
 		$this->load->view('about');
 		$this->load->view('footer');
     }
-    
-    /*function help()
-    {
-        $this->_headerData['headerClass'] = 'blue';
-        $this->load->view('header', $this->_headerData);
-		$this->load->view('help');
-		$this->load->view('footer');
-    }*/
-    
+
     function contact()
     {
         $this->_headerData['headerClass'] = 'blue';

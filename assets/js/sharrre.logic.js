@@ -1,5 +1,4 @@
-$( document ).ready(function() {
-
+function initShareButton(){
   $('#googleplus').sharrre({
     share: {
       googlePlus: true
@@ -37,11 +36,4 @@ $( document ).ready(function() {
       api.openPopup('facebook');
     }
   });
-
-});
-
-
-
-function generateImage(){
-
 }

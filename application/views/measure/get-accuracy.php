@@ -62,9 +62,9 @@
                             <center><p><br />We are happy to have you around, help us spread the love for mechanical watches and share your accuracy on:</p></center>
                            
                         <div class="col-sm-12">
-                            <div class="share-button" id="twitter" data-url="<?php echo base_url();?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} on @Toolwatch"></div>
-                            <div class="share-button" id="facebook" data-url="<?php echo base_url();?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} on @ToolwatchApp"></div>
-                            <div class="share-button" id="googleplus" data-url="<?php echo base_url();?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} on @ToolwatchApp"></div>        
+                            <div class="share-button" id="twitter" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @Toolwatch"></div>
+                            <div class="share-button" id="facebook" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @ToolwatchApp"></div>
+                            <div class="share-button" id="googleplus" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @ToolwatchApp"></div>        
                         </div>
                            
 

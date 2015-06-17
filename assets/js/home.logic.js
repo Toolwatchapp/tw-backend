@@ -42,6 +42,10 @@ $( document ).ready(function() {
                 activeIndex = activeIndex +1;
             }   
 
+            if(activeIndex === -1){
+                activeIndex = 0;
+            }
+
             if(activeIndex!==0){
                 $('header').addClass('blue');   
             }else{
