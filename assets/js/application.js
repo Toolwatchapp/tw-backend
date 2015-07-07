@@ -3,6 +3,8 @@
  * Copyright 2015 ToolwatchApp 
  */
 
+ var hoursRegExp = new RegExp("([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]");
+
 $(document).ready(function() 
 {	
     resizeContent();
@@ -281,7 +283,9 @@ $(document).ready(function()
         var userTimezone= (myDate.getTimezoneOffset()/60)+1;
         var measureId = $('input[name="measureId"]').val();
 
-        if(/\d+:\d+:\d+/.test(userTime))
+        console.log(hoursRegExp.test(userTime));
+
+        if(hoursRegExp.test(userTime))
         {
             $('.btn-spinner i').css('display', 'inline-block');
             
@@ -346,7 +350,7 @@ $(document).ready(function()
         // Timezone difference from Europe/Paris
         var userTimezone= (myDate.getTimezoneOffset()/60)+1;
                 
-        if(/\d+:\d+:\d+/.test(userTime))
+        if(hoursRegExp.test(userTime))
         {
             $('.btn-spinner i').css('display', 'inline-block');
             
