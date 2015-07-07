@@ -76,7 +76,7 @@ class Measure extends MY_Model
         $userDelta = $watchMeasure->accuracyUserTime - $watchMeasure->measureUserTime;
         $refDelta =  $watchMeasure->accuracyReferenceTime - $watchMeasure->measureReferenceTime;
         $accuracy = ($userDelta*86400/$refDelta)-86400;
-        $accuracy = sprintf("%.2f", $accuracy);
+        $accuracy = sprintf("%.1f", $accuracy);
         return $accuracy;
     }
 
