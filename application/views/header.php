@@ -98,7 +98,7 @@
                         <div style="margin-top: 10px" class="col-md-1  text-center">
                           <a href="/about/">About</a>
                         </div>
-                        <div style="margin-top: 10px" class="col-md-1  text-center">
+                        <div style="margin-top: 10px; width: auto" class="col-md-1  text-center">
 						  <a href="/blog/watch-tips/">Watch Tips</a>
                         </div>
                         <?php 
