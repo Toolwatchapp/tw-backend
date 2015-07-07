@@ -42,7 +42,7 @@ class Measure extends MY_Model
                     foreach ($watchMeasures as $watchMeasure) {
                         //Compute accuracy
                         if( $watchMeasure->statusId == 2 ){
-                            $data[$dataPushing]['accuracy'] = sprintf("%.2f", $this->computeAccuracy($watchMeasure));
+                            $data[$dataPushing]['accuracy'] = sprintf("%.1f", $this->computeAccuracy($watchMeasure));
                             $data[$dataPushing]['statusId'] = $watchMeasure->statusId;
                         //Check if the measure was made less than 12 hours ago
                         } else if ( ((time() - $watchMeasure->measureReferenceTime)/3600 ) < 12 ){
