@@ -52,6 +52,17 @@ class User extends MY_Model
         
         return $res;
     }
+
+    function isAdmin(){
+        $res = false;
+        
+        if($this->session->userdata('admin'))
+        {
+            $res = true;   
+        }
+        
+        return $res;
+    }
     
     function logout()
     {
