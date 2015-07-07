@@ -18,8 +18,8 @@ class MY_Controller extends CI_Controller
         $this->_headerData['headerClass'] = '';
 
 
-        if(!$this->user->isAdmin()){
-        	 if(strpos(base_url(), "tw-preprod") !== false && !$this->input->post('pw')){
+        if(!$this->user->isAdmin() && strpos(base_url(), "tw-prepod") !== false){
+        	 if(!$this->input->post('pw')){
 			echo "<form action='".base_url()."' method='post'><input name='pw' type='password'/><input type='submit'/>";
 				die;
 			}else if($this->input->post('pw') && $this->input->post('pw') === '&BSdJ88{waHK!Zj'){
