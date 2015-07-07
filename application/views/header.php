@@ -7,7 +7,7 @@
 
     <meta property="og:title" content="<?php if(isset($title)) echo $title; else echo 'Easily measure and track the accuracy of your mechanical watch'; ?>" />
     <meta property="og:description" content="<?php if(isset($meta_description)) echo $meta_description; else echo 'Toolwatch makes it super easy to measure the accuracy of any mechanical watch. Keep your watch’s accuracy at its best with Toolwatch.'; ?>" />
-    <meta property="og:image" content="<?php if(isset($meta_img)) echo $meta_img; else echo img_url('logo-blue.png'); ?>" />
+    <meta property="og:image" content="<?php if(isset($meta_img)) echo $meta_img; else echo img_url('share.png'); ?>" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='//fonts.googleapis.com/css?family=Raleway:500,700' rel='stylesheet' type='text/css'>
