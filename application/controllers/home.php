@@ -42,19 +42,15 @@ class Home extends MY_Controller
         $rand = rand ( 0 , 3 );
 
         $watchBrands = array('Seiko', 'Rolex', 'Omega');
-        $videos = array('Omega.mp4', 'Rolex.mp4', 'Zenith.mp4');
+        $videos = array('Omega.mp4', 'Rolex.mp4', 'Zenith.mp4', 'Vacheron.mp4');
 
         $video = vid_url('Zenith.mp4');
 
-        if($rand >= 0 && $rand <= 2){
-            return array('title'=>$this->measure
-                ->getMeasuresCountByWatchBrand($watchBrands[$rand]) . 
+        return  array('title'=>$this->measure
+                ->getMeasuresCountByWatchBrand($watchBrands[rand ( 0 , 2 )]) . 
                 ' ' . $watchBrands[$rand] . ' measured on Toolwatch.io',
-                'video_url'=>vid_url($videos[$rand]));
-        }else{
-            return array('title'=>$this->measure->getMeasuresWeeklyAverageAccuracy() .
-                ' spd average accuracy measured this week', 'video_url'=>$video);
-        }
+                'video_url'=>vid_url($videos[rand ( 0 , 3 )]));
+
     }
 	 
     function logout()
