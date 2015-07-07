@@ -43,7 +43,7 @@
                     </div>
                 </div>
 
-                <div class="form-group sync-success" style="display:none;">  
+                <div class="form-group sync-success" style="display:none; text-align: center">  
 
                     <div class="col-sm-12">
 
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="share-plugin col-md-offset-1 col-sm-10">
-                            <center><p><br />We are happy to have you around, help us spread the love for mechanical watches and share your accuracy on:</p></center>
+                            <center><p><br /><br />We are happy to have you around, help us spread the love for mechanical watches and share your accuracy on:</p></center>
                            
                         <div class="col-sm-12">
                             <div class="share-button" id="twitter" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @toolwatch"></div>
@@ -71,7 +71,7 @@
                         <center><p><br /><br />We <i style="color:#4d77a7" class="fa fa-heart"></i> <a href="https://instagram.com/toolwatchapp/">Instagram</a>, tag us with your wristshots and share your results using #ToolwatchApp !</p></center>
                            
                             <!-- www.intagme.com -->
-                        <iframe src="http://www.intagme.com/in/?u=dG9vbHdhdGNoYXBwfGlufDEwMHw0fDJ8fHllc3w1fHVuZGVmaW5lZHx5ZXM=" allowTransparency="true" frameborder="0" scrolling="no" style="margin-left:5px; border:none; overflow:hidden; width:460px; height: 230px" ></iframe>
+                        <iframe src="http://www.intagme.com/in/?u=dG9vbHdhdGNoYXBwfGlufDEwMHw0fDJ8fHllc3w1fHVuZGVmaW5lZHx5ZXM=" allowTransparency="true" frameborder="0" scrolling="no" style="margin-left:5px; border:none; overflow:hidden; width:auto; height: 230px" ></iframe>
 
                         </div>
                         
