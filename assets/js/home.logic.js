@@ -1,5 +1,5 @@
 
-var delta =  Math.floor((Math.random() * 10) + 1) - 5;
+var delta =  (Math.random() * 6) + 1 - 2;
 var d;
 
 var activeIndex = 0;
@@ -32,7 +32,7 @@ $( document ).ready(function() {
             $("#demo-pointer").removeAttr('style');
 
             animationUnderWay = true;
-            var evt = window.event || e //equalize event object     
+            var evt = window.event || e; //equalize event object     
             evt = evt.originalEvent ? evt.originalEvent : evt; //convert to originalEvent if possible               
             var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta //check for detail first, because it is used by Opera and FF
 
@@ -87,7 +87,7 @@ $( document ).ready(function() {
         $("#demo-pointer").hide();
         $("#demo-third-step").hide();
         $("#demo-fourth-step").fadeToggle();
-        $(".watch-accuracy").html(result.toFixed(0));
+        $(".watch-accuracy").html(result.toFixed(1));
     });
 
 
@@ -151,7 +151,7 @@ function similateInput(){
 
             $("#inputUserTime").focus();
 
-            var seconds = (d.getSeconds() + Math.abs(delta));
+            var seconds = (d.getSeconds() + Math.floor(Math.abs(delta)));
             if(seconds <= 9){
                 seconds = "0"+seconds;
             }
