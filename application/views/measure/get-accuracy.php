@@ -62,13 +62,13 @@
                             <center><p><br />We are happy to have you around, help us spread the love for mechanical watches and share your accuracy on:</p></center>
                            
                         <div class="col-sm-12">
-                            <div class="share-button" id="twitter" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @Toolwatch"></div>
-                            <div class="share-button" id="facebook" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @ToolwatchApp"></div>
-                            <div class="share-button" id="googleplus" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @ToolwatchApp"></div>        
+                            <div class="share-button" id="twitter" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @toolwatch"></div>
+                            <div class="share-button" id="facebook" data-url="<?php echo base_url() . '/result' ;?>" data-text="My <?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on https://www.facebook.com/Toolwatch?"></div>
+                            <div class="share-button" id="googleplus" data-url="<?php echo base_url() . '/result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on https://plus.google.com/104724190750629608501/"></div>        
                         </div>
                            
 
-                        <center><p><br /><br /><br />We <i style="color:#4d77a7" class="fa fa-heart"></i> <a href="https://instagram.com/toolwatchapp/">Instagram</a>, tag us with your wristshots and share your results using #ToolwatchApp !</p></center>
+                        <center><p><br /><br />We <i style="color:#4d77a7" class="fa fa-heart"></i> <a href="https://instagram.com/toolwatchapp/">Instagram</a>, tag us with your wristshots and share your results using #ToolwatchApp !</p></center>
                            
                             <!-- www.intagme.com -->
                         <iframe src="http://www.intagme.com/in/?u=dG9vbHdhdGNoYXBwfGlufDEwMHw0fDJ8fHllc3w1fHVuZGVmaW5lZHx5ZXM=" allowTransparency="true" frameborder="0" scrolling="no" style="margin-left:5px; border:none; overflow:hidden; width:460px; height: 230px" ></iframe>
