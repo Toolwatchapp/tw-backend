@@ -92,11 +92,14 @@
                         <div class="col-md-2">
                             <a href="<?php echo base_url(); ?>"><div class="logo"></div></a>
                         </div>
-                        <div style="margin-top: 10px" class="col-md-1 col-md-offset-5 text-center">
+                        <div style="margin-top: 10px" class="col-md-1 col-md-offset-4 text-center">
 						  <a href="<?php echo base_url(); ?>#demo-screen">Features</a>
                         </div>
                         <div style="margin-top: 10px" class="col-md-1  text-center">
-						  <a href="/blog/watch-tips/">Blog</a>
+                          <a href="/about/">About</a>
+                        </div>
+                        <div style="margin-top: 10px" class="col-md-1  text-center">
+						  <a href="/blog/watch-tips/">Watch Tips</a>
                         </div>
                         <?php 
                             if($userIsLoggedIn)
