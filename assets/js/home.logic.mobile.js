@@ -1,9 +1,16 @@
 $( document ).ready(function() {
 
 	$('video,audio').mediaelementplayer();
-
+	$('header').addClass('blue');
+	$('header').addClass('blue');
+	$('.navbar').css('min-height', '20px');
+	$('.home-intro').css('margin-top', '38px');
+	$('#toolwatch-explained').css('margin-top', '80px');
+	var delta = $("video").height()/2 + $(".slogan-home").height();
     $( ".slogan-home" ).animate({
-        marginTop: "-="+$("video").height()/2
+        marginTop: "-="+delta
     }, 2000);
+
+    console.log(delta);
 });
 
