@@ -785,7 +785,10 @@ button[name=syncDone],
   box-shadow: 0 1px 4px #DDDDDD, 0 1px 0 #929292 inset;
 }
 
-.mejs-container .mejs-controls .mejs-overlay-button{ visibility:hidden !important; }
+.mejs-container .mejs-controls, 
+.mejs-overlay-button { 
+  visibility:hidden !important; 
+}
 
 
 .slogan-home h1{

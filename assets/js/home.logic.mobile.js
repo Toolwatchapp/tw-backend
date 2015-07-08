@@ -1,6 +1,14 @@
 $( document ).ready(function() {
 
-	$('video,audio').mediaelementplayer();
+	$('video,audio').mediaelementplayer({
+		loop: true,
+		success: function (mediaElement, domObject) { 
+         
+	        // call the play method
+	        mediaElement.play();
+         
+    	},
+	});
 	$('header').addClass('blue');
 	$('header').addClass('blue');
 	$('.navbar').css('min-height', '20px');

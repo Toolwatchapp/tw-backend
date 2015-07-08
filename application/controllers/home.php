@@ -39,7 +39,7 @@ class Home extends MY_Controller
 
     private function homeMessage(){
 
-        $rand = rand ( 0 , 3 );
+        $randBrands = rand ( 0 , 2 );
 
         $watchBrands = array('Seiko', 'Rolex', 'Omega');
         $videos = array('Omega.mp4', 'Rolex.mp4', 'Zenith.mp4', 'Vacheron.mp4');
@@ -47,8 +47,8 @@ class Home extends MY_Controller
         $video = vid_url('Zenith.mp4');
 
         return  array('title'=>$this->measure
-                ->getMeasuresCountByWatchBrand($watchBrands[rand ( 0 , 2 )]) . 
-                ' ' . $watchBrands[$rand] . ' measured on Toolwatch.io',
+                ->getMeasuresCountByWatchBrand($watchBrands[$randBrands]) . 
+                ' ' . $watchBrands[$randBrands] . ' measured on Toolwatch.io',
                 'video_url'=>vid_url($videos[rand ( 0 , 3 )]));
 
     }
