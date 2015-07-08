@@ -59,7 +59,7 @@ $( document ).ready(function() {
             }
 
             $('html, body').animate({
-                scrollTop: $("#"+possibleIndex[activeIndex]).offset().top + 5;
+                scrollTop: $("#"+possibleIndex[activeIndex]).offset().top + 5
             }, 2000, function() {
                 animationUnderWay = false;
             });
