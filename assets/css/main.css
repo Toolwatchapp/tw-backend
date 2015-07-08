@@ -230,7 +230,6 @@ textarea:focus, textarea:hover, textarea:active
   border-radius: 0;
   margin-bottom: 0;
   position: fixed;
-  top: 0px;
   width: 100%;
   min-height: 70px;
 }
