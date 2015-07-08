@@ -60,6 +60,7 @@
         "https://plus.google.com/104724190750629608501/"] 
     }
     </script>
+    <script type="text/javascript" src="//cdn.bounce.bar/114697.js"></script>
     <?php
         foreach($styleSheets as $css) { echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">'; }
         foreach($javaScripts as $js) { echo '<script src="'.js_url($js).'"></script>'; }
