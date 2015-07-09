@@ -14,8 +14,8 @@
  * @package WordPress
  */
 
-define('WP_HOME','https://toolwatch.io/blog/watch-tips/');
-define('WP_SITEURL','https://toolwatch.io/blog/watch-tips/');
+define('WP_HOME','http://toolwatchapp.herokuapp.com/blog/watch-tips/');
+define('WP_SITEURL','http://toolwatchapp.herokuapp.com/blog/watch-tips/');
 
 $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
