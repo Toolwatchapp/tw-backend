@@ -14,9 +14,6 @@
  * @package WordPress
  */
 
-define('WP_HOME','http://toolwatchapp.herokuapp.com/blog/watch-tips/');
-define('WP_SITEURL','http://toolwatchapp.herokuapp.com/blog/watch-tips/');
-
 $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
 // ** MySQL settings - You can get this info from your web host ** //
