@@ -61,7 +61,7 @@
     }
     </script>
    
-    <meta name="p:domain_verify" content="6187231235ed576f7d6e438a438b6b9a"/>
+    <meta name="p:domain_verify" content="5351fd7409a950a1032e788cf9ae4ce8"/>
     <?php
         foreach($styleSheets as $css) { echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">'; }
         foreach($javaScripts as $js) { echo '<script src="'.js_url($js).'"></script>'; }
