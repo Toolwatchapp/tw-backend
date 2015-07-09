@@ -3,6 +3,8 @@
  * Copyright 2015 ToolwatchApp 
  */
 
+ var hoursRegExp = new RegExp("^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$");
+
 $(document).ready(function() 
 {	
     resizeContent();
@@ -11,33 +13,14 @@ $(document).ready(function()
        resizeContent();
     });
     
-    setInterval("changeBackground()", 7000);
-    
-    
-    $(window).scroll(function()
-    {
-        if(window.location.pathname == "/")
-        {
-             if( $(window).scrollTop() >= '70')
-            {
-                $('header').addClass('blue');   
-            }
-            else
-            {
-                $('header').removeClass('blue');   
-            }
-        }
-        
-    });
-   
-    
     /*
      * Modal Update
      */
 	$('body').on('click', 'a[data-modal-update="true"]', function()
 	{
 		var dataHref = $(this).attr("data-href");
-		$.post(dataHref, {ajax: true}, function(data)
+        var dataCta = $(this).attr("data-cta");
+		$.post(dataHref, {ajax: true, cta:dataCta}, function(data)
 		{
 			$('#pageModal .modal-body').html(data);
 		});
@@ -49,7 +32,7 @@ $(document).ready(function()
 		{
 			$('#pageModal .modal-body').html(data);
 		});
-	})
+	});
 	
     /*
      * Next step on signup form
@@ -59,29 +42,34 @@ $(document).ready(function()
 		$('.signup-error').hide();
         
         var userEmail = $('input[name="email"]').val();
+        var confirmEmail = $('input[name="confirmEmail"]').val();
         var password = $('input[name="password"]').val();
         var confirmPassword = $('input[name="confirmPassword"]').val();
         var mailingList = $('input[name="malingList"]').is(':checked');
         
         if(validateEmail(userEmail))
         {
-            if((password.length >= 6) && (password != '')) 
+            if(userEmail == confirmEmail) 
             {
                 if(confirmPassword == password)
                 {
-                    $.post('/ajax/checkEmail', {email: userEmail}, function(data)
-                    {
-                        var result = $.parseJSON(data);
-                        if(result.success == true)
+                    if((password.length >= 6) && (password !== '')){
+                        $.post('/ajax/checkEmail', {email: userEmail}, function(data)
                         {
-                            $('.stepOne').hide();
-                            $('.stepTwo').show();
-                        }
-                        else
-                        {
-                            $('.email-error').html('This email is already taken.').show();
-                        }
-                    });
+                            var result = $.parseJSON(data);
+                            if(result.success === true)
+                            {
+                                $('.stepOne').hide();
+                                $('.stepTwo').show();
+                            }
+                            else
+                            {
+                                $('.confirm-email-error').html('This email is already taken.').show();
+                            }
+                        });
+                    }else{
+                         $('.password-error').html('Your password should be at least 6 characters long.').show();
+                    }
                 }
                 else
                 {
@@ -90,7 +78,7 @@ $(document).ready(function()
             }
             else
             {
-               $('.password-error').html('Your password should be at least 6 characters long.').show();
+                $('.confirm-email-error').html('Your email doesn\'t match.').show();
             }
             
         }
@@ -116,7 +104,7 @@ $(document).ready(function()
         $.post('/ajax/login', {email: email, password: password}, function(data)
         {
             var result = $.parseJSON(data);
-            if(result.success == true)
+            if(result.success === true)
             {
                 setTimeout('window.location.replace("/measures/")', 1000);
             }
@@ -295,7 +283,7 @@ $(document).ready(function()
         var userTimezone= (myDate.getTimezoneOffset()/60)+1;
         var measureId = $('input[name="measureId"]').val();
 
-        if(/\d+:\d+:\d+/.test(userTime))
+        if(hoursRegExp.test(userTime))
         {
             $('.btn-spinner i').css('display', 'inline-block');
             
@@ -310,13 +298,24 @@ $(document).ready(function()
                     $('button[name="restartCountdown"]').hide();
                     $('.sync-success').show();
                     $('.backToMeasure').show();
+                    $('#mainTitle').hide();
+                    $('#mainExplanation').hide();
                     
                     if(result.accuracy != null)
                     {
-                        if(result.accuracy > 0)
+                        if(result.accuracy > 0){
                             result.accuracy = '+'+result.accuracy;
+                        }
                         
                         $('.watch-accuracy').html(result.accuracy);
+
+
+                        $('.share-button').each(function(index){
+                            $(this).attr("data-text", $(this).attr("data-text").replace("{WatchAccuracy}", result.accuracy));
+                        });
+
+                        initShareButton();
+
                     }
                 }  
                 else
@@ -349,7 +348,7 @@ $(document).ready(function()
         // Timezone difference from Europe/Paris
         var userTimezone= (myDate.getTimezoneOffset()/60)+1;
                 
-        if(/\d+:\d+:\d+/.test(userTime))
+        if(hoursRegExp.test(userTime))
         {
             $('.btn-spinner i').css('display', 'inline-block');
             
@@ -387,7 +386,35 @@ $(document).ready(function()
         var name = $('input[name="name"]').val();
         var email = $('input[name="email"]').val();
         var message = $('textarea[name="message"]').val();
+        var confirmEmail = $('textarea[name="confirmEmail"]').val();
+        var error = false;
+
+        $('.contact-error').hide();
+
+        if(name == ""){
+            $('.name-error').show();
+            error = true;
+        }
+
+        if(email == ""){
+            $('.email-error').show();
+            error = true;
+        }
+
+        if(message == ""){
+            $('.text-error').show();
+            error = true;
+        }
+
+        if(confirmEmail == "" || confirmEmail != email){
+            $('.confirm-email-error').show();
+            error = true;
+        }
         
+        if(error === true){
+            return;
+        }
+
         $.post('/ajax/contact', {name: name, email: email, message: message}, function(data)
         {
             var result = $.parseJSON(data);
@@ -489,7 +516,9 @@ function resizeContent()
     var footerHeight = $('footer').height();   
         
     $('.content').css('min-height', (windowHeight-(headerHeight-30)-footerHeight)+'px');
-    $('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
+    $('.content').css('min-height', (windowHeight-(headerHeight-30)-footerHeight)+'px');
+    $('.content').css('margin-top', (headerHeight+50)+'px');
+    //$('.home-intro, .home-intro-overlay').css('min-height', windowHeight+'px');
 }
 
 var currentBg = 0;
@@ -499,5 +528,5 @@ function changeBackground()
     
     currentBg = (currentBg+1)%4;
     var bgNumber = currentBg+1;
-    $('.home-intro').css('background-image', 'url("/assets/img/home_'+bgNumber+'.jpg")');
+    //$('.home-intro').css('background-image', 'url("/assets/img/home_'+bgNumber+'.jpg")');
 }

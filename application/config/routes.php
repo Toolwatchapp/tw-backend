@@ -50,6 +50,7 @@ $route['reset-password'] = "modal/resetPassword";
 
 $route['reset-password/(:any)'] = "home/resetPassword/$1";
 $route['logout'] = "home/logout";
+$route['result'] = "home/result";
 $route['about'] = "home/about";
 $route['help'] = "home/help";
 $route['contact'] = "home/contact";

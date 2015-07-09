@@ -28,13 +28,20 @@
             </div>
             <form class="form-horizontal" name="contact">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="name" placeholder="Your name">
+                    <input type="text" class="form-control" name="name" placeholder="Your name *">
+                    <span class="contact-error name-error">This field is required.</span>
                 </div>
                 <div class="form-group">
-                    <input type="email" class="form-control" name="email" placeholder="Your email">
+                    <input type="email" class="form-control" name="email" placeholder="Your email *">
+                    <span class="contact-error email-error">This field is required.</span>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" name="confirmEmail" placeholder="Confirm your email *">
+                    <span class="contact-error confirm-email-error">Your email doesn't match.</span>
                 </div>
                 <div class="form-group">
                     <textarea class="form-control" name="message" rows="10"></textarea>
+                    <span class="contact-error text-error">This field is required.</span>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-lg btn-primary">Send your message</button>

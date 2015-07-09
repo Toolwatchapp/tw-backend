@@ -4,7 +4,15 @@ if ( ! function_exists('css_url'))
 {
     function css_url($nom)
     {
-	    return base_url() . 'assets/css/' . $nom . '.css ';
+	    return base_url() . 'assets/css/' . $nom . '.css';
+    }
+}
+
+if ( ! function_exists('vid_url'))
+{
+    function vid_url($nom)
+    {
+        return base_url() . 'assets/videos/' . $nom;
     }
 }
 

@@ -1,11 +1,19 @@
+<div class="form-group">
+   <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">Sign up with Facebook<i class="fa fa-spinner fa-pulse"></i></button></center>
+   <span id="fb_error" class="signup-error login-error"></span>
+</div>
 <form method="post" name="signup">
     <div class="form-group">
-       <h1>Sign up</h1>
+       <strong class="line-thru">or</strong>
     </div>
 	<fieldset class="stepOne">
 		<div class="form-group">
 			<input type="email" class="form-control" name="email" placeholder="Enter your email" autofocus="true">
 			<span class="signup-error email-error"></span>
+		</div>
+		<div class="form-group">
+			<input type="email" class="form-control" name="confirmEmail" placeholder="Confirm your email">
+			<span class="signup-error confirm-email-error"></span>
 		</div>
 		<div class="form-group">
 			<input type="password" class="form-control" name="password" placeholder="Set a password">
@@ -15,11 +23,10 @@
 			<input type="password" class="form-control" name="confirmPassword" placeholder="Confirm your password">
 			<span class="signup-error confirm-password-error"></span>
 		</div>
-        <div class="form-group">
-            <center><input type="checkbox" name="malingList" checked><br>I would like to receive emails on Toolwatch</center>
-        </div>
 		<div class="form-group">
-			<center><a class="btn btn-primary btn-lg signupNextStep">Continue</a></center>
+			<center><a class="btn btn-primary btn-lg signupNextStep btn-full">Sign up</a></center>
+		</div>
+		<div id="status">
 		</div>
 	</fieldset>
 	<fieldset class="stepTwo">
@@ -62,6 +69,7 @@
                 <option value="America/La_Paz">GMT-04:00 La Paz</option>
                 <option value="America/Santiago">GMT-04:00 Santiago</option>
                 <option value="Canada/Newfoundland">GMT-03:30 Newfoundland</option>
+                <option value="America/Sao_Paulo">GMT-03:00 Sao Paulo</option>
                 <option value="America/Buenos_Aires">GMT-03:00 Buenos Aires</option>
                 <option value="Etc/GMT+3">GMT-03:00 Greenland</option>
                 <option value="Etc/GMT+2">GMT-02:00 Mid-Atlantic</option>
@@ -395,7 +403,7 @@
 			<span class="signup-error global-error"></span>
 		</div>
 		<div class="form-group">
-			<center><button type="submit" class="btn btn-primary btn-lg btn-spinner">Sign up <i class="fa fa-spinner fa-pulse"></i></button></center>
+			<center><button type="submit" class="btn btn-primary btn-lg btn-spinner btn-full">Sign up <i class="fa fa-spinner fa-pulse"></i></button></center>
 		</div>
 	</fieldset>
 	<div class="form-group">

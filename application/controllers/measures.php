@@ -10,18 +10,13 @@ class Measures extends MY_Controller
         $this->load->model('measure');
 	}
 
-    public function removeDuplicate($key){
-        if($key === "TMGfrXeb6WvCgNAjeKd4"){
-            $this->measure->removeDuplicate();
-        }else{
-            echo "Unauthorized";
-        }
-    }
-	
     public function index()
     {       
+
         if($this->input->post('addWatch'))
         {
+            $this->event->add($this->event->ADD_WATCH);
+
             $brand = $this->input->post('brand');
             $name = $this->input->post('name');
             $yearOfBuy = $this->input->post('yearOfBuy');
@@ -39,6 +34,8 @@ class Measures extends MY_Controller
         }
         else if($this->input->post('deleteMeasures'))
         {
+            $this->event->add($this->event->DELETE_ALL_MEASURES);
+
             $measureId = $this->input->post('deleteMeasures');
             
             if($this->measure->deleteMesure($measureId))
@@ -53,6 +50,8 @@ class Measures extends MY_Controller
         }
         else if($this->input->post('deleteWatch'))
         {
+            $this->event->add($this->event->DELETE_WATCH);
+
             $watchId = $this->input->post('deleteWatch');
             
             if($this->watch->deleteWatch($watchId))
@@ -64,6 +63,8 @@ class Measures extends MY_Controller
                $this->_bodyData['error'] = 'An error occured while deleting your watch.';
             }
         }
+
+        $this->event->add($this->event->BOARD_LOAD);
         
         $this->_headerData['headerClass'] = 'blue';
         $this->load->view('header', $this->_headerData);
@@ -79,6 +80,8 @@ class Measures extends MY_Controller
     
     public function new_watch()
     {    
+        $this->event->add($this->event->ADD_WATCH);
+
         $this->_headerData['headerClass'] = 'blue';
         $this->load->view('header', $this->_headerData);
         
@@ -89,6 +92,8 @@ class Measures extends MY_Controller
     
     public function new_measure()
     {
+
+        $this->event->add($this->event->MEASURE_LOAD);
 
         $this->_headerData['headerClass'] = 'blue';
         $this->load->view('header', $this->_headerData);
@@ -106,11 +111,15 @@ class Measures extends MY_Controller
         if($this->input->post('measureId') && $this->input->post('watchId'))
         {
 
+            $this->event->add($this->event->ACCURACY_LOAD);
+
             $this->_headerData['headerClass'] = 'blue';
+            array_push($this->_headerData['javaScripts'], "jquery.sharrre.min", "sharrre.logic", "watch.animation");
             $this->load->view('header', $this->_headerData);
         
             $this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
             $this->_bodyData['measureId'] = $this->input->post('measureId');
+
             $this->load->view('measure/get-accuracy', $this->_bodyData);  
             $this->load->view('measure/audio.php');  
         

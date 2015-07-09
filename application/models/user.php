@@ -1,10 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class User extends CI_Model 
+class User extends MY_Model 
 {
     function __construct()
     {
         parent::__construct();
+        $this->table_name = "user";
     }
     
     function login($email, $password)
@@ -45,6 +46,17 @@ class User extends CI_Model
         $res = false;
         
         if($this->session->userdata('userId'))
+        {
+            $res = true;   
+        }
+        
+        return $res;
+    }
+
+    function isAdmin(){
+        $res = false;
+        
+        if($this->session->userdata('admin'))
         {
             $res = true;   
         }
@@ -175,5 +187,13 @@ class User extends CI_Model
         }
         
         return $data;
+    }
+
+    function statsDomain(){
+
+        return $this->select('substring_index(`email`,"@",-1) as emailDomain,
+            count(substring_index(`email`,"@",-1)) as nb', false)
+        ->group_by('emailDomain')
+        ->find_all();
     }
 }
