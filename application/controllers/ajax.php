@@ -53,61 +53,69 @@ class Ajax extends CI_Controller
 
     function facebookSignup()
     {
+        $result['success'] = false;
+
         if($this->input->post('email'))
         {
-            $result = array();
 
+            $email = $this->input->post('email');
             $password = "FB_"+$this->input->post('id');
-            $name = $this->input->post('name');
+            $name = $this->input->post('last_name');
             $firstname = $this->input->post('firstname');
             $timezone = $this->input->post('timezone');
             $country = $this->input->post('country');
 
-            if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
-            {
-                $this->event->add($this->event->LOGIN_FB);
+            $emailExists = $this->user->checkUserEmail($email);
 
-                $this->load->helper('mcapi');                    
-                $api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
-                $api->listSubscribe('7f94c4aa71', $email, ''); 
+            if(!$emailExists){
 
-                $this->load->library('email');
-                
-                $config['protocol'] = "smtp";
-                $config['smtp_host'] = "smtp.mandrillapp.com";
-                $config['smtp_port'] = "587";
-                $config['smtp_user'] = "marc@toolwatch.io"; 
-                $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-                $config['charset'] = "utf-8";
-                $config['mailtype'] = "html";
-                $config['newline'] = "\r\n";
-
-                $this->email->initialize($config);
-                
-                $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                $this->email->to($email, $name.' '.$firstname);
-                $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
-
-                $this->email->subject('Welcome to Toolwatch!');
-                
-                $message = $this->load->view('email/signup', '', true);
-                $this->email->message($message);
-
-                if($this->email->send())
+                if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
                 {
-                    $result['success'] = "signup";   
-                    $this->user->login($email, $password);
+
+                    $this->event->add($this->event->SIGN_UP_FB);
+
+                    $this->load->helper('mcapi');                    
+                    $api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
+                    $api->listSubscribe('7f94c4aa71', $email, ''); 
+
+                    $this->load->library('email');
+                    
+                    $config['protocol'] = "smtp";
+                    $config['smtp_host'] = "smtp.mandrillapp.com";
+                    $config['smtp_port'] = "587";
+                    $config['smtp_user'] = "marc@toolwatch.io"; 
+                    $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                    $config['charset'] = "utf-8";
+                    $config['mailtype'] = "html";
+                    $config['newline'] = "\r\n";
+
+                    $this->email->initialize($config);
+                    
+                    $this->email->from('hello@toolwatch.io', 'Toolwatch');
+                    $this->email->to($email, $name.' '.$firstname);
+                    $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+
+                    $this->email->subject('Welcome to Toolwatch!');
+                    
+                    $message = $this->load->view('email/signup', '', true);
+                    $this->email->message($message);
+
+                    if($this->email->send())
+                    {
+                        $result['success'] = "signup";   
+                        $this->user->login($email, $password);
+                    }
+
                 }
             }else if($this->user->login($email, $password)){
 
-                $this->event->add($this->event->SIGN_UP_FB);
+                $this->event->add($this->event->LOGIN_FB);
 
-                $result['success'] = "signin";   
-            }else {
-                $result['success'] = false;
+                $result['success'] = "signin"; 
             }
-            echo json_encode($result);
         }
+
+        echo json_encode($result);
     }
     
     function signup()
