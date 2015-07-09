@@ -14,18 +14,23 @@
  * @package WordPress
  */
 
+define('WP_HOME','https://toolwatch.io/blog/watch-tips/');
+define('WP_SITEURL','https://toolwatch.io/blog/watch-tips/');
+
+$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'heroku_569fb1a070c9a16');
+define('DB_NAME', substr($url["path"], 1));
 
 /** MySQL database username */
-define('DB_USER', 'bf5857955eb8a1');
+define('DB_USER', $url["user"]);
 
 /** MySQL database password */
-define('DB_PASSWORD', 'f5e774f8');
+define('DB_PASSWORD', $url["pass"]);
 
 /** MySQL hostname */
-define('DB_HOST', 'us-cdbr-iron-east-02.cleardb.net');
+define('DB_HOST', $url["host"]);
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
