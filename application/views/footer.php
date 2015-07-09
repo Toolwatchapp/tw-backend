@@ -3,7 +3,7 @@
         <div id="publication_footer" class="publication">
                         
                 <a href="http://www.fratellowatches.com/toolwatch-measure-the-accuracy-of-your-watch/"><img src="<?php echo img_url('fratello_logos_transparant.png'); ?>"></a>
-                <a href="http://wristreview.com/?p=16698"><img src="http://wristreview.com/wp-content/uploads/2015/04/wr-logo-V21.png"></a>
+                <a href="http://wristreview.com/?p=16698"><img src="<?php echo img_url('wristreview.png'); ?>"></a>
 
         </div>
      <?php } ?>
