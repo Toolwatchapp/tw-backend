@@ -37,7 +37,7 @@ class Hooks extends CI_Controller
 
 			$text = $this->input->post('text');
 			$quote = $this->quotes[rand ( 0 , 18 )];
-			$result = "";
+			$result["text"] = $quote;
 
 			if($text === "Jack nbusers"){
 				
@@ -51,7 +51,11 @@ class Hooks extends CI_Controller
 
 				$result["text"] = $this->watch->count_all() . ". " . $quote;
 
-			}
+			}else if($text === "Jack help"){
+
+                $result["text"] = "Jack nbusers; Jack nbmeasures; Jack nbwatches" . ". " . $quote;
+
+            }
 
 			echo json_encode($result);
 		}
