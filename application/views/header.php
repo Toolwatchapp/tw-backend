@@ -60,7 +60,7 @@
         "https://plus.google.com/104724190750629608501/"] 
     }
     </script>
-    <script type="text/javascript" src="//cdn.bounce.bar/114697.js"></script>
+   
     <meta name="p:domain_verify" content="6187231235ed576f7d6e438a438b6b9a"/>
     <?php
         foreach($styleSheets as $css) { echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">'; }
@@ -86,7 +86,19 @@
 	  </div>
 	</div>
     <header class="navbar <?php echo $headerClass; ?>">
+                
+            <?php 
+
+             if (!$this->agent->is_mobile() && $_SERVER["REQUEST_URI"] == "/") { ?>
+               <div id="ph">
+                
+                    <p >We are proud of being on <b><a href="<?php echo getenv("PH_URL"); ?>">Product Hunt</a></b> today ! <img width="35px" src="https://mail.google.com/mail/e/231a"/></p>
+
+                </div>
+            <?php } ?>
+            
         <div class="container container-fluid">
+
             <div class="row collapse navbar-collapse" id="nav-menu">
                 <div class="col-md-12">
                     <div class="nav navbar-nav">

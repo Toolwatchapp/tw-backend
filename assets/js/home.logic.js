@@ -57,7 +57,7 @@ $( document ).ready(function() {
             if(activeIndex === 1){
                 timeouts.push(setTimeout(countDownDisplay, 1000));
             }
-            var scrollTo = $("#"+possibleIndex[activeIndex]).offset().top - $("#bouncebar").height() - $(".navbar").height();
+            var scrollTo = $("#"+possibleIndex[activeIndex]).offset().top -  $(".navbar").height();
             console.log(scrollTo);
             $('html, body').animate({
                 scrollTop: scrollTo
