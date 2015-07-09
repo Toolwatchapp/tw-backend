@@ -2,10 +2,20 @@
 
 class Home extends MY_Controller 
 {
+
+    //TODO: Can we overide load view to append .mobile ?
+    private $viewName = "home/home";
+
 	function __construct()
 	{
 		parent::__construct();
         $this->load->model('measure');
+
+
+        if($this->agent->is_mobile()){
+            $this->viewName = "home/home-mobile";
+        }
+
 	}
 	
 	function index()
@@ -18,7 +28,7 @@ class Home extends MY_Controller
         }
 
 		$this->load->view('header', $this->_headerData);
-		$this->load->view('home', $this->homeMessage());
+		$this->load->view($this->viewName, $this->homeMessage());
 		$this->load->view('footer');
 	}
 
@@ -33,7 +43,7 @@ class Home extends MY_Controller
         $this->_headerData["meta_img"] = img_url("accuracy.jpg");
 
         $this->load->view('header', $this->_headerData);
-        $this->load->view('home', $this->homeMessage());
+        $this->load->view($this->viewName, $this->homeMessage());
         $this->load->view('footer');
     }
 
@@ -42,14 +52,21 @@ class Home extends MY_Controller
         $randBrands = rand ( 0 , 2 );
 
         $watchBrands = array('Seiko', 'Rolex', 'Omega');
-        $videos = array('Omega.mp4', 'Rolex.mp4', 'Zenith.mp4', 'Vacheron.mp4');
+        $videos = array('Omega', 'Rolex', 'Zenith', 'Vacheron');
 
         $video = vid_url('Zenith.mp4');
 
-        return  array('title'=>$this->measure
+        if(!$this->agent->is_mobile()){
+            return  array('title'=>$this->measure
                 ->getMeasuresCountByWatchBrand($watchBrands[$randBrands]) . 
                 ' ' . $watchBrands[$randBrands] . ' measured on Toolwatch.io',
-                'video_url'=>vid_url($videos[rand ( 0 , 3 )]));
+                'video_url'=>vid_url($videos[rand ( 0 , 3 )]) . '.mp4');
+        }else{
+            return  array('title'=>$this->measure
+                ->getMeasuresCountByWatchBrand($watchBrands[$randBrands]) . 
+                ' ' . $watchBrands[$randBrands] . ' measured on Toolwatch.io',
+                'video_url'=>img_url($videos[rand ( 0 , 3 )]) . '.png');
+        }
 
     }
 	 

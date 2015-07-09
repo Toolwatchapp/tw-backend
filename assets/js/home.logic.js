@@ -34,7 +34,7 @@ $( document ).ready(function() {
             animationUnderWay = true;
             var evt = window.event || e; //equalize event object     
             evt = evt.originalEvent ? evt.originalEvent : evt; //convert to originalEvent if possible               
-            var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta //check for detail first, because it is used by Opera and FF
+            var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta; //check for detail first, because it is used by Opera and FF
 
             if(delta > 0) {
                 activeIndex = activeIndex -1;
