@@ -50,22 +50,31 @@ class Home extends MY_Controller
     private function homeMessage(){
 
         $randBrands = rand ( 0 , 2 );
+        $randWatches = rand ( 0 , 3 );
 
         $watchBrands = array('Seiko', 'Rolex', 'Omega');
         $videos = array('Omega', 'Rolex', 'Zenith', 'Vacheron');
 
         $video = vid_url('Zenith.mp4');
 
+        if(!$this->user->isLoggedIn()){
+
+            $homePage = "HOME_PAGE_" . $randWatches;
+
+            $this->event->add($this->event->{$homePage});
+
+        }
+
         if(!$this->agent->is_mobile()){
             return  array('title'=>$this->measure
                 ->getMeasuresCountByWatchBrand($watchBrands[$randBrands]) . 
                 ' ' . $watchBrands[$randBrands] . ' measured on Toolwatch.io',
-                'video_url'=>vid_url($videos[rand ( 0 , 3 )]) . '.mp4');
+                'video_url'=>vid_url($videos[$randWatches]) . '.mp4');
         }else{
             return  array('title'=>$this->measure
                 ->getMeasuresCountByWatchBrand($watchBrands[$randBrands]) . 
                 ' ' . $watchBrands[$randBrands] . ' measured on Toolwatch.io',
-                'video_url'=>img_url($videos[rand ( 0 , 3 )]) . '.png');
+                'video_url'=>img_url($videos[$randWatches]) . '.png');
         }
 
     }

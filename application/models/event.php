@@ -30,9 +30,13 @@ class Event extends MY_Model
 	public  $ACCURACY_SOMETHING_WRONG = 25;
 	public  $LOGIN_POPUP = 26;
 	public  $SIGN_UP_POPUP = 27;
+    public  $HOME_PAGE_0 = 28;
+    public  $HOME_PAGE_1 = 29;
+    public  $HOME_PAGE_2 = 30;
+    public  $HOME_PAGE_3 = 31;
 	public  $EVENT_STRING;
 
-	protected $nbEvent = 27;
+	protected $nbEvent = 31;
 	protected $masks;
 
     function __construct()
@@ -47,7 +51,11 @@ class Event extends MY_Model
 			'CTR_SIGNUP_FB'		 => array($this->SIGN_UP, $this->SIGN_UP_FB),
 			'CTR_LOGIN'    		 => array($this->LOGIN_EMAIL, $this->LOGIN_POPUP),
 			'CTR_LOGIN_FB' 		 => array($this->LOGIN_FB, $this->LOGIN_POPUP),
-			'MEASURE_COMPLETION' => array($this->NEW_ACCURACY, $this->NEW_MEASURE)
+			'MEASURE_COMPLETION' => array($this->NEW_ACCURACY, $this->NEW_MEASURE),
+            'CTR_HOME_0'         => array($this->SIGN_UP, $this->HOME_PAGE_0),
+            'CTR_HOME_1'         => array($this->SIGN_UP, $this->HOME_PAGE_1),
+            'CTR_HOME_2'         => array($this->SIGN_UP, $this->HOME_PAGE_2),
+            'CTR_HOME_3'         => array($this->SIGN_UP, $this->HOME_PAGE_3)
 		);
 
 		$this->EVENT_STRING = "'DATE',";
