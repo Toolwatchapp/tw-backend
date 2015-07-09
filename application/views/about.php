@@ -37,7 +37,7 @@
             <div class="row">
                 <div class="col-md-4 name"><center><div class="fa fa-user"></div><br>Marc<br>Founder</center></div>
                 <div class="col-md-8 infos">
-                    <p style="margin: 5px;">Marc is passionate, aficionado or even addicted to mechanical watches. We cannot even use a superlative anymore. He knew how to read hours before walking! Now in the watch valley, he gives all his extra time to Toolwatch.io and to all the watch enthusiasts around the world. He loves watches, clocks, and also digital product!</p>
+                    <p style="margin: 5px;">Marc is passionate, aficionado or even addicted to mechanical watches. We cannot even use a superlative anymore. He knew how to read hours before walking! Now in the watch valley, he gives all his extra time to Toolwatch.io and to all the watch enthusiasts around the world. He loves watches, clocks, and also digital products!</p>
                 </div>
             </div>
         </div>
