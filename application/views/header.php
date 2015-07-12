@@ -86,16 +86,7 @@
 	  </div>
 	</div>
     <header class="navbar <?php echo $headerClass; ?>">
-                
-            <?php 
-
-             if (!$this->agent->is_mobile() && $_SERVER["REQUEST_URI"] == "/") { ?>
-               <div id="ph">
-                
-                    <p >We are proud of being on <b><a href="<?php echo getenv("PH_URL"); ?>">Product Hunt</a></b> today ! <img width="35px" src="https://mail.google.com/mail/e/231a"/></p>
-
-                </div>
-            <?php } ?>
+            
             
         <div class="container container-fluid">
 
