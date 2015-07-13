@@ -39,19 +39,39 @@ class Hooks extends CI_Controller
 			$quote = $this->quotes[rand ( 0 , 18 )];
 			$result["text"] = $quote;
 
-			if($text === "Jack nbusers"){
+			if($this->startsWith($text,"Jack nbusers")){
 				
 				$result["text"] = $this->user->count_all() . ". " . $quote;
 
-			}else if($text === "Jack nbmeasures"){
+			}else if($this->startsWith($text,"Jack nbmeasures")){
 
 				$result["text"] = $this->measure->count_all() . ". " . $quote;
 
-			}else if($text === "Jack nbwatches"){
+			}else if($this->startsWith($text,"Jack nbwatches")){
 
 				$result["text"] = $this->watch->count_all() . ". " . $quote;
 
-			}else if($text === "Jack help"){
+            }else if($this->startsWith($text,"Jack whois")){
+
+                $user = $this->user->select(" user.userId, user.name, firstname, 
+                    DATE_FORMAT(FROM_UNIXTIME(`registerDate`), '%e %b %Y') AS 'register',
+                    DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
+                    ->find_by('email', str_replace("Jack whois ", "", $text));
+
+                if(!is_null($user)){
+                    $watches = $this->watch->getWatches($user->userId);
+                    $measures = $this->measure->getMeasuresByUser($user->userId, $watches);
+
+                    $result["text"] = "Id:" . $user->userId . ", Name:" . $user->name . 
+                        " ,Firstname:" . $user->firstname . " ,Register:" . $user->register .
+                        " ,LastLogin:" . $user->lastLogin . " ,Watches:" . sizeof($watches) . 
+                        " ,Measures:" . sizeof($measures);
+
+                }else{
+                    $result["text"] = "User not found. " . $quote;
+                }
+
+			}else if ($this->startsWith($text,"Jack help")){
 
                 $result["text"] = "Jack nbusers; Jack nbmeasures; Jack nbwatches" . ". " . $quote;
 
@@ -62,5 +82,15 @@ class Hooks extends CI_Controller
 
 		
 	} 
+
+    private function startsWith($haystack, $needle) {
+        // search backwards starting from haystack length characters from the end
+        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+    }
+
+    private function endsWith($haystack, $needle) {
+        // search forward starting from end minus needle length characters
+        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+    }
 
 }
