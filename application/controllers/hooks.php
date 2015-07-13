@@ -58,7 +58,7 @@ class Hooks extends CI_Controller
                         ->where("registerDate >=",  (time() - $time * 60 * 1000))
                         ->find_all();
 
-                    $result["text"] = sizeof($period) . "(" . (\
+                    $result["text"] = sizeof($period) . " (" . (\
                         sizeof($period) - sizeof($periodBefore)) . "). " . $quote;
 
                 }
@@ -83,7 +83,7 @@ class Hooks extends CI_Controller
                         ->where("accuracyReferenceTime >=",  (time() - $time * 60 * 1000))
                         ->find_all();
 
-                    $result["text"] = sizeof($period) . "(" . (\
+                    $result["text"] = sizeof($period) . " (" . (\
                         sizeof($period) - sizeof($periodBefore)) . "). " . $quote;
 
                 }
@@ -99,7 +99,9 @@ class Hooks extends CI_Controller
                     DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
                     ->find_by('email', str_replace("Jack whois ", "", $text));
 
-                if(!is_null($user)){
+                var_dump($user);
+
+                if($user){
                     $watches = $this->watch->getWatches($user->userId);
                     $measures = $this->measure->getMeasuresByUser($user->userId, $watches);
 
@@ -114,7 +116,7 @@ class Hooks extends CI_Controller
 
 			}else if ($this->startsWith($text,"Jack help")){
 
-                $result["text"] = "Jack nbusers (time); Jack nbmeasures (time); Jack nbwatches; Jack whois email" . ". " . $quote;
+                $result["text"] = "Jack nbusers (time); Jack nbmeasures (time); Jack nbwatches; Jack whois email" . ". ";
 
             }
 
