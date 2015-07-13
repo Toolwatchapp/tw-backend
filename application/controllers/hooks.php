@@ -40,12 +40,48 @@ class Hooks extends CI_Controller
 			$result["text"] = $quote;
 
 			if($this->startsWith($text,"Jack nbusers")){
-				
-				$result["text"] = $this->user->count_all() . ". " . $quote;
+
+                if($text === "Jack nbusers"){
+                   
+                    $result["text"] = $this->user->count_all() . ". " . $quote;
+                
+                }else{
+
+                    $time = str_replace("Jack nbusers ", "", $text);
+
+                    $periodBefore = $this->user->select("userId")
+                        ->where("registerDate >=",  (time() - $time * 2 * 60 * 1000))
+                        ->where("registerDate <=", time() - $time * 60 * 1000);
+
+                    $period = $this->user->select("userId")
+                        ->where("registerDate >=",  (time() - $time * 60 * 1000));
+
+                    $result["text"] = sizeof($period) . "(" . (\
+                        sizeof($period) - sizeof($periodBefore)) . "). " . $quote;
+
+                }
 
 			}else if($this->startsWith($text,"Jack nbmeasures")){
 
-				$result["text"] = $this->measure->count_all() . ". " . $quote;
+                if($text === "Jack nbmeasures"){
+                   
+				    $result["text"] = $this->measure->count_all() . ". " . $quote;
+
+                }else{
+
+                    $time = str_replace("Jack nbmeasures ", "", $text);
+
+                    $periodBefore = $this->user->select("userId")
+                        ->where("accuracyReferenceTime >=",  (time() - $time * 2 * 60 * 1000))
+                        ->where("accuracyReferenceTime <=", time() - $time * 60 * 1000);
+
+                    $period = $this->user->select("userId")
+                        ->where("accuracyReferenceTime >=",  (time() - $time * 60 * 1000));
+
+                    $result["text"] = sizeof($period) . "(" . (\
+                        sizeof($period) - sizeof($periodBefore)) . "). " . $quote;
+
+                }
 
 			}else if($this->startsWith($text,"Jack nbwatches")){
 
@@ -62,10 +98,10 @@ class Hooks extends CI_Controller
                     $watches = $this->watch->getWatches($user->userId);
                     $measures = $this->measure->getMeasuresByUser($user->userId, $watches);
 
-                    $result["text"] = "Id:" . $user->userId . ", Name:" . $user->name . 
-                        " ,Firstname:" . $user->firstname . " ,Register:" . $user->register .
-                        " ,LastLogin:" . $user->lastLogin . " ,Watches:" . sizeof($watches) . 
-                        " ,Measures:" . sizeof($measures);
+                    $result["text"] = "Id->" . $user->userId . ", Name->" . $user->name . 
+                        " ,Firstname->" . $user->firstname . " ,Register->" . $user->register .
+                        " ,LastLogin->" . $user->lastLogin . " ,Watches->" . sizeof($watches) . 
+                        " ,Measures->" . sizeof($measures);
 
                 }else{
                     $result["text"] = "User not found. " . $quote;
@@ -73,7 +109,7 @@ class Hooks extends CI_Controller
 
 			}else if ($this->startsWith($text,"Jack help")){
 
-                $result["text"] = "Jack nbusers; Jack nbmeasures; Jack nbwatches" . ". " . $quote;
+                $result["text"] = "Jack nbusers (time); Jack nbmeasures (time); Jack nbwatches; Jack whois email" . ". " . $quote;
 
             }
 
