@@ -51,10 +51,12 @@ class Hooks extends CI_Controller
 
                     $periodBefore = $this->user->select("userId")
                         ->where("registerDate >=",  (time() - $time * 2 * 60 * 1000))
-                        ->where("registerDate <=", time() - $time * 60 * 1000);
+                        ->where("registerDate <=", time() - $time * 60 * 1000)
+                        ->find_all();
 
                     $period = $this->user->select("userId")
-                        ->where("registerDate >=",  (time() - $time * 60 * 1000));
+                        ->where("registerDate >=",  (time() - $time * 60 * 1000))
+                        ->find_all();
 
                     $result["text"] = sizeof($period) . "(" . (\
                         sizeof($period) - sizeof($periodBefore)) . "). " . $quote;
@@ -71,12 +73,15 @@ class Hooks extends CI_Controller
 
                     $time = str_replace("Jack nbmeasures ", "", $text);
 
-                    $periodBefore = $this->user->select("userId")
+                    $periodBefore = $this->measure->select("id")
                         ->where("accuracyReferenceTime >=",  (time() - $time * 2 * 60 * 1000))
-                        ->where("accuracyReferenceTime <=", time() - $time * 60 * 1000);
+                        ->where("accuracyReferenceTime <=", time() - $time * 60 * 1000)
+                        ->find_all();
 
-                    $period = $this->user->select("userId")
-                        ->where("accuracyReferenceTime >=",  (time() - $time * 60 * 1000));
+
+                    $period = $this->measure->select("id")
+                        ->where("accuracyReferenceTime >=",  (time() - $time * 60 * 1000))
+                        ->find_all();
 
                     $result["text"] = sizeof($period) . "(" . (\
                         sizeof($period) - sizeof($periodBefore)) . "). " . $quote;
@@ -98,10 +103,10 @@ class Hooks extends CI_Controller
                     $watches = $this->watch->getWatches($user->userId);
                     $measures = $this->measure->getMeasuresByUser($user->userId, $watches);
 
-                    $result["text"] = "Id->" . $user->userId . ", Name->" . $user->name . 
-                        " ,Firstname->" . $user->firstname . " ,Register->" . $user->register .
-                        " ,LastLogin->" . $user->lastLogin . " ,Watches->" . sizeof($watches) . 
-                        " ,Measures->" . sizeof($measures);
+                    $result["text"] = "Id " . $user->userId . ", Name " . $user->name . 
+                        " ,Firstname " . $user->firstname . " ,Register " . $user->register .
+                        " ,LastLogin " . $user->lastLogin . " ,Watches " . sizeof($watches) . 
+                        " ,Measures " . sizeof($measures);
 
                 }else{
                     $result["text"] = "User not found. " . $quote;
