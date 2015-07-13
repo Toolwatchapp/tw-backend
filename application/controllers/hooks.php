@@ -109,7 +109,7 @@ class Hooks extends CI_Controller
                         " ,Measures " . sizeof($measures);
 
                 }else{
-                    $result["text"] = "User not found. " . $quote;
+                    $result["text"] = "User not found. " . $this->db->last_query();
                 }
 
 			}else if ($this->startsWith($text,"Jack help")){
