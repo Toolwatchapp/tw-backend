@@ -99,8 +99,6 @@ class Hooks extends CI_Controller
                     DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
                     ->find_by('email', str_replace("Jack whois ", "", $text));
 
-                var_dump($user);
-
                 if($user){
                     $watches = $this->watch->getWatches($user->userId);
                     $measures = $this->measure->getMeasuresByUser($user->userId, $watches);
