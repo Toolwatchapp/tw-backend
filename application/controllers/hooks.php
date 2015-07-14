@@ -50,15 +50,15 @@ class Hooks extends CI_Controller
                     $time = str_replace("Jack nbusers ", "", $text);
 
                     $periodBefore = $this->user->select("userId")
-                        ->where("registerDate >=",  (time() - $time * 2 * 60 * 1000))
-                        ->where("registerDate <=", time() - $time * 60 * 1000)
+                        ->where("registerDate >=",  (time() - ($time * 2 * 60 * 1000)))
+                        ->where("registerDate <=", (time() - ($time * 60 * 1000)))
                         ->find_all();
 
                     $period = $this->user->select("userId")
                         ->where("registerDate >=",  (time() - $time * 60 * 1000))
                         ->find_all();
 
-                    $result["text"] = sizeof($period) . " (" . (\
+                    $result["text"] = sizeof($period) . " (" . (
                         sizeof($period) - sizeof($periodBefore)) . "). " . $quote;
 
                 }
@@ -74,16 +74,16 @@ class Hooks extends CI_Controller
                     $time = str_replace("Jack nbmeasures ", "", $text);
 
                     $periodBefore = $this->measure->select("id")
-                        ->where("accuracyReferenceTime >=",  (time() - $time * 2 * 60 * 1000))
-                        ->where("accuracyReferenceTime <=", time() - $time * 60 * 1000)
+                        ->where("accuracyReferenceTime >",  (time() - ($time * 2 * 60 * 1000)))
+                        ->where("accuracyReferenceTime <", (time() - ($time * 60 * 1000)))
                         ->find_all();
 
 
                     $period = $this->measure->select("id")
-                        ->where("accuracyReferenceTime >=",  (time() - $time * 60 * 1000))
+                        ->where("accuracyReferenceTime >=",  (time() - ($time * 60 * 1000)))
                         ->find_all();
 
-                    $result["text"] = sizeof($period) . " (" . (\
+                    $result["text"] = sizeof($period) . " (" . (
                         sizeof($period) - sizeof($periodBefore)) . "). " . $quote;
 
                 }
