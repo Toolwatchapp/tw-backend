@@ -71,7 +71,8 @@ function sendLoginFb() {
               });
           }else if(result.success == "signin"){
               setTimeout('window.location.replace("/measures/")', 1000);
-              
+          }else if(result.success == "email"){
+              $('#fb_error').html('You have an email account.').show();
           } else {
               $('#fb_error').html('Something went wrong... Try again later.').show();
           }
