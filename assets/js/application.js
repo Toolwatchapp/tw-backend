@@ -386,7 +386,7 @@ $(document).ready(function()
         var name = $('input[name="name"]').val();
         var email = $('input[name="email"]').val();
         var message = $('textarea[name="message"]').val();
-        var confirmEmail = $('textarea[name="confirmEmail"]').val();
+        var confirmEmail = $('input[name="confirmEmail"]').val();
         var error = false;
 
         $('.contact-error').hide();
@@ -423,6 +423,7 @@ $(document).ready(function()
                 $('.alert-success').show();
                 $('input[name="name"]').val('');
                 $('input[name="email"]').val('');
+                $('input[name="confirmEmail"]').val('');
                 $('textarea[name="message"]').val('');
             }
             else
