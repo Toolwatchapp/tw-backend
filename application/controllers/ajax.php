@@ -112,6 +112,10 @@ class Ajax extends CI_Controller
                 $this->event->add($this->event->LOGIN_FB);
 
                 $result['success'] = "signin"; 
+
+            }else{
+                
+                $result['success'] = "email"; 
             }
         }
 

@@ -112,7 +112,7 @@ $(document).ready(function()
             {
                 $(this).removeClass('active');
                 $('.btn-spinner i').css('display', 'none');
-                $('.login-error').html('Wrong email and/or password.').show();
+                $('#email_error').html('Wrong email and/or password.').show();
             }
         });
     });

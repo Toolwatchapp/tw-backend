@@ -9,7 +9,7 @@
        <strong class="line-thru">or</strong>
     </div>
 	<div class="form-group">
-        <span class="signup-error login-error"></span>
+        <span id="email_error" class="signup-error login-error"></span>
 		<input type="email" class="form-control" name="email" placeholder="Login (email)" autofocus="true" required>
 	</div>
 	<div class="form-group input-group">
