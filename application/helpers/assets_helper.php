@@ -56,3 +56,8 @@ if ( ! function_exists('img'))
     }
 }
 
+if ( ! function_exists('event_url')){
+    function event_url(){
+        return getenv("TW_EVENT_URL");
+    }
+}
