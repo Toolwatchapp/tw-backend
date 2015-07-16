@@ -17,6 +17,9 @@
 $root=((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? "https://" : "http://").$_SERVER['HTTP_HOST'];
 $config['base_url'] = $root;
 
+
+$config['event_url'] = getenv("TW_EVENT_URL");
+
 /*
 |--------------------------------------------------------------------------
 | Index File
