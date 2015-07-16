@@ -48,7 +48,7 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-if((ENVIRONMENT == 'development') || (ENVIRONMENT == 'testing'))
+if(ENVIRONMENT == 'development')
 {
     $db['default']['hostname'] = 'localhost';
     $db['default']['username'] = 'root';
