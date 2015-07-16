@@ -3,203 +3,87 @@
 class Event extends MY_Model 
 {
 
-	public  $CTA_MEASURES = 1;
-	public  $CTA_MEASURE_NOW = 2;
-	public  $CTA_GET_STARTED = 3;
-	public  $CTA_FEATURES = 4;
-	public  $LOGIN_EMAIL = 5;
-	public  $LOGIN_FAIL = 6;
-	public  $LOGIN_FB = 7;
-	public  $LOGIN_FB_FAIL = 8;
-	public  $RESET_PASSWORD = 9;
-	public  $RESET_PASSWORD_USE = 10;
-	public  $LOGOUT = 11;
-	public  $SIGN_UP = 12;
-	public  $SIGN_UP_FAIL = 13;
-	public  $SIGN_UP_FB = 14;
-	public  $ADD_WATCH = 15;
-	public  $DELETE_WATCH = 16;
-	public  $NEW_MEASURE = 17;
-	public  $DELETE_MEASURE = 18;
-	public  $DELETE_ALL_MEASURES = 19;
-	public  $BOARD_LOAD = 20;
-	public  $NEW_ACCURACY = 21;
-	public  $MEASURE_LOAD = 22;
-	public  $ACCURACY_LOAD = 23;
-	public  $ACCURACY_WARNING_POPUP = 24;
-	public  $ACCURACY_SOMETHING_WRONG = 25;
-	public  $LOGIN_POPUP = 26;
-	public  $SIGN_UP_POPUP = 27;
-    public  $HOME_PAGE_0 = 28;
-    public  $HOME_PAGE_1 = 29;
-    public  $HOME_PAGE_2 = 30;
-    public  $HOME_PAGE_3 = 31;
-	public  $EVENT_STRING;
-
-	protected $nbEvent = 31;
-	protected $masks;
+	public  $CTA_MEASURES              = "CTA_MEASURES";
+	public  $CTA_MEASURE_NOW           = "CTA_MEASURE_NOW";
+	public  $CTA_GET_STARTED           = "CTA_GET_STARTED";
+	public  $CTA_FEATURES              = "CTA_FEATURES";
+	public  $LOGIN_EMAIL               = "LOGIN_EMAIL";
+	public  $LOGIN_FAIL                = "LOGIN_FAIL";
+	public  $LOGIN_FB                  = "LOGIN_FB";
+	public  $LOGIN_FB_FAIL             = "LOGIN_FB_FAIL";
+	public  $RESET_PASSWORD            = "RESET_PASSWORD";
+	public  $RESET_PASSWORD_USE        = "RESET_PASSWORD_USE";
+	public  $LOGOUT                    = "LOGOUT";
+	public  $SIGN_UP                   = "SIGN_UP";
+	public  $SIGN_UP_FAIL              = "SIGN_UP_FAIL";
+	public  $SIGN_UP_FB                = "SIGN_UP_FB";
+	public  $ADD_WATCH                 = "ADD_WATCH";
+	public  $DELETE_WATCH              = "DELETE_WATCH";
+	public  $NEW_MEASURE               = "NEW_MEASURE";
+	public  $DELETE_MEASURE            = "DELETE_MEASURE";
+	public  $DELETE_ALL_MEASURES       = "DELETE_ALL_MEASURES";
+	public  $BOARD_LOAD                = "BOARD_LOAD";
+	public  $NEW_ACCURACY              = "NEW_ACCURACY";
+	public  $MEASURE_LOAD              = "MEASURE_LOAD";
+	public  $ACCURACY_LOAD             = "ACCURACY_LOAD";
+	public  $ACCURACY_WARNING_POPUP    = "ACCURACY_WARNING_POPUP";
+	public  $ACCURACY_SOMETHING_WRONG  = "ACCURACY_SOMETHING_WRONG";
+	public  $LOGIN_POPUP               = "LOGIN_POPUP";
+	public  $SIGN_UP_POPUP             = "SIGN_UP_POPUP";
+    public  $HOME_PAGE_0               = "HOME_PAGE_0";
+    public  $HOME_PAGE_1               = "HOME_PAGE_1";
+    public  $HOME_PAGE_2               = "HOME_PAGE_2";
+    public  $HOME_PAGE_3               = "HOME_PAGE_3";
 
     function __construct()
     {
         parent::__construct();
-        $this->table_name = "event";
-        $this->masks = array(
-			'CTR_MEASURE'  		 => array($this->NEW_MEASURE, $this->MEASURE_LOAD),
-			'CTR_ACCURACY' 		 => array($this->NEW_ACCURACY, $this->ACCURACY_LOAD),
-			'CTR_PASSWORD' 		 => array($this->RESET_PASSWORD, $this->RESET_PASSWORD_USE),
-			'CTR_SIGNUP'   		 => array($this->SIGN_UP, $this->SIGN_UP_POPUP),
-			'CTR_SIGNUP_FB'		 => array($this->SIGN_UP, $this->SIGN_UP_FB),
-			'CTR_LOGIN'    		 => array($this->LOGIN_EMAIL, $this->LOGIN_POPUP),
-			'CTR_LOGIN_FB' 		 => array($this->LOGIN_FB, $this->LOGIN_POPUP),
-			'MEASURE_COMPLETION' => array($this->NEW_ACCURACY, $this->NEW_MEASURE),
-            'CTR_HOME_0'         => array($this->SIGN_UP, $this->HOME_PAGE_0),
-            'CTR_HOME_1'         => array($this->SIGN_UP, $this->HOME_PAGE_1),
-            'CTR_HOME_2'         => array($this->SIGN_UP, $this->HOME_PAGE_2),
-            'CTR_HOME_3'         => array($this->SIGN_UP, $this->HOME_PAGE_3)
-		);
-
-		$this->EVENT_STRING = "'DATE',";
-		$vars = get_object_vars($this);
-    	$index = 0;
-    	foreach ($vars as $key => $value) {
-    		if(!is_array($value) && !is_array($key) && $index < $this->nbEvent){
-    			$this->EVENT_STRING = $this->EVENT_STRING . "'" . $key . "',";
-    			$index++;
-    		}
-    	}
-
-    	$this->EVENT_STRING = rtrim($this->EVENT_STRING, ",");
     }
 
     function add($event){
 
-    	$data = array(
-            'ip' => $this->input->ip_address(),
-            'user_id' => $this->session->userdata('userId'), 
-            'mobile' => $this->agent->is_mobile(),
+        //date_default_timezone_set('UTC');
+
+        if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+          $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        }
+
+        $country = "undefined";
+
+        if (isset($_SERVER["HTTP_CF_IPCOUNTRY"])) {
+            $country = $_SERVER["HTTP_CF_IPCOUNTRY"];
+        }
+
+        $data = array(
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'user_id' => $this->session->userdata('userId') ? 
+                       $this->session->userdata('userId') : 0, 
+            'mobile' => (int) $this->agent->is_mobile(),
             'browser' => $this->agent->browser(),
             'platform' => $this->agent->platform(),
-            'event' => $event);
-        
-        if($this->insert($data) === false){
-        	echo $this->db->last_query();
-        }
+            'country' => $country,
+            'date' => str_replace(' ', 'T', date("Y-m-d H:i:s")),
+            'event' => $event
+        );
+                                                                
+        $data_string = json_encode($data);                                                                                   
+                        
+        event_url();
+
+        $ch = curl_init(event_url());
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+            'Content-Type: application/json',                                                                                
+            'Content-Length: ' . strlen($data_string))                                                                       
+        );                                                                                                                   
+                                                                                                                             
+        $result = curl_exec($ch);
+
+        echo $data_string . "<br /><br />";
+        echo $result;
     }
-
-    function mobileEvents(){
-    	return $this->select("
-    		(select count(1) from event where mobile = 1) / 
-    		count(1) as percent", false)
-    		->find();
-    }
-
-    function getPlatforms(){
-    	return $this->select("platform, count(1) as nb")
-    	->group_by('platform')
-    	->find_all();
-    }
-
-    function getBrowsers(){
-    	return $this->select("browser, count(1) as nb")
-    	->group_by('browser')
-    	->find_all();
-    }
-
-    function getEvents(){
-
-    	return array_merge(
-    		$this->activeUser(), 
-    		$this->activeBrowser(),
-    		$this->computeMask(),
-    		$this->events()
-    	);
-    }
-
-    public function getAllEvents(){
-
-    	$selectString = 'CONCAT(DAY(timestamp), "/", MONTH(timestamp),"/",
-	    		YEAR(timestamp)) as date,';
-
-    	$vars = get_object_vars($this);
-
-    	$index = 0;
-    	foreach ($vars as $key => $value) {
-    		if(!is_array($value) && !is_array($key) && $index < $this->nbEvent){
-    			$selectString = $selectString . 
-    				$this->constructSubMask($value) .
-    				' as ' . $key . ',';
-    			$index++;
-    		}
-    		
-    	}
-
-    	return $this->select(rtrim($selectString, ","), false)
-    		->group_by('date')
-    		->find_all();
-    }
-
-    private function computeMask(){
-
-    	$computedMasks = array();
-
-    	foreach ($this->masks as $mask => $values) {
-
-    		$maskResult = $this->select('CONCAT(DAY(timestamp), "/", MONTH(timestamp),"/",
-	    		YEAR(timestamp)) as date, ("'. $mask .'") as name,'. 
-				$this->constructSubMask($values[0]) . '/' . 
-				$this->constructSubMask($values[1]) . ' as cnt', false)
-				->where('event.event', $values[0])
-				->or_where('event.event', $values[1])
-				->group_by('date')
-				->find_all();
-
-			if(is_array($maskResult)){
-				$computedMasks = array_merge($computedMasks, $maskResult);
-			}
-    	}
-
-    	return $computedMasks;
-
-    }
-
-    private function constructSubMask($value){
-    	return '
-    		(Select count(id) from event where CONCAT(DAY(timestamp), "/", 
-    		MONTH(timestamp), "/", YEAR(timestamp)) = 
-			date and event.event = '.$value.')';
-    }
-
-    private function activeUser(){
-    	return $this->select('count(distinct(user_id)) as cnt, 
-    		CONCAT(DAY(timestamp), "/", MONTH(timestamp),"/",
-    		YEAR(timestamp)) as date, ("ACTIVE_REGISTERED_USER") as name', false)
-    		->where("user_id !=", 0)
-    		->group_by("date")
-    		->find_all();
-    }
-
-    private function activeBrowser(){
-    	return $this->select('count(distinct(ip)) as cnt, 
-    		CONCAT(DAY(timestamp), "/", MONTH(timestamp),"/",
-    		YEAR(timestamp)) as date, ("ACTIVE_UNREGISTERED_USER") as name', false)
-    		->where("user_id =", 0)
-    		->group_by("date")
-    		->find_all();
-    }
-
-    private function events(){
-    	$data = $this->select('count(event) as cnt, event,
-    		CONCAT(DAY(timestamp), "/", MONTH(timestamp),"/",
-    		YEAR(timestamp)) as date, name', false)
-    		->join("event_name", "event.event = event_name.id")
-    		->group_by("event")
-    		->group_by("date")
-    		->order_by("event")
-    		->find_all();
-
-    	return $data;
-    }
-
-
 
  }
