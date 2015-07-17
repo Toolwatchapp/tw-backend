@@ -72,7 +72,7 @@ function sendLoginFb() {
           }else if(result.success == "signin"){
               setTimeout('window.location.replace("/measures/")', 1000);
           }else if(result.success == "email"){
-              $('#fb_error').html('You have an email account.').show();
+              $('#fb_error').html('You already have an email account, please use it to connect.').show();
           } else {
               $('#fb_error').html('Something went wrong... Try again later.').show();
           }
