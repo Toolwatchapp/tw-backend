@@ -59,7 +59,7 @@ class Event extends MY_Model
                            $this->session->userdata('userId') : 0, 
                 'mobile' => (int) $this->agent->is_mobile(),
                 'browser' => $this->agent->browser(),
-                'platform' => $this->agent->platform(),
+                'platform' => str_replace(' ', '', $this->agent->platform()),
                 'country' => $country,
                 'date' => str_replace(' ', 'T', date("Y-m-d H:i:s")),
                 'event' => $event
