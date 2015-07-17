@@ -1,0 +1,5 @@
+<?php
+/*
+* Sociable - Blogplay.com
+*/
+?>

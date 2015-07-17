@@ -1,0 +1,234 @@
+.Main-Content{
+	margin-left:10px;
+	width:98%;
+	border:SOLID 1PX #000000;
+	font-family: Arial;
+}
+
+.Title-Blue{
+	font-size:30px;
+	color:#18305d;
+}
+
+.Title-Box{
+	margin:0px 0px 0px 25px;	padding:0px;
+	Width:100%;
+}
+
+.Title-Box .Border-Left{
+	background-image:url('../images/Title-Box-Border-Left.png');
+	height:34px;
+	width:10px;
+	color:#ffffff;
+	font-weight:bold;
+}
+
+.Title-Box .Border-Right{
+	background-image:url('../images/Title-Box-Border-Right.png');
+	height:34px;
+	width:10px;
+}
+
+.Title-Box .BG-Middle{
+	color:#ffffff;
+	font-size:20px;
+	background-color:#18305d;
+}	
+
+.Content-Box{
+	margin:0px;
+	padding:0px;
+	margin-left:25px;
+	
+}
+
+.Content-Box .Live-Preview{
+
+	padding-top:10px;
+	padding-bottom:10px;
+	color:#18305d;
+	font-size:16px;
+	margin-left:-19px;
+	width:600px;	
+	background-color:#cccccc;
+	text-indent:10px
+}	
+.Content-Box .Post-TXT{
+	padding-bottom:0px;
+	color:#000000;
+	font-size:15px;
+	
+}
+.Content-Box .Post-subTXT{
+	padding-top:5px;
+	color:#666666;
+	font-size:15px;
+	
+}
+
+.Content-Box .ShareAndEnjoy {
+	background-position:0px;	
+	background-image:url('../images/ShareAndEnjoy.png');
+	background-repeat:no-repeat;
+	height:80px;
+	width:375px;
+
+}
+
+.Content-Box .Tagline-TXT{
+	padding-top:5px;
+	color:#666666;
+	font-size:16px;
+	
+}
+.Content-Box .Tagline-INPUT{
+	color:#666666;
+	width:380px;
+	float:left;
+	padding:5px;
+	font-size:16px;
+	border:solid 1px #666666;
+	height:30px;
+}
+
+.Content-Box .ToSociable{
+	color:#666666;
+	float:left;
+	margin-left:50px;
+	float:left;
+	font-size:16px;
+}
+.Content-Box .IconsToInclude-TXT{
+	padding-top:5px;
+	color:#666666;
+	font-size:16px;
+	/* background-color:#ffffff; */
+}
+
+
+
+.Content-Box .IconSize-Item{
+		color:#666666;
+		font-size:16px;
+		margin-left:25px;
+
+}
+.Content-Box  .IconStyle-Item IMG{
+	margin-left:20px;	
+
+}
+
+
+.Content-Box .Locations-TXT{
+	padding-top:5px;
+	color:#666666;
+	margin-left:20px;
+	font-size:16px;
+	/* background-color:#ffffff; */
+}
+.Content-Box .Locations-List{
+	width:100%;
+  }
+.Content-Box .Locations-List .Title{
+	width:250px;
+	font-weight:bold;
+	border-right:solid 1px #000000;
+	font-family:arial;
+	padding:7px;
+	font-size:16px;
+}
+.Content-Box .Locations-List .Content{
+	color:#666666;
+}
+.Content-Box .Locations-List .Content .TXT{
+	font-size:16px;
+}
+.Content-Box .Locations-List .Content .sTXT{
+	font-size:12px;
+	font-style:italic;
+}
+.Locations-List td{
+padding:7px !important;
+
+}
+
+.GeneralOptions-List td{
+padding:7px !important;
+
+}
+
+
+.Content-Box .GeneralOptions-List{
+	width:100%;
+  }
+.Content-Box .GeneralOptions-List .Title{
+	width:250px;
+	font-weight:bold;
+	border-right:solid 1px #000000;
+	font-family:arial;
+	padding:7px;
+	font-size:16px;
+}
+.Content-Box .GeneralOptions-List .Content{
+	color:#666666;
+}
+.Content-Box .GeneralOptions-List .Content .TXT{
+	font-size:16px;
+}
+.Content-Box .GeneralOptions-List .Content .sTXT{
+	font-size:12px;
+	font-style:italic;
+}
+.Content-Box .GeneralOptions-List .Content INPUT{
+	color:#666666;
+	width:380px;
+	float:left;
+	padding:5px;
+	font-size:16px;
+	border:solid 1px #666666;
+	height:30px;
+}
+
+
+
+
+.Content-Box #ActionsBar .SaveChanges{
+	background-image:url('../images/save-button.png');
+	background-position:0px;	
+	background-repeat:no-repeat;
+	width:173px;
+	height:49px;
+	float:left;
+	
+	color:#ffffff;
+	font-weight:bold;
+}
+.Content-Box #ActionsBar .ResetSociable{
+	background-image:url('../images/reset-button.png');
+	background-position:0px;	
+	background-repeat:no-repeat;
+	width:173px;
+	height:49px;
+	float:left;
+	color:#ffffff;
+	font-weight:bold;
+}
+.Content-Box #ActionsBar .UninstallSociable{
+	background-image:url('../images/uninstall-button.png');
+	background-position:0px;	
+	background-repeat:no-repeat;
+	width:235px;
+	height:49px;
+	float:left;
+	color:#ffffff;
+	font-weight:bold;
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,249 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-19 13:51-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: class-sociable_Admin_Options.php:20 class-sociable_Admin_Options.php:338
+msgid "Locations"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:22 class-sociable_Admin_Options.php:447
+msgid "General Options"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:36
+msgid "Sociable Options"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:36
+msgid "Sociable"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:192
+msgid "Sociable 2 Options"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:206
+msgid "Live preview of how Sociable will appear on your blog."
+msgstr ""
+
+#: class-sociable_Admin_Options.php:210
+msgid "This is your post here..."
+msgstr ""
+
+#: class-sociable_Admin_Options.php:219
+msgid "Tagline"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:225
+msgid "Previously we used \"Share and Enjoy\", remember the good old days?"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:233
+msgid "Link to Sociable"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:234
+msgid ""
+"(Help us grow, please leave the link so others discover Sociable from your "
+"blog)"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:242
+msgid "Icons to Include"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:249
+msgid "Check the sites you want to appear on your blog."
+msgstr ""
+
+#: class-sociable_Admin_Options.php:261
+msgid "Icons Size"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:291
+msgid "Icons Style"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:344
+msgid ""
+"Please select the locations that you wish to allow the Sociable plugin to  "
+"insert itself."
+msgstr ""
+
+#: class-sociable_Admin_Options.php:350
+msgid "Home page"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:353
+msgid ""
+"The front page of the blog (if set to a static page), or the main blog page "
+"(if set to your latest posts)."
+msgstr ""
+
+#: class-sociable_Admin_Options.php:359
+msgid "Blog page"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:362
+msgid ""
+"The home page of the blog if is set to your latest posts, or the posts page "
+"if the home page is set to a static page"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:368
+msgid "Posts"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:371
+msgid "Single post pages"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:377
+msgid "Pages"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:380
+msgid "Individual Wordpress pages"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:386
+msgid "Category archives"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:389
+msgid "Category archive pages"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:395
+msgid "Date archives"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:398
+msgid "Date archive pages"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:404
+msgid "Tag archives"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:407
+msgid "Tag archive pages"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:413
+msgid "Author archives"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:416
+msgid "Author archive pages"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:422
+msgid "Search results"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:425
+msgid "Search results pages"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:431 class-sociable_Admin_Options.php:434
+msgid "RSS feeds"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:458
+msgid "Automatic mode"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:461
+msgid "Do you want to automatically use Sociable on the locations specified?"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:464
+msgid ""
+"If this is unchecked, you will have to use the shortcode[sociable/] or "
+"template"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:473
+msgid "Use styleSheet"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:476
+msgid "Do you want to use the default stylesheet for sociable?"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:480
+msgid "Use your own icons"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:483
+msgid "Do you want to use your own icons for sociable?"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:487
+msgid "Use images"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:490
+msgid ""
+"Do you want to use the Sociable images? If not, the plugin will insert plain "
+"text links."
+msgstr ""
+
+#: class-sociable_Admin_Options.php:496
+msgid "Use alpha mask"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:499
+msgid ""
+"Do you want to use alpha masks on the images (available only on the Original "
+"Sociable)?"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:504
+msgid "Open in new window"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:507
+msgid "do you want to open the links in a new window?"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:525
+msgid "Save Changes"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:528
+msgid "Reset Sociable"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:531
+msgid "Completly Uninstall Sociable"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:564
+msgid "Disable sociable"
+msgstr ""
+
+#: class-sociable_Admin_Options.php:575
+msgid "Check This To Disable Sociable 2 On This Post Only."
+msgstr ""
+
+#: class-sociable_Admin_Options.php:624
+msgid ""
+"Please Select The Locations That You Wish To Allow The Sociable 2 Plugin To "
+"Insert The Links."
+msgstr ""
