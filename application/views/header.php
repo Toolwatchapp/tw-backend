@@ -104,7 +104,7 @@
                           <a href="/about/">About</a>
                         </div>
                         <div style="margin-top: 10px; width: auto" class="col-md-1  text-center">
-						  <a href="/blog/watch-tips/">Watch Tips</a>
+						  <a target="_blank" href="https://blog.toolwatch.io/watch-tips">Watch Tips</a>
                         </div>
                         <?php 
                             if($userIsLoggedIn)
