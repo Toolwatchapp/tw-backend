@@ -1,4 +1,5 @@
 application/cache/*
 application/logs/*
+application/tests/build/*
 vendor/
 .env
