@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CodeIgniter Application Test Suite" tests="3" assertions="3" failures="0" errors="0" time="0.023790">
+    <testsuite name="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" fullPackage="Welcome" tests="3" assertions="3" failures="0" errors="0" time="0.023790">
+      <testcase name="test_index" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="13" assertions="1" time="0.011884"/>
+      <testcase name="test_method_404" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="19" assertions="1" time="0.005183"/>
+      <testcase name="test_APPPATH" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="25" assertions="1" time="0.006723"/>
+    </testsuite>
+  </testsuite>
+</testsuites>
