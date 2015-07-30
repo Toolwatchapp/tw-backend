@@ -5,6 +5,7 @@
         "monolog/monolog": "~1.7"
   },
   "require-dev": {
-      "heroku/heroku-buildpack-php": "*"
+      "heroku/heroku-buildpack-php": "*",
+      "mikey179/vfsStream": "1.1.*"
   }
 }
