@@ -82,12 +82,6 @@ class User_test extends TestCase {
 			$this->obj->logout(),
 			'Should by true'
 		);
-
-		$this->assertEquals(
-			null,
-			$this->session->userdata('userId'),
-			'Should by true'
-		);
 	}
 
 	public function test_getUser() {
