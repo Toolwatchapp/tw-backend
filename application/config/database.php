@@ -57,45 +57,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
-*/
+ */
 
-$active_group = 'default';
+$active_group  = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => '',
-	'password' => '',
-	'database' => '',
-	'dbdriver' => 'mysqli',
-	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => TRUE,
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
-	'failover' => array(),
+	'dsn'          => '',
+	'hostname'     => 'localhost',
+	'username'     => '',
+	'password'     => '',
+	'database'     => '',
+	'dbdriver'     => 'mysqli',
+	'dbprefix'     => '',
+	'pconnect'     => FALSE,
+	'db_debug'     => TRUE,
+	'cache_on'     => FALSE,
+	'cachedir'     => '',
+	'char_set'     => 'utf8',
+	'dbcollat'     => 'utf8_general_ci',
+	'swap_pre'     => '',
+	'encrypt'      => FALSE,
+	'compress'     => FALSE,
+	'stricton'     => FALSE,
+	'failover'     => array(),
 	'save_queries' => TRUE
 );
 
-if(ENVIRONMENT == 'development')
-{
-    $db['default']['hostname'] = 'localhost';
-    $db['default']['username'] = 'root';
-    $db['default']['password'] = '';
-    $db['default']['database'] = 'toolwatch';
-}
-else
-{
-    $url = parse_url(getenv("TW_DB_URL"));
-    $db['default']['hostname'] = $url["host"];
-    $db['default']['username'] = $url["user"]; 
-    $db['default']['password'] = $url["pass"];
-    $db['default']['database'] = substr($url["path"], 1);
+if (ENVIRONMENT == 'development') {
+	$db['default']['hostname'] = 'localhost';
+	$db['default']['username'] = 'root';
+	$db['default']['password'] = '';
+	$db['default']['database'] = 'toolwatch';
+} else {
+	$url                       = parse_url(getenv("TW_DB_URL"));
+	$db['default']['hostname'] = $url["host"];
+	$db['default']['username'] = $url["user"];
+	$db['default']['password'] = $url["pass"];
+	$db['default']['database'] = substr($url["path"], 1);
 }

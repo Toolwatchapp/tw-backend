@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="CodeIgniter Application Test Suite" tests="3" assertions="3" failures="0" errors="0" time="0.023790">
-    <testsuite name="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" fullPackage="Welcome" tests="3" assertions="3" failures="0" errors="0" time="0.023790">
-      <testcase name="test_index" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="13" assertions="1" time="0.011884"/>
-      <testcase name="test_method_404" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="19" assertions="1" time="0.005183"/>
-      <testcase name="test_APPPATH" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="25" assertions="1" time="0.006723"/>
+  <testsuite name="CodeIgniter Application Test Suite" tests="18" assertions="43" failures="0" errors="0" time="3.787228">
+    <testsuite name="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" fullPackage="Welcome" tests="3" assertions="3" failures="0" errors="0" time="0.463697">
+      <testcase name="test_index" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="13" assertions="1" time="0.452145"/>
+      <testcase name="test_method_404" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="19" assertions="1" time="0.005033"/>
+      <testcase name="test_APPPATH" class="Welcome_test" file="/var/www/tw/application/tests/controllers/Welcome_test.php" line="25" assertions="1" time="0.006519"/>
+    </testsuite>
+    <testsuite name="User_test" file="/var/www/tw/application/tests/models/User_test.php" fullPackage="User" tests="8" assertions="20" failures="0" errors="0" time="2.532970">
+      <testcase name="test_signup" class="User_test" file="/var/www/tw/application/tests/models/User_test.php" line="19" assertions="1" time="0.136048"/>
+      <testcase name="test_login" class="User_test" file="/var/www/tw/application/tests/models/User_test.php" line="34" assertions="5" time="0.234915"/>
+      <testcase name="test_checkUserEmail" class="User_test" file="/var/www/tw/application/tests/models/User_test.php" line="64" assertions="2" time="0.198257"/>
+      <testcase name="test_logout" class="User_test" file="/var/www/tw/application/tests/models/User_test.php" line="79" assertions="2" time="0.003904"/>
+      <testcase name="test_getUser" class="User_test" file="/var/www/tw/application/tests/models/User_test.php" line="93" assertions="6" time="0.329813"/>
+      <testcase name="test_askResetPassword" class="User_test" file="/var/www/tw/application/tests/models/User_test.php" line="118" assertions="1" time="0.639988"/>
+      <testcase name="test_resetPassword" class="User_test" file="/var/www/tw/application/tests/models/User_test.php" line="137" assertions="2" time="0.891908"/>
+      <testcase name="test_getUserFromWatchId" class="User_test" file="/var/www/tw/application/tests/models/User_test.php" line="160" assertions="1" time="0.098137"/>
+    </testsuite>
+    <testsuite name="Watch_test" file="/var/www/tw/application/tests/models/Watch_test.php" fullPackage="Watch" tests="7" assertions="20" failures="0" errors="0" time="0.790561">
+      <testcase name="test_addWatch" class="Watch_test" file="/var/www/tw/application/tests/models/Watch_test.php" line="38" assertions="1" time="0.135648"/>
+      <testcase name="test_getWatches" class="Watch_test" file="/var/www/tw/application/tests/models/Watch_test.php" line="55" assertions="8" time="0.111129"/>
+      <testcase name="test_getWatchesUserNotExist" class="Watch_test" file="/var/www/tw/application/tests/models/Watch_test.php" line="73" assertions="1" time="0.101032"/>
+      <testcase name="test_getWatch" class="Watch_test" file="/var/www/tw/application/tests/models/Watch_test.php" line="77" assertions="7" time="0.103578"/>
+      <testcase name="test_getWatchWrongId" class="Watch_test" file="/var/www/tw/application/tests/models/Watch_test.php" line="89" assertions="1" time="0.096494"/>
+      <testcase name="test_deleteWatch" class="Watch_test" file="/var/www/tw/application/tests/models/Watch_test.php" line="93" assertions="1" time="0.136953"/>
+      <testcase name="test_getWatchDeletedWatch" class="Watch_test" file="/var/www/tw/application/tests/models/Watch_test.php" line="97" assertions="1" time="0.105727"/>
     </testsuite>
   </testsuite>
 </testsuites>
