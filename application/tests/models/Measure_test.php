@@ -127,22 +127,6 @@ class Measure_test extends TestCase {
 		$this->assertEquals(true, is_numeric(self::$measureId));
 	}
 
-	public function test_getMeasuresByUser3() {
-		$measures = $this->obj->getMeasuresByUser(
-			self::$userId,
-			array(self::$watch)
-		);
-
-		$this->assertEquals(true, is_array($measures));
-
-		$this->assertEquals(
-			1.5,
-			$measures[0]['statusId'],
-			'it\'s been less than 12 hours'
-		);
-
-	}
-
 	public function test_addAccuracyMesure1() {
 		$watchMeasure = $this->obj->addAccuracyMesure(
 			self::$measureId,
@@ -194,22 +178,6 @@ class Measure_test extends TestCase {
 		);
 
 		$this->assertEquals(true, is_numeric(self::$measureId));
-	}
-
-	public function test_getMeasuresByUser5() {
-		$measures = $this->obj->getMeasuresByUser(
-			self::$userId,
-			array(self::$watch)
-		);
-
-		$this->assertEquals(true, is_array($measures));
-
-		$this->assertEquals(
-			1.5,
-			$measures[0]['statusId'],
-			'it\'s been less than 12 hours'
-		);
-
 	}
 
 	public function test_addAccuracyMesure2() {
