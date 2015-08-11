@@ -293,9 +293,4 @@ class Ajax_test extends TestCase {
 
 	}
 
-	public static function tearDownAfterClass() {
-		$CI = &get_instance();
-		$CI->load->model('User');
-		$CI->User->delete_where(array("userId >=" => "0"));
-	}
 }
