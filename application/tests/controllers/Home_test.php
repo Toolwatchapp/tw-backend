@@ -40,8 +40,8 @@ class Home_test extends TestCase {
 	}
 
 	public function test_logout(){
-		$output = $this->request('GET', ['Home', 'resetPassword']);
-		$this->assertResponseCode(200);
+		$output = $this->request('GET', ['Home', 'logout']);
+		$this->assertResponseCode(302);
 	}
 
 }
