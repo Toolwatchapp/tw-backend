@@ -39,4 +39,9 @@ class Home_test extends TestCase {
 		$this->assertContains('<div class="col-md-12"><center><h1>Reset your password</h1></center></div>', $output);
 	}
 
+	public function test_logout(){
+		$output = $this->request('GET', ['Home', 'resetPassword']);
+		$this->assertResponseCode(200);
+	}
+
 }
