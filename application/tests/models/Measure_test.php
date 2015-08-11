@@ -250,18 +250,8 @@ class Measure_test extends TestCase {
 	}
 
 	public function test_getMeasuresCountByWatchBrand() {
-		$this->assertEquals(6, $this->obj->getMeasuresCountByWatchBrand('brand'));
-	}
-
-	public static function tearDownAfterClass() {
-		$CI = &get_instance();
-		$CI->load->model('User');
-		$CI->load->model('Watch');
-		$CI->load->model('Measure');
-
-		$CI->Measure->delete_where(array("id >="    => "0"));
-		$CI->Watch->delete_where(array("watchId >=" => "0"));
-		$CI->User->delete_where(array("userId >="   => "0"));
+		$count = $this->obj->getMeasuresCountByWatchBrand('brand');
+		$this->assertEquals(6, $count);
 	}
 
 }
