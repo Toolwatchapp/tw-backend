@@ -77,6 +77,7 @@ class User_test extends TestCase {
 	}
 
 	public function test_logout() {
+
 		$this->assertEquals(
 			true,
 			$this->obj->logout(),

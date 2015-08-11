@@ -8,8 +8,7 @@
  * @link       https://github.com/kenjis/ci-phpunit-test
  */
 
-class Mock_Libraries_Email
-{
+class Mock_Libraries_Email {
 	private $data = [];
 
 	/**
@@ -17,43 +16,35 @@ class Mock_Libraries_Email
 	 */
 	public $return_send = TRUE;
 
-	public function initialize()
-	{
-		
+	public function initialize() {
+
 	}
 
-	public function from($from)
-	{
+	public function from($from) {
 		$this->data['from'] = $from;
 	}
 
-	public function to($to)
-	{
+	public function to($to) {
 		$this->data['to'] = $to;
 	}
 
-	public function bcc($bcc)
-	{
+	public function bcc($bcc) {
 		$this->data['bcc'] = $bcc;
 	}
 
-	public function subject($subject)
-	{
+	public function subject($subject) {
 		$this->data['subject'] = $subject;
 	}
 
-	public function message($message)
-	{
+	public function message($message) {
 		$this->data['message'] = $message;
 	}
 
-	public function send()
-	{
+	public function send() {
 		return $this->return_send;
 	}
 
-	public function _get_data()
-	{
+	public function _get_data() {
 		return $this->data;
 	}
 }
