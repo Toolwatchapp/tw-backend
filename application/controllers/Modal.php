@@ -65,37 +65,13 @@ class Modal extends MY_Controller
         }
     }
     
-    public function newMeasure()
-    {
-        if($this->input->post('ajax'))
-		{
-			$this->load->view('modal/new-measure');
-		}
-        else
-        {
-            redirect(base_url());
-        }
-    }
-    
-    public function newWatch()
-    {
-        if($this->input->post('ajax'))
-		{
-			$this->load->view('modal/new-watch');
-		}
-        else
-        {
-            redirect(base_url());
-        }
-    }
-    
     public function resetPassword()
     {
         if($this->input->post('ajax'))
 		{
 			$this->load->view('modal/reset-password');
 		}
-                else
+        else
         {
             redirect(base_url());
         }
