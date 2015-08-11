@@ -17,6 +17,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
  */
+
+if(isset($_SERVER['HTTP_HOST']) == false){
+	$_SERVER['HTTP_HOST'] = "";
+}
+
 $root               = ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))?"https://":"http://").$_SERVER['HTTP_HOST'];
 $config['base_url'] = $root;
 
