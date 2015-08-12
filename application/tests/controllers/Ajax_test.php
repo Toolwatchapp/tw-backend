@@ -29,6 +29,14 @@ class Ajax_test extends TestCase {
 
 	public function test_signup() {
 
+		$this->request->setCallable(
+			function ($CI) {
+				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
+				$this->verifyInvokedOnce($email, 'send');
+				$CI->email = $email;
+			}
+		);
+
 		$output = $this->request(
 			'POST',
 			['Ajax', 'signup'],
@@ -104,6 +112,15 @@ class Ajax_test extends TestCase {
 	}
 
 	public function test_facebookSignup() {
+
+		$this->request->setCallable(
+			function ($CI) {
+				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
+				$this->verifyInvokedOnce($email, 'send');
+				$CI->email = $email;
+			}
+		);
+
 		$output = $this->request(
 			'POST',
 			['Ajax', 'facebookSignup'],
@@ -142,6 +159,7 @@ class Ajax_test extends TestCase {
 	}
 
 	public function test_facebookSigninFalse() {
+
 		$output = $this->request(
 			'POST',
 			['Ajax', 'facebookSignup'],
@@ -161,6 +179,15 @@ class Ajax_test extends TestCase {
 	}
 
 	public function test_askResetPassword() {
+
+		$this->request->setCallable(
+			function ($CI) {
+				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
+				$this->verifyInvokedOnce($email, 'send');
+				$CI->email = $email;
+			}
+		);
+
 		$output = $this->request(
 			'POST',
 			['Ajax', 'askResetPassword'],
@@ -244,6 +271,14 @@ class Ajax_test extends TestCase {
 			014
 		);
 
+		$this->request->setCallable(
+			function ($CI) {
+				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
+				$this->verifyInvokedOnce($email, 'send');
+				$CI->email = $email;
+			}
+		);
+
 		$output = $this->request(
 			'POST',
 			['Ajax', 'baseMeasure'],
@@ -278,6 +313,14 @@ class Ajax_test extends TestCase {
 	}
 
 	public function test_contact() {
+
+		$this->request->setCallable(
+			function ($CI) {
+				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
+				$this->verifyInvokedOnce($email, 'send');
+				$CI->email = $email;
+			}
+		);
 
 		$output = $this->request(
 			'POST',
