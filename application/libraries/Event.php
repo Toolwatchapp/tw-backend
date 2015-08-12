@@ -1,7 +1,6 @@
-<?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
-}
+<?php
 
-class Event extends MY_Model {
+class Event {
 
 	public $CTA_MEASURES             = "CTA_MEASURES";
 	public $CTA_MEASURE_NOW          = "CTA_MEASURE_NOW";
@@ -35,11 +34,7 @@ class Event extends MY_Model {
 	public $HOME_PAGE_2              = "HOME_PAGE_2";
 	public $HOME_PAGE_3              = "HOME_PAGE_3";
 
-	function __construct() {
-		parent::__construct();
-	}
-
-	function add($event) {
+	public function add($event) {
 
 		if (ENVIRONMENT === 'production') {
 			if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
