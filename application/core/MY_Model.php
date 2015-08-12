@@ -1899,5 +1899,6 @@ class MY_Model extends CI_Model {
 	public function affected_rows() {return $this->db->affected_rows();}
 	public function last_query() {return $this->db->last_query();}
 	public function truncate() {$this->db->truncate($this->table_name);}
+	public function insert_id() {$this->db->insert_id();}
 
 }
