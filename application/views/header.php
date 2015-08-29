@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Toolwatch • <?php if(isset($title)) echo $title; else echo 'Easily measure and track the accuracy of your mechanical watch'; ?></title>
+    <title>Toolwatch • <?php if (isset($title)) {echo $title;
+} else {
+	echo 'Easily measure and track the accuracy of your mechanical watch';
+}
+
+?></title>
     <meta name="keywords" content="toolwatch, toolwatchapp, accuracy, precision, measure, mechanical watch, manual winding, automatic winding">
     <meta name="description" content="Toolwatch makes it super easy to measure the accuracy of any mechanical watch. Keep your watch’s accuracy at its best with Toolwatch.">
 
-    <meta property="og:title" content="<?php if(isset($title)) echo $title; else echo 'Easily measure and track the accuracy of your mechanical watch'; ?>" />
-    <meta property="og:description" content="<?php if(isset($meta_description)) echo $meta_description; else echo 'Toolwatch makes it super easy to measure the accuracy of any mechanical watch. Keep your watch’s accuracy at its best with Toolwatch.'; ?>" />
-    <meta property="og:image" content="<?php if(isset($meta_img)) echo $meta_img; else echo img_url('share.png'); ?>" />
+    <meta property="og:title" content="<?php if (isset($title)) {echo $title;
+} else {
+	echo 'Easily measure and track the accuracy of your mechanical watch';
+}
+?>" />
+    <meta property="og:description" content="<?php if (isset($meta_description)) {echo $meta_description;
+} else {
+	echo 'Toolwatch makes it super easy to measure the accuracy of any mechanical watch. Keep your watch’s accuracy at its best with Toolwatch.';
+}
+?>" />
+    <meta property="og:image" content="<?php if (isset($meta_img)) {echo $meta_img;
+} else {
+	echo img_url('share.png');
+}
+?>" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='//fonts.googleapis.com/css?family=Raleway:500,700' rel='stylesheet' type='text/css'>
@@ -33,13 +50,17 @@
 	<script>
           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          m=s.getElementsByTagName(o)[0];
+a.async=1;
+a.src=g;
+m.parentNode.insertBefore(a,m)
           })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
          (function(d, s, id){
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) {return;}
-            js = d.createElement(s); js.id = id;
+            js = d.createElement(s);
+ js.id = id;
             js.src = "https://connect.facebook.net/en_US/sdk.js#version=v2.2&appId=807383452677000&status=true&cookie=true&xfbml=true";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
@@ -57,15 +78,15 @@
         "https://twitter.com/ToolwatchApp",
         "https://www.pinterest.com/toolwatch/",
         "https://instagram.com/toolwatchapp/",
-        "https://plus.google.com/104724190750629608501/"] 
+        "https://plus.google.com/104724190750629608501/"]
     }
     </script>
-   
+
     <meta name="p:domain_verify" content="9f4eefba8c49cf4a79b31c72a7e388a9"/>
-    <?php
-        foreach($styleSheets as $css) { echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">'; }
-        foreach($javaScripts as $js) { echo '<script src="'.js_url($js).'"></script>'; }
-    ?>
+<?php
+foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">';}
+foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
+?>
     <!--[if lt IE 8]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -85,9 +106,9 @@
 		</div>
 	  </div>
 	</div>
-    <header class="navbar <?php echo $headerClass; ?>">
-            
-            
+    <header class="navbar <?php echo $headerClass;?>">
+
+
         <div class="container container-fluid">
 
             <div class="row collapse navbar-collapse" id="nav-menu">
@@ -95,30 +116,27 @@
                     <div class="nav navbar-nav">
 
                         <div class="col-md-2">
-                            <a href="<?php echo base_url(); ?>"><div class="logo"></div></a>
+                            <a href="<?php echo base_url();?>"><div class="logo"></div></a>
                         </div>
                         <div style="margin-top: 10px" class="col-md-1 col-md-offset-4 text-center">
-						  <a href="<?php echo base_url(); ?>#demo-screen">Features</a>
+						  <a href="<?php echo base_url();?>#demo-screen">Features</a>
                         </div>
                         <div style="margin-top: 10px" class="col-md-1  text-center">
                           <a href="/about/">About</a>
                         </div>
                         <div style="margin-top: 10px; width: auto" class="col-md-1  text-center">
-						  <a target="_blank" href="https://blog.toolwatch.io/watch-tips">Watch Tips</a>
+						  <a href="https://blog.toolwatch.io/watch-tips">Watch Tips</a>
                         </div>
-                        <?php 
-                            if($userIsLoggedIn)
-                            {
-                                echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="/logout/" title="Logout">Logout</a></div>';
-                                echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" href="/measures/" title="Measures">Measures</a></div>';
-                            }
-                            else
-                            {
-                                
-                                echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></div>';
-                                echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" title="Measures" data-toggle="modal" data-cta="MEASURES" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a></div>';
-                            }
-                        ?>
+<?php
+if ($userIsLoggedIn) {
+	echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="/logout/" title="Logout">Logout</a></div>';
+	echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" href="/measures/" title="Measures">Measures</a></div>';
+} else {
+
+	echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></div>';
+	echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" title="Measures" data-toggle="modal" data-cta="MEASURES" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a></div>';
+}
+?>
                     </div>
                 </div>
             </div>
