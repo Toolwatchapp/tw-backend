@@ -88,7 +88,15 @@ class Measure extends MY_Model {
 			'measureUserTime'      => $userTime,
 			'statusId'             => 1);
 
-		return $this->insert($data);
+		$returnValue = $this->insert($data);
+
+		if ($returnValue) {
+			$this->notify(NEW_MEASURE,
+				array('user' => arrayToObject($this->session->all_userdata),
+					'measure'   => $data));
+		}
+
+		return $returnValue;
 	}
 
 	function addAccuracyMesure($measureId, $referenceTime, $userTime) {
@@ -103,6 +111,10 @@ class Measure extends MY_Model {
 			$watchMeasure           = $this->find($measureId);
 			$watchMeasure->accuracy = $this->computeAccuracy($watchMeasure);
 
+			$this->notify(NEW_ACCURACY,
+				array('user' => arrayToObject($this->session->all_userdata),
+					'measure'   => $watchMeasure));
+
 			return $watchMeasure;
 		}
 
@@ -113,6 +125,11 @@ class Measure extends MY_Model {
 	function deleteMesure($measureId) {
 
 		$data = array('statusId' => 4);
+
+		$this->notify(DELETE_MEASURE,
+			array('user' => arrayToObject($this->session->all_userdata),
+				'measure'   => $measureId));
+
 		return $this->update($measureId, $data) !== false;
 	}
 

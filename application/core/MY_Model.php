@@ -28,7 +28,7 @@ class MY_Model extends CI_Model {
 	 * @var string
 	 * @access protected
 	 */
-	protected $table_name = '';
+	public $table_name = '';
 
 	/**
 	 * The primary key of the table. Used as the 'id' throughout.
@@ -355,8 +355,12 @@ class MY_Model extends CI_Model {
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct($table = false) {
 		parent::__construct();
+
+		if ($table !== false) {
+			$this->table_name = $table;
+		}
 
 		// If there are specific DB connection settings used in the model, load
 		// the database using those settings.
@@ -1887,7 +1891,7 @@ class MY_Model extends CI_Model {
 	public function where_not_in($key = null, $values = null) {$this->db->where_not_in($key, $values);return $this;}
 	public function or_where_not_in($key = null, $values = null) {$this->db->or_where_not_in($key, $values);return $this;}
 	public function like($field, $match = '', $side = 'both') {$this->db->like($field, $match, $side);return $this;}
-	public function not_like($field, $match = '', $side = 'both') {$this->db->not_like($field, $match, $side);return $this;}
+	public function nto_like($field, $match = '', $side = 'both') {$this->db->not_like($field, $match, $side);return $this;}
 	public function or_like($field, $match = '', $side = 'both') {$this->db->or_like($field, $match, $side);return $this;}
 	public function or_not_like($field, $match = '', $side = 'both') {$this->db->or_not_like($field, $match, $side);return $this;}
 	public function group_by($by) {$this->db->group_by($by);return $this;}
@@ -1899,6 +1903,6 @@ class MY_Model extends CI_Model {
 	public function affected_rows() {return $this->db->affected_rows();}
 	public function last_query() {return $this->db->last_query();}
 	public function truncate() {$this->db->truncate($this->table_name);}
-	public function insert_id() {$this->db->insert_id();}
+	public function inserted_id() {return $this->db->insert_id();}
 
 }

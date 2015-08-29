@@ -15,10 +15,8 @@ class Ajax extends CI_Controller {
 			$email    = $this->input->post('email');
 			$password = $this->input->post('password');
 			if ($this->user->login($email, $password)) {
-				$this->event->add($this->event->LOGIN_EMAIL);
 				$result['success'] = true;
 			} else {
-				$this->event->add($this->event->LOGIN_FAIL);
 				$result['success'] = false;
 			}
 
@@ -58,44 +56,12 @@ class Ajax extends CI_Controller {
 
 				if ($this->user->signup($email, $password, $name, $firstname, $timezone, $country)) {
 
-					$this->event->add($this->event->SIGN_UP_FB);
-
-					$this->load->helper('mcapi');
-					$api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
-					$api->listSubscribe('7f94c4aa71', $email, '');
-
-					$this->load->library('email');
-
-					$config['protocol']  = "smtp";
-					$config['smtp_host'] = "smtp.mandrillapp.com";
-					$config['smtp_port'] = "587";
-					$config['smtp_user'] = "marc@toolwatch.io";
-					$config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-					$config['charset']   = "utf-8";
-					$config['mailtype']  = "html";
-					$config['newline']   = "\r\n";
-
-					$this->email->initialize($config);
-
-					$this->email->from('hello@toolwatch.io', 'Toolwatch');
-					$this->email->to($email, $name.' '.$firstname);
-					$this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
-
-					$this->email->subject('Welcome to Toolwatch!');
-
-					$message = $this->load->view('email/signup', '', true);
-					$this->email->message($message);
-
-					if ($this->email->send()) {
-						$result['success'] = "signup";
-						$this->user->login($email, $password);
-					}
+					$result['success'] = "signup";
+					$this->user->login($email, $password);
 
 				}
 
 			} else if ($this->user->login($email, $password)) {
-
-				$this->event->add($this->event->LOGIN_FB);
 
 				$result['success'] = "signin";
 
@@ -130,46 +96,10 @@ class Ajax extends CI_Controller {
 						$email, $password, $name, $firstname,
 						$timezone, $country)) {
 
-					$this->event->add($this->event->SIGN_UP);
+					$result['success'] = true;
+					$this->user->login($email, $password);
 
-					if ('true' == $mailingList) {
-						$this->load->helper('mcapi');
-
-						$api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
-						$api->listSubscribe('7f94c4aa71', $email, '');
-					}
-
-					$this->load->library('email');
-
-					$config['protocol']  = "smtp";
-					$config['smtp_host'] = "smtp.mandrillapp.com";
-					$config['smtp_port'] = "587";
-					$config['smtp_user'] = "marc@toolwatch.io";
-					$config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-					$config['charset']   = "utf-8";
-					$config['mailtype']  = "html";
-					$config['newline']   = "\r\n";
-
-					$this->email->initialize($config);
-
-					$this->email->from('hello@toolwatch.io', 'Toolwatch');
-					$this->email->to($email, $name.' '.$firstname);
-					$this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
-
-					$this->email->subject('Welcome to Toolwatch!');
-
-					$message = $this->load->view('email/signup', '', true);
-					$this->email->message($message);
-
-					if ($this->email->send()) {
-						$result['success'] = true;
-						$this->user->login($email, $password);
-					} else {
-						$result['success'] = false;
-					}
 				} else {
-
-					$this->event->add($this->event->SIGN_UP_FAIL);
 
 					$result['success'] = false;
 				}
@@ -188,42 +118,13 @@ class Ajax extends CI_Controller {
 			$email = $this->input->post('email');
 
 			$result = array();
-			$data   = array();
 
 			$resetToken = $this->user->askResetPassword($email);
 
-			if ($resetToken != '') {
-				$this->event->add($this->event->RESET_PASSWORD);
+			if ($resetToken !== '') {
 
-				$this->load->library('email');
+				$result['success'] = true;
 
-				$config['protocol']  = "smtp";
-				$config['smtp_host'] = "smtp.mandrillapp.com";
-				$config['smtp_port'] = "587";
-				$config['smtp_user'] = "marc@toolwatch.io";
-				$config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-				$config['charset']   = "utf-8";
-				$config['mailtype']  = "html";
-				$config['newline']   = "\r\n";
-
-				$this->email->initialize($config);
-
-				$this->email->from('hello@toolwatch.io', 'Toolwatch');
-				$this->email->to($email, '');
-				$this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
-
-				$this->email->subject('Your Toolwatch password');
-
-				$data['resetToken'] = $resetToken;
-
-				$message = $this->load->view('email/reset-password', $data, true);
-				$this->email->message($message);
-
-				if ($this->email->send()) {
-					$result['success'] = true;
-				} else {
-					$result['success'] = false;
-				}
 			} else {
 				$result['success'] = false;
 			}
@@ -234,8 +135,6 @@ class Ajax extends CI_Controller {
 
 	function resetPassword() {
 		if ($this->input->post('resetToken')) {
-
-			$this->event->add($this->event->RESET_PASSWORD_USE);
 
 			$result = array();
 
@@ -258,8 +157,6 @@ class Ajax extends CI_Controller {
 
 	function accuracyMeasure() {
 		if ($this->input->post('measureId')) {
-
-			$this->event->add($this->event->NEW_ACCURACY);
 
 			$referenceTime = $this->session->userdata('referenceTime');
 			$userTimezone  = $this->input->post('userTimezone');
@@ -286,7 +183,6 @@ class Ajax extends CI_Controller {
 
 	function baseMeasure() {
 		if ($this->input->post('watchId')) {
-			$this->event->add($this->event->NEW_MEASURE);
 
 			$result = array();
 
@@ -302,42 +198,8 @@ class Ajax extends CI_Controller {
 
 			if ($this->measure->addBaseMesure($watchId, $referenceTime, $userTime)) {
 
-				$user = $this->user->getUserFromWatchId($watchId);
+				$result['success'] = true;
 
-				$this->load->library('email');
-
-				$config['protocol']  = "smtp";
-				$config['smtp_host'] = "smtp.mandrillapp.com";
-				$config['smtp_port'] = "587";
-				$config['smtp_user'] = "marc@toolwatch.io";
-				$config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-				$config['charset']   = "utf-8";
-				$config['mailtype']  = "html";
-				$config['newline']   = "\r\n";
-
-				$this->email->initialize($config);
-
-				$this->email->from('hello@toolwatch.io', 'Toolwatch');
-				$this->email->to($user->email, $user->name.' '.$user->firstname);
-				$this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
-
-				$scheduleTime = time()+86400;
-				$sentAt       = date('Y-', $scheduleTime).date('m-', $scheduleTime).(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'.(date('i', $scheduleTime)).date(':s', $scheduleTime);
-				$this->email->set_header('X-MC-SendAt', $sentAt);
-
-				$this->email->subject('It\'s time to check your watch\'s accuracy !');
-
-				$data['watchBrand'] = $user->brand;
-				$data['watchName']  = $user->name;
-
-				$message = $this->load->view('email/remind-check-accuracy', $data, true);
-				$this->email->message($message);
-
-				if ($this->email->send()) {
-					$result['success'] = true;
-				} else {
-					$result['success'] = false;
-				}
 			} else {
 				$result['success'] = false;
 			}

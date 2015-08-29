@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
 }
 
-class Watch extends MY_Model {
+class Watch extends ObservableModel {
 	function __construct() {
 		parent::__construct();
 		$this->table_name = "watch";
@@ -19,7 +19,11 @@ class Watch extends MY_Model {
 			'serial'    => $serial,
 			'caliber'   => $caliber);
 
-		return $this->insert($data);
+		$res = $this->insert($data);
+
+		$this->notify(ADD_WATCH, arrayToObject($data));
+
+		return $res;
 	}
 
 	function getWatches($userId) {
@@ -37,6 +41,11 @@ class Watch extends MY_Model {
 
 	function deleteWatch($watchId) {
 		$data = array('status' => 4);
-		return $this->update($watchId, $data) !== false;
+		$res  = $this->update($watchId, $data) !== false;
+
+		$this->notify(DELETE_WATCH,
+			array('user' => arrayToObject($this->session->all_userdata),
+				'watch'     => $watchId));
+		return $res;
 	}
 }

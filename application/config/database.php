@@ -90,7 +90,7 @@ if (ENVIRONMENT == 'development') {
 	$db['default']['password'] = '';
 	$db['default']['database'] = 'toolwatch';
 } else {
-	$url                       = parse_url(getenv("TW_DB_URL"));
+	$url                       = parse_url('mysql://travis:pmykAg2WeUKzhQ6q@host0.toolwatch.io/tw_ci?reconnect=true');
 	$db['default']['hostname'] = $url["host"];
 	$db['default']['username'] = $url["user"];
 	$db['default']['password'] = $url["pass"];

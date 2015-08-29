@@ -2,37 +2,9 @@
 
 class Event {
 
-	public $CTA_MEASURES             = "CTA_MEASURES";
-	public $CTA_MEASURE_NOW          = "CTA_MEASURE_NOW";
-	public $CTA_GET_STARTED          = "CTA_GET_STARTED";
-	public $CTA_FEATURES             = "CTA_FEATURES";
-	public $LOGIN_EMAIL              = "LOGIN_EMAIL";
-	public $LOGIN_FAIL               = "LOGIN_FAIL";
-	public $LOGIN_FB                 = "LOGIN_FB";
-	public $LOGIN_FB_FAIL            = "LOGIN_FB_FAIL";
-	public $RESET_PASSWORD           = "RESET_PASSWORD";
-	public $RESET_PASSWORD_USE       = "RESET_PASSWORD_USE";
-	public $LOGOUT                   = "LOGOUT";
-	public $SIGN_UP                  = "SIGN_UP";
-	public $SIGN_UP_FAIL             = "SIGN_UP_FAIL";
-	public $SIGN_UP_FB               = "SIGN_UP_FB";
-	public $ADD_WATCH                = "ADD_WATCH";
-	public $DELETE_WATCH             = "DELETE_WATCH";
-	public $NEW_MEASURE              = "NEW_MEASURE";
-	public $DELETE_MEASURE           = "DELETE_MEASURE";
-	public $DELETE_ALL_MEASURES      = "DELETE_ALL_MEASURES";
-	public $BOARD_LOAD               = "BOARD_LOAD";
-	public $NEW_ACCURACY             = "NEW_ACCURACY";
-	public $MEASURE_LOAD             = "MEASURE_LOAD";
-	public $ACCURACY_LOAD            = "ACCURACY_LOAD";
-	public $ACCURACY_WARNING_POPUP   = "ACCURACY_WARNING_POPUP";
-	public $ACCURACY_SOMETHING_WRONG = "ACCURACY_SOMETHING_WRONG";
-	public $LOGIN_POPUP              = "LOGIN_POPUP";
-	public $SIGN_UP_POPUP            = "SIGN_UP_POPUP";
-	public $HOME_PAGE_0              = "HOME_PAGE_0";
-	public $HOME_PAGE_1              = "HOME_PAGE_1";
-	public $HOME_PAGE_2              = "HOME_PAGE_2";
-	public $HOME_PAGE_3              = "HOME_PAGE_3";
+	public function updateObserver($subject, $event, $data) {
+		$this->add($event);
+	}
 
 	public function add($event) {
 

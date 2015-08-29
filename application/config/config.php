@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
  */
 
-if(isset($_SERVER['HTTP_HOST']) == false){
+if (isset($_SERVER['HTTP_HOST']) == false) {
 	$_SERVER['HTTP_HOST'] = "";
 }
 

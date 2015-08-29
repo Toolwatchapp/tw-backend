@@ -56,9 +56,9 @@ class Home extends MY_Controller {
 
 		if (!$this->user->isLoggedIn()) {
 
-			$homePage = "HOME_PAGE_".$randWatches;
+			$homePage = 'HOME_PAGE_'.$randWatches;
 
-			$this->event->add($this->event->{ $homePage});
+			$this->event->add($homePage);
 
 		}
 
@@ -77,7 +77,6 @@ class Home extends MY_Controller {
 	}
 
 	function logout() {
-		$this->event->add($this->event->LOGOUT);
 
 		$this->user->logout();
 		redirect(base_url());
