@@ -1,14 +1,14 @@
-    <footer>
-    <?php if(!$this->agent->is_mobile()){ ?>
-        <div id="publication_footer" class="publication">
-                        
-                <a href="http://www.fratellowatches.com/toolwatch-measure-the-accuracy-of-your-watch/"><img src="<?php echo img_url('fratello_logos_transparant.png'); ?>"></a>
-                <a href="http://wristreview.com/?p=16698"><img src="<?php echo img_url('wristreview.png'); ?>"></a>
+<footer>
+<?php if (!$this->agent->is_mobile()) {?>
+	        <div id="publication_footer" class="publication">
 
-        </div>
-     <?php } ?>
+	                <a href="http://www.fratellowatches.com/toolwatch-measure-the-accuracy-of-your-watch/"><img src="<?php echo img_url('fratello_logos_transparant.png');?>"></a>
+	                <a href="http://wristreview.com/?p=16698"><img src="<?php echo img_url('wristreview.png');?>"></a>
+
+	        </div>
+	<?php }?>
         <div class="container container-fluid">
-           
+
             <div class="row">
 
                 <div class="col-sm-12">
@@ -16,32 +16,29 @@
                         <div class="logo"></div>
                     </div>
                     <div class="links col-md-offset-1 col-sm-1">
-                        <a href="<?php echo base_url(); ?>#demo-screen">Features</a>
+                        <a href="<?php echo base_url();?>#demo-screen">Features</a>
                     </div>
                     <div class="links col-sm-1">
-                        <a href="<?php echo base_url(); ?>/blog/watch-tips/">Blog</a>
+                        <a href="https://blog.toolwatch.io/watch-tips">Blog</a>
                     </div>
 
-                    <?php 
-                        if($userIsLoggedIn)
-                        {
-                            echo '<div class="links col-sm-1">
+<?php
+if ($userIsLoggedIn) {
+	echo '<div class="links col-sm-1">
                                 <a href="/logout">Logout</a>
                             </div>
                             <div class="links col-sm-1">
                                 <a href="/measures/">Measures</a>
                             </div>';
-                        }
-                        else
-                        {
-                            echo '<div class="links col-sm-1">
+} else {
+	echo '<div class="links col-sm-1">
                                 <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a>
                             </div>
                             <div class="links col-sm-1">
                                 <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a>
                             </div>';
-                        }
-                    ?>
+}
+?>
 
 
                     <div class="links col-sm-1">
@@ -58,15 +55,15 @@
                     </div>
 
                 </div>
-                	
+
             </div>
             <div class="row">
                 <div class="col-md-12 copyright">
                     <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; 2015.</p>
                 </div>
             </div>
-        </div>    
-        
+        </div>
+
     </footer>
 </body>
 </html>
