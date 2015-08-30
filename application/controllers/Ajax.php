@@ -351,7 +351,7 @@ class Ajax extends CI_Controller
 
                 $scheduleTime = time()+86400;
                 $sentAt = date('Y-', $scheduleTime).date('m-', $scheduleTime).(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'.(date('i', $scheduleTime)).date(':s', $scheduleTime);
-                $this->email->add_custom_header('X-MC-SendAt',$sentAt); 
+                $this->email->set_header('X-MC-SendAt',$sentAt); 
 
                 $this->email->subject('It\'s time to check your watch\'s accuracy !');
 
