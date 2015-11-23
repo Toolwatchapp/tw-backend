@@ -34,22 +34,40 @@ class Email_test extends TestCase {
 		$CI->User->insert($data);
 
 		$data['email'] = 'ernest@ernest.com';
+														// + 2 days and 1 hour
+		$data['registerDate'] = time() + (2*24*60*60) + 3600;
+		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$data['email'] = 'anatole@anatole.com';
+		$data['registerDate'] = time() + (3*24*60*60) + 3600;
+		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$data['email'] = 'phillibert@phillibert.com';
+		$data['registerDate'] = time() + (4*24*60*60) + 3600;
+		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$data['email'] = 'hippolyte@hippolyte.com';
+		$data['registerDate'] = time() + (5*24*60*60) + 3600;
+		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$data['email'] = 'raymond@raymond.com';
+		$data['registerDate'] = time() + (6*24*60*60) + 3600;
+		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
+		$tmp = $CI->User->select()->find_all();
 
-		self::$users = $CI->User->select()->find_all();
+
+		self::$users['nestor'] = $tmp[0];
+		self::$users['ernest'] = $tmp[1];
+		self::$users['anatole'] = $tmp[2];
+		self::$users['phillibert'] = $tmp[3];
+		self::$users['hippolyte'] = $tmp[4];
+		self::$users['raymond'] = $tmp[5];
 	}
 
 	public function setUp() {
@@ -96,7 +114,6 @@ class Email_test extends TestCase {
 
 		$this->emailMeasure = new MY_Model('email_measure');
 		$this->emailWatch   = new MY_Model('email_watch');
-
 	}
 
 	public function test_mock() {
@@ -111,7 +128,6 @@ class Email_test extends TestCase {
 		);
 	}
 
-
 	public function test_signup() {
 
 		echo 'test_signup';
@@ -121,7 +137,7 @@ class Email_test extends TestCase {
 			$this->email->updateObserver(
 				'TEST',
 				SIGN_UP,
-				self::$users[0])[0]['_id']
+				self::$users['nestor'])[0]['_id']
 		);
 	}
 
@@ -136,10 +152,12 @@ class Email_test extends TestCase {
 			$this->email->updateObserver(
 				'TEST',
 				RESET_PASSWORD,
-				array('user' => self::$users[0],
+				array('user' => self::$users['nestor'],
 				'token' => 'plop' ))[0]['_id']
 		);
 	}
+
+
 
 
 
