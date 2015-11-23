@@ -22,22 +22,41 @@ class Email extends MY_Model {
 		$this->load->model('measure');
 		$this->load->model('user');
 		$this->load->library('__');
-
 	}
 
 	public function updateObserver($subject, $event, $data) {
 		switch ($event) {
 			case "SIGN_UP":
 			case "SIGN_UP_FB":
-				$this->signup($data);
+				return $this->signup($data);
 				break;
 			case "NEW_ACCURACY":
-				$this->newResult($data['user'], $data['watch'], $data['measure']);
+				return $this->newResult($data['user'], $data['watch'], $data['measure']);
 				break;
 			case "RESET_PASSWORD":
-				$this->resetPassword($data['user'], $data['token']);
+				return $this->resetPassword($data['user'], $data['token']);
 				break;
 		}
+	}
+
+	public function cronCheck($time = null) {
+
+		if($time === null){
+			$time = time();
+		}
+
+		$emailsUserSent    = array();
+		$emailsWatchSent   = array();
+		$emailsMeasureSent = array();
+
+		$this->inactiveUser($time, $emailsUserSent);
+		$this->userWithoutWatch($time, $emailsUserSent);
+		$this->userWithWatchWithoutMeasure($time, $emailsWatchSent);
+		$this->userWithOneCompleteMeasureAndOneWatch($time, $emailsUserSent);
+		$this->checkAccuracy($time, $emailsMeasureSent);
+		$this->checkAccuracyOneWeek($time, $emailsMeasureSent);
+		$this->startANewMeasure($time, $emailsWatchSent);
+
 	}
 
 	private function sendMandrillEmail($subject, $content, $recipientName,
@@ -347,28 +366,8 @@ class Email extends MY_Model {
 					$this->START_NEW_MEASURE,
 					$time
 				);
-
-				//Delete in email_watch to sent it again when event results
 			}
 		}
-	}
-
-	public function cronCheck() {
-
-		$time = time();
-
-		$emailsUserSent    = array();
-		$emailsWatchSent   = array();
-		$emailsMeasureSent = array();
-
-		$this->inactiveUser($time, $emailsUserSent);
-		$this->userWithoutWatch($time, $emailsUserSent);
-		$this->userWithWatchWithoutMeasure($time, $emailsWatchSent);
-		$this->userWithOneCompleteMeasureAndOneWatch($time, $emailsUserSent);
-		$this->checkAccuracy($time, $emailsMeasureSent);
-		$this->checkAccuracyOneWeek($time, $emailsMeasureSent);
-		$this->startANewMeasure($time, $emailsWatchSent);
-
 	}
 
 	private function signup($user) {
@@ -377,7 +376,7 @@ class Email extends MY_Model {
 		$api = new MCAPI('8d13b5ce53af2e80af803078bfd91e9e-us9');
 		$api->listSubscribe('7f94c4aa71', $user->email, '');
 
-		$this->sendMandrillEmail(
+		return $this->sendMandrillEmail(
 			'Welcome to Toolwatch!',
 			$this->load->view('email/signup', '', true),
 			$user->name.' '.$user->firstname,
