@@ -54,8 +54,8 @@ class Email extends MY_Model {
 		$this->userWithWatchWithoutMeasure($time, $emailsWatchSent);
 		$this->userWithOneCompleteMeasureAndOneWatch($time, $emailsUserSent);
 		$this->checkAccuracy($time, $emailsMeasureSent);
-		// $this->checkAccuracyOneWeek($time, $emailsMeasureSent);
-		// $this->startANewMeasure($time, $emailsWatchSent);
+		$this->checkAccuracyOneWeek($time, $emailsMeasureSent);
+		$this->startANewMeasure($time, $emailsWatchSent);
 
 		return array(
 			'users' 	 => $emailsUserSent,
@@ -318,7 +318,7 @@ class Email extends MY_Model {
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
 			->where('measureReferenceTime <=', $time-($this->day*7))
-			->whereNotAlreadySentMeasure($this->CHECK_ACCURACY_1_WEEK)
+			->where($this->whereNotAlreadySentUser($this->CHECK_ACCURACY_1_WEEK), 0, false)
 			->find_all();
 
 		if ($measureWithoutAccuracy !== FALSE) {
@@ -354,7 +354,7 @@ class Email extends MY_Model {
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 2)
 			->where('accuracyReferenceTime', $time-($this->day*30))
-			->whereNotAlreadySentWatch($this->START_NEW_MEASURE)
+			->where($this->whereNotAlreadySentUser($this->START_NEW_MEASURE), 0, false)
 			->find_all();
 
 		if ($measureWithoutAccuracy !== FALSE) {
