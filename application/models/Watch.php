@@ -17,7 +17,8 @@ class Watch extends ObservableModel {
 			'name'      => $name,
 			'yearOfBuy' => $yearOfBuy,
 			'serial'    => $serial,
-			'caliber'   => $caliber);
+			'caliber'   => $caliber,
+			'creationDate' => time());
 
 		$res = $this->insert($data);
 
@@ -37,6 +38,12 @@ class Watch extends ObservableModel {
 
 	function getWatch($watchId) {
 		return $this->select()->find_by("watchId", $watchId);
+	}
+
+	function getWatchByMeasureId($measureId){
+		return $this->select('watch.*')
+			->join('measure', 'measure.watchId = watch.watchId')
+			->find_by('measure.id', $measureId);
 	}
 
 	function deleteWatch($watchId) {
