@@ -387,12 +387,12 @@ class Email extends MY_Model {
 	}
 
 	private function resetPassword($user, $data) {
-		$this->sendMandrillEmail(
+		return $this->sendMandrillEmail(
 			'Your Toolwatch password',
 			$this->load->view('email/reset-password', $data, true),
 			$user->name.' '.$user->firstname,
 			$user->email,
-			'comeback_100d_email',
+			'reset_password',
 			$this->sendAtString(time())
 		);
 	}

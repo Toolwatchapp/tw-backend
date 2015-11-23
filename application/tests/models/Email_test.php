@@ -125,6 +125,22 @@ class Email_test extends TestCase {
 		);
 	}
 
+	public function test_lostPassword(){
+
+		echo 'test_lostPassword';
+
+		self::$users[0]->token = "plop";
+
+		$this->assertEquals(
+			'abc123abc123abc123abc123abc123',
+			$this->email->updateObserver(
+				'TEST',
+				RESET_PASSWORD,
+				array('user' => self::$users[0],
+				'token' => 'plop' ))[0]['_id']
+		);
+	}
+
 
 
 	// public function test_addWatch() {
