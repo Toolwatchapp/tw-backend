@@ -1,5 +1,35 @@
 <?php
+/**
+ * user,action,time
+ nestor,signup,01 octobre 2015 10:00:00
+ nestor,lost password,02 octobre 2015 11:00:00
+ ernest,signup, 03 octobre 2015 11:30:00
+ anatole,signup, 04 octobre 2015 04:32:00
+ phillibert,signup, 05 octobre 2015 03:11:00
+ phillibert,add watch, 05 octobre 2015 03:14:00
+ phillibert,add m1, 05 octobre 2015 03:16:00
+ phillibert,add m2, 07 octobre 2015 02:12:00
+ hippolyte,signup, 08 octobre 2015 01:09:00
+ hippolyte,add watch, 08 octobre 2015 01:14:00
+ hippolyte,add m1, 08 octobre 2015 01:18:00
+ hippolyte,add m2, 10 octobre 2015 03:12:00
+ raymond,signup, 09 octobre 2015 02:09:00
+ raymond,add watch, 09 octobre 2015 02:14:00
+ raymond,add m1, 09 octobre 2015 02:18:00
+ raymond,add m2, 17 octobre 2015 04:12:00
 
+ Emails envoy�s (user,email,time):
+ nestor,signup,01 octobre 2015 10:01:00
+ nestor,reset-password, 02 octobre 2015 11:01:00
+ ernest,comeback_100d, 12 janvier 2016 11:45:00
+ anatole,add_first_watch, 05 octobre 2015 08:40:00
+ phillibert,check_accuracy, 06 octobre 2015 09:20:00
+ phillibert,result_email, 07 octobre 2015 04:15:00
+ phillibert,start_new_measure, 08 novembre 2015 03:03:00
+ hippolyte,add_another_watch, 13 octobre 2015 02:08:00
+ raymond,check_accuracy, 10 octobre 2015 10:20:00
+ raymond,check_accuracy, 17 octobre 2015 03:18:00
+ */
 class Email_test extends TestCase {
 
 	public static $users;
@@ -14,12 +44,21 @@ class Email_test extends TestCase {
 		$CI->load->model('User');
 		$CI->load->model('measure');
 
-		$CI->emailMeasure = new MY_Model('email_measure');
+
 		$CI->emailWatch   = new MY_Model('email_watch');
+		$CI->emailMeasure = new MY_Model('email_measure');
+		$CI->emailUser   = new MY_Model('email_user');
+
+		$CI->emailUser->delete_where(array("id >=" => "0"));
+		$CI->emailWatch->delete_where(array("id >=" => "0"));
+		$CI->emailMeasure->delete_where(array("id >=" => "0"));
+
+		$CI->measure->delete_where(array("id >="      => "0"));
 		$CI->Watch->delete_where(array("watchId >="   => "0"));
 		$CI->User->delete_where(array("userId >="     => "0"));
-		$CI->emailMeasure->delete_where(array("id >=" => "0"));
-		$CI->measure->delete_where(array("id >="      => "0"));
+
+
+
 
 		$data = array(
 			'email'        => 'nestor@nestor.com',
@@ -34,29 +73,18 @@ class Email_test extends TestCase {
 		$CI->User->insert($data);
 
 		$data['email'] = 'ernest@ernest.com';
-														// + 2 days and 1 hour
-		$data['registerDate'] = time() + (2*24*60*60) + 3600;
-		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$data['email'] = 'anatole@anatole.com';
-		$data['registerDate'] = time() + (3*24*60*60) + 3600;
-		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$data['email'] = 'phillibert@phillibert.com';
-		$data['registerDate'] = time() + (4*24*60*60) + 3600;
-		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$data['email'] = 'hippolyte@hippolyte.com';
-		$data['registerDate'] = time() + (5*24*60*60) + 3600;
-		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$data['email'] = 'raymond@raymond.com';
-		$data['registerDate'] = time() + (6*24*60*60) + 3600;
-		$data['lastLogin'] = $data['registerDate'];
 		$CI->User->insert($data);
 
 		$tmp = $CI->User->select()->find_all();
@@ -106,14 +134,13 @@ class Email_test extends TestCase {
 
 		$CI->load->model('Email');
 		$CI->load->model('Watch');
+		$CI->load->model('Measure');
 
 		$CI->Email->mandrill->messages = $mandrillMessage;
 
 		$this->email      = $CI->Email;
 		$this->watchModel = $CI->Watch;
-
-		$this->emailMeasure = new MY_Model('email_measure');
-		$this->emailWatch   = new MY_Model('email_watch');
+		$this->measureModel = $CI->Measure;
 	}
 
 	public function test_mock() {
@@ -145,8 +172,6 @@ class Email_test extends TestCase {
 
 		echo 'test_lostPassword';
 
-		self::$users[0]->token = "plop";
-
 		$this->assertEquals(
 			'abc123abc123abc123abc123abc123',
 			$this->email->updateObserver(
@@ -157,6 +182,71 @@ class Email_test extends TestCase {
 		);
 	}
 
+	public function test_phillibert(){
+
+		echo 'test_phillibert';
+
+		$watchId = $this->watchModel->addWatch(
+			self::$users['nestor']->userId,
+			'rolex',
+			'marolex',
+			'2000',
+			'0000-0000',
+			'caliber'
+		);
+
+		$baseMeasureId = $this->measureModel->addBaseMesure($watchId, time(), time());
+
+		//1 day later
+		// Should have 5 add first and 1 check
+		$emails = $this->email->cronCheck(time()+(24*60*60));
+
+		$this->assertEquals(sizeof($emails['users']), 5);
+
+		$this->assertEquals($emails['users'][0]['userId'], self::$users['ernest']->userId);
+		$this->assertEquals($emails['users'][0]['emailType'], $this->email->ADD_FIRST_WATCH);
+
+		$this->assertEquals($emails['users'][1]['userId'], self::$users['anatole']->userId);
+		$this->assertEquals($emails['users'][1]['emailType'], $this->email->ADD_FIRST_WATCH);
+
+		$this->assertEquals($emails['users'][2]['userId'], self::$users['phillibert']->userId);
+		$this->assertEquals($emails['users'][2]['emailType'], $this->email->ADD_FIRST_WATCH);
+
+		$this->assertEquals($emails['users'][3]['userId'], self::$users['hippolyte']->userId);
+		$this->assertEquals($emails['users'][3]['emailType'], $this->email->ADD_FIRST_WATCH);
+
+		$this->assertEquals($emails['users'][4]['userId'], self::$users['raymond']->userId);
+		$this->assertEquals($emails['users'][4]['emailType'], $this->email->ADD_FIRST_WATCH);
+
+		$this->assertEquals(sizeof($emails['watches']), 0);
+
+		$this->assertEquals(sizeof($emails['measures']), 1);
+		$this->assertEquals($emails['measures'][0]['measureId'], $baseMeasureId);
+		$this->assertEquals($emails['measures'][0]['emailType'], $this->email->CHECK_ACCURACY);
+
+		//1 week later
+		// Should have 1 CHECK_ACCURACY_1_WEEK
+		$emails = $this->email->cronCheck(time()+(24*8*60*60));
+
+		$this->assertEquals(sizeof($emails['users']), 0);
+		$this->assertEquals(sizeof($emails['watches']), 0);
+		$this->assertEquals(sizeof($emails['measures']), 1);
+
+		$this->assertEquals(sizeof($emails['measures']), 1);
+		$this->assertEquals($emails['measures'][0]['measureId'], $baseMeasureId);
+		$this->assertEquals($emails['measures'][0]['emailType'], $this->email->CHECK_ACCURACY_1_WEEK);
+
+		$baseMeasureId = $this->measureModel->addAccuracyMesure($baseMeasureId,
+			time()+(24*8*60*60), time()+(24*8*60*60));
+
+		//1 day after
+		// Should be empty
+		$emails = $this->email->cronCheck(time()+(24*9*60*60));
+		$this->assertEquals(sizeof($emails['users']), 0);
+		$this->assertEquals(sizeof($emails['watches']), 0);
+		$this->assertEquals(sizeof($emails['measures']), 0);
+
+	}
 
 
 
