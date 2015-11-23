@@ -31,7 +31,7 @@ class Email extends MY_Model {
 				return $this->signup($data);
 				break;
 			case "NEW_ACCURACY":
-				return $this->newResult($data['user'], $data['watch'], $data['measure']);
+				return $this->newResult($data['measure']);
 				break;
 			case "RESET_PASSWORD":
 				return $this->resetPassword($data['user'], $data['token']);
@@ -180,7 +180,7 @@ class Email extends MY_Model {
 			->user
 			->select('user.userId, user.name, firstname, email')
 			->where('(select count(1) from watch where user.userId = watch.userId) =', 0)
-			->where($this->whereNotAlreadySentUser($this->ADD_FIRST_WATCH), 0, false)
+			->where($this->whereNotAlreadySentUser($this->ADD_FIRST_WATCH), 0)
 			->where('lastLogin <=', $time-$this->day)
 			->find_all();
 
@@ -256,7 +256,7 @@ class Email extends MY_Model {
 					join watch on measure.watchId = watch.watchId
 					where user.userId = watch.userId
 					and measure.statusId = 2
-					and measure.accuracyUserTime) <= ', $twoDays)
+					and measure.accuracyReferenceTime <= '.$twoDays.' ) >= ', 1)
 			->where($this->whereNotAlreadySentUser($this->ADD_SECOND_WATCH), 0, false)
 			->find_all();
 
@@ -331,7 +331,7 @@ class Email extends MY_Model {
 	private function checkAccuracyOneWeek($time, &$queuedEmail) {
 		$measureWithoutAccuracy = $this
 			->measure
-			->select('user.userId, user.name, user.firstname, email')
+			->select('measure.id as measureId, user.userId, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
@@ -435,15 +435,18 @@ class Email extends MY_Model {
 		);
 	}
 
-	private function newResult($user, $watch, $measure) {
+	private function newResult($measure) {
 
-		$data['user']  = $user;
+		$watch = $this->watch->find($measure->watchId);
 		$data['watch'] = $watch;
+
+		$user = $this->user->getUserFromWatchId($watch->watchId);
+		$data['user']  = $user;
 
 		$attachments = array();
 		$description = "Check accuracy of my ".$watch->brand.' '.$watch->name;
 		$this->load->helper('ics');
-		$in30days = $this->timeAtHoursFromNow(30*24);
+		$in30days = time() + 30*24*60*60;
 
 		array_push($attachments, array(
 				'type'    => 'text/calendar',
