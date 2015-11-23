@@ -54,9 +54,14 @@ class Email extends MY_Model {
 		$this->userWithWatchWithoutMeasure($time, $emailsWatchSent);
 		$this->userWithOneCompleteMeasureAndOneWatch($time, $emailsUserSent);
 		$this->checkAccuracy($time, $emailsMeasureSent);
-		$this->checkAccuracyOneWeek($time, $emailsMeasureSent);
-		$this->startANewMeasure($time, $emailsWatchSent);
+		// $this->checkAccuracyOneWeek($time, $emailsMeasureSent);
+		// $this->startANewMeasure($time, $emailsWatchSent);
 
+		return array(
+			'users' 	 => $emailsUserSent,
+			'watches'  => $emailsWatchSent,
+			'measures' => $emailsMeasureSent
+		);
 	}
 
 	private function sendMandrillEmail($subject, $content, $recipientName,
@@ -105,8 +110,8 @@ class Email extends MY_Model {
 	}
 
 	private function whereNotAlreadySentUser($emailType) {
-		return $this->where('(select count(1) from email_user where user.userId '.
-			'= email_user.userId and emailType = '.$emailType.')', 0);
+		return '(select count(1) from email_user where user.userId '.
+			'= email_user.userId and emailType = '.$emailType.') = ';
 	}
 
 	private function whereNotAlreadySentWatch($emailType) {
@@ -122,7 +127,7 @@ class Email extends MY_Model {
 	private function addEmailToQueue($queue, $userId, $emailType, $time) {
 		array_push($queue,
 			array(
-				'userId'    => $user->userId,
+				'userId'    => $userId,
 				'sendTime'  => $time,
 				'emailType' => $emailType,
 			)
@@ -134,7 +139,7 @@ class Email extends MY_Model {
 			->user
 			->select()
 			->where('lastLogin <=', $time-$this->day*100)
-			->whereNotAlreadySentUser($this->COMEBACK)
+			->where($this->whereNotAlreadySentUser($this->COMEBACK), 0, false)
 			->find_all();
 
 		if ($inactiveUsers !== FALSE) {
@@ -162,9 +167,9 @@ class Email extends MY_Model {
 
 		$userWithoutWatch = $this
 			->user
-			->select('user.name, firstname, email')
-			->where('(select count(1) from watch where user.userId = watch.userId)', 0)
-			->whereNotAlreadySentUser($this->ADD_FIRST_WATCH)
+			->select('user.userId, user.name, firstname, email')
+			->where('(select count(1) from watch where user.userId = watch.userId) =', 0)
+			->where($this->whereNotAlreadySentUser($this->ADD_FIRST_WATCH), 0, false)
 			->where('lastLogin <=', $time-$this->day)
 			->find_all();
 
@@ -172,7 +177,7 @@ class Email extends MY_Model {
 			foreach ($userWithoutWatch as $user) {
 				$this->sendMandrillEmail(
 					'Let’s add a watch and start measuring! ⌚',
-					$this->load->view('email/add-first-watch-email', $user, true),
+					$this->load->view('email/add-first-watch', $user, true),
 					$user->name.' '.$user->firstname,
 					$user->email,
 					'add_first_watch_email',
@@ -194,9 +199,9 @@ class Email extends MY_Model {
 			->watch
 			->select('user.name, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
-			->where('select count(1) from measure where watch.watchId = measure.watchId', 0)
+			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
 			->where('creationDate <=', $time-$this->day)
-			->whereNotAlreadySentWatch($this->START_FIRST_MEASURE)
+			->where($this->whereNotAlreadySentUser($this->START_FIRST_MEASURE), 0, false)
 			->find_all();
 
 		if ($userWithWatchWithoutMeasure !== FALSE) {
@@ -229,14 +234,14 @@ class Email extends MY_Model {
 
 		$userWithOneCompleteMeasureAndOneWatch = $this
 			->user
-			->select('user.name, firstname, email')
-			->where('(select count(1) from watch where user.userId = watch.userId)', 1)
+			->select('user.userId, user.name, firstname, email')
+			->where('(select count(1) from watch where user.userId = watch.userId) = ', 1)
 			->where('(select count(1) from measure
 					join watch on measure.watchId = watch.watchId
 					where user.userId = watch.userId
-					and measure.status = 2
-					and measure.accuracyUserTime <= '.$twoDays.')')
-			->whereNotAlreadySentUser($this->ADD_SECOND_WATCH)
+					and measure.statusId = 2
+					and measure.accuracyUserTime) <= ', $twoDays)
+			->where($this->whereNotAlreadySentUser($this->ADD_SECOND_WATCH), 0, false)
 			->find_all();
 
 		if ($userWithOneCompleteMeasureAndOneWatch !== FALSE) {
@@ -265,19 +270,26 @@ class Email extends MY_Model {
 	private function checkAccuracy($time, $queuedEmail) {
 		$measureWithoutAccuracy = $this
 			->measure
-			->select('user.name, user.firstname, email')
+			->select('user.userId, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
 			->where('measureReferenceTime <=', $time-$this->day)
-			->whereNotAlreadySentMeasure($this->CHECK_ACCURACY)
+			->where($this->whereNotAlreadySentUser($this->CHECK_ACCURACY), 0, false)
+			->as_array()
 			->find_all();
 
 		if ($measureWithoutAccuracy !== FALSE) {
 
+			if(!is_array($measureWithoutAccuracy)){
+				$measureWithoutAccuracy = array($measureWithoutAccuracy);
+			}
+
 			$this->__->groupBy($measureWithoutAccuracy, 'email');
 
 			foreach ($measureWithoutAccuracy as $user) {
+
+				$user = (object) $user;
 
 				$this->sendMandrillEmail(
 					'Let’s check your watch accuracy! ⌚',
@@ -301,7 +313,7 @@ class Email extends MY_Model {
 	private function checkAccuracyOneWeek($time, $queuedEmail) {
 		$measureWithoutAccuracy = $this
 			->measure
-			->select('user.name, user.firstname, email')
+			->select('user.userId, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
@@ -337,7 +349,7 @@ class Email extends MY_Model {
 	private function startANewMeasure($time, $queuedEmail) {
 		$userWithWatchWithoutMeasure = $this
 			->measure
-			->select('user.name, user.firstname, email')
+			->select('user.userId, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 2)
