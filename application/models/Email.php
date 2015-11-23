@@ -57,11 +57,21 @@ class Email extends MY_Model {
 		$this->checkAccuracyOneWeek($time, $emailsMeasureSent);
 		$this->startANewMeasure($time, $emailsWatchSent);
 
+		$this->insertAll($emailsUserSent, new MY_Model('email_user'));
+		$this->insertAll($emailsWatchSent, new MY_Model('email_watch'));
+	  $this->insertAll($emailsMeasureSent, new MY_Model('email_measure'));
+
 		return array(
 			'users' 	 => $emailsUserSent,
 			'watches'  => $emailsWatchSent,
 			'measures' => $emailsMeasureSent
 		);
+	}
+
+	private function insertAll($array, $model){
+		if(is_array($array) && sizeof($array) !== 0){
+			$model->insert_batch($array);
+		}
 	}
 
 	private function sendMandrillEmail($subject, $content, $recipientName,
@@ -124,11 +134,11 @@ class Email extends MY_Model {
 			'= email_measure.measureId and emailType = '.$emailType.') = ';
 	}
 
-	private function addEmailToQueue(&$queue, $userId, $emailType, $time) {
+	private function addEmailToQueue(&$queue, $userId, $emailType, $time, $idTitle) {
 		array_push($queue,
 			array(
-				'userId'    => $userId,
-				'sendTime'  => $time,
+				$idTitle    => $userId,
+				'sentTime'  => $time,
 				'emailType' => $emailType,
 			)
 		);
@@ -157,7 +167,8 @@ class Email extends MY_Model {
 					$queuedEmail,
 					$user->userId,
 					$this->COMEBACK,
-					$time
+					$time,
+					'userId'
 				);
 			}
 		}
@@ -188,7 +199,8 @@ class Email extends MY_Model {
 					$queuedEmail,
 					$user->userId,
 					$this->ADD_FIRST_WATCH,
-					$time
+					$time,
+					'userId'
 				);
 			}
 		}
@@ -202,6 +214,7 @@ class Email extends MY_Model {
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
 			->where('creationDate <=', $time-$this->day)
 			->where($this->whereNotAlreadySentWatch($this->START_FIRST_MEASURE), 0, false)
+			->as_array()
 			->find_all();
 
 		if ($userWithWatchWithoutMeasure !== FALSE) {
@@ -209,6 +222,8 @@ class Email extends MY_Model {
 			$this->__->groupBy($userWithWatchWithoutMeasure, 'email');
 
 			foreach ($userWithWatchWithoutMeasure as $user) {
+
+				$user = (object) $user;
 
 				$this->sendMandrillEmail(
 					'Let’s start measuring! ⌚',
@@ -221,9 +236,10 @@ class Email extends MY_Model {
 
 				$this->addEmailToQueue(
 					$queuedEmail,
-					$user->userId,
+					$user->watchId,
 					$this->START_FIRST_MEASURE,
-					$time
+					$time,
+					'watchId'
 				);
 			}
 		}
@@ -261,7 +277,8 @@ class Email extends MY_Model {
 					$queuedEmail,
 					$user->userId,
 					$this->ADD_SECOND_WATCH,
-					$time
+					$time,
+					'userId'
 				);
 			}
 		}
@@ -270,7 +287,7 @@ class Email extends MY_Model {
 	private function checkAccuracy($time, &$queuedEmail) {
 		$measureWithoutAccuracy = $this
 			->measure
-			->select('user.userId, user.name, user.firstname, email')
+			->select('measure.id as measureId, user.userId, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
@@ -302,9 +319,10 @@ class Email extends MY_Model {
 
 				$this->addEmailToQueue(
 					$queuedEmail,
-					$user->userId,
+					$user->measureId,
 					$this->CHECK_ACCURACY,
-					$time
+					$time,
+					'measureId'
 				);
 			}
 		}
@@ -341,9 +359,10 @@ class Email extends MY_Model {
 
 				$this->addEmailToQueue(
 					$queuedEmail,
-					$user->userId,
+					$user->measureId,
 					$this->CHECK_ACCURACY_1_WEEK,
-					$time
+					$time,
+					'measureId'
 				);
 			}
 		}
@@ -357,7 +376,7 @@ class Email extends MY_Model {
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 2)
 			->where('accuracyReferenceTime', $time-($this->day*30))
-			->where($this->whereNotAlreadySentMeasure($this->START_NEW_MEASURE), 0, false)
+			->where($this->whereNotAlreadySentWatch($this->START_NEW_MEASURE), 0, false)
 			->as_array()
 			->find_all();
 
@@ -380,9 +399,10 @@ class Email extends MY_Model {
 
 				$this->addEmailToQueue(
 					$queuedEmail,
-					$user->userId,
+					$user->watchId,
 					$this->START_NEW_MEASURE,
-					$time
+					$time,
+					'watchId'
 				);
 			}
 		}
