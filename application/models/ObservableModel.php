@@ -10,7 +10,10 @@ class ObservableModel extends MY_Model {
 
 		$this->load->model('email');
 
-		$this->_observers[0] =$this->email;
+		if(isset($this->email)){
+			$this->_observers[0] = $this->email;
+		}
+
 	}
 
 	public function notify($event, $data) {
