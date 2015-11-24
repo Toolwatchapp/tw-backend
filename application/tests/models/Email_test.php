@@ -272,7 +272,7 @@ class Email_test extends TestCase {
 	}
 
  	/**
- 	 * Nestor should be reminded to add a second watch
+ 	 * Nestor should be reminded once to add a second watch
  	 * two day after his first watch has been accuratly measured
  	 * @return pass|fail
  	 */
@@ -290,6 +290,14 @@ class Email_test extends TestCase {
 		$this->assertEquals($emails['users'][0]['emailType'],
 			$this->email->ADD_SECOND_WATCH);
 
+		$this->assertEquals(sizeof($emails['watches']), 0);
+		$this->assertEquals(sizeof($emails['measures']), 0);
+
+		//Check that the email is sent only once
+		//2 days later
+		$emails = $this->email->cronCheck(time()+(24*10*62*60));
+
+		$this->assertEquals(sizeof($emails['users']), 0);
 		$this->assertEquals(sizeof($emails['watches']), 0);
 		$this->assertEquals(sizeof($emails['measures']), 0);
 
