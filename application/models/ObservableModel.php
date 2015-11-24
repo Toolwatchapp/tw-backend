@@ -10,7 +10,7 @@ class ObservableModel extends MY_Model {
 
 		$this->load->model('email');
 
-		$this->_observers = array($this->email, $this->event);
+		$this->_observers = array($this->email);
 
 	}
 
