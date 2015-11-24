@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
 }
 
-class Measure extends MY_Model {
+class Measure extends ObservableModel {
 
 	function __construct() {
 		parent::__construct();
@@ -90,12 +90,6 @@ class Measure extends MY_Model {
 
 		$returnValue = $this->insert($data);
 
-		if ($returnValue) {
-			$this->notify(NEW_MEASURE,
-				array('user' => arrayToObject($this->session->all_userdata),
-					'measure'   => $data));
-		}
-
 		return $returnValue;
 	}
 
@@ -112,8 +106,7 @@ class Measure extends MY_Model {
 			$watchMeasure->accuracy = $this->computeAccuracy($watchMeasure);
 
 			$this->notify(NEW_ACCURACY,
-				array('user' => arrayToObject($this->session->all_userdata),
-					'measure'   => $watchMeasure));
+				array('measure'   => $watchMeasure));
 
 			return $watchMeasure;
 		}
