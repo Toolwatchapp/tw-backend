@@ -51,7 +51,7 @@ class Watch extends ObservableModel {
 		$res  = $this->update($watchId, $data) !== false;
 
 		$this->notify(DELETE_WATCH,
-			array('user' => arrayToObject($this->session->all_userdata),
+			array('user' => arrayToObject($this->session->all_userdata()),
 				'watch'     => $watchId));
 		return $res;
 	}
