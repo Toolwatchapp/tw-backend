@@ -19,5 +19,4 @@ class ObservableModel extends MY_Model {
 			$observer->updateObserver($this, $event, $data);
 		}
 	}
-
 }
