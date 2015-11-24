@@ -3,20 +3,22 @@
 
 class ObservableModel extends MY_Model {
 
-	private $_observers;
+	private $_observers = array();
 
 	public function __construct() {
 		parent::__construct();
 
 		$this->load->model('email');
 
-		$this->_observers = array($this->email);
-
+		$this->_observers[0] =$this->email;
 	}
 
 	public function notify($event, $data) {
+
 		foreach ($this->_observers as $observer) {
-			$observer->updateObserver($this, $event, $data);
+			if($observer !== null){
+				$observer->updateObserver($this, $event, $data);
+			}
 		}
 	}
 }
