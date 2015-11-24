@@ -39,6 +39,14 @@ class Measure_test extends TestCase {
 
 		self::$watch = $CI->Watch->getWatch(self::$watchId);
 
+		$CI->emailWatch   = new MY_Model('email_watch');
+		$CI->emailMeasure = new MY_Model('email_measure');
+		$CI->emailUser   = new MY_Model('email_user');
+
+		$CI->emailUser->delete_where(array("id >=" => "0"));
+		$CI->emailWatch->delete_where(array("id >=" => "0"));
+		$CI->emailMeasure->delete_where(array("id >=" => "0"));
+
 		$CI->Measure->delete_where(array("id >=" => "0"));
 	}
 

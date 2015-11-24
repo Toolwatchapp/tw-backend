@@ -7,6 +7,14 @@ class Ajax_test extends TestCase {
 
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
+		$CI->emailWatch   = new MY_Model('email_watch');
+		$CI->emailMeasure = new MY_Model('email_measure');
+		$CI->emailUser   = new MY_Model('email_user');
+
+		$CI->emailUser->delete_where(array("id >=" => "0"));
+		$CI->emailWatch->delete_where(array("id >=" => "0"));
+		$CI->emailMeasure->delete_where(array("id >=" => "0"));
+
 		$CI->load->model('User');
 		$CI->load->model('Measure');
 		$CI->load->model('Watch');
@@ -28,14 +36,6 @@ class Ajax_test extends TestCase {
 	}
 
 	public function test_signup() {
-
-		$this->request->setCallable(
-			function ($CI) {
-				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
-				$this->verifyInvokedOnce($email, 'send');
-				$CI->email = $email;
-			}
-		);
 
 		$output = $this->request(
 			'POST',
@@ -113,14 +113,6 @@ class Ajax_test extends TestCase {
 
 	public function test_facebookSignup() {
 
-		$this->request->setCallable(
-			function ($CI) {
-				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
-				$this->verifyInvokedOnce($email, 'send');
-				$CI->email = $email;
-			}
-		);
-
 		$output = $this->request(
 			'POST',
 			['Ajax', 'facebookSignup'],
@@ -179,14 +171,6 @@ class Ajax_test extends TestCase {
 	}
 
 	public function test_askResetPassword() {
-
-		$this->request->setCallable(
-			function ($CI) {
-				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
-				$this->verifyInvokedOnce($email, 'send');
-				$CI->email = $email;
-			}
-		);
 
 		$output = $this->request(
 			'POST',
@@ -269,14 +253,6 @@ class Ajax_test extends TestCase {
 			2015,
 			28,
 			014
-		);
-
-		$this->request->setCallable(
-			function ($CI) {
-				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
-				$this->verifyInvokedOnce($email, 'send');
-				$CI->email = $email;
-			}
 		);
 
 		$output = $this->request(
