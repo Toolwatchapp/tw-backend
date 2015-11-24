@@ -58,9 +58,6 @@ class Email_test extends TestCase {
 		$CI->Watch->delete_where(array("watchId >="   => "0"));
 		$CI->User->delete_where(array("userId >="     => "0"));
 
-
-
-
 		$data = array(
 			'email'        => 'nestor@nestor.com',
 			'password'     => hash('sha256', 'azerty'),
@@ -154,6 +151,10 @@ class Email_test extends TestCase {
 		);
 	}
 
+	/**
+	 * Nestor SIGN_UP. Mocked id should be resturned
+	 * @return pass|fail
+	 */
 	public function test_signup() {
 
 		$this->assertEquals(
@@ -165,6 +166,10 @@ class Email_test extends TestCase {
 		);
 	}
 
+	/**
+	 * Nestor password reset. Mocked id should be resturned
+	 * @return pass|fail
+	 */
 	public function test_lostPassword(){
 
 		$this->assertEquals(
@@ -177,7 +182,14 @@ class Email_test extends TestCase {
 		);
 	}
 
-	public function test_Accuracy(){
+  /**
+   * Nestor adds a watch and a baseMeasure.
+   * 24h later, he have reminder for the accuracyMeasure.
+   * ernest, anatole, phillibert, hippolyte and raymond have a reminder
+   * to add a watch.
+   * @return pass|fail
+   */
+	public function test_AccuracyAndAddFirstWatch(){
 
 		$watchId = $this->watchModel->addWatch(
 			self::$users['nestor']->userId,
@@ -219,6 +231,11 @@ class Email_test extends TestCase {
 
 	}
 
+	/**
+	 * 1 week after the baseMeasure, nestor have a CHECK_ACCURACY_1_WEEK
+	 * reminder
+	 * @return pass|fail
+	 */
 	public function test_AccuracyOneWeek(){
 
 		//1 week later
@@ -235,6 +252,11 @@ class Email_test extends TestCase {
 			$this->email->CHECK_ACCURACY_1_WEEK);
 	}
 
+	/**
+	 * Nestor do the accuracy measure.
+	 * No emails to be sent
+	 * @return pass|fail
+	 */
 	public function test_accuracyEmpty(){
 
 		self::$baseMeasureId = $this->measureModel->addAccuracyMesure(self::$baseMeasureId,
@@ -248,6 +270,8 @@ class Email_test extends TestCase {
 		$this->assertEquals(sizeof($emails['measures']), 0);
 
 	}
+
+
 
 
 
