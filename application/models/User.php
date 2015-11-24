@@ -64,7 +64,7 @@ class User extends ObservableModel {
 		//Workaround for automated tests
 		session_unset();
 
-		$this->notify(LOGOUT);
+		$this->notify(LOGOUT, array());
 
 		return true;
 	}
@@ -176,7 +176,9 @@ class User extends ObservableModel {
 		$query = $this->db->get();
 		if ($query->num_rows() > 0) {
 			$res = true;
-			$this->notify(RESET_PASSWORD_USE);
+			$this->notify(RESET_PASSWORD_USE,
+				array('user' => arrayToObject($this->session->all_userdata()),
+			'token'=>$resetToken));
 		}
 
 		return $res;
