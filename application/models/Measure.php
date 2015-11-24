@@ -120,7 +120,7 @@ class Measure extends ObservableModel {
 		$data = array('statusId' => 4);
 
 		$this->notify(DELETE_MEASURE,
-			array('user' => arrayToObject($this->session->all_userdata),
+			array('user' => arrayToObject($this->session->all_userdata()),
 				'measure'   => $measureId));
 
 		return $this->update($measureId, $data) !== false;
