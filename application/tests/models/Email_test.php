@@ -271,6 +271,30 @@ class Email_test extends TestCase {
 
 	}
 
+ 	/**
+ 	 * Nestor should be reminded to add a second watch
+ 	 * two day after his first watch has been accuratly measured
+ 	 * @return pass|fail
+ 	 */
+	public function test_addSecondWatch(){
+
+		//The accuracy measure was at time()+(24*8*60*60)
+		//2 days later
+		$emails = $this->email->cronCheck(time()+(24*10*61*60));
+
+		$this->assertEquals(sizeof($emails['users']), 1);
+
+		$this->assertEquals($emails['users'][0]['userId'],
+			self::$users['nestor']->userId);
+
+		$this->assertEquals($emails['users'][0]['emailType'],
+			$this->email->ADD_SECOND_WATCH);
+
+		$this->assertEquals(sizeof($emails['watches']), 0);
+		$this->assertEquals(sizeof($emails['measures']), 0);
+
+	}
+
 
 
 
