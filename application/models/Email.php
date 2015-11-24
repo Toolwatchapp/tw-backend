@@ -256,7 +256,7 @@ class Email extends MY_Model {
 					join watch on measure.watchId = watch.watchId
 					where user.userId = watch.userId
 					and measure.statusId = 2
-					and measure.accuracyReferenceTime <= '.$twoDays.' ) >= ', 1)
+					and measure.accuracyReferenceTime <= '.$twoDays.' ) = ', 1)
 			->where($this->whereNotAlreadySentUser($this->ADD_SECOND_WATCH), 0, false)
 			->find_all();
 
