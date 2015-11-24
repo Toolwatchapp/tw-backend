@@ -36,6 +36,7 @@ class Email_test extends TestCase {
 	public static $measure;
 	public static $watch;
 	public static $watch2Id;
+	public static $baseMeasureId;
 
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
@@ -145,8 +146,6 @@ class Email_test extends TestCase {
 
 	public function test_mock() {
 
-		echo 'test_mock';
-
 		$result = $this->email->mandrill->messages->send(null);
 
 		$this->assertEquals(
@@ -156,8 +155,6 @@ class Email_test extends TestCase {
 	}
 
 	public function test_signup() {
-
-		echo 'test_signup';
 
 		$this->assertEquals(
 			'abc123abc123abc123abc123abc123',
@@ -170,8 +167,6 @@ class Email_test extends TestCase {
 
 	public function test_lostPassword(){
 
-		echo 'test_lostPassword';
-
 		$this->assertEquals(
 			'abc123abc123abc123abc123abc123',
 			$this->email->updateObserver(
@@ -182,9 +177,7 @@ class Email_test extends TestCase {
 		);
 	}
 
-	public function test_phillibert(){
-
-		echo 'test_phillibert';
+	public function test_Accuracy(){
 
 		$watchId = $this->watchModel->addWatch(
 			self::$users['nestor']->userId,
@@ -195,7 +188,7 @@ class Email_test extends TestCase {
 			'caliber'
 		);
 
-		$baseMeasureId = $this->measureModel->addBaseMesure($watchId, time(), time());
+		self::$baseMeasureId = $this->measureModel->addBaseMesure($watchId, time(), time());
 
 		//1 day later
 		// Should have 5 add first and 1 check
@@ -221,8 +214,12 @@ class Email_test extends TestCase {
 		$this->assertEquals(sizeof($emails['watches']), 0);
 
 		$this->assertEquals(sizeof($emails['measures']), 1);
-		$this->assertEquals($emails['measures'][0]['measureId'], $baseMeasureId);
+		$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
 		$this->assertEquals($emails['measures'][0]['emailType'], $this->email->CHECK_ACCURACY);
+
+	}
+
+	public function test_AccuracyOneWeek(){
 
 		//1 week later
 		// Should have 1 CHECK_ACCURACY_1_WEEK
@@ -233,10 +230,14 @@ class Email_test extends TestCase {
 		$this->assertEquals(sizeof($emails['measures']), 1);
 
 		$this->assertEquals(sizeof($emails['measures']), 1);
-		$this->assertEquals($emails['measures'][0]['measureId'], $baseMeasureId);
-		$this->assertEquals($emails['measures'][0]['emailType'], $this->email->CHECK_ACCURACY_1_WEEK);
+		$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
+		$this->assertEquals($emails['measures'][0]['emailType'],
+			$this->email->CHECK_ACCURACY_1_WEEK);
+	}
 
-		$baseMeasureId = $this->measureModel->addAccuracyMesure($baseMeasureId,
+	public function test_accuracyEmpty(){
+
+		self::$baseMeasureId = $this->measureModel->addAccuracyMesure(self::$baseMeasureId,
 			time()+(24*8*60*60), time()+(24*8*60*60));
 
 		//1 day after
@@ -247,6 +248,8 @@ class Email_test extends TestCase {
 		$this->assertEquals(sizeof($emails['measures']), 0);
 
 	}
+
+
 
 
 
