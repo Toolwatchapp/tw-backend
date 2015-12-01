@@ -209,7 +209,7 @@ class Email extends MY_Model {
 	private function userWithWatchWithoutMeasure($time, &$queuedEmail) {
 		$userWithWatchWithoutMeasure = $this
 			->watch
-			->select('user.name, user.firstname, email')
+			->select('watch.watchId, user.name, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
 			->where('creationDate <=', $time-$this->day)

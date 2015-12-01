@@ -370,136 +370,42 @@ class Email_test extends TestCase {
 		$this->assertEquals(sizeof($emails['measures']), 0);
 	}
 
+ /**
+  * When user adds a watch. If s/he doesn't add a measure
+  * in the first 24h hours -> email
+  */
+ public function test_addFirstMeasure(){
+
+	 self::$watchId = $this->watchModel->addWatch(
+		 self::$users['nestor']->userId,
+		 'rolex',
+		 'marolex',
+		 '2000',
+		 '0000-0000',
+		 'caliber'
+	 );
+
+	 //The watch is added at time
+	 $emails = $this->email->cronCheck(time()+(24*1*61*60));
+
+	 $this->assertEquals(sizeof($emails['users']), 0);
+	 $this->assertEquals(sizeof($emails['watches']), 1);
+	 $this->assertEquals(sizeof($emails['measures']), 0);
+
+	 $this->assertEquals($emails['watches'][0]['watchId'],
+		 self::$watchId);
+
+	 $this->assertEquals($emails['watches'][0]['emailType'],
+			 $this->email->START_FIRST_MEASURE);
+
+			 //Check that the email is sent only once
+ 	 $emails = $this->email->cronCheck(time()+(24*1*62*60));
+
+ 	 $this->assertEquals(sizeof($emails['users']), 0);
+ 	 $this->assertEquals(sizeof($emails['watches']), 0);
+ 	 $this->assertEquals(sizeof($emails['measures']), 0);
 
 
-
-
-
-	// public function test_addWatch() {
-
-	// 	echo 'test_addWatch';
-
-	// 	$this->email->updateObserver('TEST', ADD_WATCH, self::$watch);
-
-	// 	$this->assertEquals(0, $this->email->select()->where('type', 1)->count_all());
-
-	// }
-
-	// public function test_login() {
-
-	// 	echo 'test_login';
-
-	// 	$comebackBefore = $this->email->select()->find_by('type', 5);
-
-	// 	$this->email->updateObserver('TEST', LOGIN_EMAIL, self::$user);
-
-	// 	$comebackAfter = $this->email->select()->find_by('type', 5);
-
-	// 	$this->assertNotEquals($comebackBefore->plannedAt, $comebackAfter->plannedAt);
-	// 	$this->assertEquals($comebackBefore->id, $comebackAfter->id);
-
-	// }
-
-	// public function test_newMeasure() {
-
-	// 	echo 'test_newMeasure';
-
-	// 	$data = array(
-	// 		'user'    => self::$user,
-	// 		'watch'   => self::$watch,
-	// 		'measure' => self::$measure,
-	// 	);
-
-	// 	$this->email->updateObserver('TEST', NEW_MEASURE, $data);
-
-	// 	$emails = $this->email->select()->where('type', 2)->find_all();
-
-	// 	$this->assertEquals(2, sizeof($emails));
-	// 	$this->assertNotEquals($emails[0]->plannedAt, $emails[1]->plannedAt);
-	// }
-
-	// public function test_newAccuracy() {
-
-	// 	echo 'test_newAccuracy';
-
-	// 	$data = array(
-	// 		'user'    => self::$user,
-	// 		'watch'   => self::$watch,
-	// 		'measure' => self::$measure,
-	// 	);
-
-	// 	$this->email->updateObserver('TEST', NEW_ACCURACY, $data);
-
-	// 	$this->assertEquals(1, $this->email->select()->where('type', 3)->count_all());
-	// 	$this->assertEquals(1, $this->email->select()->where('type', 4)->count_all());
-	// }
-
-	// public function test_addSecondWatch() {
-
-	// 	echo 'test_addSecondWatch';
-
-	// 	$this->watchModel->addWatch(
-	// 		self::$user->userId,
-	// 		'Rolex 2',
-	// 		'watch 2',
-	// 		2015,
-	// 		28,
-	// 		014
-	// 	);
-
-	// 	self::$watch2Id = $this->watchModel->inserted_id();
-
-	// 	$this->email->updateObserver('TEST', ADD_WATCH, self::$watch);
-
-	// 	$this->assertEquals(0, $this->email->select()->where('type', 3)->count_all());
-
-	// }
-
-	// public function test_bundle() {
-
-	// 	echo 'test_bundle';
-
-	// 	$data = array(
-	// 		'user'    => self::$user,
-	// 		'watch'   => self::$watch,
-	// 		'measure' => self::$measure,
-	// 	);
-
-	// 	$this->email->updateObserver('TEST', NEW_MEASURE, $data);
-
-	// 	$measure2          = self::$measure;
-	// 	$measure2->watchId = self::$watch2Id;
-	// 	$measure2->id      = 2;
-
-	// 	$watch2          = self::$watch;
-	// 	$watch2->watchId = self::$watch2Id;
-
-	// 	$data = array(
-	// 		'user'    => self::$user,
-	// 		'watch'   => $watch2,
-	// 		'measure' => $measure2,
-	// 	);
-
-	// 	$this->email->updateObserver('TEST', NEW_MEASURE, $data);
-
-	// 	$measure3          = self::$measure;
-	// 	$measure3->watchId = self::$watch2Id;
-	// 	$measure3->id      = 3;
-
-	// 	$data = array(
-	// 		'user'    => self::$user,
-	// 		'watch'   => $watch2,
-	// 		'measure' => $measure3,
-	// 	);
-
-	// 	$this->email->updateObserver('TEST', NEW_MEASURE, $data);
-
-	// 	$this->assertEquals(6, $this->emailMeasure->count_all());
-
-	// 	$this->assertEquals(2,
-	// 		$this->emailMeasure->select('count(distinct(emailId)) as cnt', false)
-	// 		->find_all()[0]->cnt);
-
-	// }
+ }
 
 }
