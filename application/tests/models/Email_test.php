@@ -37,6 +37,7 @@ class Email_test extends TestCase {
 	public static $watch;
 	public static $watch2Id;
 	public static $baseMeasureId;
+	public static $watchId;
 
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
@@ -191,7 +192,7 @@ class Email_test extends TestCase {
    */
 	public function test_AccuracyAndAddFirstWatch(){
 
-		$watchId = $this->watchModel->addWatch(
+		self::$watchId = $this->watchModel->addWatch(
 			self::$users['nestor']->userId,
 			'rolex',
 			'marolex',
@@ -200,7 +201,7 @@ class Email_test extends TestCase {
 			'caliber'
 		);
 
-		self::$baseMeasureId = $this->measureModel->addBaseMesure($watchId, time(), time());
+		self::$baseMeasureId = $this->measureModel->addBaseMesure(self::$watchId, time(), time());
 
 		//1 day later
 		// Should have 5 add first and 1 check
@@ -294,8 +295,37 @@ class Email_test extends TestCase {
 		$this->assertEquals(sizeof($emails['measures']), 0);
 
 		//Check that the email is sent only once
-		//2 days later
 		$emails = $this->email->cronCheck(time()+(24*10*62*60));
+
+		$this->assertEquals(sizeof($emails['users']), 0);
+		$this->assertEquals(sizeof($emails['watches']), 0);
+		$this->assertEquals(sizeof($emails['measures']), 0);
+
+	}
+
+	/**
+	 * 30 days after the last completed measure, Nestor should have an
+	 * email to start a new measure.
+	 * @return pass|fail
+	 */
+	public function test_startANewMeasure(){
+
+		//The accuracy measure was at time()+(24*8*60*60)
+		$emails = $this->email->cronCheck(time()+(24*39*60*60));
+
+		$this->assertEquals(sizeof($emails['watches']), 1);
+
+		$this->assertEquals($emails['watches'][0]['watchId'],
+			self::$watchId);
+
+		$this->assertEquals($emails['watches'][0]['emailType'],
+			$this->email->START_NEW_MEASURE);
+
+		$this->assertEquals(sizeof($emails['users']), 0);
+		$this->assertEquals(sizeof($emails['measures']), 0);
+
+		//Check that the email is sent only once
+		$emails = $this->email->cronCheck(time()+(24*39*61*60));
 
 		$this->assertEquals(sizeof($emails['users']), 0);
 		$this->assertEquals(sizeof($emails['watches']), 0);

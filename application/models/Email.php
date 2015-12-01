@@ -371,11 +371,11 @@ class Email extends MY_Model {
 	private function startANewMeasure($time, &$queuedEmail) {
 		$userWithWatchWithoutMeasure = $this
 			->measure
-			->select('user.userId, user.name, user.firstname, email')
+			->select('watch.watchId, user.userId, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 2)
-			->where('accuracyReferenceTime', $time-($this->day*30))
+			->where('accuracyReferenceTime <=', $time-($this->day*30))
 			->where($this->whereNotAlreadySentWatch($this->START_NEW_MEASURE), 0, false)
 			->as_array()
 			->find_all();
