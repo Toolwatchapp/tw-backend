@@ -60,6 +60,41 @@ function comebackContent($firstName){
   );
 }
 
+function checkAccuracyContent($firstName, $watches){
+
+  $content = 'You’ve synchronized your ' .
+    $watches[0]->brand.' '.$watches[0]->name . ' with
+    Toolwatch one day ago and now is the time to see the results
+    of your watch’s accuracy !<br>';
+
+  // override the one watch version in case we have many watches to report
+  if(sizeof($watches) > 1){
+
+    $content = 'You’ve synchronized the following watches <ul>' .
+      $watches[0]->brand.' '.$watches[0]->name . ' ';
+
+    foreach ($watches as $watch) {
+      $content += '<li>'.$watch->brand.' '.$watch->name.'</li>';
+    }
+
+    $content += "</ul> with
+    Toolwatch one day ago and now is the time to see the results
+    of your watch’s accuracy !<br>";
+  }
+
+  return array(
+    'title' => 'Hey '.$firstName.'!',
+    'content' => $content . '
+      Just make sure your have your watch(es) near you (it should already
+      be on your wrist ;) ) and go to the
+      <a href="https://toolwatch.io/measures/">measure page</a>.<br>
+      <br>
+      See you there !
+      <br>',
+    'summary' => $watches
+  );
+}
+
 function oneWeekAccuracy($firstName, $watchBrand, $watchName){
   return array(
     'title' => 'Hey '.$firstName.'!',

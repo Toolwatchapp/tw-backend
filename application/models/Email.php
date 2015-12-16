@@ -294,9 +294,10 @@ class Email extends MY_Model {
 	}
 
 	private function checkAccuracy($time, &$queuedEmail) {
+
 		$measureWithoutAccuracy = $this
 			->measure
-			->select('measure.id as measureId, user.userId, user.name, user.firstname, email')
+			->select('measure.id as measureId, measure.*, watch.*, user.userId, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
@@ -319,7 +320,8 @@ class Email extends MY_Model {
 
 				$this->sendMandrillEmail(
 					'Let’s check your watch accuracy! ⌚',
-					$this->load->view('email/remind-check-accuracy', $user, true),
+					$this->load->view('email/generic',
+						checkAccuracyContent($user->firstname, $user), true),
 					$user->name.' '.$user->firstname,
 					$user->email,
 					'check_accuracy_email',

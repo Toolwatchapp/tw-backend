@@ -75,7 +75,7 @@
 							<tr>
 								<td valign="top" style="background-color:#fafafa;border-top:0;border-bottom:0;padding-top:9px;padding-bottom:9px"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse">
 
-<?php if(isset($summary)) { ?>
+<?php if(isset($summary) && is_array($summary)) { ?>
 	<tbody>
         <tr>
             <td valign="top">
@@ -93,7 +93,7 @@
 
 <ul>
   <?php foreach ($summary as $watch) { ?>
-    <li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd"><?php echo $watch; ?></span></li>
+    <li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd"><?php echo $watch->brand .' '.$watch->name . ' : ' . $watch->accuracy </span></li>
   <?php } ?>
 	</ul>
 Have you tested your watch recently? Measure it <a href="https://toolwatch.io?utm_source=Toolwatch+blog&amp;utm_campaign=e1c9cc363f-Toolwatch_Test&amp;utm_medium=email&amp;utm_term=0_73aaa65a62-e1c9cc363f-" title="Toolwatch.io" style="color:#656565;font-weight:normal;text-decoration:underline" target="_blank">NO</a><a href="https://Toolwatch.io?utm_source=Toolwatch+blog&amp;utm_campaign=e1c9cc363f-Toolwatch_Test&amp;utm_medium=email&amp;utm_term=0_73aaa65a62-e1c9cc363f-" title="Toolwatch.io" style="color:#656565;font-weight:normal;text-decoration:underline" target="_blank">W</a>!

@@ -6,6 +6,7 @@ class Measure extends ObservableModel {
 	function __construct() {
 		parent::__construct();
 		$this->table_name = "measure";
+		$this->after_find = array('computeAccuracy');
 	}
 
 	function getMeasuresByUser($userId, $userWatches) {
@@ -64,11 +65,12 @@ class Measure extends ObservableModel {
 		return $data;
 	}
 
-	private function computeAccuracy($watchMeasure) {
+	private function computeAccuracy(&$watchMeasure) {
 		$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
 		$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
 		$accuracy  = ($userDelta*86400/$refDelta)-86400;
 		$accuracy  = sprintf("%.1f", $accuracy);
+		$watchMeasure->accuracy = $accuracy;
 		return $accuracy;
 	}
 
