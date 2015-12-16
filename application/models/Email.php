@@ -361,7 +361,7 @@ class Email extends MY_Model {
 
 				$this->sendMandrillEmail(
 					'Let’s check your watch accuracy! ⌚',
-					$this->load->view('email/remind-check-accuracy', $user, true),
+					$this->load->view('email/generic', oneWeekAccuracyContent($user->firstname, $user), true),
 					$user->name.' '.$user->firstname,
 					$user->email,
 					'check_accuracy_email',
@@ -401,7 +401,7 @@ class Email extends MY_Model {
 
 				$this->sendMandrillEmail(
 					'Let’s check your watch accuracy! ⌚',
-					$this->load->view('email/remind-check-accuracy', $user, true),
+					$this->load->view('email/generic', $user, true),
 					$user->name.' '.$user->firstname,
 					$user->email,
 					'check_accuracy_email',

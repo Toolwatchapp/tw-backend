@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * util function to create the content emails
+ * @param String $firstName of the recipient
+ */
 function addFirstWatchContent($firstName){
   return array(
         'title' => 'Hey '.$firstName.'!',
@@ -14,6 +18,10 @@ function addFirstWatchContent($firstName){
     );
 }
 
+/**
+ * util function to create the content emails
+ * @param String $firstName of the recipient
+ */
 function makeFirstMeasureContent($firstName){
   return array(
         'title' => 'Hey '.$firstName.'!',
@@ -28,6 +36,11 @@ function makeFirstMeasureContent($firstName){
     );
 }
 
+/**
+ * util function to create the content emails
+ * @param String $firstName of the recipient
+ * @param String $firstWatchName
+ */
 function addSecondWatchContent($firstName, $firstWatchName){
   return array(
     'title' => 'Hey '.$firstName.'!',
@@ -45,6 +58,10 @@ function addSecondWatchContent($firstName, $firstWatchName){
   );
 }
 
+/**
+ * util function to create the content emails
+ * @param String $firstName of the recipient
+ */
 function comebackContent($firstName){
   return array(
     'title' => 'Hey '.$firstName.'!',
@@ -60,8 +77,14 @@ function comebackContent($firstName){
   );
 }
 
+/**
+ * util function to create the content emails
+ * @param String $firstName of the recipient
+ * @param Array $watches represents the control panel of given user
+ */
 function checkAccuracyContent($firstName, $watches){
 
+  // if the user has only one watch to be checked now
   $content = 'You’ve synchronized your ' .
     $watches[0]->brand.' '.$watches[0]->name . ' with
     Toolwatch one day ago and now is the time to see the results
@@ -70,8 +93,7 @@ function checkAccuracyContent($firstName, $watches){
   // override the one watch version in case we have many watches to report
   if(sizeof($watches) > 1){
 
-    $content = 'You’ve synchronized the following watches <ul>' .
-      $watches[0]->brand.' '.$watches[0]->name . ' ';
+    $content = 'You’ve synchronized the following watches <ul>';
 
     foreach ($watches as $watch) {
       $content += '<li>'.$watch->brand.' '.$watch->name.'</li>';
@@ -95,28 +117,68 @@ function checkAccuracyContent($firstName, $watches){
   );
 }
 
-function oneWeekAccuracy($firstName, $watchBrand, $watchName){
+/**
+ * util function to create the content emails
+ * @param String $firstName of the recipient
+ * @param Array $watches represents the control panel of given user
+ */
+function oneWeekAccuracyContent($firstName, $watches){
+
+  // if the user has only one watch to be checked now
+  $content = 'You’ve synchronized your ' .
+    $watches[0]->brand.' '.$watches[0]->name . ' with
+    Toolwatch one week ago and now is the time to see the results
+    of your watch’s accuracy !<br>';
+
+  // override the one watch version in case we have many watches to report
+  if(sizeof($watches) > 1){
+
+    $content = 'You’ve synchronized the following watches <ul>';
+
+    foreach ($watches as $watch) {
+      $content += '<li>'.$watch->brand.' '.$watch->name.'</li>';
+    }
+
+    $content += "</ul> with
+    Toolwatch one week ago and now is the time to see the results
+    of your watch’s accuracy !<br>";
+  }
+
   return array(
     'title' => 'Hey '.$firstName.'!',
-    'content' =>
-      'You’ve synchronized your '.$watchBrand.' ' . $watchName . '
-      with Toolwatch one week ago and now is the time to see the results
-      of your watch’s accuracy!
+    'content' => $content . '
+      Just make sure your have your watch(es) near you (it should already
+      be on your wrist ;) ) and go to the
+      <a href="https://toolwatch.io/measures/">measure page</a>.<br>
       <br>
-      Just make sure you have your watch near you
-      (it should already be on your wrist ;) )
-      and go to the <a href="https://toolwatch.io/measures">measure page</a>.
-      <br>
-      See you there!'
-    );
+      See you there !
+      <br>',
+    'summary' => $watches
+  );
 }
 
-function oneMonthAccuracy($firstName, $watchBrand, $watchName){
+function oneMonthAccuracyContent($firstName, $watches){
+
+  // if the user has only one watch to be checked now
+  $content = 'Last month you measured your ' .
+    $watches[0]->brand.' '.$watches[0]->name;
+
+    // override the one watch version in case we have many watches to report
+    if(sizeof($watches) > 1){
+
+      $content = 'Last month you measured the followin watches <ul>';
+
+      foreach ($watches as $watch) {
+        $content += '<li>'.$watch->brand.' '.$watch->name.'</li>';
+      }
+
+      $content += "</ul>";
+    }
 
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
-      'Last month you measured your '.$watchBrand.' ' . $watchName . ' on
+      $content . 'on
       <a href="https://toolwatch.io/">Toolwatch</a> and
       we’re happy to count you as a cool member of the Toolwatch community!
       <br>
