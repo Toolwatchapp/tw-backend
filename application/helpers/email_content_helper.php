@@ -1,6 +1,6 @@
 <?php
 
-function addFirstWatch($firstName){
+function addFirstWatchContent($firstName){
   return array(
         'title' => 'Hey '.$firstName.'!',
         'content' =>
@@ -14,7 +14,7 @@ function addFirstWatch($firstName){
     );
 }
 
-function makeFirstMeasure($firstName){
+function makeFirstMeasureContent($firstName){
   return array(
         'title' => 'Hey '.$firstName.'!',
         'content' =>
@@ -28,7 +28,7 @@ function makeFirstMeasure($firstName){
     );
 }
 
-function addSecondWatch($firstName, $firstWatchName){
+function addSecondWatchContent($firstName, $firstWatchName){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
@@ -45,7 +45,7 @@ function addSecondWatch($firstName, $firstWatchName){
   );
 }
 
-function comeback($firstName){
+function comebackContent($firstName){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
@@ -95,7 +95,7 @@ function oneMonthAccuracy($firstName, $watchBrand, $watchName){
       And don’t forget to share a wristshot or
       <a href="https://twitter.com/toolwatchapp">Twitter</a> or
       <a href="https://www.instagram.com/Toolwatchapp/">Instagram</a>
-      using our <a href="https://twitter.com/hashtag/toolwatchapp?f=tweets&src=hash">#ToolwatchApp</a> hashtag and join us 
+      using our <a href="https://twitter.com/hashtag/toolwatchapp?f=tweets&src=hash">#ToolwatchApp</a> hashtag and join us
       spreading the love for mechanical timepieces!'
     );
 }

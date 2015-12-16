@@ -22,6 +22,7 @@ class Email extends MY_Model {
 		$this->load->model('measure');
 		$this->load->model('user');
 		$this->load->library('__');
+		$this->load->helper('email_content');
 	}
 
 	public function updateObserver($subject, $event, $data) {
@@ -156,7 +157,7 @@ class Email extends MY_Model {
 			foreach ($inactiveUsers as $user) {
 				$this->sendMandrillEmail(
 					'We haven\'t seen you for a while ?',
-					$this->load->view('email/comeback_100d', $user, true),
+					$this->load->view('email/generic', comebackContent($user->firstname), true),
 					$user->name.' '.$user->firstname,
 					$user->email,
 					'comeback_100d',
@@ -188,7 +189,8 @@ class Email extends MY_Model {
 			foreach ($userWithoutWatch as $user) {
 				$this->sendMandrillEmail(
 					'Let’s add a watch and start measuring! ⌚',
-					$this->load->view('email/add-first-watch', $user, true),
+					$this->load->view('email/generic',
+						addFirstWatchContent($user->firstname), true),
 					$user->name.' '.$user->firstname,
 					$user->email,
 					'add_first_watch_email',
@@ -227,7 +229,8 @@ class Email extends MY_Model {
 
 				$this->sendMandrillEmail(
 					'Let’s start measuring! ⌚',
-					$this->load->view('email/make-first-measure', $user, true),
+					$this->load->view('email/generic',
+						makeFirstMeasureContent($user->firstname), true),
 					$user->name.' '.$user->firstname,
 					$user->email,
 					'make_first_measure_email',
@@ -264,9 +267,15 @@ class Email extends MY_Model {
 
 			foreach ($userWithOneCompleteMeasureAndOneWatch as $user) {
 
+				$watch = $this->watch
+					->select('brand, name')-
+					>find_by('userid', $user->userId);
+
 				$this->sendMandrillEmail(
 					'Add another watch ? ⌚',
-					$this->load->view('email/add-second-watch', $user, true),
+					$this->load->view('email/generic',
+						addSecondWatchContent($user->firstname, $watch->brand . " " . $watch->name)
+						, true),
 					$user->name.' '.$user->firstname,
 					$user->email,
 					'add_another_watch_email',

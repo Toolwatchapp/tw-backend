@@ -41,10 +41,10 @@
 
                         <td valign="top" style="padding-top:9px;padding-right:18px;padding-bottom:9px;padding-left:18px;word-break:break-word;color:#202020;font-family:Helvetica;font-size:16px;line-height:150%;text-align:left">
 
-                            <h1 style="display:block;margin:0;padding:0;color:#202020;font-family:Helvetica;font-size:26px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:normal;text-align:left">Titre</h1>
+                            <h1 style="display:block;margin:0;padding:0;color:#202020;font-family:Helvetica;font-size:26px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:normal;text-align:left"><?php echo $title;?></h1>
 &nbsp;
 
-<p style="text-align:justify;margin:10px 0;padding:0;color:#202020;font-family:Helvetica;font-size:16px;line-height:150%">Test test test</p>
+<p style="text-align:justify;margin:10px 0;padding:0;color:#202020;font-family:Helvetica;font-size:16px;line-height:150%"><?php echo $content;?></p>
 
                         </td>
                     </tr>
@@ -75,6 +75,7 @@
 							<tr>
 								<td valign="top" style="background-color:#fafafa;border-top:0;border-bottom:0;padding-top:9px;padding-bottom:9px"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse">
 
+<?php if(isset($summary)) { ?>
 	<tbody>
         <tr>
             <td valign="top">
@@ -91,10 +92,10 @@
                                         <div style="text-align:center">Quick view of your Toolwatch <a href="https://toolwatch.io/measures/?utm_source=Toolwatch+blog&amp;utm_campaign=e1c9cc363f-Toolwatch_Test&amp;utm_medium=email&amp;utm_term=0_73aaa65a62-e1c9cc363f-" title="Toolwath dashboard" style="color:#656565;font-weight:normal;text-decoration:underline" target="_blank">dashboard</a> :</div>
 
 <ul>
-	<li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd">Rolex Submariner : +2.1 sec per day</span></li>
-	<li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd">Omega Speedmaster : Measure me</span></li>
-	<li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd">Swatch Sistem 51 : Get result</span></li>
-</ul>
+  <?php foreach ($summary as $watch) { ?>
+    <li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd"><?php echo $watch; ?></span></li>
+  <?php } ?>
+	</ul>
 Have you tested your watch recently? Measure it <a href="https://toolwatch.io?utm_source=Toolwatch+blog&amp;utm_campaign=e1c9cc363f-Toolwatch_Test&amp;utm_medium=email&amp;utm_term=0_73aaa65a62-e1c9cc363f-" title="Toolwatch.io" style="color:#656565;font-weight:normal;text-decoration:underline" target="_blank">NO</a><a href="https://Toolwatch.io?utm_source=Toolwatch+blog&amp;utm_campaign=e1c9cc363f-Toolwatch_Test&amp;utm_medium=email&amp;utm_term=0_73aaa65a62-e1c9cc363f-" title="Toolwatch.io" style="color:#656565;font-weight:normal;text-decoration:underline" target="_blank">W</a>!
                                     </td>
                                 </tr>
@@ -108,6 +109,7 @@ Have you tested your watch recently? Measure it <a href="https://toolwatch.io?ut
             </td>
         </tr>
     </tbody>
+  <?php } ?>
 </table><table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse;table-layout:fixed!important">
     <tbody>
         <tr>
