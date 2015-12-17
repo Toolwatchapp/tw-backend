@@ -80,6 +80,20 @@ class Hooks extends CI_Controller {
 
 	}
 
+	public function email($key, $time = null){
+		if ($key === "bPiAi9XNEa3p9FF1lQnZfuUY") {
+			if($time === null || !is_numeric($time)){
+				$time = time();
+			}else{
+				$time = time() + $time * 60 * 60;
+			}
+
+			$this->load->model("email");
+			$this->email->cronCheck($time);
+
+		}
+	}
+
 	private function startsWith($haystack, $needle) {
 		// search backwards starting from haystack length characters from the end
 		return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
