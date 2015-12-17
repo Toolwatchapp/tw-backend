@@ -65,7 +65,7 @@ class Measure extends ObservableModel {
 		return $data;
 	}
 
-	private function computeAccuracy(&$watchMeasure) {
+	public function computeAccuracy(&$watchMeasure) {
 		$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
 		$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
 		$accuracy  = ($userDelta*86400/$refDelta)-86400;
