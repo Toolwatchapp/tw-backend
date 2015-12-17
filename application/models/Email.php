@@ -268,8 +268,8 @@ class Email extends MY_Model {
 			foreach ($userWithOneCompleteMeasureAndOneWatch as $user) {
 
 				$watch = $this->watch
-					->select('brand, name')-
-					>find_by('userid', $user->userId);
+					->select('brand, name')
+					->find_by('userid', $user->userId);
 
 				$this->sendMandrillEmail(
 					'Add another watch ? ⌚',
