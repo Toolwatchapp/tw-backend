@@ -1,22 +1,76 @@
 <?php
 
+/**
+ * Email Model
+ *
+ * This model defines automatic emails
+ * sent to users during their toolwatch adventure.
+ *
+ * ------------------
+ *  AUTOMATIC EMAILS
+ * ------------------
+ *
+ * ADD_FIRST_WATCH : Send an email to registered users
+ * 48 hours after their sign up if they didn't add a watch
+ *
+ * CHECK_ACCURACY : Send an email 24 hours after an user
+ * synchronized a watch to remind him to take the second measure
+ *
+ * ADD_SECOND_WATCH : Send an email after this first completed measure
+ * if the user only has one registered watch
+ *
+ * CHECK_ACCURACY_1_WEEK : 1 week after a completed measure,
+ * we remind the user to check the precision again
+ *
+ * START_NEW_MEASURE : One month after a completed measure, we
+ * send a reminder to check the accuracy again
+ *
+ * -------------
+ * EVENT EMAILS
+ * -------------
+ *
+ * SIGN_UP : Classical email on signup (email of facebook)
+ *
+ * RESET_PASSWORD : Send a new password to users
+ *
+ * NEW_ACCURACY : Send an email after a complete measure with
+ * the measure accuracy. This is email has an .icc setting a
+ * calendar (iCal, Google Cal, ...) event. The event is
+ * for measuring the watch again in one month.
+ *
+ * Automatic emails are cron based. A call to hooks/emails is made
+ * at fixed intervals.
+ *
+ * Event emails are based on the observer pattern. This model
+ * observes other relevant model such as user of measure.
+ *
+ */
 class Email extends MY_Model {
 
-	public $ADD_FIRST_WATCH       = 1;
-	public $CHECK_ACCURACY        = 2;
-	public $ADD_SECOND_WATCH      = 3;
-	public $START_NEW_MEASURE     = 4;
-	public $COMEBACK              = 5;
-	public $START_FIRST_MEASURE   = 6;
-	public $CHECK_ACCURACY_1_WEEK = 7;
+	/**
+	 * Constantes for emails ids.
+	 * Theses ids are used to ensure that
+	 * an email isn't sent twice for an user.
+	 */
+	public const $ADD_FIRST_WATCH       = 1;
+	public const $CHECK_ACCURACY        = 2;
+	public const $ADD_SECOND_WATCH      = 3;
+	public const $START_NEW_MEASURE     = 4;
+	public const $COMEBACK              = 5;
+	public const $START_FIRST_MEASURE   = 6;
+	public const $CHECK_ACCURACY_1_WEEK = 7;
 
-	private $hour           = 3600;
-	private $day            = 86400;
-	private $cancelledEmail = 1;
+	private const $hour           = 3600;
+	private const $day            = 86400;
+	private const $cancelledEmail = 1;
 
+	/**
+	 * Load model, library and helpers
+	 */
 	function __construct() {
 		parent::__construct();
 		$this->table_name = "Email";
+		//TODO: Have mandrill key as env variable
 		$this->load->library('mandrill', 'pUOMLUusBKdoR604DpcOnQ');
 		$this->load->model('watch');
 		$this->load->model('measure');
@@ -25,6 +79,15 @@ class Email extends MY_Model {
 		$this->load->helper('email_content');
 	}
 
+	/**
+	 * Obverved model call this method one something
+	 * noticieable happen on their side. This method
+	 * will send event emails
+	 *
+	 * @param  MY_MODEL $subject An instance of the model calling
+	 * @param  String $event   Which event has been triggered
+	 * @param  Array $data    data related to the event
+	 */
 	public function updateObserver($subject, $event, $data) {
 		switch ($event) {
 			case "SIGN_UP":
@@ -40,16 +103,29 @@ class Email extends MY_Model {
 		}
 	}
 
+	/**
+	 * Check which emails should be sent now
+	 * according to the email specifications
+	 *
+	 * @param  long $time unix time against which the rules
+	 * should be applied
+	 * @return Array       email sent
+	 */
 	public function cronCheck($time = null) {
 
+		//If no time was provided, we check at time();
 		if($time === null){
 			$time = time();
 		}
 
+		//Creating empty array to store email to send
 		$emailsUserSent    = array();
 		$emailsWatchSent   = array();
 		$emailsMeasureSent = array();
 
+		//Apply all the rules for emails
+		//The emails arrays are sent by references and
+		//updated in the different methods
 		$this->inactiveUser($time, $emailsUserSent);
 		$this->userWithoutWatch($time, $emailsUserSent);
 		$this->userWithWatchWithoutMeasure($time, $emailsWatchSent);
@@ -58,6 +134,7 @@ class Email extends MY_Model {
 		$this->checkAccuracyOneWeek($time, $emailsMeasureSent);
 		$this->startANewMeasure($time, $emailsWatchSent);
 
+		//Store all sent email in order to send them only once
 		$this->insertAll($emailsUserSent, new MY_Model('email_user'));
 		$this->insertAll($emailsWatchSent, new MY_Model('email_watch'));
 	  $this->insertAll($emailsMeasureSent, new MY_Model('email_measure'));
@@ -69,6 +146,11 @@ class Email extends MY_Model {
 		);
 	}
 
+	/**
+	 * Helper method to batch insert in a model
+	 * @param  Array $array data to batch insert
+	 * @param  MY_MODEL $model Model to insert
+	 */
 	private function insertAll($array, $model){
 		if(is_array($array) && sizeof($array) !== 0){
 			$model->insert_batch($array);
