@@ -105,7 +105,7 @@ class Measure extends ObservableModel {
 		if ($this->update($measureId, $data) !== false) {
 
 			$watchMeasure           = $this->find($measureId);
-			$watchMeasure->accuracy = $this->computeAccuracy($watchMeasure);
+			//$watchMeasure->accuracy = $this->computeAccuracy($watchMeasure);
 
 			$this->notify(NEW_ACCURACY,
 				array('measure'   => $watchMeasure));

@@ -171,7 +171,7 @@ class Ajax extends CI_Controller {
 
 			$result['accuracy'] = $watchMeasure->accuracy;
 
-			if ($watchMeasure->accuracy) {
+			if (is_numeric($watchMeasure->accuracy)) {
 				$result['success'] = true;
 			} else {
 				$result['success'] = false;
