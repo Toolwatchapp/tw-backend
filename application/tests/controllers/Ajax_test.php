@@ -274,6 +274,8 @@ class Ajax_test extends TestCase {
 		$CI->load->model('Measure');
 		$measure = $CI->Measure->find_by('watchId', self::$watchId);
 
+		var_dump($measure);
+
 		$output = $this->request(
 			'POST',
 			['Ajax', 'accuracyMeasure'],

@@ -52,17 +52,17 @@ class Email extends MY_Model {
 	 * Theses ids are used to ensure that
 	 * an email isn't sent twice for an user.
 	 */
-	public const $ADD_FIRST_WATCH       = 1;
-	public const $CHECK_ACCURACY        = 2;
-	public const $ADD_SECOND_WATCH      = 3;
-	public const $START_NEW_MEASURE     = 4;
-	public const $COMEBACK              = 5;
-	public const $START_FIRST_MEASURE   = 6;
-	public const $CHECK_ACCURACY_1_WEEK = 7;
+	public $ADD_FIRST_WATCH       = 1;
+	public $CHECK_ACCURACY        = 2;
+	public $ADD_SECOND_WATCH      = 3;
+	public $START_NEW_MEASURE     = 4;
+	public $COMEBACK              = 5;
+	public $START_FIRST_MEASURE   = 6;
+	public $CHECK_ACCURACY_1_WEEK = 7;
 
-	private const $hour           = 3600;
-	private const $day            = 86400;
-	private const $cancelledEmail = 1;
+	private $hour           = 3600;
+	private $day            = 86400;
+	private $cancelledEmail = 1;
 
 	/**
 	 * Load model, library and helpers
@@ -156,6 +156,7 @@ class Email extends MY_Model {
 			$model->insert_batch($array);
 		}
 	}
+
 
 	private function sendMandrillEmail($subject, $content, $recipientName,
 		$recipientEmail, $tags, $sendAt, $attachments = null) {
