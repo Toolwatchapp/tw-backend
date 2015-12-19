@@ -1,9 +1,25 @@
 <?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
 }
 
+/**
+ * Hooks controller.
+ *
+ * The Hooks controllers handle different hooks. As of now:
+ *
+ * - default hook (on index) Jack slack bot
+ * - email hook to compute and send automated email.
+ */
 class Hooks extends CI_Controller {
 
-	private $quotes = array("Did no one come to save me just because they missed me?",
+	/**
+	 * Captain Jack (slack bot) quotes.
+	 *
+	 * TODO: This could go to a dedicated config file or even a csv.
+	 *
+	 * @var array
+	 */
+	private $quotes = array(
+		"Did no one come to save me just because they missed me?",
 		"I can let you drown",
 		"The world’s still the same. There’s just less in it",
 		"Did everyone see that? Because I will not be doing it again",
@@ -21,7 +37,8 @@ class Hooks extends CI_Controller {
 		"If you choose to lock your heart away, you’ll lose it for certain",
 		"You’ve stolen me and I’m here to take myself back",
 		"Not all treasure is silver and gold mate",
-		"My spirit will live on");
+		"My spirit will live on"
+	);
 
 	function __construct() {
 		parent::__construct();
@@ -29,8 +46,25 @@ class Hooks extends CI_Controller {
 		$this->load->model('measure');
 	}
 
+	/**
+	 * Default hook used by the Cpt Jack slackbot
+	 *
+	 * Supported commands are:
+	 *
+	 * - Jack nbusers
+	 * - Jack nbmeasures
+	 * - Jack nbwatches
+	 * - Jack whois `email`
+	 * - Jack help
+	 *
+	 * Each command results will be followed by a quote.
+	 *
+	 * @return String command response in a json format as per slack
+	 * specifications.
+	 */
 	function index() {
 
+		//FIXME: The token has to be env value
 		if ($this->input->post('token') === "bPiAi9XNEa3p9FF1lQnZfuUY") {
 
 			$text           = $this->input->post('text');
@@ -49,6 +83,7 @@ class Hooks extends CI_Controller {
 
 				$result["text"] = $this->watch->count_all().". ".$quote;
 
+			//FIXME: Doesn't work in production. Add tests
 			} else if ($this->startsWith($text, "Jack whois")) {
 
 				$user = $this->user->select(" user.userId, user.name, firstname,
@@ -71,7 +106,7 @@ class Hooks extends CI_Controller {
 
 			} else if ($this->startsWith($text, "Jack help")) {
 
-				$result["text"] = "Jack nbusers ; Jack nbmeasures ; Jack nbwatches; Jack whois email.";
+				$result["text"] = "`Jack nbusers` ; `Jack nbmeasures` ; `Jack nbwatches`; `Jack whois email`.";
 
 			}
 
@@ -80,8 +115,21 @@ class Hooks extends CI_Controller {
 
 	}
 
+	/**
+	 * Email hook.
+	 *
+	 * Compute and send automated email at $time
+	 *
+	 * @param  String $key  authorization key
+	 * @param  int $time 	hours from now to compute the emails. Only used
+	 * for testing. Compute the email in the future.
+	 */
 	public function email($key, $time = null){
+
+		//FIXME: The token has to be env value
 		if ($key === "bPiAi9XNEa3p9FF1lQnZfuUY") {
+
+			//If no time given
 			if($time === null || !is_numeric($time)){
 				$time = time();
 			}else{
@@ -93,7 +141,4 @@ class Hooks extends CI_Controller {
 
 		}
 	}
-
-
-
 }
