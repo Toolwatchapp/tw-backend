@@ -11,8 +11,8 @@
  * - Serve add watch from (new_watch) and to add watches (add_watch)
  * - Serve the base measure (1/2) page (new_measure) and the accuracy page
  * (2/2).
- *
- * TODO: Adding measure is still the responsability of the Ajax controller.
+ * - Compute the base measures (1/2, baseMeasure) and accuracy measures
+ *  (2/2, accuracyMeasure)
  */
 class Measures extends MY_Controller {
 
@@ -168,6 +168,93 @@ class Measures extends MY_Controller {
 
 		} else {
 			redirect('/measures/');
+		}
+	}
+
+	/**
+	 * getReferenceTime. Set the server time to the user session.
+	 *
+	 * This must to be call by the user before accuracyMeasure or baseMeasure
+	 */
+	function getReferenceTime() {
+		$this->session->set_userdata('referenceTime', time());
+	}
+
+	/**
+	 * Save the base measure (1/2)
+	 *
+	 * @param POST String watchId
+	 * @param POST String userTimezone
+	 * @param POST String userTime
+	 *
+	 * @return boolean JSON
+	 */
+	function baseMeasure() {
+
+		if ($this->expectsPost(array('watchId', 'userTimezone', 'userTime'))) {
+
+			$result = array();
+
+			$watchId       = $this->input->post('watchId');
+
+			//Construct user time
+			$referenceTime = $this->session->userdata('referenceTime');
+			$userTimezone  = $this->input->post('userTimezone');
+			$tempUserTime	 = preg_split('/:/', $this->input->post('userTime'));
+			$userTime 		 = mktime($tempUserTime[0], $tempUserTime[1],
+			 	$tempUserTime[2], date("n"), date("j"), date("Y"));
+
+			//Add the base measure
+			if ($this->measure->addBaseMesure($watchId, $referenceTime, $userTime)) {
+
+				$result['success'] = true;
+
+			} else {
+				$result['success'] = false;
+			}
+
+			echo json_encode($result);
+		}
+	}
+
+
+	/**
+	 * Save the accuracy measure (2/2).
+	 *
+	 * FIXME: userTimezone parameter isn't used. Should it ?
+	 *
+	 * @param POST String measureId
+	 * @param POST String userTimezone
+	 * @param POST String userTime
+	 *
+	 * @return Array['accuracy', 'success'] JSON
+	 */
+	function accuracyMeasure() {
+
+		if ($this->expectsPost(array('measureId', 'userTimezone', 'userTime'))) {
+
+			//Construct the user time
+			$referenceTime = $this->session->userdata('referenceTime');
+			$userTimezone  = $this->input->post('userTimezone');
+			$tempUserTime = preg_split('/:/', $this->input->post('userTime'));
+			$userTime = mktime($tempUserTime[0], $tempUserTime[1], $tempUserTime[2],
+				date("n"), date("j"), date("Y"));
+
+			//Add the watch measure
+			$watchMeasure = $this->measure->addAccuracyMesure(
+				$this->input->post('measureId'), $referenceTime, $userTime);
+
+			//We store the computed accuracy
+			$result['accuracy'] = $watchMeasure->accuracy;
+
+			// If the computed accuracy makes sense, we return success
+			if (is_numeric($watchMeasure->accuracy)) {
+				$result['success'] = true;
+			} else {
+				$result['success'] = false;
+			}
+
+			echo json_encode($result);
 		}
 	}
 }
