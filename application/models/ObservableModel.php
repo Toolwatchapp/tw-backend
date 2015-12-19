@@ -12,6 +12,7 @@ class ObservableModel extends MY_Model {
 
 		if(isset($this->email)){
 			$this->_observers[0] = $this->email;
+			$this->_observers[1] = $this->event;
 		}
 
 	}
