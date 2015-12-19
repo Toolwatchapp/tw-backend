@@ -21,4 +21,15 @@ class MY_Controller extends CI_Controller {
 		}
 	}
 
+	protected function expectsPost($postNames){
+
+		foreach ($postNames as $postName) {
+			if(!$this->input->post($postName)){
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }
