@@ -183,6 +183,9 @@ class Measures extends MY_Controller {
 	/**
 	 * Save the base measure (1/2)
 	 *
+	 * TODO: When this becomes doable from many endpoints (web, mobile, ...)
+	 * I'll to move it to the model.
+	 *
 	 * @param POST String watchId
 	 * @param POST String userTimezone
 	 * @param POST String userTime
@@ -221,6 +224,9 @@ class Measures extends MY_Controller {
 	/**
 	 * Save the accuracy measure (2/2).
 	 *
+	 * TODO: When this becomes doable from many endpoints (web, mobile, ...)
+	 * I'll to move it to the model.
+	 * 
 	 * FIXME: userTimezone parameter isn't used. Should it ?
 	 *
 	 * @param POST String measureId
