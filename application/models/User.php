@@ -1,6 +1,8 @@
 <?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
 }
 
+include_once('ObservableModel.php');
+
 /**
  * User model.
  *
@@ -165,7 +167,7 @@ class User extends ObservableModel {
 
 		$resetToken = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
 
-		if($this->update_where('email', $email array('resetToken' => $resetToken))){
+		if($this->update_where('email', $email, array('resetToken' => $resetToken))){
 			$this->notify(RESET_PASSWORD, $data);
 			return resetToken;
 		}
@@ -210,7 +212,7 @@ class User extends ObservableModel {
 
 		return $this->select('user.*')
 			->join('watch', '`user`.`userId`=`watch`.`userId`')
-			find_by('watchId', $watchId);
+			->find_by('watchId', $watchId);
 
 	}
 }

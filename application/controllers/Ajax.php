@@ -10,7 +10,7 @@
  * related controller and properly documented as method expecting
  * Ajax behaviour.
  */
-class Ajax extends CI_Controller {
+class Ajax extends MY_Controller {
 
 	/**
 	 * Default constructor that invokes CI_Controller
@@ -46,7 +46,7 @@ class Ajax extends CI_Controller {
 			 * as this are fb user that must use the fb login button
 			 * @see facebookSignup
 			 */
-			if(startsWith($password, "FB_"){
+			if(startsWith($password, "FB_")){
 
 				$result['success'] = false;
 
