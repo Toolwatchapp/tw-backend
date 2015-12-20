@@ -34,11 +34,6 @@ class Measure extends ObservableModel {
 	/**
 	 * Get the last measure of each $userWatches
 	 *
-	 * TODO: I really don't like the overall look of this method.
-	 * We should return an array of $watchMeasure and get rid of $dataPushing.
-	 * I think data pushing date back from when measures 1/2 and 2/2 were not
-	 * a couple but two instances of the same db objects.
-	 *
 	 * @param  int $userId      id of the user
 	 * @param  array $userWatches watches of the user
 	 * @return array The last measure per $userWatches for $userId
@@ -46,19 +41,10 @@ class Measure extends ObservableModel {
 	function getMeasuresByUser($userId, $userWatches) {
 
 		$data        = array();
-		$dataPushing = 0;
 
 		if (is_array($userWatches) && sizeof($userWatches) > 0) {
 
 			foreach ($userWatches as $watch) {
-				//Construct array of result
-				$data[$dataPushing]['watchId']   = $watch->watchId;
-				$data[$dataPushing]['brand']     = $watch->brand;
-				$data[$dataPushing]['name']      = $watch->name;
-				$data[$dataPushing]['yearOfBuy'] = $watch->yearOfBuy;
-				$data[$dataPushing]['serial']    = $watch->serial;
-				$data[$dataPushing]['statusId']  = 0;
-
 				//Get measure couple that are on measure or accuracy status
 				$watchMeasures = $this->select()->where('watchId', $watch->watchId)
 					->where('(`statusId` = 1 OR `statusId` = 2)', null, false)
@@ -67,32 +53,20 @@ class Measure extends ObservableModel {
 				if ($watchMeasures) {
 
 					foreach ($watchMeasures as $watchMeasure) {
-						//Compute accuracy
-						if ($watchMeasure->statusId == 2) {
-							$data[$dataPushing]['accuracy'] = $watchMeasure->accuracy;
-							$data[$dataPushing]['statusId'] = $watchMeasure->statusId;
-							//Check if the measure was made less than 12 hours ago
-						} else if (((time()-$watchMeasure->measureReferenceTime)/3600) < 12) {
-							$data[$dataPushing]['statusId'] = 1.5;
+
+						//If the first measure is less than 12 hours old
+						if (((time()-$watchMeasure->measureReferenceTime)/3600) < 12) {
 							$watchMeasure->statusId         = 1.5;
 							$ellapsedTime                   = ((time()-$watchMeasure->measureReferenceTime)/3600);
 							$watchMeasure->accuracy         = round(12-round($ellapsedTime, 1));
 							if ($watchMeasure->accuracy <= 1) {
 								$watchMeasure->accuracy = " < 1";
 							}
-							$data[$dataPushing]['statusId'] = $watchMeasure->statusId;
-							$data[$dataPushing]['accuracy'] = $watchMeasure->accuracy;
-							// If not, the baseMeasure is here and we are ready for the accuracy
-						} else {
-							$data[$dataPushing]['statusId'] = 1;
 						}
 
-						$data[$dataPushing]['measureId'] = $watchMeasure->id;
+						array_push($data, $watchMeasure);
 					}
-
 				}
-
-				$dataPushing++;
 			}
 		}
 
