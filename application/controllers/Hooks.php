@@ -71,20 +71,20 @@ class Hooks extends CI_Controller {
 			$quote          = $this->quotes[rand(0, 18)];
 			$result["text"] = $quote;
 
-			if ($this->startsWith($text, "Jack nbusers")) {
+			if (startsWith($text, "Jack nbusers")) {
 
 				$result["text"] = $this->user->count_all().". ".$quote;
 
-			} else if ($this->startsWith($text, "Jack nbmeasures")) {
+			} else if (startsWith($text, "Jack nbmeasures")) {
 
 				$result["text"] = $this->measure->count_all().". ".$quote;
 
-			} else if ($this->startsWith($text, "Jack nbwatches")) {
+			} else if (startsWith($text, "Jack nbwatches")) {
 
 				$result["text"] = $this->watch->count_all().". ".$quote;
 
 			//FIXME: Doesn't work in production. Add tests
-			} else if ($this->startsWith($text, "Jack whois")) {
+			} else if (startsWith($text, "Jack whois")) {
 
 				$user = $this->user->select(" user.userId, user.name, firstname,
                     DATE_FORMAT(FROM_UNIXTIME(`registerDate`), '%e %b %Y') AS 'register',
@@ -104,7 +104,7 @@ class Hooks extends CI_Controller {
 					$result["text"] = "User not found. ".$this->db->last_query();
 				}
 
-			} else if ($this->startsWith($text, "Jack help")) {
+			} else if (startsWith($text, "Jack help")) {
 
 				$result["text"] = "`Jack nbusers` ; `Jack nbmeasures` ; `Jack nbwatches`; `Jack whois email`.";
 

@@ -25,7 +25,7 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('1. ', $output);
+		$this->assertContains('0. ', $output);
 	}
 
 	public function test_indexWatch() {
@@ -38,7 +38,7 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('1. ', $output);
+		$this->assertContains('0. ', $output);
 	}
 
 	public function test_indexWhois() {
@@ -64,7 +64,7 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('Jack nbusers ; Jack nbmeasures ; Jack nbwatches; Jack whois email.', $output);
+		$this->assertContains('`Jack nbusers` ; `Jack nbmeasures` ; `Jack nbwatches`; `Jack whois email`.', $output);
 	}
 
 }
