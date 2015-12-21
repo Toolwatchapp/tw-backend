@@ -228,29 +228,4 @@ class Ajax_test extends TestCase {
 
 		$this->assertContains('true', $output);
 	}
-
-	public function test_contact() {
-
-		$this->request->setCallable(
-			function ($CI) {
-				$email = $this->getDouble('CI_Email', ['send' => TRUE]);
-				$this->verifyInvokedOnce($email, 'send');
-				$CI->email = $email;
-			}
-		);
-
-		$output = $this->request(
-			'POST',
-			['Ajax', 'contact'],
-			[
-				'name'    => 'amthieu',
-				'email'   => 'mathieu@gmail.com',
-				'message' => 'message'
-			]
-		);
-
-		$this->assertContains('true', $output);
-
-	}
-
 }
