@@ -119,7 +119,7 @@ class Ajax_test extends TestCase {
 			[
 				'email'       => 'mathieu_fb@gmail.com',
 				'id'          => '10',
-				'name'        => 'name',
+				'last_name'        => 'name',
 				'firstname'   => 'firstname',
 				'timezone'    => 'timezone',
 				'country'     => 'country',
@@ -138,7 +138,7 @@ class Ajax_test extends TestCase {
 			[
 				'email'       => 'mathieu_fb@gmail.com',
 				'id'          => '10',
-				'name'        => 'name',
+				'last_name'   => 'name',
 				'firstname'   => 'firstname',
 				'timezone'    => 'timezone',
 				'country'     => 'country',
@@ -158,7 +158,7 @@ class Ajax_test extends TestCase {
 			[
 				'email'       => 'mathieu_fb@gmail.com',
 				'id'          => '11',
-				'name'        => 'name',
+				'last_name'   => 'name',
 				'firstname'   => 'firstname',
 				'timezone'    => 'timezone',
 				'country'     => 'country',
@@ -188,7 +188,7 @@ class Ajax_test extends TestCase {
 			'POST',
 			['Ajax', 'askResetPassword'],
 			[
-
+				'email' => 'qzdqdqd@gmail.com'
 			]
 		);
 
@@ -201,7 +201,8 @@ class Ajax_test extends TestCase {
 			'POST',
 			['Ajax', 'resetPassword'],
 			[
-				'resetToken' => 'ab'
+				'resetToken' => 'ab',
+				'password' => 'abcd'
 			]
 		);
 
@@ -220,72 +221,12 @@ class Ajax_test extends TestCase {
 			'POST',
 			['Ajax', 'resetPassword'],
 			[
-				'resetToken' => $user->resetToken
+				'resetToken' => $user->resetToken,
+				'password' => 'abcd'
 			]
 		);
 
 		$this->assertContains('true', $output);
-	}
-
-	public function test_getReferenceTime() {
-		$CI = &get_instance();
-		$CI->load->model('User');
-		$CI->load->library('Session');
-
-		$output = $this->request('GET', ['Ajax', 'getReferenceTime']);
-
-		$this->assertEquals($CI->session->userdata('referenceTime'), time());
-	}
-
-	public function test_baseMesure() {
-
-		$CI = &get_instance();
-		$CI->load->model('User');
-		$CI->load->model('Watch');
-		$CI->load->library('Session');
-
-		$CI->session->set_userdata('referenceTime', time());
-
-		self::$watchId = $CI->Watch->addWatch(
-			self::$userId,
-			'brand',
-			'name',
-			2015,
-			28,
-			014
-		);
-
-		$output = $this->request(
-			'POST',
-			['Ajax', 'baseMeasure'],
-			[
-				'watchId'      => self::$watchId,
-				'userTime'     => '10:13:12',
-				'userTimezone' => '5'
-			]
-		);
-
-		$this->assertContains('true', $output);
-
-	}
-
-	public function test_accuracyMeasure() {
-		$CI = &get_instance();
-		$CI->load->model('Measure');
-		$measure = $CI->Measure->find_by('watchId', self::$watchId);
-
-		$output = $this->request(
-			'POST',
-			['Ajax', 'accuracyMeasure'],
-			[
-				'measureId'    => $measure->id,
-				'userTime'     => '10:16:12',
-				'userTimezone' => '5'
-			]
-		);
-
-		$this->assertContains('true', $output);
-
 	}
 
 	public function test_contact() {

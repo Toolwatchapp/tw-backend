@@ -42,7 +42,6 @@ class User extends ObservableModel {
 
 		if ($user) {
 
-			$data = $query->row();
 			$this->session->set_userdata('userId', $user->userId);
 			$this->session->set_userdata('email', $user->email);
 			$this->session->set_userdata('name', $user->name);
@@ -167,9 +166,12 @@ class User extends ObservableModel {
 
 		$resetToken = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
 
-		if($this->update_where('email', $email, array('resetToken' => $resetToken))){
-			$this->notify(RESET_PASSWORD, $data);
-			return resetToken;
+		if(
+			$this->checkUserEmail($email) === true &&
+			$this->update_where('email', $email, array('resetToken' => $resetToken))
+			&& $this->affected_rows() === 1){
+			$this->notify(RESET_PASSWORD,  array('email' => $email));
+			return $resetToken;
 		}
 
 		return false;
@@ -181,9 +183,6 @@ class User extends ObservableModel {
 	 * @param String $password   The new password
 	 */
 	function resetPassword($resetToken, $password) {
-
-		$this->db->where('resetToken', $resetToken);
-		$this->db->update('user', $update);
 
 		/**
 		 * TODO:The update is based on the reset token generated in the askResetPassword
@@ -197,7 +196,8 @@ class User extends ObservableModel {
 		 * problems to happen.
 		 */
 		if($this->update_where('resetToken', $resetToken,
-			array('resetToken' => '', 'password' => hash('sha256', $password)))){
+			array('resetToken' => '', 'password' => hash('sha256', $password)))
+			&& $this->affected_rows() === 1){
 				return true;
 		}
 		return false;

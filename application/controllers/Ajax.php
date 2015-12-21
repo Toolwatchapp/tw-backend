@@ -134,7 +134,7 @@ class Ajax extends MY_Controller {
 			 * For fb user, we don't have their fb password (obviously).
 			 * Yet, having a password is mandatory in tw and I don't feel
 			 * like having a specialized type of user for facebook users.
-			 * So, we use as password FB_ concatenates with the FB id of
+			 * So, we use as password FB_ concatenated with the FB id of
 			 * the user.
 			 *
 			 * Email + password login are forbidden
@@ -190,7 +190,7 @@ class Ajax extends MY_Controller {
 
 		$result['success'] = false;
 
-		if ($this->expectsPost(array('email','password','name','firstnam',
+		if ($this->expectsPost(array('email','password','name','firstname',
 			'timezone','country'))) {
 
 			$result = array();
@@ -249,7 +249,7 @@ class Ajax extends MY_Controller {
 			//The token will be transfered in an email.
 			$resetToken = $this->user->askResetPassword($email);
 
-			if ($resetToken !== '') {
+			if ($resetToken) {
 
 				$result['success'] = true;
 
