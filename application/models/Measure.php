@@ -75,15 +75,19 @@ class Measure extends ObservableModel {
 
 	/**
 	 * Compute the accuracy of a watch given the raw data of the database
+	 *
 	 * @param  Measure $watchMeasure A watchMeasure object containing row data
 	 * about the timing of measure
 	 */
-	public function computeAccuracy(&$watchMeasure) {
+	public function computeAccuracy($watchMeasure) {
+
 		$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
 		$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
 		$accuracy  = ($userDelta*86400/$refDelta)-86400;
 		$accuracy  = sprintf("%.1f", $accuracy);
 		$watchMeasure->accuracy = $accuracy;
+
+		return $watchMeasure;
 	}
 
 	/**
@@ -99,11 +103,9 @@ class Measure extends ObservableModel {
 	function addBaseMesure($watchId, $referenceTime, $userTime) {
 
 		//Archive previous measure couples
-		$data = array('statusId' => 3);
-
 		$this->where('watchId', $watchId)
 		     ->where('(`statusId` = 1 OR `statusId` = 2)', null, false)
-		     ->update(null, $data);
+		     ->update(null, array('statusId' => 3));
 
 		//Create new couple
 		$data = array(

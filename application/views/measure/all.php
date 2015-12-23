@@ -86,7 +86,7 @@
                                             </form></li>
                                             <li>
                                                 <a href="#" class="submitDeleteMeasures" data-watch="'.$measure->id.'">Delete this measure</a>
-                                                <form method="post" action="/measures/" name="delete-measures-'.$measure->id.'" class="no-display">
+                                                <form method="post" action="/measures/delete_measure" name="delete-measures-'.$measure->id.'" class="no-display">
                                                 <input type="hidden" name="deleteMeasures" value="'.$measure->id.'">
                                                 </form>
                                             </li>
@@ -112,7 +112,7 @@
                                             </form></li>
                                             <li>
                                                 <a href="#" class="submitDeleteMeasures" data-watch="'.$measure->id.'">Delete this measure</a>
-                                                <form method="post" action="/measures/" name="delete-measures-'.$measure->id.'" class="no-display">
+                                                <form method="post" action="/measures/delete_measure" name="delete-measures-'.$measure->id.'" class="no-display">
                                                 <input type="hidden" name="deleteMeasures" value="'.$measure->id.'">
                                                 </form>
                                             </li>
@@ -153,7 +153,7 @@
                                           <li class="divider"></li>
                                             <li>
                                                 <a href="#" class="submitDeleteMeasures" data-watch="'.$measure->id.'">Delete all measures</a>
-                                                <form method="post" action="/measures/" name="delete-measures-'.$measure->id.'" class="no-display">
+                                                <form method="post" action="/measures/delete_measure" name="delete-measures-'.$measure->id.'" class="no-display">
                                                 <input type="hidden" name="deleteMeasures" value="'.$measure->id.'">
                                                 </form>
                                             </li>

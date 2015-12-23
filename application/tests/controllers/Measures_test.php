@@ -39,6 +39,7 @@ class Measures_test extends TestCase {
 
 	public function test_index(){
 		$output = $this->request('GET', ['Measures', 'index']);
+
 		$this->assertContains('<h1>My measures</h1>', $output);
 		$this->assertContains('Add a watch', $output);
 	}
@@ -46,9 +47,8 @@ class Measures_test extends TestCase {
 	public function test_indexAddWatch(){
 		$output = $this->request(
 			'POST',
-			['Measures', 'index'],
+			['Measures', 'add_watch'],
 			[
-				'addWatch' => true,
 				'brand'      => 'brand',
 				'name'      => 'name',
 				'yearOfBuy'      => 2015,
@@ -63,7 +63,7 @@ class Measures_test extends TestCase {
 	public function test_indexDeleteMeasures(){
 		$output = $this->request(
 			'POST',
-			['Measures', 'index'],
+			['Measures', 'delete_measure'],
 			[
 				'deleteMeasures' => 28
 			]
@@ -79,7 +79,7 @@ class Measures_test extends TestCase {
 
 		$output = $this->request(
 			'POST',
-			['Measures', 'index'],
+			['Measures', 'delete_watch'],
 			[
 				'deleteWatch' => $watch->watchId
 			]
@@ -115,6 +115,78 @@ class Measures_test extends TestCase {
 
 		$this->assertContains('<h1 id="mainTitle">Check the accuracy</h1>', $output);
 	}
+
+	public function test_getReferenceTime() {
+		$CI = &get_instance();
+		$CI->load->model('User');
+		$CI->load->library('Session');
+
+		$output = $this->request('GET', ['Measures', 'getReferenceTime']);
+
+		$this->assertEquals($CI->session->userdata('referenceTime'), time());
+	}
+
+	public function test_baseMesure() {
+
+		$CI = &get_instance();
+		$CI->load->model('User');
+		$CI->load->model('Watch');
+		$CI->load->library('Session');
+
+		$CI->session->set_userdata('referenceTime', time());
+
+		self::$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'brand',
+			'name',
+			2015,
+			28,
+			014
+		);
+
+		var_dump(self::$watchId);
+
+		$output = $this->request(
+			'POST',
+			['Measures', 'baseMeasure'],
+			[
+				'watchId'      => self::$watchId,
+				'userTime'     => '10:13:12',
+				'userTimezone' => '5'
+			]
+		);
+
+		var_dump($output);
+
+		$this->assertContains('true', $output);
+
+	}
+
+	// public function test_accuracyMeasure() {
+	// 	$CI = &get_instance();
+	// 	$CI->load->model('Measure');
+	//
+	// 	echo "test_accuracyMeasure\n";
+	//
+	// 	$measure = $CI->Measure->find_by('watchId', self::$watchId);
+	// 	echo  $CI->Measure->last_query();
+	//
+	// 	var_dump(self::$watchId);
+	// 	var_dump($measure);
+	//
+	// 	$output = $this->request(
+	// 		'POST',
+	// 		['Measures', 'accuracyMeasure'],
+	// 		[
+	// 			'measureId'    => $measure->id,
+	// 			'userTime'     => '10:16:12',
+	// 			'userTimezone' => '5'
+	// 		]
+	// 	);
+	//
+	// 	$this->assertContains('true', $output);
+	//
+	// }
 
 
 }

@@ -1311,7 +1311,7 @@ class MY_Model extends CI_Model {
 				$this->callback_parameters = explode(',', $matches[3]);
 			}
 
-			$data = call_user_func_array(array($this, $method), array(&$data));
+			$data = call_user_func_array(array($this, $method), array($data));
 		}
 
 		return $data;

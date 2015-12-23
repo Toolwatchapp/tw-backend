@@ -23,7 +23,7 @@ $( document ).ready(function() {
                 {
                     $('.sync-time').html('Go!');
                     $('.userTime').show();
-                    $('button[name="syncDone"]').removeAttr('disabled');        
+                    $('button[name="syncDone"]').removeAttr('disabled');
                     $.post('/ajax/getReferenceTime');
                 }
             }
@@ -31,6 +31,6 @@ $( document ).ready(function() {
         }, false);
 	}});
 
-});	
+});
 
 </script>

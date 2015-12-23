@@ -40,7 +40,11 @@ class User extends ObservableModel {
 		}
 
 
-		if ($user) {
+		if (is_array($user)
+		//That's not a mistake, the tranformation from array
+		//to a single user is made here.
+		//Not super intuitive nor conform to coding rules
+		&& $user = $user[0]) {
 
 			$this->session->set_userdata('userId', $user->userId);
 			$this->session->set_userdata('email', $user->email);
@@ -52,7 +56,7 @@ class User extends ObservableModel {
 
 			$this->update_where('userId', $user->userId, array('lastLogin' => time()));
 
-			$this->notify($event, $data);
+			$this->notify($event, $user);
 
 		} else {
 			$this->notify($event.'_FAIL', $data);

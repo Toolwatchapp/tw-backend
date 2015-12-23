@@ -29,8 +29,16 @@ class Measures extends MY_Controller {
 	 */
 	public function index() {
 
-		$this->event->add($this->event->BOARD_LOAD);
+		$this->event->add(BOARD_LOAD);
+		$this->constructMeasurePage();
+	}
 
+	/**
+	 * Construct the views of the measure page (board).
+	 *
+	 * @return mixed|html Board view
+	 */
+	private function constructMeasurePage(){
 		$this->_headerData['headerClass'] = 'blue';
 		$this->load->view('header', $this->_headerData);
 
@@ -56,17 +64,22 @@ class Measures extends MY_Controller {
 	 * @param POST String caliber
 	 */
 	public function add_watch(){
+
 		if($this->expectsPost(array('brand', 'name', 'yearOfBuy',
 			'serial', 'caliber'))){
 
 			if ($this->watch->addWatch($this->session->userdata('userId'),
-						$brand, $name, $yearOfBuy, $serial, $caliber)) {
+						$this->brand, $this->name,
+						$this->yearOfBuy, $this->serial,
+						$this->caliber)) {
 
 				$this->_bodyData['success'] = 'Watch successfully added!';
 
 			} else {
 				$this->_bodyData['error'] = 'An error occured while adding your watch.';
 			}
+
+			$this->constructMeasurePage();
 		}
 	}
 
@@ -82,13 +95,14 @@ class Measures extends MY_Controller {
 	public function delete_watch(){
 
 		if($this->expectsPost(array('deleteWatch'))){
-			$watchId = $this->input->post('deleteWatch');
 
-			if ($this->watch->deleteWatch($watchId)) {
+			if ($this->watch->deleteWatch($this->watchId)) {
 				$this->_bodyData['success'] = 'Watch successfully deleted!';
 			} else {
 				$this->_bodyData['error'] = 'An error occured while deleting your watch.';
 		  }
+
+			$this->constructMeasurePage();
 		}
 	}
 
@@ -104,13 +118,14 @@ class Measures extends MY_Controller {
 	public function delete_measure(){
 
 		if($this->expectsPost(array('deleteMeasures'))){
-			$measureId = $this->input->post('deleteMeasures');
 
-			if ($this->measure->deleteMesure($measureId)) {
+			if ($this->measure->deleteMesure($this->measureId)) {
 				$this->_bodyData['success'] = 'Measures successfully deleted!';
 			} else {
 				$this->_bodyData['error'] = 'An error occured while deleting your measures.';
 			}
+
+			$this->constructMeasurePage();
 		}
 	}
 
@@ -226,7 +241,7 @@ class Measures extends MY_Controller {
 	 *
 	 * TODO: When this becomes doable from many endpoints (web, mobile, ...)
 	 * I'll to move it to the model.
-	 * 
+	 *
 	 * FIXME: userTimezone parameter isn't used. Should it ?
 	 *
 	 * @param POST String measureId

@@ -27,6 +27,7 @@ class MY_Controller extends CI_Controller {
 			if(!$this->input->post($postName)){
 				return false;
 			}
+			$this->{$postName} = $this->input->post($postName);
 		}
 
 		return true;
