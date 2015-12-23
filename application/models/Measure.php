@@ -55,7 +55,9 @@ class Measure extends ObservableModel {
 					foreach ($watchMeasures as $watchMeasure) {
 
 						//If the first measure is less than 12 hours old
-						if (((time()-$watchMeasure->measureReferenceTime)/3600) < 12) {
+						if ($watchMeasure->statusId === "1" &&
+							(((time()-$watchMeasure->measureReferenceTime)/3600) < 12)) {
+
 							$watchMeasure->statusId         = 1.5;
 							$ellapsedTime                   = ((time()-$watchMeasure->measureReferenceTime)/3600);
 							$watchMeasure->accuracy         = round(12-round($ellapsedTime, 1));
@@ -174,10 +176,8 @@ class Measure extends ObservableModel {
 	 * @return int How many watches belong tp $watchBrand
 	 */
 	function getMeasuresCountByWatchBrand($watchBrand) {
-		return $this->select("count(1) as cnt")
-		            ->join("watch", "watch.watchId = measure.watchId")
-		            ->find_by("UPPER(brand)", strtoupper($watchBrand))
-		            ->cnt;
+		return $this->join("watch", "watch.watchId = measure.watchId")
+		            ->count_by("UPPER(brand)", strtoupper($watchBrand));
 	}
 
 }

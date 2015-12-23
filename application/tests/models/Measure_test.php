@@ -78,7 +78,7 @@ class Measure_test extends TestCase {
 		$this->assertEquals(true, is_array($measures));
 		$this->assertEquals(
 			1.5,
-			$measures[0]['statusId'],
+			$measures[0]->statusId,
 			'it\'s been less than 12 hours'
 		);
 	}
@@ -105,13 +105,13 @@ class Measure_test extends TestCase {
 
 		$this->assertEquals(
 			2,
-			$measures[0]['statusId'],
+			$measures[0]->statusId,
 			'Accuracy should be computed'
 		);
 
 		$this->assertEquals(
 			0.0,
-			$measures[0]['accuracy'],
+			$measures[0]->accuracy,
 			'it should be 0.0'
 		);
 
@@ -158,13 +158,13 @@ class Measure_test extends TestCase {
 
 		$this->assertEquals(
 			2,
-			$measures[0]['statusId'],
+			$measures[0]->statusId,
 			'Accuracy should be computed'
 		);
 
 		$this->assertEquals(
 			2.0,
-			$measures[0]['accuracy'],
+			$measures[0]->accuracy,
 			'it should be 2.0'
 		);
 
@@ -211,13 +211,13 @@ class Measure_test extends TestCase {
 
 		$this->assertEquals(
 			2,
-			$measures[0]['statusId'],
+			$measures[0]->statusId,
 			'Accuracy should be computed'
 		);
 
 		$this->assertEquals(
 			4.0,
-			$measures[0]['accuracy'],
+			$measures[0]->accuracy,
 			'it should be 4.0'
 		);
 
