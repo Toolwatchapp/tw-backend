@@ -47,7 +47,7 @@ class User_test extends TestCase {
 			'Wrong id generated'
 		);
 
-		$this->assertEquals(true, $result, "Not logged");
+		$this->assertNotEquals(false, $result, "Not logged");
 
 		$this->assertEquals(
 			'mathieu@gmail.com',
