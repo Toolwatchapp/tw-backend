@@ -294,7 +294,7 @@ class Email extends MY_Model {
 	private function userWithWatchWithoutMeasure($time, &$queuedEmail) {
 		$userWithWatchWithoutMeasure = $this
 			->watch
-			->select('watch.watchId, user.name, user.firstname, email')
+			->select('watch.watchId, watch.brand, user.name, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
 			->where('creationDate <=', $time-$this->day)
@@ -350,14 +350,18 @@ class Email extends MY_Model {
 
 			foreach ($userWithOneCompleteMeasureAndOneWatch as $user) {
 
-				$watch = $this->watch
+				// TODO: Why does this retrieve an array and
+				// not an object ??
+				$watch = (object) $this->watch
 					->select('brand, name')
 					->find_by('userid', $user->userId);
 
 				$this->sendMandrillEmail(
 					'Add another watch ? ⌚',
 					$this->load->view('email/generic',
-						addSecondWatchContent($user->firstname, $watch->brand . " " . $watch->name)
+						addSecondWatchContent($user->firstname,
+						$watch->brand . " " .
+						$watch->name)
 						, true),
 					$user->name.' '.$user->firstname,
 					$user->email,
@@ -425,7 +429,8 @@ class Email extends MY_Model {
 	private function checkAccuracyOneWeek($time, &$queuedEmail) {
 		$measureWithoutAccuracy = $this
 			->measure
-			->select('measure.id as measureId, user.userId, user.name, user.firstname, email')
+			->select('measure.id as measureId, watch.*, user.userId,
+			measure.*, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
@@ -465,7 +470,8 @@ class Email extends MY_Model {
 	private function startANewMeasure($time, &$queuedEmail) {
 		$userWithWatchWithoutMeasure = $this
 			->measure
-			->select('watch.watchId, user.userId, user.name, user.firstname, email')
+			->select('watch.watchId, watch.brand, user.userId, user.name,
+			user.firstname, email, measure.*')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 2)

@@ -86,7 +86,7 @@ function checkAccuracyContent($firstName, $watches){
 
   // if the user has only one watch to be checked now
   $content = 'You’ve synchronized your ' .
-    $watches[0]->brand.' '.$watches[0]->name . ' with
+    $watches->brand.' '.$watches->name . ' with
     Toolwatch one day ago and now is the time to see the results
     of your watch’s accuracy !<br>';
 
@@ -126,7 +126,7 @@ function oneWeekAccuracyContent($firstName, $watches){
 
   // if the user has only one watch to be checked now
   $content = 'You’ve synchronized your ' .
-    $watches[0]->brand.' '.$watches[0]->name . ' with
+    $watches->brand.' '.$watches->name . ' with
     Toolwatch one week ago and now is the time to see the results
     of your watch’s accuracy !<br>';
 
@@ -161,7 +161,7 @@ function oneMonthAccuracyContent($firstName, $watches){
 
   // if the user has only one watch to be checked now
   $content = 'Last month you measured your ' .
-    $watches[0]->brand.' '.$watches[0]->name;
+    $watches->brand.' '.$watches->name;
 
     // override the one watch version in case we have many watches to report
     if(sizeof($watches) > 1){

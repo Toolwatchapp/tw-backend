@@ -83,11 +83,28 @@ class Measure extends ObservableModel {
 	 */
 	public function computeAccuracy($watchMeasure) {
 
+		//Some models (email model for example) require
+		//data to be selected as array (mainly for grouping).
+		//In the following lines, I typecast an eventual array
+		//to object.
+		$wasArray = false;
+
+		if(is_array($watchMeasure)){
+			$watchMeasure = (object) $watchMeasure;
+			$wasArray = true;
+		}
+
 		$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
 		$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
 		$accuracy  = ($userDelta*86400/$refDelta)-86400;
 		$accuracy  = sprintf("%.1f", $accuracy);
 		$watchMeasure->accuracy = $accuracy;
+
+		//If the measure was an array,
+		//I typecast it back to array.
+		if($wasArray){
+			$watchMeasure = (array) $watchMeasure;
+		}
 
 		return $watchMeasure;
 	}

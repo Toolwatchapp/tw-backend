@@ -156,37 +156,29 @@ class Measures_test extends TestCase {
 			]
 		);
 
-		var_dump($output);
-
 		$this->assertContains('true', $output);
 
 	}
 
-	// public function test_accuracyMeasure() {
-	// 	$CI = &get_instance();
-	// 	$CI->load->model('Measure');
-	//
-	// 	echo "test_accuracyMeasure\n";
-	//
-	// 	$measure = $CI->Measure->find_by('watchId', self::$watchId);
-	// 	echo  $CI->Measure->last_query();
-	//
-	// 	var_dump(self::$watchId);
-	// 	var_dump($measure);
-	//
-	// 	$output = $this->request(
-	// 		'POST',
-	// 		['Measures', 'accuracyMeasure'],
-	// 		[
-	// 			'measureId'    => $measure->id,
-	// 			'userTime'     => '10:16:12',
-	// 			'userTimezone' => '5'
-	// 		]
-	// 	);
-	//
-	// 	$this->assertContains('true', $output);
-	//
-	// }
+	public function test_accuracyMeasure() {
+		$CI = &get_instance();
+		$CI->load->model('Measure');
+
+		$measure = $CI->Measure->find_by('watchId', self::$watchId);
+
+		$output = $this->request(
+			'POST',
+			['Measures', 'accuracyMeasure'],
+			[
+				'measureId'    => $measure->id,
+				'userTime'     => '10:16:12',
+				'userTimezone' => '5'
+			]
+		);
+
+		$this->assertContains('true', $output);
+
+	}
 
 
 }
