@@ -62,7 +62,7 @@ class User extends ObservableModel {
 			$this->notify($event.'_FAIL', $data);
 		}
 
-		return $user;
+		return true;
 	}
 
 	/**
@@ -83,6 +83,8 @@ class User extends ObservableModel {
 		session_unset();
 
 		$this->notify(LOGOUT, array());
+
+		return true;
 	}
 
 	/**

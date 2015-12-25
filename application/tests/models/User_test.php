@@ -2,10 +2,14 @@
 
 class User_test extends TestCase {
 
+	private static $userId;
+
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
 		$CI->load->model('User');
+
 		$CI->User->delete_where(array("userId >=" => "0"));
+
 	}
 
 	public function setUp() {
@@ -136,9 +140,9 @@ class User_test extends TestCase {
 			'azerty'
 		);
 
-		$userId = $this->session->userdata('userId');
+		self::$userId = $this->session->userdata('userId');
 
-		$user = $this->obj->getUser($userId);
+		$user = $this->obj->getUser(self::$userId);
 
 		$token = $this->obj->askResetPassword($user->email);
 
@@ -146,7 +150,7 @@ class User_test extends TestCase {
 
 		$this->assertEquals(true, $res);
 
-		$user = $this->obj->getUser($userId);
+		$user = $this->obj->getUser(self::$userId);
 
 		$this->assertEquals(hash('sha256', 'azerty'), $user->password);
 
@@ -154,9 +158,21 @@ class User_test extends TestCase {
 
 	public function test_getUserFromWatchId() {
 
+		$CI = &get_instance();
+		$CI->load->model('Watch');
+
+		$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'brand',
+			'name',
+			2015,
+			28,
+			014
+		);
+
 		$this->assertEquals(
 			true,
-			is_array($this->obj->getUserFromWatchId(1)),
+			is_object($this->obj->getUserFromWatchId($watchId)),
 			'should return an array'
 		);
 	}
@@ -164,6 +180,8 @@ class User_test extends TestCase {
 	public static function tearDownAfterClass() {
 		$CI = &get_instance();
 		$CI->load->model('User');
+		$CI->load->model('Watch');
+		$CI->watch->delete_where(array("watchId >=" => "0"));
 		$CI->User->delete_where(array("userId >=" => "0"));
 	}
 
