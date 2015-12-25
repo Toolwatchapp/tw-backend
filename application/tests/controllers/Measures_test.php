@@ -144,8 +144,6 @@ class Measures_test extends TestCase {
 			014
 		);
 
-		var_dump(self::$watchId);
-
 		$output = $this->request(
 			'POST',
 			['Measures', 'baseMeasure'],
