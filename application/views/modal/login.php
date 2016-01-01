@@ -1,7 +1,4 @@
 <div class="form-group">
-  Login in allows you to access and track all your measures in one place.
-</div>
-<div class="form-group">
    <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">Log in with Facebook<i class="fa fa-spinner fa-pulse"></i></button></center>
    <span id="fb_error" class="signup-error login-error"></span>
 </div>
@@ -27,5 +24,5 @@
 	<div class="form-group">
 		  <center>Not registered yet? <a data-href="/sign-up/" data-modal-update="true">Sign up here!</a> or <br />
 		</center>
-	</div>
+	</div>  
 </form>
