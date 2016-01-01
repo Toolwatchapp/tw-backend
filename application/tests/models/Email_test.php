@@ -209,6 +209,8 @@ class Email_test extends TestCase {
 
 	$addWatchContent = file_get_contents("emails/add_watch.html",
 		FILE_USE_INCLUDE_PATH);
+	$checkAccuracyContent = file_get_contents("emails/check_accuracy.html",
+		FILE_USE_INCLUDE_PATH);
 
  	$this->assertEquals(sizeof($emails['users']), 5);
 
@@ -237,7 +239,7 @@ class Email_test extends TestCase {
  	$this->assertEquals(sizeof($emails['measures']), 1);
  	$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
  	$this->assertEquals($emails['measures'][0]['emailType'], $this->email->CHECK_ACCURACY);
-
+	$this->assertEquals($emails['measures'][0]['content'], $checkAccuracyContent);
 
  }
 
