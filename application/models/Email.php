@@ -317,7 +317,8 @@ class Email extends MY_Model {
 	private function userWithWatchWithoutMeasure($time, &$queuedEmail) {
 		$userWithWatchWithoutMeasure = $this
 			->watch
-			->select('watch.watchId, watch.brand, user.name, user.firstname, email')
+			->select('watch.watchId, watch.brand, watch.name as watchName,
+			user.name, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
 			->where('creationDate <=', $time-$this->day)
@@ -334,7 +335,8 @@ class Email extends MY_Model {
 				$user = (object) $user;
 
 				$emailcontent = $this->load->view('email/generic',
-					makeFirstMeasureContent($user->firstname), true);
+					makeFirstMeasureContent($user->firstname,
+					$user->brand . ' ' . $user->watchName), true);
 
 				$this->sendMandrillEmail(
 					'Let’s start measuring! ⌚',

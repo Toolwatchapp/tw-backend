@@ -22,16 +22,18 @@ function addFirstWatchContent($firstName){
  * util function to create the content emails
  * @param String $firstName of the recipient
  */
-function makeFirstMeasureContent($firstName){
+function makeFirstMeasureContent($firstName, $firstWatchName){
   return array(
         'title' => 'Hey '.$firstName.'!',
         'content' =>
-          'You’ve added your first watch on Toolwatch.io and we’re thrilled to
+          'You\'ve added your first watch on
+          <a href="https://toolwatch.io">Toolwatch.io</a> and we\'re thrilled to
           have you onboard!<br>
-          You can now start the first measuring for
-          the accuracy of your mechanical watches.
+          You can now start the <a href="https://toolwatch.io/measures/">first measuring for
+          the accuracy</a> of your '.$firstWatchName.'. <br/>
           Is your watch really accurate or should it be serviced?
-          Let’s begin by starting your first measure and find out now!
+          Let\'s begin by starting your
+          <a href="https://toolwatch.io/measures/">first measure</a> and find out now!
           '
     );
 }
