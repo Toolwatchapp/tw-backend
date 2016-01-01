@@ -424,6 +424,9 @@ class Email_test extends TestCase {
   //The watch is added at time
   $emails = $this->email->cronCheck(time()+(24*1*61*60));
 
+	$addFirstMeasureContent = file_get_contents("emails/add_first_measure.html",
+		FILE_USE_INCLUDE_PATH);
+
   $this->assertEquals(sizeof($emails['users']), 0);
   $this->assertEquals(sizeof($emails['watches']), 1);
   $this->assertEquals(sizeof($emails['measures']), 0);
@@ -433,6 +436,9 @@ class Email_test extends TestCase {
 
   $this->assertEquals($emails['watches'][0]['emailType'],
  		 $this->email->START_FIRST_MEASURE);
+
+	$this->assertEquals($emails['watches'][0]['content'],
+		$addFirstMeasureContent);
 
  		 //Check that the email is sent only once
  	 $emails = $this->email->cronCheck(time()+(24*1*62*60));
