@@ -13,7 +13,7 @@ function addFirstWatchContent($firstName){
           <br>
           You can now start the first measuring for the accuracy of your
           mechanical watches. Is your watch really accurate or should it be serviced?
-          Let’s start by adding your first watch and find out
+          Let\'s start by adding your first watch and find out
           <a href="https://toolwatch.io/measures">now</a>!'
     );
 }
@@ -85,10 +85,10 @@ function comebackContent($firstName){
 function checkAccuracyContent($firstName, $watches){
 
   // if the user has only one watch to be checked now
-  $content = 'You’ve synchronized your ' .
-    $watches->brand.' '.$watches->name . ' with
+  $content = 'You\'ve synchronized your ' .
+    $watches->brand.' '.$watches->watchName . ' with
     Toolwatch one day ago and now is the time to see the results
-    of your watch’s accuracy !<br>';
+    of your watch\'s accuracy !<br>';
 
   // override the one watch version in case we have many watches to report
   if(sizeof($watches) > 1){
@@ -96,7 +96,7 @@ function checkAccuracyContent($firstName, $watches){
     $content = 'You’ve synchronized the following watches <ul>';
 
     foreach ($watches as $watch) {
-      $content += '<li>'.$watch->brand.' '.$watch->name.'</li>';
+      $content += '<li>'.$watch->brand.' '.$watch->watchName.'</li>';
     }
 
     $content += "</ul> with
@@ -125,23 +125,23 @@ function checkAccuracyContent($firstName, $watches){
 function oneWeekAccuracyContent($firstName, $watches){
 
   // if the user has only one watch to be checked now
-  $content = 'You’ve synchronized your ' .
-    $watches->brand.' '.$watches->name . ' with
+  $content = 'You\'ve synchronized your ' .
+    $watches->brand.' '.$watches->watchName . ' with
     Toolwatch one week ago and now is the time to see the results
-    of your watch’s accuracy !<br>';
+    of your watch\'s accuracy !<br>';
 
   // override the one watch version in case we have many watches to report
   if(sizeof($watches) > 1){
 
-    $content = 'You’ve synchronized the following watches <ul>';
+    $content = 'You\'ve synchronized the following watches <ul>';
 
     foreach ($watches as $watch) {
-      $content += '<li>'.$watch->brand.' '.$watch->name.'</li>';
+      $content += '<li>'.$watch->brand.' '.$watch->watchName.'</li>';
     }
 
     $content += "</ul> with
     Toolwatch one week ago and now is the time to see the results
-    of your watch’s accuracy !<br>";
+    of your watch\'s accuracy !<br>";
   }
 
   return array(

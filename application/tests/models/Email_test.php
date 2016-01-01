@@ -254,14 +254,17 @@ class Email_test extends TestCase {
  	// Should have 1 CHECK_ACCURACY_1_WEEK
  	$emails = $this->email->cronCheck(time()+(24*8*60*60));
 
+	$checkAccuracy1wContent = file_get_contents("emails/check_accuracy_1w.html",
+		FILE_USE_INCLUDE_PATH);
+
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['watches']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 1);
 
- 	$this->assertEquals(sizeof($emails['measures']), 1);
  	$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
  	$this->assertEquals($emails['measures'][0]['emailType'],
  		$this->email->CHECK_ACCURACY_1_WEEK);
+	$this->assertEquals($emails['measures'][0]['content'], $checkAccuracy1wContent);
  }
 
  /**
