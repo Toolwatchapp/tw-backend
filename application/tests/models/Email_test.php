@@ -297,6 +297,9 @@ class Email_test extends TestCase {
  	//2 days later
  	$emails = $this->email->cronCheck(time()+(24*10*61*60));
 
+	$addSecondWatch = file_get_contents("emails/add_second_watch.html",
+		FILE_USE_INCLUDE_PATH);
+
  	$this->assertEquals(sizeof($emails['users']), 1);
 
  	$this->assertEquals($emails['users'][0]['userId'],
@@ -304,6 +307,8 @@ class Email_test extends TestCase {
 
  	$this->assertEquals($emails['users'][0]['emailType'],
  		$this->email->ADD_SECOND_WATCH);
+
+	$this->assertEquals($emails['users'][0]['content'], $addSecondWatch);
 
  	$this->assertEquals(sizeof($emails['watches']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);

@@ -45,15 +45,15 @@ function addSecondWatchContent($firstName, $firstWatchName){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
-      '2 days ago, you did your first measure on Toolwatch and we’re so proud
+      '2 days ago, you did your first measure on Toolwatch and we\'re so proud
       of that! Thank you for your trust, it means a lot to us.<br>
-      If, like 37% of Toolwatch’s users you have another mechanical watch,
-      <a href="https://toolwatch.io/measures">let’s start a new measure</a>
-       and see how it compares to your '.$firstWatchName.'
+      If, like 37% of Toolwatch\'s users you have another mechanical watch,
+      <a href="https://toolwatch.io/measures">let\'s start a new measure</a>
+       and see how it compares to your '.$firstWatchName.'.
       <br>
-      If you don’t have another watch, you can still make our day by
+      If you don\'t have another watch, you can still make our day by
       <a href="https://www.facebook.com/sharer/sharer.php?u=www.toolwatch.io">
-      spreading the word about Toolwatch on social</a>
+      spreading the word about Toolwatch on social medias</a>
       (it works no matter how many watch you own!).'
   );
 }
