@@ -365,27 +365,38 @@ class Email_test extends TestCase {
  public function test_comback(){
  	//Last Login was at time()
  	$emails = $this->email->cronCheck(time()+(100*25*60*60));
+
+	$comebackContent = file_get_contents("emails/comeback.html",
+		FILE_USE_INCLUDE_PATH);
+
  	$this->assertEquals(sizeof($emails['users']), 6);
  	$this->assertEquals(sizeof($emails['watches']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);
 
  	$this->assertEquals($emails['users'][0]['userId'], self::$users['nestor']->userId);
  	$this->assertEquals($emails['users'][0]['emailType'], $this->email->COMEBACK);
+	$this->assertEquals($emails['users'][0]['content'], $comebackContent);
 
  	$this->assertEquals($emails['users'][1]['userId'], self::$users['ernest']->userId);
- 	$this->assertEquals($emails['users'][2]['emailType'], $this->email->COMEBACK);
+ 	$this->assertEquals($emails['users'][1]['emailType'], $this->email->COMEBACK);
+	$this->assertEquals($emails['users'][1]['content'], $comebackContent);
+
 
  	$this->assertEquals($emails['users'][2]['userId'], self::$users['anatole']->userId);
  	$this->assertEquals($emails['users'][2]['emailType'], $this->email->COMEBACK);
+	$this->assertEquals($emails['users'][2]['content'], $comebackContent);
 
  	$this->assertEquals($emails['users'][3]['userId'], self::$users['phillibert']->userId);
  	$this->assertEquals($emails['users'][3]['emailType'], $this->email->COMEBACK);
+	$this->assertEquals($emails['users'][3]['content'], $comebackContent);
 
  	$this->assertEquals($emails['users'][4]['userId'], self::$users['hippolyte']->userId);
  	$this->assertEquals($emails['users'][4]['emailType'], $this->email->COMEBACK);
+	$this->assertEquals($emails['users'][4]['content'], $comebackContent);
 
  	$this->assertEquals($emails['users'][5]['userId'], self::$users['raymond']->userId);
  	$this->assertEquals($emails['users'][5]['emailType'], $this->email->COMEBACK);
+	$this->assertEquals($emails['users'][5]['content'], $comebackContent);
 
  	//Check that the email is sent only once
  	$emails = $this->email->cronCheck(time()+(101*25*60*60));

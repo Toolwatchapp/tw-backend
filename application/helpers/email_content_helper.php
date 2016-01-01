@@ -66,12 +66,13 @@ function comebackContent($firstName){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
-      'It’s been a while since we last saw you on Toolwatch.io!
+      'It\'s been a while since we last saw you on
+      <a href="https://toolwatch.io/">Toolwatch.io</a> !
       The accuracy of a watch should be regularly checked to make sure
       everything is fine and that you can continue enjoying this work of
       art and mechanics on your wrist AND we will be very happy to have you around!
       <br>
-      <a href="https://toolwatch.io/measures">Let’s start a new measure</a>
+      <a href="https://toolwatch.io/measures">Let\'s start a new measure</a>
       and do not hesitate to also say hi on
       <a href="https://twitter.com/toolwatchapp">Twitter</a>!'
   );
