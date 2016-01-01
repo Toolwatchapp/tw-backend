@@ -161,7 +161,7 @@ function oneMonthAccuracyContent($firstName, $watches){
 
   // if the user has only one watch to be checked now
   $content = 'Last month you measured your ' .
-    $watches->brand.' '.$watches->name;
+    $watches->brand.' '.$watches->watchName;
 
     // override the one watch version in case we have many watches to report
     if(sizeof($watches) > 1){
@@ -169,7 +169,7 @@ function oneMonthAccuracyContent($firstName, $watches){
       $content = 'Last month you measured the followin watches <ul>';
 
       foreach ($watches as $watch) {
-        $content += '<li>'.$watch->brand.' '.$watch->name.'</li>';
+        $content += '<li>'.$watch->brand.' '.$watch->watchName.'</li>';
       }
 
       $content += "</ul>";
@@ -178,18 +178,18 @@ function oneMonthAccuracyContent($firstName, $watches){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
-      $content . 'on
+      $content . ' on
       <a href="https://toolwatch.io/">Toolwatch</a> and
-      we’re happy to count you as a cool member of the Toolwatch community!
+      we\'re happy to count you as a cool member of the Toolwatch community!
       <br>
       The accuracy of a watch should be regularly checked to make sure everything
       is fine and that you can continue enjoying this work of art and mechanics on
       your wrist.
       <br>
-      <a href="https://toolwatch.io/measures">Let’s start a new measure</a>
+      <a href="https://toolwatch.io/measures">Let\'s start a new measure</a>
       and see how it compares to last time!
       <br>
-      And don’t forget to share a wristshot or
+      And don\'t forget to share a wristshot or
       <a href="https://twitter.com/toolwatchapp">Twitter</a> or
       <a href="https://www.instagram.com/Toolwatchapp/">Instagram</a>
       using our <a href="https://twitter.com/hashtag/toolwatchapp?f=tweets&src=hash">#ToolwatchApp</a> hashtag and join us

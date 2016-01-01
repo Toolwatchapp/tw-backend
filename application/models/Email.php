@@ -509,8 +509,8 @@ class Email extends MY_Model {
 	private function startANewMeasure($time, &$queuedEmail) {
 		$userWithWatchWithoutMeasure = $this
 			->measure
-			->select('watch.watchId, watch.brand, user.userId, user.name,
-			user.firstname, email, measure.*')
+			->select('watch.watchId, watch.name as watchName, watch.brand,
+			user.userId, user.name, user.firstname, email, measure.*')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 2)

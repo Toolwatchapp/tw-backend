@@ -332,6 +332,9 @@ class Email_test extends TestCase {
  	//The accuracy measure was at time()+(24*8*60*60)
  	$emails = $this->email->cronCheck(time()+(24*39*60*60));
 
+	$startNewMeasureContent = file_get_contents("emails/start_new_measure.html",
+		FILE_USE_INCLUDE_PATH);
+
  	$this->assertEquals(sizeof($emails['watches']), 1);
 
  	$this->assertEquals($emails['watches'][0]['watchId'],
@@ -339,6 +342,9 @@ class Email_test extends TestCase {
 
  	$this->assertEquals($emails['watches'][0]['emailType'],
  		$this->email->START_NEW_MEASURE);
+
+	$this->assertEquals($emails['watches'][0]['content'],
+		$startNewMeasureContent);
 
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);
