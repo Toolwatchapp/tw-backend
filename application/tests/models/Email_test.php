@@ -207,28 +207,37 @@ class Email_test extends TestCase {
  	// Should have 5 add first and 1 check
  	$emails = $this->email->cronCheck(time()+(24*60*60));
 
+	$addWatchContent = file_get_contents("emails/add_watch.html",
+		FILE_USE_INCLUDE_PATH);
+
  	$this->assertEquals(sizeof($emails['users']), 5);
 
  	$this->assertEquals($emails['users'][0]['userId'], self::$users['ernest']->userId);
  	$this->assertEquals($emails['users'][0]['emailType'], $this->email->ADD_FIRST_WATCH);
+	$this->assertEquals($emails['users'][0]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][1]['userId'], self::$users['anatole']->userId);
  	$this->assertEquals($emails['users'][1]['emailType'], $this->email->ADD_FIRST_WATCH);
+	$this->assertEquals($emails['users'][1]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][2]['userId'], self::$users['phillibert']->userId);
  	$this->assertEquals($emails['users'][2]['emailType'], $this->email->ADD_FIRST_WATCH);
+	$this->assertEquals($emails['users'][2]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][3]['userId'], self::$users['hippolyte']->userId);
  	$this->assertEquals($emails['users'][3]['emailType'], $this->email->ADD_FIRST_WATCH);
+	$this->assertEquals($emails['users'][3]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][4]['userId'], self::$users['raymond']->userId);
  	$this->assertEquals($emails['users'][4]['emailType'], $this->email->ADD_FIRST_WATCH);
+	$this->assertEquals($emails['users'][4]['content'], $addWatchContent);
 
  	$this->assertEquals(sizeof($emails['watches']), 0);
 
  	$this->assertEquals(sizeof($emails['measures']), 1);
  	$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
  	$this->assertEquals($emails['measures'][0]['emailType'], $this->email->CHECK_ACCURACY);
+
 
  }
 
