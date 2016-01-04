@@ -1,0 +1,22 @@
+{
+  "name": "app.json",
+  "scripts": {
+  },
+  "env": {
+    "PH_URL": {
+      "required": true
+    },
+    "TW_DB_URL": {
+      "required": true
+    },
+    "TW_EVENT_URL": {
+      "required": true
+    },
+    "TW_WP_DB_URL": {
+      "required": true
+    }
+  },
+  "addons": [
+    "cleardb"
+  ]
+}
