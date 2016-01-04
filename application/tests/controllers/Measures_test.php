@@ -81,7 +81,7 @@ class Measures_test extends TestCase {
 			'POST',
 			['Measures', 'delete_watch'],
 			[
-				'deleteWatch' => $watch->watchId
+				'watchId' => $watch->watchId
 			]
 		);
 
@@ -164,6 +164,8 @@ class Measures_test extends TestCase {
 
 		$measure = $CI->Measure->find_by('watchId', self::$watchId);
 
+		$CI->session->set_userdata('referenceTime', time());
+
 		$output = $this->request(
 			'POST',
 			['Measures', 'accuracyMeasure'],
@@ -173,6 +175,8 @@ class Measures_test extends TestCase {
 				'userTimezone' => '5'
 			]
 		);
+
+
 
 		$this->assertContains('true', $output);
 
