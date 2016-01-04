@@ -470,6 +470,15 @@ $(document).ready(function()
         }
     });
 
+    $('body').on('click', '.submitNewMeasure', function(e)
+    {
+        e.preventDefault();
+        var watchId = $(this).attr('data-watch');
+
+        $('form[name="start-new-measure-'+watchId+'"]').submit();
+
+    });
+
     $('body').on('click', '.submitDeleteMeasures', function(e)
     {
         e.preventDefault();

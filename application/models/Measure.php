@@ -35,46 +35,17 @@ class Measure extends ObservableModel {
 	 * Get the last measure of each $userWatches
 	 *
 	 * @param  int $userId      id of the user
-	 * @param  array $userWatches watches of the user
-	 * @return array The last measure per $userWatches for $userId
+	 * @return array The last measure per of $userId
 	 */
-	function getMeasuresByUser($userId, $userWatches) {
+	function getMeasuresByUser($userId) {
 
-		$data        = array();
-
-		if (is_array($userWatches) && sizeof($userWatches) > 0) {
-
-			foreach ($userWatches as $watch) {
-				//Get measure couple that are on measure or accuracy status
-				$watchMeasures = $this->select()
-					->join("watch", "watch.watchId = ".$watch->watchId)
-					->where('measure.watchId', $watch->watchId)
-					->where('(`statusId` = 1 OR `statusId` = 2)', null, false)
-					->find_all();
-
-				if ($watchMeasures) {
-
-					foreach ($watchMeasures as $watchMeasure) {
-
-						//If the first measure is less than 12 hours old
-						if ($watchMeasure->statusId === "1" &&
-							(((time()-$watchMeasure->measureReferenceTime)/3600) < 12)) {
-
-							$watchMeasure->statusId         = 1.5;
-							$ellapsedTime                   = ((time()-$watchMeasure->measureReferenceTime)/3600);
-							$watchMeasure->accuracy         = round(12-round($ellapsedTime, 1));
-							if ($watchMeasure->accuracy <= 1) {
-								$watchMeasure->accuracy = " < 1";
-							}
-						}
-
-						array_push($data, $watchMeasure);
-					}
-				}
-			}
-		}
-
-		return $data;
+		return $this->select()
+				->join("watch", "watch.watchId = measure.watchId
+							AND measure.statusId < 3", "right")
+				->where("watch.userId", $userId)
+				->where("watch.status <", 4)
+				->group_by("watch.watchId")
+				->find_all();
 	}
 
 	/**
@@ -96,11 +67,31 @@ class Measure extends ObservableModel {
 			$wasArray = true;
 		}
 
-		$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
-		$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
-		$accuracy  = ($userDelta*86400/$refDelta)-86400;
-		$accuracy  = sprintf("%.1f", $accuracy);
-		$watchMeasure->accuracy = $accuracy;
+		//Compute the accuracy if all the data are available
+		//Both measure have been performed
+		if(is_numeric($watchMeasure->accuracyUserTime)
+		&& is_numeric($watchMeasure->measureUserTime)
+		&& is_numeric($watchMeasure->accuracyReferenceTime)
+		&& is_numeric($watchMeasure->measureReferenceTime))
+		{
+			$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
+			$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
+			$accuracy  = ($userDelta*86400/$refDelta)-86400;
+			$accuracy  = sprintf("%.1f", $accuracy);
+			$watchMeasure->accuracy = $accuracy;
+		}
+
+		//Compute 1.5 status. When a measure is less than 12 hours old
+		if ($watchMeasure->statusId === "1" &&
+			(((time()-$watchMeasure->measureReferenceTime)/3600) < 12)) {
+
+			$watchMeasure->statusId         = 1.5;
+			$ellapsedTime                   = ((time()-$watchMeasure->measureReferenceTime)/3600);
+			$watchMeasure->accuracy         = round(12-round($ellapsedTime, 1));
+			if ($watchMeasure->accuracy <= 1) {
+				$watchMeasure->accuracy = " < 1";
+			}
+		}
 
 		//If the measure was an array,
 		//I typecast it back to array.

@@ -62,7 +62,6 @@ class Watch extends ObservableModel {
 		            ->where('status', 1)
 		            ->order_by('brand', 'asc')
 		            ->find_all();
-
 	}
 
 	/**
@@ -89,7 +88,7 @@ class Watch extends ObservableModel {
 	 * Soft delete watch $watchId
 	 *
 	 * @param  int $watchId The watch to delete
-	 * @return boolean 
+	 * @return boolean
 	 */
 	function deleteWatch($watchId) {
 		$data = array('status' => 4);
