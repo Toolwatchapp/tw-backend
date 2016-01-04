@@ -24,7 +24,7 @@ $( document ).ready(function() {
                     $('.sync-time').html('Go!');
                     $('.userTime').show();
                     $('button[name="syncDone"]').removeAttr('disabled');
-                    $.post('/ajax/getReferenceTime');
+                    $.post('/measures/getReferenceTime');
                 }
             }
 

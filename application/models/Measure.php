@@ -46,7 +46,9 @@ class Measure extends ObservableModel {
 
 			foreach ($userWatches as $watch) {
 				//Get measure couple that are on measure or accuracy status
-				$watchMeasures = $this->select()->where('watchId', $watch->watchId)
+				$watchMeasures = $this->select()
+					->join("watch", "watch.watchId = ".$watch->watchId)
+					->where('measure.watchId', $watch->watchId)
 					->where('(`statusId` = 1 OR `statusId` = 2)', null, false)
 					->find_all();
 
