@@ -42,12 +42,10 @@ class Measures extends MY_Controller {
 		$this->_headerData['headerClass'] = 'blue';
 		$this->load->view('header', $this->_headerData);
 
-		$this->_bodyData['watches']    = $this->watch->getWatches(
-			$this->session->userdata('userId'));
 		$this->_bodyData['allMeasure'] = $this->measure->getMeasuresByUser(
-			$this->session->userdata('userId'), $this->_bodyData['watches']);
+			$this->session->userdata('userId'));
 
-		$this->load->view('measure/all', $this->_bodyData);
+		$this->load->view('measure/dashboard', $this->_bodyData);
 
 		$this->load->view('footer');
 	}
@@ -94,7 +92,7 @@ class Measures extends MY_Controller {
 	 */
 	public function delete_watch(){
 
-		if($this->expectsPost(array('deleteWatch'))){
+		if($this->expectsPost(array('watchId'))){
 
 			if ($this->watch->deleteWatch($this->watchId)) {
 				$this->_bodyData['success'] = 'Watch successfully deleted!';
@@ -148,16 +146,33 @@ class Measures extends MY_Controller {
 	 */
 	public function new_measure() {
 
+		$this->_bodyData['watches'] = $this->watch->getWatches(
+			$this->session->userdata('userId'));
+
 		$this->event->add(MEASURE_LOAD);
 
 		$this->_headerData['headerClass'] = 'blue';
 		$this->load->view('header', $this->_headerData);
 
-		$this->_bodyData['watches'] = $this->watch->getWatches($this->session->userdata('userId'));
 		$this->load->view('measure/new-measure', $this->_bodyData);
 		$this->load->view('measure/audio.php');
 
 		$this->load->view('footer');
+	}
+
+	/**
+	 * Serves the new measure form (1/2) for a watch
+	 * with existing measures.
+	 */
+	public function new_measure_for_watch(){
+
+		if($this->expectsPost(array('watchId'))){
+
+			$this->_bodyData['selected_watch'] = $this->watchId;
+
+			$this->new_measure();
+
+		}
 	}
 
 	/**

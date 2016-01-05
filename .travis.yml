@@ -1,7 +1,6 @@
 language: php
 php:
   - '5.6'
-  - '7.0'
 
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe

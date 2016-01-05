@@ -20,6 +20,9 @@
 			<directory suffix=".php">../helpers</directory>
 			<directory suffix=".php">../hooks</directory>
 		</whitelist>
+		<blacklist>
+			<directory>../libraries/Mandrill</directory>
+		</blacklist>
 	</filter>
 	<logging>
 		<log type="coverage-html" target="build/coverage"/>

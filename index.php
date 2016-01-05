@@ -256,6 +256,12 @@ if (($_temp = realpath($view_folder)) !== FALSE) {
 
 define('VIEWPATH', $view_folder);
 
+if(isset($_SERVER["HTTP_CF_CONNECTING_IP"])){
+	$_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+}else if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+	$_SERVER['REMOTE_ADDR'] = trim(end(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+}
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
