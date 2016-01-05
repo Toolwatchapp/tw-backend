@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<?php var_dump($this->session->userdata());?>
+<br />
+<?php echo "RA" . $_SERVER['REMOTE_ADDR'];
+echo "<br />";
+echo "RA CF" . $_SERVER["HTTP_CF_CONNECTING_IP"];
+?>
 <html lang="en">
 <head>
     <title>Toolwatch • <?php if (isset($title)) {echo $title;
@@ -149,4 +155,3 @@ if ($userIsLoggedIn) {
             </div>
         </div>
     </header>
-<?php var_dump($this->session->userdata());?>
