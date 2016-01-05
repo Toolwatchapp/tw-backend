@@ -30,8 +30,6 @@ class Event {
 
 			$data_string = json_encode($data);
 
-			event_url();
-
 			$ch = curl_init(event_url());
 
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
