@@ -7,7 +7,9 @@ echo "RA CF " . $_SERVER["HTTP_CF_CONNECTING_IP"];
 echo "<br />";
 echo "RA HK ";
 if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-  trim(end(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+  echo trim(end(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+  echo "<br />";
+  echo $_SERVER['HTTP_X_FORWARDED_FOR'];
 }
 
 ?>
