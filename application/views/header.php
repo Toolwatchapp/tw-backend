@@ -149,3 +149,4 @@ if ($userIsLoggedIn) {
             </div>
         </div>
     </header>
+<?php var_dump($this->session->userdata());?>
