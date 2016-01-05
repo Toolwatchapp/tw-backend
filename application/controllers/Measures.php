@@ -199,7 +199,7 @@ class Measures extends MY_Controller {
 
 		echo date('Y-m-d H:i:s', time() + 8*60*60 - date('Z'));
 
-		$this->session->set_userdata('referenceTime', time() - date('Z'));
+		$this->session->set_userdata('referenceTime', time() + 8*60*60 - date('Z'));
 	}
 
 	/**
