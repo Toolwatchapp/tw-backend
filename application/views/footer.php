@@ -1,14 +1,14 @@
     <footer>
     <?php if(!$this->agent->is_mobile()){ ?>
         <div id="publication_footer" class="publication">
-                        
+
                 <a href="http://www.fratellowatches.com/toolwatch-measure-the-accuracy-of-your-watch/"><img src="<?php echo img_url('fratello_logos_transparant.png'); ?>"></a>
                 <a href="http://wristreview.com/?p=16698"><img src="<?php echo img_url('wristreview.png'); ?>"></a>
 
         </div>
      <?php } ?>
         <div class="container container-fluid">
-           
+
             <div class="row">
 
                 <div class="col-sm-12">
@@ -22,7 +22,7 @@
                         <a href="<?php echo base_url(); ?>/blog/watch-tips/">Blog</a>
                     </div>
 
-                    <?php 
+                    <?php
                         if($userIsLoggedIn)
                         {
                             echo '<div class="links col-sm-1">
@@ -58,15 +58,15 @@
                     </div>
 
                 </div>
-                	
+
             </div>
             <div class="row">
                 <div class="col-md-12 copyright">
-                    <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; 2015.</p>
+                    <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; 2016.</p>
                 </div>
             </div>
-        </div>    
-        
+        </div>
+
     </footer>
 </body>
 </html>
