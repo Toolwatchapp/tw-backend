@@ -12,9 +12,16 @@
     },
     "TW_EVENT_URL": {
       "required": true
+    },
+    "NEW_RELIC_APP_NAME": {
+      "required": true
+    },
+    "NEW_RELIC_CONFIG_FILE": {
+      "required": true
     }
   },
   "addons": [
-    "cleardb"
+    "cleardb",
+    "newrelic"
   ]
 }
