@@ -1,18 +1,4 @@
 <!DOCTYPE html>
-<?php var_dump($this->session->userdata());?>
-<br />
-<?php echo "RA" . $_SERVER['REMOTE_ADDR'];
-echo "<br />";
-echo "RA CF " . $_SERVER["HTTP_CF_CONNECTING_IP"];
-echo "<br />";
-echo "RA HK ";
-if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-  echo trim(end(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
-  echo "<br />";
-  echo $_SERVER['HTTP_X_FORWARDED_FOR'];
-}
-
-?>
 <html lang="en">
 <head>
     <title>Toolwatch • <?php if (isset($title)) {echo $title;
