@@ -557,8 +557,6 @@ class MY_Model extends CI_Model {
 	 */
 	public function find_by($field = '', $value = '', $type = 'and') {
 		if (empty($field) || (!is_array($field) && empty($value))) {
-			$this->error = lang('ff_model_find_error');
-			$this->logit('['.get_class($this).': '.__METHOD__ .'] '.lang('ff_model_find_error'));
 
 			return false;
 		}
@@ -980,8 +978,6 @@ class MY_Model extends CI_Model {
 	 */
 	public function is_unique($field = '', $value = '') {
 		if (empty($field) || empty($value)) {
-			$this->error = lang('ff_model_unique_error');
-			$this->logit('['.get_class($this).': '.__METHOD__ .'] '.lang('ff_model_unique_error'));
 
 			return false;
 		}
@@ -1024,8 +1020,6 @@ class MY_Model extends CI_Model {
 	 */
 	public function count_by($field = '', $value = null) {
 		if (empty($field)) {
-			$this->error = lang('ff_model_count_error');
-			$this->logit('['.get_class($this).': '.__METHOD__ .'] '.lang('ff_model_count_error'));
 
 			return false;
 		}

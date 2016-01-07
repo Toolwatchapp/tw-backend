@@ -9,8 +9,8 @@
             <form class="form-horizontal" method="post" name="newMeasure">
                 <div class="form-group">
                      <center>
-                         To begin measuring the accuracy of your watch, we must first synchronize your watch with Toolwatch’s accuracy system. 
-                         Start clicking on « Start now! » to start the countdown then look at your watch.<br><br> 
+                         To begin measuring the accuracy of your watch, we must first synchronize your watch with Toolwatch’s accuracy system.
+                         Start clicking on « Start now! » to start the countdown then look at your watch.<br><br>
                          At the end of the countdown, please enter below the exact time as it is on your watch. Let’s start measuring!
                     </center>
                 </div>
@@ -21,7 +21,11 @@
                             <?php
                                 foreach($watches as $watch)
                                 {
-                                    echo '<option value="'.$watch->watchId.'">'.$watch->brand.' - '.$watch->name.'</option>';   
+                                  if(isset($selected_watch)){
+                                    $selected = ($watch->watchId === $selected_watch) ? "selected" : "";
+                                  }
+
+                                  echo '<option value="'.$watch->watchId.'" '.$selected.'>'.$watch->brand.' - '.$watch->name.'</option>';
                                 }
                             ?>
                         </select>
@@ -37,8 +41,8 @@
                     <div class="col-sm-12">
                         <div class="alert alert-success">
                             <center>
-                            Congratulations, your watch is now synchronized. 
-                            For a better accuracy of the measurement, you must wait at least 12 hours before coming back. 
+                            Congratulations, your watch is now synchronized.
+                            For a better accuracy of the measurement, you must wait at least 12 hours before coming back.
                             Do not worry, we will send you an email when you should come back and check your results.
                             </center>
                         </div>

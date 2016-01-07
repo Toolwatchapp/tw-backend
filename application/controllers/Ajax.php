@@ -61,7 +61,10 @@ class Ajax extends MY_Controller {
 			}
 
 			echo json_encode($result);
+		}else{
+			echo "POST FAIL";
 		}
+
 	}
 
 	/**

@@ -9,9 +9,6 @@ class Event {
 	public function add($event) {
 
 		if (ENVIRONMENT === 'production') {
-			if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-				$_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
-			}
 
 			$country = "undefined";
 
@@ -32,8 +29,6 @@ class Event {
 			);
 
 			$data_string = json_encode($data);
-
-			event_url();
 
 			$ch = curl_init(event_url());
 
