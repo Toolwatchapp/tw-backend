@@ -262,6 +262,13 @@ class Measure_test extends TestCase {
 		$this->assertEquals(6, $count);
 	}
 
+	public function test_computePercentileAccuracy(){
+
+		$this->assertEquals(67, $this->obj->computePercentileAccuracy(1.5));
+		$this->assertEquals(0, $this->obj->computePercentileAccuracy(7));
+
+	}
+
 }
 
 ?>

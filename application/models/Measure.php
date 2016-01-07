@@ -103,6 +103,31 @@ class Measure extends ObservableModel {
 	}
 
 	/**
+	 * Computes the percentile for an accuracy, i.e, the percentage
+	 * of watches that are less accurate than $accuracy.
+	 *
+	 * The percentile excludes bugged measure (+/- 300 spd)
+	 *
+	 * @param  float $accuracy A complete measure with computed
+	 * @return int the percentile for this accuracy.
+	 */
+	function computePercentileAccuracy($accuracy){
+
+		//This have to be kept in line with the computeAccuracy method
+		$precisionFormulae = 'ABS(((measure.accuracyUserTime
+		- measure.measureUserTime)*86400)/
+		(measure.accuracyReferenceTime - measure.measureReferenceTime)
+		-86400)';
+
+		$moreAccurateCount = $this->count_by($precisionFormulae . ' <',
+			abs($accuracy));
+
+		$valideMeasuresCount = $this->count_by($precisionFormulae . ' <', 300);
+
+		return round(100 - (($moreAccurateCount / $valideMeasuresCount) * 100));
+	}
+
+	/**
 	 * Add a base measure (1/2) to $watchId given $referenceTime and $userTime
 	 *
 	 * All previous measures, completed or not, will be archived (status = 3)
@@ -154,6 +179,9 @@ class Measure extends ObservableModel {
 
 			$this->notify(NEW_ACCURACY,
 				array('measure'   => $watchMeasure));
+
+			$watchMeasure->percentile =
+				$this->computePercentileAccuracy($watchMeasure->accuracy);
 
 			return $watchMeasure;
 		}

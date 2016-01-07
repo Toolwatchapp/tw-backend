@@ -308,10 +308,11 @@ $(document).ready(function()
                         }
 
                         $('.watch-accuracy').html(result.accuracy);
+                        $('.watch-percentile').html(result.percentile);
 
 
                         $('.share-button').each(function(index){
-                            $(this).attr("data-text", $(this).attr("data-text").replace("{WatchAccuracy}", result.accuracy));
+                            $(this).attr("data-text", $(this).attr("data-text").replace("{WatchPercentile}", result.percentile));
                         });
 
                         initShareButton();
