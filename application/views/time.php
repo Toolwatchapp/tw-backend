@@ -42,24 +42,3 @@
     </div>
 
 </div>
-
-<style media="screen">
-#clockdiv{
-  margin-top: 30px;
-  color: #4d77a7;
-  display: inline-block;
-  font-weight: 100;
-  text-align: center;
-  font-size: 40px;
-}
-
-#clockdiv > div{
-  padding: 10px;
-  display: inline-block;
-}
-
-.smalltext{
-  padding-top: 5px;
-  font-size: 16px;
-}
-</style>
