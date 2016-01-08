@@ -39,7 +39,12 @@ class Measures extends MY_Controller {
 	 * @return mixed|html Board view
 	 */
 	private function constructMeasurePage(){
+
 		$this->_headerData['headerClass'] = 'blue';
+		if (!$this->agent->is_mobile()) {
+			array_push($this->_headerData['javaScripts'], "watch.animation", "time");
+		}
+
 		$this->load->view('header', $this->_headerData);
 
 		$this->_bodyData['allMeasure'] = $this->measure->getMeasuresByUser(
