@@ -134,6 +134,9 @@ class Measures extends MY_Controller {
 		$this->event->add(ADD_WATCH_LOAD);
 
 		$this->_headerData['headerClass'] = 'blue';
+		array_push($this->_headerData['javaScripts'],
+			"jquery-ui.min", "watch.autocomplete");
+
 		$this->load->view('header', $this->_headerData);
 
 		$this->load->view('measure/new-watch', $this->_bodyData);
