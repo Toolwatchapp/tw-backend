@@ -14,11 +14,21 @@ function getTime() {
     'total': t,
     'years':years,
     'months':months,
-    'days': days,
+    'days': days + "<sup>" + nth(days) + "</sup>",
     'hours': hours,
     'minutes': minutes,
     'seconds': seconds
   };
+}
+
+function nth(d) {
+  if(d>3 && d<21) return 'th';
+  switch (d % 10) {
+        case 1:  return "st";
+        case 2:  return "nd";
+        case 3:  return "rd";
+        default: return "th";
+    }
 }
 
 function initializeClock(id, endtime) {

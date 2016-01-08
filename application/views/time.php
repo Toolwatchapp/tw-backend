@@ -14,8 +14,8 @@
          <div class="row">
 
            <div class="col-sm-12">
-             <span class="months"></span>,
              <span class="days"></span>
+             <span class="months"></span>,
              <span class="years"></span>
            </div>
 
