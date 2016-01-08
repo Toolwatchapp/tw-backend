@@ -939,6 +939,7 @@ footer .links{
 }
 
 #clockdiv{
+  width: 100%;
   margin-top: 30px;
   color: #4d77a7;
   display: inline-block;
@@ -950,6 +951,10 @@ footer .links{
 #clockdiv > div{
   padding: 10px;
   display: inline-block;
+}
+
+#clockdiv span{
+  margin-top: 30px;
 }
 
 .smalltext{
