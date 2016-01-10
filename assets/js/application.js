@@ -310,12 +310,9 @@ $(document).ready(function()
                         $('.watch-accuracy').html(result.accuracy);
                         $('.watch-percentile').html(result.percentile);
 
-
                         $('.share-button').each(function(index){
-                            $(this).attr("data-text", $(this).attr("data-text").replace("{WatchPercentile}", result.percentile));
+                            $(this).attr("href", $(this).attr("href").replace("{WatchPercentile}", result.percentile));
                         });
-
-                        initShareButton();
 
                     }
                 }

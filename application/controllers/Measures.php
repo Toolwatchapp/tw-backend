@@ -185,7 +185,7 @@ class Measures extends MY_Controller {
 			$this->event->add(ACCURACY_LOAD);
 
 			$this->_headerData['headerClass'] = 'blue';
-			array_push($this->_headerData['javaScripts'], "jquery.sharrre.min", "sharrre.logic", "watch.animation");
+			array_push($this->_headerData['javaScripts'], "watch.animation");
 			$this->load->view('header', $this->_headerData);
 
 			$this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));

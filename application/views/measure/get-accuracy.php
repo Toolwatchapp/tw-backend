@@ -59,12 +59,32 @@
                         </div>
 
                         <div class="share-plugin col-md-offset-1 col-sm-10">
-                            <center><p><br /><br />You're watch is <b>more accurate than <span class="watch-percentile"></span>%</b> of all tested watches.</p></center>
+                            <center><p><br /><br />Your watch is <b>more accurate than <span class="watch-percentile"></span>%</b> of all tested watches.</p></center>
 
                         <div class="col-sm-12">
-                            <div class="share-button" id="twitter" data-url="<?php echo base_url() . 'result' ;?>" data-text="My watch is more accurate than {WatchPercentile}% of all tested watches on @toolwatchapp"></div>
-                            <div class="share-button" id="facebook" data-url="<?php echo base_url() . 'result' ;?>" data-text="My watch is more accurate than {WatchPercentile}% of all tested watches on https://www.facebook.com/Toolwatch"></div>
-                            <div class="share-button" id="googleplus" data-url="<?php echo base_url() . 'result' ;?>" data-text="My watch is more accurate than {WatchPercentile}% of all tested watches on https://plus.google.com/104724190750629608501/"></div>
+                          <a class="share-button"
+                          href="https://twitter.com/intent/tweet?text=My watch is more accurate than {WatchPercentile}%25 of all tested watches on @ToolWatchApp&url=https://toolwatch.io"
+                          target="_blank">
+                            <img src="<?php echo base_url();?>assets/img/tweet.png" alt="Tweet on tweeter" />
+                          </a>
+
+                          <a class="share-button"
+                          href="http://www.facebook.com/sharer.php?s=100&p[url]=https://toolwatch.io&p[title]=I just tested the accuracy of my watch&p[summary]=My watch is more accurate than {WatchPercentile}%25 of all tested watches on https://www.facebook.com/Toolwatch"
+                          target="_blank">
+                            <img src="<?php echo base_url();?>assets/img/facebook.png" alt="Share on timeline" />
+                          </a>
+
+                          <a class="share-button"
+                          href="https://plus.google.com/share?url=https://toolwatch.io"
+                          target="_blank">
+                            <img src="<?php echo base_url();?>assets/img/google-plus.png" alt="Share on timeline" />
+                          </a>
+
+                          <a class="share-button"
+                          href="mailto:?to=&Subject=I just tested the accuracy of my watch&body=My watch is more accurate than {WatchPercentile}%25 of all tested watches on https://www.facebook.com/Toolwatch"
+                          target="_top">
+                            <img src="<?php echo base_url();?>assets/img/email-share.png" alt="Share on Google+" />
+                          </a>
                         </div>
 
                         <br/>
