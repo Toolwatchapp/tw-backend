@@ -65,3 +65,12 @@ $route['result'] = "home/result";
 $route['about'] = "home/about";
 $route['help'] = "home/help";
 $route['contact'] = "home/contact";
+
+/*
+| -------------------------------------------------------------------------
+| REST API Routes
+| -------------------------------------------------------------------------
+*/
+
+$route['apiz/(:num)'] = 'api/example/users/id/$1'; // Example 4
+$route['api/example/users/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/example/users/id/$1/format/$3$4'; // Example 8
