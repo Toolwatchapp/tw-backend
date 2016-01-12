@@ -190,7 +190,7 @@ class Measures extends MY_Controller {
 			$this->event->add(ACCURACY_LOAD);
 
 			$this->_headerData['headerClass'] = 'blue';
-			array_push($this->_headerData['javaScripts'], "jquery.sharrre.min", "sharrre.logic", "watch.animation");
+			array_push($this->_headerData['javaScripts'], "watch.animation");
 			$this->load->view('header', $this->_headerData);
 
 			$this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
@@ -285,12 +285,12 @@ class Measures extends MY_Controller {
 			$watchMeasure = $this->measure->addAccuracyMesure(
 				$this->input->post('measureId'), $referenceTime, $userTime);
 
-			//We store the computed accuracy
-			$result['accuracy'] = $watchMeasure->accuracy;
-
 			// If the computed accuracy makes sense, we return success
 			if (is_numeric($watchMeasure->accuracy)) {
 				$result['success'] = true;
+				//We store the computed accuracy & percentile
+				$result['accuracy'] = $watchMeasure->accuracy;
+				$result['percentile'] = $watchMeasure->percentile;
 			} else {
 				$result['success'] = false;
 			}
