@@ -81,9 +81,9 @@
                           </a>
 
                           <a class="share-button"
-                          href="mailto:?to=&Subject=I just tested the accuracy of my watch&body=My watch is more accurate than {WatchPercentile}%25 of all tested watches on https://www.facebook.com/Toolwatch"
+                          href="mailto:?to=&Subject=I just tested the accuracy of my watch&body=My watch is more accurate than {WatchPercentile}%25 of all tested watches on https://toolwatch.io"
                           target="_top">
-                            <img src="<?php echo base_url();?>assets/img/email-share.png" alt="Share on Google+" />
+                            <img src="<?php echo base_url();?>assets/img/email-share.png" alt="Share by email" />
                           </a>
                         </div>
 
