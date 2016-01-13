@@ -56,7 +56,7 @@ class Mandrill {
 		"Unknown_MetadataField"      => "Mandrill_Unknown_MetadataField",
 	);
 
-	public function __construct($apikey = 'pUOMLUusBKdoR604DpcOnQ') {
+	public function __construct() {
 		if (!$apikey) {$apikey = getenv('MANDRILL_APIKEY');
 		}
 
