@@ -85,9 +85,7 @@ $db['default'] = array(
 );
 
 
-$url                       = parse_url(getenv("TW_DB_URL"));
-$db['default']['hostname'] = $url["host"];
-$db['default']['username'] = $url["user"];
-$db['default']['password'] = $url["pass"];
-$db['default']['database'] = substr($url["path"], 1);
-
+$db['default']['hostname'] = "localhost";
+$db['default']['username'] = "root";
+$db['default']['password'] = "";
+$db['default']['database'] = "tw_ci";
