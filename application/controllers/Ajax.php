@@ -84,7 +84,7 @@ class Ajax extends CI_Controller
                     $config['smtp_host'] = "smtp.mandrillapp.com";
                     $config['smtp_port'] = "587";
                     $config['smtp_user'] = "marc@toolwatch.io"; 
-                    $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                    $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
                     $config['charset'] = "utf-8";
                     $config['mailtype'] = "html";
                     $config['newline'] = "\r\n";
@@ -156,7 +156,7 @@ class Ajax extends CI_Controller
                 $config['smtp_host'] = "smtp.mandrillapp.com";
                 $config['smtp_port'] = "587";
                 $config['smtp_user'] = "marc@toolwatch.io"; 
-                $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
                 $config['charset'] = "utf-8";
                 $config['mailtype'] = "html";
                 $config['newline'] = "\r\n";
@@ -214,7 +214,7 @@ class Ajax extends CI_Controller
                 $config['smtp_host'] = "smtp.mandrillapp.com";
                 $config['smtp_port'] = "587";
                 $config['smtp_user'] = "marc@toolwatch.io"; 
-                $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
                 $config['charset'] = "utf-8";
                 $config['mailtype'] = "html";
                 $config['newline'] = "\r\n";
@@ -338,7 +338,7 @@ class Ajax extends CI_Controller
                 $config['smtp_host'] = "smtp.mandrillapp.com";
                 $config['smtp_port'] = "587";
                 $config['smtp_user'] = "marc@toolwatch.io"; 
-                $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+                $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
                 $config['charset'] = "utf-8";
                 $config['mailtype'] = "html";
                 $config['newline'] = "\r\n";
@@ -395,7 +395,7 @@ class Ajax extends CI_Controller
             $config['smtp_host'] = "smtp.mandrillapp.com";
             $config['smtp_port'] = "587";
             $config['smtp_user'] = "marc@toolwatch.io"; 
-            $config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
+            $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
             $config['charset'] = "utf-8";
             $config['mailtype'] = "html";
             $config['newline'] = "\r\n";
