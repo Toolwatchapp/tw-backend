@@ -139,6 +139,38 @@ class Email extends MY_Model {
 		$this->insertAll($emailsWatchSent, new MY_Model('email_watch'));
 	  $this->insertAll($emailsMeasureSent, new MY_Model('email_measure'));
 
+		$date = new DateTime("@$time");
+		echo "<h1> Emails sent at" . $date->format('U = Y-m-d H:i:s') . "</h1>";
+
+		echo "
+			ADD_FIRST_WATCH       = 1;
+			CHECK_ACCURACY        = 2;
+			ADD_SECOND_WATCH      = 3;
+			START_NEW_MEASURE     = 4;
+			COMEBACK              = 5;
+			START_FIRST_MEASURE   = 6;
+			CHECK_ACCURACY_1_WEEK = 7;";
+
+
+		echo "<h2> Users related </h2>";
+
+		foreach ($emailsUserSent as $email) {
+			echo "user " . $email['idTitle'] . "->" . $email['emailType'];
+		}
+
+		echo "<h2> Watch related </h2>";
+
+		foreach ($emailsWatchSent as $email) {
+			echo "user " . $email['idTitle'] . "->" . $email['emailType'];
+		}
+
+		echo "<h2> Measure related </h2>";
+
+		foreach ($emailsMeasureSent as $email) {
+			echo "user " . $email['idTitle'] . "->" . $email['emailType'];
+		}
+
+
 		return array(
 			'users' 	 => $emailsUserSent,
 			'watches'  => $emailsWatchSent,
