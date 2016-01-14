@@ -519,7 +519,7 @@ class Email extends MY_Model {
 						$user->email,
 						'check_accuracy_email',
 						$this->sendAtString($time)
-					);
+					)
 				);
 			}
 		}
