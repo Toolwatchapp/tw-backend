@@ -150,6 +150,7 @@ class Email extends MY_Model {
 		foreach ($emailsUserSent as $email) {
 			echo 'TO ' . $this->user->find_by('userId', $email['userId'])->email
 				. " " . $this->idToType[$email['emailType']];
+			echo '\n'; var_dump($email['mandrill']); echo '\n';
 			echo $email['content'];
 		}
 
@@ -158,6 +159,7 @@ class Email extends MY_Model {
 		foreach ($emailsWatchSent as $email) {
 			echo 'TO ' . $this->user->find_by('userId', $email['userId'])->email
 				. " " . $this->idToType[$email['emailType']];
+			echo '\n'; var_dump($email['mandrill']); echo '\n';
 			echo $email['content'];
 		}
 
@@ -166,6 +168,7 @@ class Email extends MY_Model {
 		foreach ($emailsMeasureSent as $email) {
 			echo 'TO ' . $this->user->find_by('userId', $email['userId'])->email
 				. " " . $this->idToType[$email['emailType']];
+			echo '\n'; var_dump($email['mandrill']); echo '\n';
 			echo $email['content'];
 		}
 
@@ -184,15 +187,46 @@ class Email extends MY_Model {
 	private function insertAll($array, $model){
 		if(is_array($array) && sizeof($array) !== 0){
 
-			//The content key is used for unit testing.
-			//It stores the email as html so we can test it.
-			//However, it doesn't make sense to store the html
-			//in the database.
-			//Here we unset the 'content' key of each insertion
-			//in order to avoid the database insertion of the
-			//html.
+
 			foreach ($array as &$insertion) {
+				//The content key is used for unit testing.
+				//It stores the email as html so we can test it.
+				//However, it doesn't make sense to store the html
+				//in the database.
+				//Here we unset the 'content' key of each insertion
+				//in order to avoid the database insertion of the
+				//html.
 				unset($insertion['content']);
+
+				//As per mandrill specification https://mandrillapp.com/api/docs/messages.php.html
+				//A mandrill api call will return
+		    // Array
+		    // (
+		    //     [0] => Array
+		    //         (
+		    //             [email] => recipient.email@example.com
+		    //             [status] => sent
+		    //             [reject_reason] => hard-bounce
+		    //             [_id] => abc123abc123abc123abc123abc123
+		    //         )
+		    // )
+		    // If the status isn't sent, we don't save the email
+		    // as sent and log the reject reason.
+				if($insertion['mandrill'][0]['status'] != "sent"){
+
+					log_message('error', 'Mandrill failled for '
+						. $insertion['mandrill'][0]['email'] . ' reason '
+						. $insertion['mandrill'][0]['reject_reason']);
+
+					//Unset the failled insertion so we don't store it on
+					//our side
+					unset($array[$insertion]);
+
+				}else{
+					//If the email was sent; unset mandrill as it's not
+					//a field in the db. Very much like content.
+					unset($insertion['mandrill']);
+				}
 			}
 
 			$model->insert_batch($array);
@@ -261,13 +295,14 @@ class Email extends MY_Model {
 	}
 
 	private function addEmailToQueue(&$queue, $userId, $emailType, $time,
-		$idTitle, $content) {
+		$idTitle, $content, $mandrillResponse) {
 		array_push($queue,
 			array(
 				$idTitle    => $userId,
 				'sentTime'  => $time,
 				'emailType' => $emailType,
-				'content'		=> $content
+				'content'		=> $content,
+				'mandrill'  => $mandrillResponse
 			)
 		);
 	}
@@ -286,14 +321,6 @@ class Email extends MY_Model {
 				$emailcontent = $this->load->view('email/generic',
 					comebackContent($user->firstname), true);
 
-				$this->sendMandrillEmail(
-					'We haven\'t seen you for a while ?',
-					$emailcontent,
-					$user->name.' '.$user->firstname,
-					$user->email,
-					'comeback_100d',
-					$this->sendAtString($time)
-				);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
@@ -301,7 +328,15 @@ class Email extends MY_Model {
 					$this->COMEBACK,
 					$time,
 					'userId',
-					$emailcontent
+					$emailcontent,
+					$this->sendMandrillEmail(
+						'We haven\'t seen you for a while ?',
+						$emailcontent,
+						$user->name.' '.$user->firstname,
+						$user->email,
+						'comeback_100d',
+						$this->sendAtString($time)
+					)
 				);
 			}
 		}
@@ -323,22 +358,21 @@ class Email extends MY_Model {
 				$emailcontent = $this->load->view('email/generic',
 					addFirstWatchContent($user->firstname), true);
 
-				$this->sendMandrillEmail(
-					'Let’s add a watch and start measuring! ⌚',
-					$emailcontent,
-					$user->name.' '.$user->firstname,
-					$user->email,
-					'add_first_watch_email',
-					$this->sendAtString($time)
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->userId,
 					$this->ADD_FIRST_WATCH,
 					$time,
 					'userId',
-					$emailcontent
+					$emailcontent,
+					$this->sendMandrillEmail(
+						'Let’s add a watch and start measuring! ⌚',
+						$emailcontent,
+						$user->name.' '.$user->firstname,
+						$user->email,
+						'add_first_watch_email',
+						$this->sendAtString($time)
+					)
 				);
 			}
 		}
@@ -368,14 +402,7 @@ class Email extends MY_Model {
 					makeFirstMeasureContent($user->firstname,
 					$user->brand . ' ' . $user->watchName), true);
 
-				$this->sendMandrillEmail(
-					'Let’s start measuring! ⌚',
-					$emailcontent,
-					$user->name.' '.$user->firstname,
-					$user->email,
-					'make_first_measure_email',
-					$this->sendAtString($time)
-				);
+
 
 				$this->addEmailToQueue(
 					$queuedEmail,
@@ -383,7 +410,15 @@ class Email extends MY_Model {
 					$this->START_FIRST_MEASURE,
 					$time,
 					'watchId',
-					$emailcontent
+					$emailcontent,
+					$this->sendMandrillEmail(
+						'Let’s start measuring! ⌚',
+						$emailcontent,
+						$user->name.' '.$user->firstname,
+						$user->email,
+						'make_first_measure_email',
+						$this->sendAtString($time)
+					)
 				);
 			}
 		}
@@ -420,22 +455,21 @@ class Email extends MY_Model {
 					$watch->name)
 					, true);
 
-				$this->sendMandrillEmail(
-					'Add another watch ? ⌚',
-					$emailcontent,
-					$user->name.' '.$user->firstname,
-					$user->email,
-					'add_another_watch_email',
-					$this->sendAtString($time)
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->userId,
 					$this->ADD_SECOND_WATCH,
 					$time,
 					'userId',
-					$emailcontent
+					$emailcontent,
+					$this->sendMandrillEmail(
+						'Add another watch ? ⌚',
+						$emailcontent,
+						$user->name.' '.$user->firstname,
+						$user->email,
+						'add_another_watch_email',
+						$this->sendAtString($time)
+					)
 				);
 			}
 		}
@@ -471,22 +505,21 @@ class Email extends MY_Model {
 				$emailcontent = $this->load->view('email/generic',
 					checkAccuracyContent($user->firstname, $user), true);
 
-				$this->sendMandrillEmail(
-					'Let’s check your watch accuracy! ⌚',
-					$emailcontent,
-					$user->name.' '.$user->firstname,
-					$user->email,
-					'check_accuracy_email',
-					$this->sendAtString($time)
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->measureId,
 					$this->CHECK_ACCURACY,
 					$time,
 					'measureId',
-					$emailcontent
+					$emailcontent,
+					$this->sendMandrillEmail(
+						'Let’s check your watch accuracy! ⌚',
+						$emailcontent,
+						$user->name.' '.$user->firstname,
+						$user->email,
+						'check_accuracy_email',
+						$this->sendAtString($time)
+					);
 				);
 			}
 		}
@@ -516,23 +549,21 @@ class Email extends MY_Model {
 				$emailcontent = $this->load->view('email/generic',
 					oneWeekAccuracyContent($user->firstname, $user), true);
 
-
-				$this->sendMandrillEmail(
-					'Let’s check your watch accuracy! ⌚',
-					$emailcontent,
-					$user->name.' '.$user->firstname,
-					$user->email,
-					'check_accuracy_email',
-					$this->sendAtString($time)
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->measureId,
 					$this->CHECK_ACCURACY_1_WEEK,
 					$time,
 					'measureId',
-					$emailcontent
+					$emailcontent,
+					$this->sendMandrillEmail(
+						'Let’s check your watch accuracy! ⌚',
+						$emailcontent,
+						$user->name.' '.$user->firstname,
+						$user->email,
+						'check_accuracy_email',
+						$this->sendAtString($time)
+					)
 				);
 			}
 		}
@@ -577,7 +608,15 @@ class Email extends MY_Model {
 					$this->START_NEW_MEASURE,
 					$time,
 					'watchId',
-					$emailcontent
+					$emailcontent,
+					$this->sendMandrillEmail(
+						'Let’s check your watch accuracy! ⌚',
+						$emailcontent,
+						$user->name.' '.$user->firstname,
+						$user->email,
+						'check_accuracy_email',
+						$this->sendAtString($time)
+					)
 				);
 			}
 		}
