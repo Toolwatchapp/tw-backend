@@ -73,7 +73,7 @@ class Email extends MY_Model {
 	function __construct() {
 		parent::__construct();
 		$this->table_name = "Email";
-		$this->load->library('mandrill');
+		$this->load->library('mandrill', false);
 		$this->load->model('watch');
 		$this->load->model('measure');
 		$this->load->model('user');
