@@ -212,7 +212,14 @@ class Measures extends MY_Controller {
 	 * This must to be call by the user before accuracyMeasure or baseMeasure
 	 */
 	function getReferenceTime() {
-		$this->session->set_userdata('referenceTime', time());
+
+		echo date('Y-m-d H:i:s', time());
+
+		echo "<br />";
+
+		echo date('Y-m-d H:i:s', time() - date('Z'));
+
+		$this->session->set_userdata('referenceTime', time() - date('Z'));
 	}
 
 	/**
