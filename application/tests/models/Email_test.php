@@ -100,6 +100,12 @@ class Email_test extends TestCase {
 	public function setUp() {
 		$CI = &get_instance();
 
+		$mcapi = $this->getMockBuilder('Mandrill_Messages')
+														->disableOriginalConstructor()
+														->getMock();
+
+		$mcapi->method('listSubscribe')->willReturn(true);
+
 		$mandrillMessage = $this->getMockBuilder('Mandrill_Messages')
 		                        ->disableOriginalConstructor()
 		                        ->getMock();
@@ -205,7 +211,7 @@ class Email_test extends TestCase {
 
  	//1 day later
  	// Should have 5 add first and 1 check
- 	$emails = $this->email->cronCheck(time()+(24*60*60));
+ 	$emails = $this->email->cronCheck(24*60*60);
 
 	$addWatchContent = file_get_contents("emails/add_watch.html",
 		FILE_USE_INCLUDE_PATH);
@@ -252,7 +258,7 @@ class Email_test extends TestCase {
 
  	//1 week later
  	// Should have 1 CHECK_ACCURACY_1_WEEK
- 	$emails = $this->email->cronCheck(time()+(24*8*60*60));
+ 	$emails = $this->email->cronCheck(24*8*60*60);
 
 	$checkAccuracy1wContent = file_get_contents("emails/check_accuracy_1w.html",
 		FILE_USE_INCLUDE_PATH);
@@ -279,7 +285,7 @@ class Email_test extends TestCase {
 
  	//1 day after
  	// Should be empty
- 	$emails = $this->email->cronCheck(time()+(24*9*60*60));
+ 	$emails = $this->email->cronCheck(24*9*60*60);
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['watches']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);
@@ -295,7 +301,7 @@ class Email_test extends TestCase {
 
  	//The accuracy measure was at time()+(24*8*60*60)
  	//2 days later
- 	$emails = $this->email->cronCheck(time()+(24*10*61*60));
+ 	$emails = $this->email->cronCheck(24*10*61*60);
 
 	$addSecondWatch = file_get_contents("emails/add_second_watch.html",
 		FILE_USE_INCLUDE_PATH);
@@ -314,7 +320,7 @@ class Email_test extends TestCase {
  	$this->assertEquals(sizeof($emails['measures']), 0);
 
  	//Check that the email is sent only once
- 	$emails = $this->email->cronCheck(time()+(24*10*62*60));
+ 	$emails = $this->email->cronCheck(24*10*62*60);
 
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['watches']), 0);
@@ -330,7 +336,7 @@ class Email_test extends TestCase {
  public function test_startANewMeasure(){
 
  	//The accuracy measure was at time()+(24*8*60*60)
- 	$emails = $this->email->cronCheck(time()+(24*39*60*60));
+ 	$emails = $this->email->cronCheck(24*39*60*60);
 
 	$startNewMeasureContent = file_get_contents("emails/start_new_measure.html",
 		FILE_USE_INCLUDE_PATH);
@@ -350,7 +356,7 @@ class Email_test extends TestCase {
  	$this->assertEquals(sizeof($emails['measures']), 0);
 
  	//Check that the email is sent only once
- 	$emails = $this->email->cronCheck(time()+(24*39*61*60));
+ 	$emails = $this->email->cronCheck(24*39*61*60);
 
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['watches']), 0);
@@ -364,7 +370,7 @@ class Email_test extends TestCase {
   */
  public function test_comback(){
  	//Last Login was at time()
- 	$emails = $this->email->cronCheck(time()+(100*25*60*60));
+ 	$emails = $this->email->cronCheck(100*25*60*60);
 
 	$comebackContent = file_get_contents("emails/comeback.html",
 		FILE_USE_INCLUDE_PATH);
@@ -399,7 +405,7 @@ class Email_test extends TestCase {
 	$this->assertEquals($emails['users'][5]['content'], $comebackContent);
 
  	//Check that the email is sent only once
- 	$emails = $this->email->cronCheck(time()+(101*25*60*60));
+ 	$emails = $this->email->cronCheck(101*25*60*60);
 
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['watches']), 0);
@@ -422,7 +428,7 @@ class Email_test extends TestCase {
   );
 
   //The watch is added at time
-  $emails = $this->email->cronCheck(time()+(24*1*61*60));
+  $emails = $this->email->cronCheck(24*1*61*60);
 
 	$addFirstMeasureContent = file_get_contents("emails/add_first_measure.html",
 		FILE_USE_INCLUDE_PATH);
@@ -441,7 +447,7 @@ class Email_test extends TestCase {
 		$addFirstMeasureContent);
 
  		 //Check that the email is sent only once
- 	 $emails = $this->email->cronCheck(time()+(24*1*62*60));
+ 	 $emails = $this->email->cronCheck(24*1*62*60);
 
  	 $this->assertEquals(sizeof($emails['users']), 0);
  	 $this->assertEquals(sizeof($emails['watches']), 0);

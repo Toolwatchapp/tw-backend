@@ -124,17 +124,10 @@ class Hooks extends CI_Controller {
 	 * @param  int $time 	hours from now to compute the emails. Only used
 	 * for testing. Compute the email in the future.
 	 */
-	public function email($key, $time = null){
+	public function email($key, $time = 0){
 
 		//FIXME: The token has to be env value
 		if ($key === "bPiAi9XNEa3p9FF1lQnZfuUY") {
-
-			//If no time given
-			if($time === null || !is_numeric($time)){
-				$time = time();
-			}else{
-				$time = time() + $time * 60 * 60;
-			}
 
 			$this->load->model("email");
 			$this->email->cronCheck($time);
