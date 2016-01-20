@@ -27,7 +27,6 @@ class User_test extends TestCase {
 			'azerty',
 			'math',
 			'nay',
-			'-5',
 			'Canada'
 		);
 
@@ -105,8 +104,6 @@ class User_test extends TestCase {
 		$this->assertEquals('math', $user->name);
 
 		$this->assertEquals('nay', $user->firstname);
-
-		$this->assertEquals('-5', $user->timezone);
 
 		$this->assertEquals('Canada', $user->country);
 

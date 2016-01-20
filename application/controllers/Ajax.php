@@ -123,7 +123,7 @@ class Ajax extends MY_Controller {
 		$result['success'] = false;
 
 		if ($this->expectsPost(array('email', 'id', 'last_name',
-			'firstname', 'timezone', 'country'))) {
+			'firstname', 'country'))) {
 
 			/**
 			 * Getting all the posts
@@ -131,7 +131,6 @@ class Ajax extends MY_Controller {
 			$email     = $this->input->post('email');
 			$name      = $this->input->post('last_name');
 			$firstname = $this->input->post('firstname');
-			$timezone  = $this->input->post('timezone');
 			$country   = $this->input->post('country');
 			/**
 			 * For fb user, we don't have their fb password (obviously).
@@ -154,7 +153,7 @@ class Ajax extends MY_Controller {
 				 * remove the if, if yes, provide a else with a dedicated response
 				 * code.
 				 */
-				if ($this->user->signup($email, $password, $name, $firstname, $timezone, $country)) {
+				if ($this->user->signup($email, $password, $name, $firstname, $country)) {
 
 					$result['success'] = "signup";
 					$this->user->login($email, $password);
@@ -194,7 +193,7 @@ class Ajax extends MY_Controller {
 		$result['success'] = false;
 
 		if ($this->expectsPost(array('email','password','name','firstname',
-			'timezone','country'))) {
+			'country'))) {
 
 			$result = array();
 
@@ -202,7 +201,6 @@ class Ajax extends MY_Controller {
 			$password    = $this->input->post('password');
 			$name        = $this->input->post('name');
 			$firstname   = $this->input->post('firstname');
-			$timezone    = $this->input->post('timezone');
 			$country     = $this->input->post('country');
 
 			//If the email isn't already in used
@@ -211,7 +209,7 @@ class Ajax extends MY_Controller {
 				// Create the account
 				if ($this->user->signup(
 						$email, $password, $name, $firstname,
-						$timezone, $country)) {
+						$country)) {
 
 					$result['success'] = true;
 

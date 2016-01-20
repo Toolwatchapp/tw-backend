@@ -45,7 +45,6 @@ class Ajax_test extends TestCase {
 				'password'    => 'password',
 				'name'        => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'false',
 			]
@@ -102,7 +101,6 @@ class Ajax_test extends TestCase {
 				'password'    => 'password',
 				'name'        => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'false',
 			]
@@ -121,7 +119,6 @@ class Ajax_test extends TestCase {
 				'id'          => '10',
 				'last_name'        => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'false',
 			]
@@ -140,7 +137,6 @@ class Ajax_test extends TestCase {
 				'id'          => '10',
 				'last_name'   => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'false',
 			]
@@ -160,7 +156,6 @@ class Ajax_test extends TestCase {
 				'id'          => '11',
 				'last_name'   => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'email',
 			]
