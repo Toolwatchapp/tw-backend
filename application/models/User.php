@@ -123,7 +123,7 @@ class User extends ObservableModel {
 	 * @param  String $country
 	 * @return boolean   false an faillure
 	 */
-	function signup($email, $password, $name, $firstname, $timezone, $country) {
+	function signup($email, $password, $name, $firstname, $country) {
 
 		$event = SIGN_UP;
 
@@ -137,7 +137,6 @@ class User extends ObservableModel {
 			'password'     => hash('sha256', $password),
 			'name'         => $name,
 			'firstname'    => $firstname,
-			'timezone'     => $timezone,
 			'country'      => $country,
 			'registerDate' => time(),
 			'lastLogin'    => time()
