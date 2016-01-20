@@ -19,13 +19,7 @@
     "NEW_RELIC_CONFIG_FILE": {
       "required": true
     },
-    "NEW_RELIC_LICENSE_KEY": {
-      "required":true
-    },
-    "NEW_RELIC_LOG": {
-      "required":true
-    },
-    "MANDRILL_APIKEY": {
+    "MANDRILL_APIKEY":{
       "required":true
     },
     "MC_APIKEY": {
