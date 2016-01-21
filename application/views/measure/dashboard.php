@@ -55,6 +55,7 @@
                                 $this->load->view("measure/dashboard/start-new-measure", $measure);
 
 
+                                $this->load->view("measure/dashboard/edit-watch", $measure);
                                 $this->load->view("measure/dashboard/delete-watch", $measure);
                                 $this->load->view("measure/dashboard/end-action-button");
 

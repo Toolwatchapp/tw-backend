@@ -72,6 +72,36 @@ class Measures_test extends TestCase {
 		$this->assertContains('Measures successfully deleted!', $output);
 	}
 
+	public function test_indexEditWatch(){
+		$CI = &get_instance();
+		$CI->load->model('Watch');
+		$watch = $CI->Watch->find_by('userId', self::$userId);
+
+		$output = $this->request(
+			'POST',
+			['Measures', 'edit_watch'],
+			[
+				'watchId' => $watch->watchId,
+				'brand'      => 'branda',
+				'name'      => 'nama',
+				'yearOfBuy'      => 2014,
+				'serial'      => 2013,
+				'caliber'      => 2012
+			]
+		);
+
+		$this->assertContains('Watch successfully updated!', $output);
+
+		$watch = $CI->Watch->find_by('watchId', $watch->watchId);
+
+		$this->assertEquals($watch->brand, "branda");
+		$this->assertEquals($watch->name, "nama");
+		$this->assertEquals($watch->yearOfBuy, 2014);
+		$this->assertEquals($watch->serial, 2013);
+		$this->assertEquals($watch->caliber, 2012);
+
+	}
+
 	public function test_indexDeleteWatch(){
 		$CI = &get_instance();
 		$CI->load->model('Watch');

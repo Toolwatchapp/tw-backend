@@ -22,7 +22,7 @@
     "MANDRILL_APIKEY":{
       "required":true
     },
-    "MC_APIKEY":{
+    "MC_APIKEY": {
       "required":true
     }
   },

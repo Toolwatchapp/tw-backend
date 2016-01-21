@@ -147,6 +147,55 @@ class Measures extends MY_Controller {
 	}
 
 	/**
+	 * Serves the edit watch page
+	 * TODO: Is there a clean way to separate serving page
+	 * functions and processing inputs functions ?
+	 * TODO: A watch controller start to makes sense
+	 * to separate things.
+	 * @return Views
+	 */
+	public function edit_watch_p(){
+
+		if($this->expectsPost(array('watchId'))){
+
+			$watch = $this->watch->getWatch($this->watchId);
+
+			if($watch){
+
+				$this->_headerData['headerClass'] = 'blue';
+				$this->load->view('header', $this->_headerData);
+				$this->load->view('measure/edit-watch', $watch);
+				$this->load->view('footer');
+			}
+		}
+	}
+
+	/**
+	 * Receive an edited watch post form
+	 * @return body messages
+	 */
+	public function edit_watch(){
+		if($this->expectsPost(array('watchId','brand', 'name', 'yearOfBuy',
+			'serial', 'caliber'))){
+
+			if ($this->watch->editWatch($this->session->userdata('userId'),
+						$this->watchId,
+						$this->brand, $this->name,
+						$this->yearOfBuy, $this->serial,
+						$this->caliber)) {
+
+				$this->_bodyData['success'] = 'Watch successfully updated!';
+
+			} else {
+				$this->_bodyData['error'] = 'An error occured while updating your watch.';
+			}
+
+			$this->constructMeasurePage();
+		}
+		echo "not all posts";
+	}
+
+	/**
 	 * Serves the new measure form (1/2)
 	 */
 	public function new_measure() {

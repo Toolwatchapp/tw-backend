@@ -94,6 +94,48 @@ class Watch_test extends TestCase {
 		$this->assertEquals('1', $watch->status);
 	}
 
+	public function test_editWatch(){
+		$watch = $this->obj->getWatch(self::$watchId);
+
+		$result = $this->obj->editWatch(
+			self::$userId,
+			self::$watchId,
+			"branda",
+			"nama",
+			2014,
+			2013,
+			2012
+		);
+
+		$watch = $this->obj->getWatch(self::$watchId);
+
+		$this->assertEquals($result, true);
+
+		$this->assertEquals($watch->brand, "branda");
+		$this->assertEquals($watch->name, "nama");
+		$this->assertEquals($watch->yearOfBuy, 2014);
+		$this->assertEquals($watch->serial, 2013);
+		$this->assertEquals($watch->caliber, 2012);
+	}
+
+	public function test_editWatchWrongUserId(){
+		$watch = $this->obj->getWatch(self::$watchId);
+
+		$result = $this->obj->editWatch(
+			999,
+			self::$watchId,
+			"branda",
+			"nama",
+			2014,
+			2013,
+			2012
+		);
+
+		$watch = $this->obj->getWatch(self::$watchId);
+
+		$this->assertEquals($result, false);
+	}
+
 	public function test_getWatchWrongId() {
 		$this->assertEquals(false, $this->obj->getWatch('42'));
 	}
