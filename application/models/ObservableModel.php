@@ -23,10 +23,9 @@ abstract class ObservableModel extends MY_Model {
 
 		$this->load->model('email');
 
-		if(isset($this->email)){
-			$this->_observers[0] = $this->email;
-			$this->_observers[1] = $this->event;
-		}
+		$this->_observers[0] = $this->email;
+		$this->_observers[1] = $this->event;
+
 	}
 
 	/**
