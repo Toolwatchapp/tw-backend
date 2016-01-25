@@ -11,8 +11,8 @@ function addFirstWatchContent($firstName){
           'You signed in on <a href="https://toolwatch.io">Toolwatch.io</a> and
           we\'re thrilled to have you onboard! <br>
           <br>
-          You can now start the first measuring for the accuracy of your
-          mechanical watches. Is your watch really accurate or should it be serviced?
+          You can now start to measure the accuracy of your mechanical watches.
+          Is your watch really accurate or should it be serviced?
           Let\'s start by adding your first watch and find out
           <a href="https://toolwatch.io/measures">now</a>!'
     );
