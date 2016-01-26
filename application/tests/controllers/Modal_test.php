@@ -7,17 +7,6 @@ class Modal_test extends TestCase {
 		$this->assertResponseCode(200);
 	}
 
-	public function test_ctaClick(){
-		$output = $this->request(
-			'POST',
-			['Modal', 'ctaClick'],
-			[
-				'cta' => 'ACCURACY_WARNING_POPUP'
-			]
-		);
-
-		$this->assertResponseCode(200);
-	}
 
 	public function test_accuracyWarning(){
 		$output = $this->request(

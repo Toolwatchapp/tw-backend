@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Modal extends MY_Controller 
+class Modal extends MY_Controller
 {
 
     private function ctaClick(){
@@ -17,7 +17,7 @@ class Modal extends MY_Controller
         if($this->input->post('ajax'))
         {
             $this->load->view('modal/accuracy-warning');
-            $this->event->add($this->event->ACCURACY_WARNING_POPUP);
+            $this->event->add(ACCURACY_WARNING_POPUP);
         }
         else
         {
@@ -30,7 +30,7 @@ class Modal extends MY_Controller
 		if($this->input->post('ajax'))
 		{
             $this->ctaClick();
-            $this->event->add($this->event->LOGIN_POPUP);
+            $this->event->add(LOGIN_POPUP);
 			$this->load->view('modal/login');
 		}
         else
@@ -38,13 +38,13 @@ class Modal extends MY_Controller
             redirect(base_url());
         }
 	}
-	
+
 	public function signUp()
 	{
 		if($this->input->post('ajax'))
 		{
             $this->ctaClick();
-            $this->event->add($this->event->SIGN_UP_POPUP);
+            $this->event->add(SIGN_UP_POPUP);
 			$this->load->view('modal/sign-up');
 		}
         else
@@ -52,7 +52,7 @@ class Modal extends MY_Controller
             redirect(base_url());
         }
 	}
-    
+
     public function signUpSuccess()
     {
         if($this->input->post('ajax'))
@@ -64,7 +64,7 @@ class Modal extends MY_Controller
             redirect(base_url());
         }
     }
-    
+
     public function resetPassword()
     {
         if($this->input->post('ajax'))
