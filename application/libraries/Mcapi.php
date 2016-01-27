@@ -3,7 +3,7 @@
 /**
  * @codeCoverageIgnore
  */
-class MCAPI {
+class Mcapi {
 	var $version = "1.3";
 	var $errorMessage;
 	var $errorCode;
@@ -39,10 +39,9 @@ class MCAPI {
 	 * @param string $apikey Your MailChimp apikey
 	 * @param string $secure Whether or not this should use a secure connection
 	 */
-	function __construct($apikey, $secure = false) {
-		$this->secure  = $secure;
+	function __construct() {
 		$this->apiUrl  = parse_url("http://api.mailchimp.com/".$this->version."/?output=php");
-		$this->api_key = $apikey;
+		$this->api_key = getenv("MC_APIKEY");
 	}
 	function setTimeout($seconds) {
 		if (is_int($seconds)) {

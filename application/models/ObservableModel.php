@@ -13,7 +13,7 @@
  */
 abstract class ObservableModel extends MY_Model {
 
-	private $_observers = array();
+	protected $_observers = array();
 
 	/**
 	 * Default constructor
@@ -21,9 +21,9 @@ abstract class ObservableModel extends MY_Model {
 	public function __construct() {
 		parent::__construct();
 
-		$this->load->model('email');
+		$this->load->library('auto_email');
 
-		$this->_observers[0] = $this->email;
+		$this->_observers[0] = $this->auto_email;
 		$this->_observers[1] = $this->event;
 
 	}

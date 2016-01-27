@@ -175,7 +175,7 @@ class User extends ObservableModel {
 			$this->checkUserEmail($email) === true &&
 			$this->update_where('email', $email, array('resetToken' => $resetToken))
 			&& $this->affected_rows() === 1){
-			$this->notify(RESET_PASSWORD,  array('email' => $email));
+			$this->notify(RESET_PASSWORD,  array('email' => $email, 'token'=>$resetToken));
 			return $resetToken;
 		}
 

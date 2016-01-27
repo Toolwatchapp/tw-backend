@@ -30,7 +30,7 @@
  raymond,check_accuracy, 10 octobre 2015 10:20:00
  raymond,check_accuracy, 17 octobre 2015 03:18:00
  */
-class Email_test extends TestCase {
+class Auto_email_test extends TestCase {
 
 	public static $users;
 	public static $measure;
@@ -41,19 +41,13 @@ class Email_test extends TestCase {
 
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
-		$CI->load->model('Email');
 		$CI->load->model('Watch');
 		$CI->load->model('User');
 		$CI->load->model('measure');
 
-
-		$CI->emailWatch   = new MY_Model('email_watch');
-		$CI->emailMeasure = new MY_Model('email_measure');
-		$CI->emailUser   = new MY_Model('email_user');
-
-		$CI->emailUser->delete_where(array("id >=" => "0"));
-		$CI->emailWatch->delete_where(array("id >=" => "0"));
-		$CI->emailMeasure->delete_where(array("id >=" => "0"));
+		$emailBatch = new MY_Model("email_batch");
+		$emailBatch->delete_where(array("id >="      => "0"));
+		$emailBatch->insert(array("time"=>0, "amount"=>0));
 
 		$CI->measure->delete_where(array("id >="      => "0"));
 		$CI->Watch->delete_where(array("watchId >="   => "0"));
@@ -100,11 +94,14 @@ class Email_test extends TestCase {
 	public function setUp() {
 		$CI = &get_instance();
 
-		$mcapi = $this->getMockBuilder('Mandrill_Messages')
-														->disableOriginalConstructor()
+		$mcapi = $this->getMockBuilder('Mcapi')
 														->getMock();
 
-		$mcapi->method('listSubscribe')->willReturn(true);
+		$mcapi->method('listSubscribe')->with(
+        $this->anything(),
+        $this->anything(),
+        $this->anything()
+    )->willReturn(true);
 
 		$mandrillMessage = $this->getMockBuilder('Mandrill_Messages')
 		                        ->disableOriginalConstructor()
@@ -137,24 +134,30 @@ class Email_test extends TestCase {
 		$mandrillMessage->method('reschedule')->willReturn($returnReschedule);
 		$mandrillMessage->method('cancelScheduled')->willReturn($returnSend);
 
-		$CI->load->model('Email');
+		$CI->load->library('auto_email');
 		$CI->load->model('Watch');
 		$CI->load->model('Measure');
 
-		$CI->Email->mandrill->messages = $mandrillMessage;
+		$CI->auto_email->CI->mandrill->messages = $mandrillMessage;
+		$CI->auto_email->CI->mcapi = $mcapi;
 
-		$this->email      = $CI->Email;
+		$this->email      = $CI->auto_email;
 		$this->watchModel = $CI->Watch;
 		$this->measureModel = $CI->Measure;
 	}
 
 	public function test_mock() {
 
-		$result = $this->email->mandrill->messages->send(null);
+		$result = $this->email->CI->mandrill->messages->send(null);
 
 		$this->assertEquals(
 			'abc123abc123abc123abc123abc123',
 			$result[0]['_id']
+		);
+
+		$this->assertEquals(
+			true,
+			$this->email->CI->mcapi->listSubscribe("qd", "qzd", '')
 		);
 	}
 
@@ -173,21 +176,22 @@ class Email_test extends TestCase {
 		);
 	}
 
-	/**
-	 * Nestor password reset. Mocked id should be resturned
-	 * @return pass|fail
-	 */
-	public function test_lostPassword(){
 
-		$this->assertEquals(
-			'abc123abc123abc123abc123abc123',
-			$this->email->updateObserver(
-				'TEST',
-				RESET_PASSWORD,
-				array('user' => self::$users['nestor'],
-				'token' => 'plop' ))[0]['_id']
-		);
-	}
+ /**
+  * Nestor password reset. Mocked id should be resturned
+  * @return pass|fail
+  */
+ public function test_lostPassword(){
+
+ 	$this->assertEquals(
+ 		'abc123abc123abc123abc123abc123',
+ 		$this->email->updateObserver(
+ 			'TEST',
+ 			RESET_PASSWORD,
+ 			array('email' => self::$users['nestor']->email,
+ 			'token' => 'plop' ))[0]['_id']
+ 	);
+ }
 
   /**
    * Nestor adds a watch and a baseMeasure.
@@ -209,43 +213,43 @@ class Email_test extends TestCase {
 
  	self::$baseMeasureId = $this->measureModel->addBaseMesure(self::$watchId, time(), time());
 
- 	//1 day later
+ 	//1 day later and 1 sec later
  	// Should have 5 add first and 1 check
- 	$emails = $this->email->cronCheck(24*60*60);
+ 	$emails = $this->email->cronCheck(24*60*61);
 
-	$addWatchContent = file_get_contents("emails/add_watch.html",
-		FILE_USE_INCLUDE_PATH);
-	$checkAccuracyContent = file_get_contents("emails/check_accuracy.html",
-		FILE_USE_INCLUDE_PATH);
+  $addWatchContent = file_get_contents("emails/add_watch.html",
+ 	FILE_USE_INCLUDE_PATH);
+  $checkAccuracyContent = file_get_contents("emails/check_accuracy.html",
+ 	FILE_USE_INCLUDE_PATH);
 
  	$this->assertEquals(sizeof($emails['users']), 5);
 
  	$this->assertEquals($emails['users'][0]['userId'], self::$users['ernest']->userId);
  	$this->assertEquals($emails['users'][0]['emailType'], $this->email->ADD_FIRST_WATCH);
-	$this->assertEquals($emails['users'][0]['content'], $addWatchContent);
+  $this->assertEquals($emails['users'][0]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][1]['userId'], self::$users['anatole']->userId);
  	$this->assertEquals($emails['users'][1]['emailType'], $this->email->ADD_FIRST_WATCH);
-	$this->assertEquals($emails['users'][1]['content'], $addWatchContent);
+  $this->assertEquals($emails['users'][1]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][2]['userId'], self::$users['phillibert']->userId);
  	$this->assertEquals($emails['users'][2]['emailType'], $this->email->ADD_FIRST_WATCH);
-	$this->assertEquals($emails['users'][2]['content'], $addWatchContent);
+  $this->assertEquals($emails['users'][2]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][3]['userId'], self::$users['hippolyte']->userId);
  	$this->assertEquals($emails['users'][3]['emailType'], $this->email->ADD_FIRST_WATCH);
-	$this->assertEquals($emails['users'][3]['content'], $addWatchContent);
+  $this->assertEquals($emails['users'][3]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][4]['userId'], self::$users['raymond']->userId);
  	$this->assertEquals($emails['users'][4]['emailType'], $this->email->ADD_FIRST_WATCH);
-	$this->assertEquals($emails['users'][4]['content'], $addWatchContent);
+  $this->assertEquals($emails['users'][4]['content'], $addWatchContent);
 
  	$this->assertEquals(sizeof($emails['watches']), 0);
 
  	$this->assertEquals(sizeof($emails['measures']), 1);
  	$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
  	$this->assertEquals($emails['measures'][0]['emailType'], $this->email->CHECK_ACCURACY);
-	$this->assertEquals($emails['measures'][0]['content'], $checkAccuracyContent);
+  $this->assertEquals($emails['measures'][0]['content'], $checkAccuracyContent);
 
  }
 
@@ -256,12 +260,12 @@ class Email_test extends TestCase {
   */
  public function test_AccuracyOneWeek(){
 
- 	//1 week later
+ 	//1 week later and 1 sec later
  	// Should have 1 CHECK_ACCURACY_1_WEEK
- 	$emails = $this->email->cronCheck(24*8*60*60);
+ 	$emails = $this->email->cronCheck(24*8*60*61);
 
-	$checkAccuracy1wContent = file_get_contents("emails/check_accuracy_1w.html",
-		FILE_USE_INCLUDE_PATH);
+ 	$checkAccuracy1wContent = file_get_contents("emails/check_accuracy_1w.html",
+ 	FILE_USE_INCLUDE_PATH);
 
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['watches']), 0);
@@ -269,8 +273,8 @@ class Email_test extends TestCase {
 
  	$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
  	$this->assertEquals($emails['measures'][0]['emailType'],
- 		$this->email->CHECK_ACCURACY_1_WEEK);
-	$this->assertEquals($emails['measures'][0]['content'], $checkAccuracy1wContent);
+ 	$this->email->CHECK_ACCURACY_1_WEEK);
+ 	$this->assertEquals($emails['measures'][0]['content'], $checkAccuracy1wContent);
  }
 
  /**
@@ -283,7 +287,7 @@ class Email_test extends TestCase {
  	self::$baseMeasureId = $this->measureModel->addAccuracyMesure(self::$baseMeasureId,
  		time()+(24*8*60*60), time()+(24*8*60*60));
 
- 	//1 day after
+ 	//1 day after and 1 later
  	// Should be empty
  	$emails = $this->email->cronCheck(24*9*60*60);
  	$this->assertEquals(sizeof($emails['users']), 0);
@@ -303,8 +307,8 @@ class Email_test extends TestCase {
  	//2 days later
  	$emails = $this->email->cronCheck(24*10*61*60);
 
-	$addSecondWatch = file_get_contents("emails/add_second_watch.html",
-		FILE_USE_INCLUDE_PATH);
+  $addSecondWatch = file_get_contents("emails/add_second_watch.html",
+ 	FILE_USE_INCLUDE_PATH);
 
  	$this->assertEquals(sizeof($emails['users']), 1);
 
@@ -314,7 +318,7 @@ class Email_test extends TestCase {
  	$this->assertEquals($emails['users'][0]['emailType'],
  		$this->email->ADD_SECOND_WATCH);
 
-	$this->assertEquals($emails['users'][0]['content'], $addSecondWatch);
+  $this->assertEquals($emails['users'][0]['content'], $addSecondWatch);
 
  	$this->assertEquals(sizeof($emails['watches']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);
@@ -338,8 +342,8 @@ class Email_test extends TestCase {
  	//The accuracy measure was at time()+(24*8*60*60)
  	$emails = $this->email->cronCheck(24*39*60*60);
 
-	$startNewMeasureContent = file_get_contents("emails/start_new_measure.html",
-		FILE_USE_INCLUDE_PATH);
+  $startNewMeasureContent = file_get_contents("emails/start_new_measure.html",
+ 	FILE_USE_INCLUDE_PATH);
 
  	$this->assertEquals(sizeof($emails['watches']), 1);
 
@@ -349,8 +353,8 @@ class Email_test extends TestCase {
  	$this->assertEquals($emails['watches'][0]['emailType'],
  		$this->email->START_NEW_MEASURE);
 
-	$this->assertEquals($emails['watches'][0]['content'],
-		$startNewMeasureContent);
+  $this->assertEquals($emails['watches'][0]['content'],
+ 	$startNewMeasureContent);
 
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);
@@ -413,47 +417,57 @@ class Email_test extends TestCase {
  }
 
  /**
-  * When user adds a watch. If s/he doesn't add a measure
-  * in the first 24h hours -> email
-  */
+	* When user adds a watch. If s/he doesn't add a measure
+	* in the first 24h hours -> email
+	*/
  public function test_addFirstMeasure(){
 
-  self::$watchId = $this->watchModel->addWatch(
- 	 self::$users['nestor']->userId,
- 	 'rolex',
- 	 'marolex',
- 	 '2000',
- 	 '0000-0000',
- 	 'caliber'
-  );
+	$data = array(
+		'userId'    =>  self::$users['nestor']->userId,
+		'brand'     =>  'rolex',
+		'name'      => 'marolex',
+		'yearOfBuy' => '2000',
+		'serial'    => '0000-0000',
+		'caliber'   => 'caliber',
+		'creationDate' => time() + 101*25*60*60);
 
-  //The watch is added at time
-  $emails = $this->email->cronCheck(24*1*61*60);
+	self::$watchId = $this->watchModel->insert($data);
+
+	//The watch is added at time() + 24*39*61*60
+	$emails = $this->email->cronCheck(102*25*60*60);
 
 	$addFirstMeasureContent = file_get_contents("emails/add_first_measure.html",
-		FILE_USE_INCLUDE_PATH);
+	 FILE_USE_INCLUDE_PATH);
 
-  $this->assertEquals(sizeof($emails['users']), 0);
-  $this->assertEquals(sizeof($emails['watches']), 1);
-  $this->assertEquals(sizeof($emails['measures']), 0);
+	$this->assertEquals(sizeof($emails['users']), 0);
+	$this->assertEquals(sizeof($emails['watches']), 1);
+	$this->assertEquals(sizeof($emails['measures']), 0);
 
-  $this->assertEquals($emails['watches'][0]['watchId'],
- 	 self::$watchId);
+	$this->assertEquals($emails['watches'][0]['watchId'],
+		self::$watchId);
 
-  $this->assertEquals($emails['watches'][0]['emailType'],
- 		 $this->email->START_FIRST_MEASURE);
+	$this->assertEquals($emails['watches'][0]['emailType'],
+			$this->email->START_FIRST_MEASURE);
 
 	$this->assertEquals($emails['watches'][0]['content'],
-		$addFirstMeasureContent);
+	 $addFirstMeasureContent);
 
- 		 //Check that the email is sent only once
- 	 $emails = $this->email->cronCheck(24*1*62*60);
+			//Check that the email is sent only once
+		$emails = $this->email->cronCheck(24*1*62*60);
 
- 	 $this->assertEquals(sizeof($emails['users']), 0);
- 	 $this->assertEquals(sizeof($emails['watches']), 0);
- 	 $this->assertEquals(sizeof($emails['measures']), 0);
+		$this->assertEquals(sizeof($emails['users']), 0);
+		$this->assertEquals(sizeof($emails['watches']), 0);
+		$this->assertEquals(sizeof($emails['measures']), 0);
+ }
 
-
+ public static function tearDownAfterClass() {
+	 $CI = &get_instance();
+	 $CI->load->model('User');
+	 $CI->load->model('Watch');
+	 $CI->load->model('Measure');
+	 $CI->watch->delete_where(array("watchId >=" => "0"));
+	 $CI->User->delete_where(array("userId >=" => "0"));
+	 $CI->Measure->delete_where(array("id >=" => "0"));
  }
 
 }

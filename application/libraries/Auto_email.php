@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Email Model
+ * Email
  *
- * This model defines automatic emails
+ * This libraries defines automatic emails
  * sent to users during their toolwatch adventure.
  *
  * ------------------
@@ -45,7 +45,7 @@
  * observes other relevant model such as user of measure.
  *
  */
-class Email extends MY_Model {
+class Auto_email {
 
 	/**
 	 * Constantes for emails ids.
@@ -67,21 +67,24 @@ class Email extends MY_Model {
 	private $day            = 86400;
 	private $cancelledEmail = 1;
 	private $timeOffset 		= 0;
+	private $time;
+	private $lastBatchDate  = 0;
+	private $emailBatchModel;
 
 	/**
 	 * Load model, library and helpers
 	 */
 	function __construct() {
-		parent::__construct();
-		$this->table_name = "Email";
-		$this->load->library('mandrill');
-		$this->load->library('__');
-		$this->load->model('watch');
-		$this->load->model('measure');
-		$this->load->model('user');
-		$this->load->helper('email_content');
-		$this->load->helper('mcapi');
-		$this->mcapi = new MCAPI(getenv("MC_APIKEY"));
+
+		$this->CI =& get_instance();
+
+		$this->CI->load->library("mandrill");
+		$this->CI->load->library("__");
+		$this->CI->load->model("watch");
+		$this->CI->load->model("measure");
+		$this->CI->load->model("user");
+		$this->CI->load->helper("email_content");
+		$this->CI->load->library("mcapi");
 	}
 
 	/**
@@ -103,7 +106,7 @@ class Email extends MY_Model {
 				return $this->newResult($data['measure']);
 				break;
 			case "RESET_PASSWORD":
-				return $this->resetPassword($data['user'], $data['token']);
+				return $this->resetPassword($data['email'], $data['token']);
 				break;
 		}
 	}
@@ -134,7 +137,7 @@ class Email extends MY_Model {
 	  * testing or staging.
 	  * @var long
 	  */
-		$time = time() + $timeOffset;
+		$this->time = time() + $timeOffset;
 		$this->timeOffset = $timeOffset;
 
 		//Creating empty array to store email to send
@@ -142,21 +145,20 @@ class Email extends MY_Model {
 		$emailsWatchSent   = array();
 		$emailsMeasureSent = array();
 
+		$this->emailBatchModel = new MY_MODEL("email_batch");
+
+		$this->lastBatchDate = $this->findLastBatchDate();
+
 		//Apply all the rules for emails
 		//The emails arrays are sent by references and
 		//updated in the different methods
-		$this->inactiveUser($time, $emailsUserSent);
-		$this->userWithoutWatch($time, $emailsUserSent);
-		$this->userWithWatchWithoutMeasure($time, $emailsWatchSent);
-		$this->userWithOneCompleteMeasureAndOneWatch($time, $emailsUserSent);
-		$this->checkAccuracy($time, $emailsMeasureSent);
-		$this->checkAccuracyOneWeek($time, $emailsMeasureSent);
-		$this->startANewMeasure($time, $emailsWatchSent);
-
-		//Store all sent email in order to send them only once
-		$this->insertAll($emailsUserSent, new MY_Model('email_user'));
-		$this->insertAll($emailsWatchSent, new MY_Model('email_watch'));
-	  $this->insertAll($emailsMeasureSent, new MY_Model('email_measure'));
+		$this->inactiveUser($emailsUserSent);
+		$this->userWithoutWatch($emailsUserSent);
+		$this->userWithWatchWithoutMeasure($emailsWatchSent);
+		$this->userWithOneCompleteMeasureAndOneWatch($emailsUserSent);
+		$this->checkAccuracy($emailsMeasureSent);
+		$this->checkAccuracyOneWeek($emailsMeasureSent);
+		$this->startANewMeasure($emailsWatchSent);
 
 		if(ENVIRONMENT === "development"){
 			$date = new DateTime("@$time");
@@ -167,11 +169,39 @@ class Email extends MY_Model {
 			$thus->showSentEmails($emailsMeasureSent, "Measure emails");
 		}
 
+
+		$this->emailBatchModel->insert(
+			array("time"=>$this->time,
+			"amount" => sizeof($emailsMeasureSent)
+				+ sizeof($emailsWatchSent)
+				+ sizeof($emailsMeasureSent)
+			)
+		);
+
+
 		return array(
 			'users' 	 => $emailsUserSent,
 			'watches'  => $emailsWatchSent,
 			'measures' => $emailsMeasureSent
 		);
+	}
+
+	/**
+	 * Returns the last time we sent emails
+	 * @return Long
+	 */
+	private function findLastBatchDate(){
+
+
+		if($this->emailBatchModel->count_all() === 0){
+			throw new Exception("Email Batch model can't be empty", 1);
+		}
+
+		return (float) $this->emailBatchModel
+			->select("time")
+			->order_by("id", "desc")
+			->limit(1)
+			->find_all()[0]->time;
 	}
 
 	/**
@@ -187,67 +217,12 @@ class Email extends MY_Model {
 		echo "<h2> ".$title." </h2>";
 
 		foreach ($emails as $email) {
-			echo 'TO ' . $this->user->find_by('userId', $email['userId'])->email
+			echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email
 				. " " . $this->idToType[$email['emailType']];
 			echo '\n'; var_dump($email['mandrill']); echo '\n';
 			echo $email['content'];
 		}
 	}
-
-	/**
-	 * Helper method to batch insert in a model
-	 * @param  Array $array data to batch insert
-	 * @param  MY_MODEL $model Model to insert
-	 */
-	private function insertAll($array, $model){
-		if(is_array($array) && sizeof($array) !== 0){
-
-
-			foreach ($array as &$insertion) {
-				//The content key is used for unit testing.
-				//It stores the email as html so we can test it.
-				//However, it doesn't make sense to store the html
-				//in the database.
-				//Here we unset the 'content' key of each insertion
-				//in order to avoid the database insertion of the
-				//html.
-				unset($insertion['content']);
-
-				//As per mandrill specification https://mandrillapp.com/api/docs/messages.php.html
-				//A mandrill api call will return
-		    // Array
-		    // (
-		    //     [0] => Array
-		    //         (
-		    //             [email] => recipient.email@example.com
-		    //             [status] => sent
-		    //             [reject_reason] => hard-bounce
-		    //             [_id] => abc123abc123abc123abc123abc123
-		    //         )
-		    // )
-		    // If the status isn't sent, we don't save the email
-		    // as sent and log the reject reason.
-				if($insertion['mandrill'][0]['status'] != "sent"){
-
-					log_message('error', 'Mandrill failled for '
-						. $insertion['mandrill'][0]['email'] . ' reason '
-						. $insertion['mandrill'][0]['reject_reason']);
-
-					//Unset the failled insertion so we don't store it on
-					//our side
-					unset($array[$insertion]);
-
-				}else{
-					//If the email was sent; unset mandrill as it's not
-					//a field in the db. Very much like content.
-					unset($insertion['mandrill']);
-				}
-			}
-
-			$model->insert_batch($array);
-		}
-	}
-
 
 	/**
 	 * Send an email throught the mandrill api
@@ -300,7 +275,7 @@ class Email extends MY_Model {
 		$async   = false;
 		$ip_pool = 'Main Pool';
 		$send_at = $sendAt;
-		return $this->mandrill->messages->send($message, $async, $ip_pool, $send_at);
+		return $this->CI->mandrill->messages->send($message, $async, $ip_pool, $send_at);
 	}
 
 	/**
@@ -319,39 +294,6 @@ class Email extends MY_Model {
 		return date('Y-', $scheduleTime).date('m-', $scheduleTime)
 		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'
 		.(date('i', $scheduleTime)).date(':s', $scheduleTime);
-	}
-
-	/**
-	 * Helper thate created a subquery on email_user
-	 * and emailType
-	 * @param  int $emailType The type of the email to look for
-	 * @return String The subquery
-	 */
-	private function whereNotAlreadySentUser($emailType) {
-		return '(select count(1) from email_user where user.userId '.
-			'= email_user.userId and emailType = '.$emailType.') = ';
-	}
-
-	/**
-	 * Helper thate created a subquery on email_watch
-	 * and emailType
-	 * @param  int $emailType The type of the email to look for
-	 * @return String The subquery
-	 */
-	private function whereNotAlreadySentWatch($emailType) {
-		return '(select count(1) from email_watch where watch.watchId '.
-			'= email_watch.watchId and emailType = '.$emailType.') = ';
-	}
-
-	/**
-	 * Helper thate created a subquery on email_measure
-	 * and emailType
-	 * @param  int $emailType The type of the email to look for
-	 * @return String The subquery
-	 */
-	private function whereNotAlreadySentMeasure($emailType) {
-		return '(select count(1) from email_measure where measure.id '.
-			'= email_measure.measureId and emailType = '.$emailType.') = ';
 	}
 
 	/**
@@ -378,32 +320,39 @@ class Email extends MY_Model {
 		);
 	}
 
+	private function getBatchUpperBound($timeCondition){
+		return $this->time-$timeCondition;
+	}
+
+	private function getBatchLowerBound($timeCondition){
+		return $this->time-$timeCondition-($this->time-$this->lastBatchDate);
+	}
+
 	/**
 	 * Send email to incative user
 	 *
 	 * @param  long $time Time at which compute the rule
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
-	private function inactiveUser($time, &$queuedEmail) {
-		$inactiveUsers = $this
+	private function inactiveUser(&$queuedEmail) {
+		$inactiveUsers = $this->CI
 			->user
 			->select()
-			->where('lastLogin <=', $time-$this->day*100)
-			->where($this->whereNotAlreadySentUser($this->COMEBACK), 0, false)
+			->where('lastLogin <', $this->getBatchUpperBound($this->day*100))
+			->where('lastLogin >', $this->getBatchLowerBound($this->day*100))
 			->find_all();
 
 		if ($inactiveUsers !== FALSE) {
 			foreach ($inactiveUsers as $user) {
 
-				$emailcontent = $this->load->view('email/generic',
+				$emailcontent = $this->CI->load->view('email/generic',
 					comebackContent($user->firstname), true);
-
 
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->userId,
 					$this->COMEBACK,
-					$time,
+					$this->time,
 					'userId',
 					$emailcontent,
 					$this->sendMandrillEmail(
@@ -412,7 +361,7 @@ class Email extends MY_Model {
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'comeback_100d',
-						$this->sendAtString($time)
+						$this->sendAtString($this->time)
 					)
 				);
 			}
@@ -425,27 +374,27 @@ class Email extends MY_Model {
 	 * @param  long $time Time at which compute the rule
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
-	private function userWithoutWatch($time, &$queuedEmail) {
+	private function userWithoutWatch(&$queuedEmail) {
 
-		$userWithoutWatch = $this
+		$userWithoutWatch = $this->CI
 			->user
-			->select('user.userId, user.name, firstname, email')
+			->select('user.userId, user.name, firstname, email, lastLogin')
 			->where('(select count(1) from watch where user.userId = watch.userId) =', 0)
-			->where($this->whereNotAlreadySentUser($this->ADD_FIRST_WATCH), 0)
-			->where('lastLogin <=', $time-$this->day)
+			->where('lastLogin <', $this->getBatchUpperBound($this->day))
+			->where('lastLogin >', $this->getBatchLowerBound($this->day))
 			->find_all();
 
 		if ($userWithoutWatch !== FALSE) {
 			foreach ($userWithoutWatch as $user) {
 
-				$emailcontent = $this->load->view('email/generic',
+				$emailcontent = $this->CI->load->view('email/generic',
 					addFirstWatchContent($user->firstname), true);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->userId,
 					$this->ADD_FIRST_WATCH,
-					$time,
+					$this->time,
 					'userId',
 					$emailcontent,
 					$this->sendMandrillEmail(
@@ -454,7 +403,7 @@ class Email extends MY_Model {
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'add_first_watch_email',
-						$this->sendAtString($time)
+						$this->sendAtString($this->time)
 					)
 				);
 			}
@@ -466,27 +415,27 @@ class Email extends MY_Model {
 	 * @param  long $time Time at which compute the rule
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
-	private function userWithWatchWithoutMeasure($time, &$queuedEmail) {
-		$userWithWatchWithoutMeasure = $this
+	private function userWithWatchWithoutMeasure(&$queuedEmail) {
+		$userWithWatchWithoutMeasure = $this->CI
 			->watch
 			->select('watch.watchId, watch.brand, watch.name as watchName,
 			user.name, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
-			->where('creationDate <=', $time-$this->day)
-			->where($this->whereNotAlreadySentWatch($this->START_FIRST_MEASURE), 0, false)
+			->where('creationDate < ', $this->getBatchUpperBound($this->day))
+			->where('creationDate > ', $this->getBatchLowerBound($this->day))
 			->as_array()
 			->find_all();
 
 		if ($userWithWatchWithoutMeasure !== FALSE) {
 
-			$this->__->groupBy($userWithWatchWithoutMeasure, 'email');
+			$this->CI->__->groupBy($userWithWatchWithoutMeasure, 'email');
 
 			foreach ($userWithWatchWithoutMeasure as $user) {
 
 				$user = (object) $user;
 
-				$emailcontent = $this->load->view('email/generic',
+				$emailcontent = $this->CI->load->view('email/generic',
 					makeFirstMeasureContent($user->firstname,
 					$user->brand . ' ' . $user->watchName), true);
 
@@ -494,7 +443,7 @@ class Email extends MY_Model {
 					$queuedEmail,
 					$user->watchId,
 					$this->START_FIRST_MEASURE,
-					$time,
+					$this->time,
 					'watchId',
 					$emailcontent,
 					$this->sendMandrillEmail(
@@ -503,7 +452,7 @@ class Email extends MY_Model {
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'make_first_measure_email',
-						$this->sendAtString($time)
+						$this->sendAtString($this->time)
 					)
 				);
 			}
@@ -516,10 +465,9 @@ class Email extends MY_Model {
 	 * @param  long $time Time at which compute the rule
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
-	private function userWithOneCompleteMeasureAndOneWatch($time, &$queuedEmail) {
-		$twoDays = $time-$this->day*2;
+	private function userWithOneCompleteMeasureAndOneWatch(&$queuedEmail) {
 
-		$userWithOneCompleteMeasureAndOneWatch = $this
+		$userWithOneCompleteMeasureAndOneWatch = $this->CI
 			->user
 			->select('user.userId, user.name, firstname, email')
 			->where('(select count(1) from watch where user.userId = watch.userId) = ', 1)
@@ -527,8 +475,8 @@ class Email extends MY_Model {
 					join watch on measure.watchId = watch.watchId
 					where user.userId = watch.userId
 					and measure.statusId = 2
-					and measure.accuracyReferenceTime <= '.$twoDays.' ) = ', 1)
-			->where($this->whereNotAlreadySentUser($this->ADD_SECOND_WATCH), 0, false)
+					and measure.accuracyReferenceTime < '.$this->getBatchUpperBound($this->day*2).'
+					and measure.accuracyReferenceTime > '.$this->getBatchLowerBound($this->day*2). ') = ', 1)
 			->find_all();
 
 		if ($userWithOneCompleteMeasureAndOneWatch !== FALSE) {
@@ -537,11 +485,11 @@ class Email extends MY_Model {
 
 				// TODO: Why does this retrieve an array and
 				// not an object ??
-				$watch = (object) $this->watch
+				$watch = (object) $this->CI->watch
 					->select('brand, name')
 					->find_by('userid', $user->userId);
 
-				$emailcontent = $this->load->view('email/generic',
+				$emailcontent = $this->CI->load->view('email/generic',
 					addSecondWatchContent($user->firstname,
 					$watch->brand . " " .
 					$watch->name)
@@ -551,7 +499,7 @@ class Email extends MY_Model {
 					$queuedEmail,
 					$user->userId,
 					$this->ADD_SECOND_WATCH,
-					$time,
+					$this->time,
 					'userId',
 					$emailcontent,
 					$this->sendMandrillEmail(
@@ -560,7 +508,7 @@ class Email extends MY_Model {
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'add_another_watch_email',
-						$this->sendAtString($time)
+						$this->sendAtString($this->time)
 					)
 				);
 			}
@@ -573,9 +521,9 @@ class Email extends MY_Model {
 	 * @param  long $time Time at which compute the rule
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
-	private function checkAccuracy($time, &$queuedEmail) {
+	private function checkAccuracy(&$queuedEmail) {
 
-		$measureWithoutAccuracy = $this
+		$measureWithoutAccuracy = $this->CI
 			->measure
 			->select('measure.id as measureId, measure.*, watch.*,
 								watch.name as watchName, user.userId, user.name,
@@ -583,8 +531,8 @@ class Email extends MY_Model {
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
-			->where('measureReferenceTime <=', $time-$this->day)
-			->where($this->whereNotAlreadySentMeasure($this->CHECK_ACCURACY), 0, false)
+			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day))
+			->where('measureReferenceTime >', $this->getBatchLowerBound($this->day))
 			->as_array()
 			->find_all();
 
@@ -594,20 +542,20 @@ class Email extends MY_Model {
 				$measureWithoutAccuracy = array($measureWithoutAccuracy);
 			}
 
-			$this->__->groupBy($measureWithoutAccuracy, 'email');
+			$this->CI->__->groupBy($measureWithoutAccuracy, 'email');
 
 			foreach ($measureWithoutAccuracy as $user) {
 
 				$user = (object) $user;
 
-				$emailcontent = $this->load->view('email/generic',
+				$emailcontent = $this->CI->load->view('email/generic',
 					checkAccuracyContent($user->firstname, $user), true);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->measureId,
 					$this->CHECK_ACCURACY,
-					$time,
+					$this->time,
 					'measureId',
 					$emailcontent,
 					$this->sendMandrillEmail(
@@ -616,7 +564,7 @@ class Email extends MY_Model {
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'check_accuracy_email',
-						$this->sendAtString($time)
+						$this->sendAtString($this->time)
 					)
 				);
 			}
@@ -629,35 +577,35 @@ class Email extends MY_Model {
 	 * @param  long $time Time at which compute the rule
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
-	private function checkAccuracyOneWeek($time, &$queuedEmail) {
-		$measureWithoutAccuracy = $this
+	private function checkAccuracyOneWeek(&$queuedEmail) {
+		$measureWithoutAccuracy = $this->CI
 			->measure
 			->select('measure.id as measureId, watch.*, user.userId,
 			measure.*, watch.name as watchName, user.name, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
-			->where('measureReferenceTime <=', $time-($this->day*7))
-			->where($this->whereNotAlreadySentMeasure($this->CHECK_ACCURACY_1_WEEK), 0, false)
+			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day*7))
+			->where('measureReferenceTime >', $this->getBatchLowerBound($this->day*7))
 			->as_array()
 			->find_all();
 
 		if ($measureWithoutAccuracy !== FALSE) {
 
-			$this->__->groupBy($measureWithoutAccuracy, 'email');
+			$this->CI->__->groupBy($measureWithoutAccuracy, 'email');
 
 			foreach ($measureWithoutAccuracy as $user) {
 
 				$user = (object) $user;
 
-				$emailcontent = $this->load->view('email/generic',
+				$emailcontent = $this->CI->load->view('email/generic',
 					oneWeekAccuracyContent($user->firstname, $user), true);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->measureId,
 					$this->CHECK_ACCURACY_1_WEEK,
-					$time,
+					$this->time,
 					'measureId',
 					$emailcontent,
 					$this->sendMandrillEmail(
@@ -666,7 +614,7 @@ class Email extends MY_Model {
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'check_accuracy_email',
-						$this->sendAtString($time)
+						$this->sendAtString($this->time)
 					)
 				);
 			}
@@ -679,44 +627,36 @@ class Email extends MY_Model {
 	 * @param  long $time Time at which compute the rule
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
-	private function startANewMeasure($time, &$queuedEmail) {
-		$userWithWatchWithoutMeasure = $this
+	private function startANewMeasure(&$queuedEmail) {
+
+		$userWithWatchWithoutMeasure = $this->CI
 			->measure
 			->select('watch.watchId, watch.name as watchName, watch.brand,
 			user.userId, user.name, user.firstname, email, measure.*')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 2)
-			->where('accuracyReferenceTime <=', $time-($this->day*30))
-			->where($this->whereNotAlreadySentWatch($this->START_NEW_MEASURE), 0, false)
+			->where('accuracyReferenceTime <', $this->getBatchUpperBound($this->day*30))
+			->where('accuracyReferenceTime >', $this->getBatchLowerBound($this->day*30))
 			->as_array()
 			->find_all();
 
 		if ($userWithWatchWithoutMeasure !== FALSE) {
 
-			$this->__->groupBy($userWithWatchWithoutMeasure, 'email');
+			$this->CI->__->groupBy($userWithWatchWithoutMeasure, 'email');
 
 			foreach ($userWithWatchWithoutMeasure as $user) {
 
 				$user = (object) $user;
 
-				$emailcontent = 	$this->load->view('email/generic',
+				$emailcontent = 	$this->CI->load->view('email/generic',
 						oneMonthAccuracyContent($user->firstname, $user), true);
-
-				$this->sendMandrillEmail(
-					'Let’s check your watch accuracy! ⌚',
-					$emailcontent,
-					$user->name.' '.$user->firstname,
-					$user->email,
-					'check_accuracy_email',
-					$this->sendAtString($time)
-				);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->watchId,
 					$this->START_NEW_MEASURE,
-					$time,
+					$this->time,
 					'watchId',
 					$emailcontent,
 					$this->sendMandrillEmail(
@@ -725,7 +665,7 @@ class Email extends MY_Model {
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'check_accuracy_email',
-						$this->sendAtString($time)
+						$this->sendAtString($this->time)
 					)
 				);
 			}
@@ -739,11 +679,11 @@ class Email extends MY_Model {
 	 */
 	private function signup($user) {
 
-		$this->mcapi->listSubscribe('7f94c4aa71', $user->email, '');
+		$this->CI->mcapi->listSubscribe('7f94c4aa71', $user->email, '');
 
 		return $this->sendMandrillEmail(
 			'Welcome to Toolwatch! ⌚',
-			$this->load->view('email/signup', '', true),
+			$this->CI->load->view('email/signup', '', true),
 			$user->name.' '.$user->firstname,
 			$user->email,
 			'signup',
@@ -754,15 +694,15 @@ class Email extends MY_Model {
 	/**
 	 * Send a password token for reset $user
 	 *
-	 * @param User $user
+	 * @param $email $email
 	 * @param String $token
 	 */
-	private function resetPassword($user, $token) {
+	private function resetPassword($email, $token) {
 		return $this->sendMandrillEmail(
 			'Your Toolwatch password ⌚',
-			$this->load->view('email/reset-password', array('resetToken'=>$token), true),
-			$user->name.' '.$user->firstname,
-			$user->email,
+			$this->CI->load->view('email/reset-password', array('resetToken'=>$token), true),
+			'',
+			$email,
 			'reset_password',
 			$this->sendAtString(time())
 		);
@@ -775,15 +715,9 @@ class Email extends MY_Model {
 	 */
 	private function newResult($measure) {
 
-		$watch = $this->watch->find($measure->watchId);
-		$data['watch'] = $watch;
-
-		$user = $this->user->getUserFromWatchId($watch->watchId);
-		$data['user']  = $user;
-
 		$attachments = array();
-		$description = "Check the accuracy of my ".$watch->brand.' '.$watch->name;
-		$this->load->helper('ics');
+		$description = "Check the accuracy of my ".$measure->brand.' '.$measure->model;
+		$this->CI->load->helper('ics');
 		$in30days = time() + 30*24*60*60;
 
 		array_push($attachments, array(
@@ -792,11 +726,15 @@ class Email extends MY_Model {
 				'content' => generateBase64Ics($in30days, $in30days, $description, 'Check my watch accuracy', 'Toolwatch.io')
 			));
 
+		$emailcontent = $this->CI->load->view('email/generic',
+					watchResultContent($measure->firstname, $measure->brand,
+					$measure->model, $measure->accuracy), true);
+
 		$this->sendMandrillEmail(
 			'The result of your watch’s accuracy! ⌚',
-			$this->load->view('email/watch-result', $data, true),
-			$user->name.' '.$user->firstname,
-			$user->email,
+			$this->CI->load->view('email/generic', $emailcontent, true),
+			$measure->name.' '.$measure->firstname,
+			$measure->email,
 			'result_email',
 			$this->sendAtString(time()),
 			$attachments

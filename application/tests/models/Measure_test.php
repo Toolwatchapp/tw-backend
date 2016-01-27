@@ -15,6 +15,10 @@ class Measure_test extends TestCase {
 		$CI->load->model('Measure');
 		$CI->load->library('Session');
 
+		$CI->watch->delete_where(array("watchId >=" => "0"));
+		$CI->User->delete_where(array("userId >=" => "0"));
+		$CI->Measure->delete_where(array("id >=" => "0"));
+
 		$CI->User->signup(
 			'mathieu@gmail.com',
 			'azerty',
@@ -38,16 +42,6 @@ class Measure_test extends TestCase {
 		);
 
 		self::$watch = $CI->Watch->getWatch(self::$watchId);
-
-		$CI->emailWatch   = new MY_Model('email_watch');
-		$CI->emailMeasure = new MY_Model('email_measure');
-		$CI->emailUser   = new MY_Model('email_user');
-
-		$CI->emailUser->delete_where(array("id >=" => "0"));
-		$CI->emailWatch->delete_where(array("id >=" => "0"));
-		$CI->emailMeasure->delete_where(array("id >=" => "0"));
-
-		$CI->Measure->delete_where(array("id >=" => "0"));
 	}
 
 	public function setUp() {
@@ -267,6 +261,16 @@ class Measure_test extends TestCase {
 		$this->assertEquals(67, $this->obj->computePercentileAccuracy(1.5));
 		$this->assertEquals(0, $this->obj->computePercentileAccuracy(7));
 
+	}
+
+	public static function tearDownAfterClass() {
+		$CI = &get_instance();
+		$CI->load->model('User');
+		$CI->load->model('Watch');
+		$CI->load->model('Measure');
+		$CI->watch->delete_where(array("watchId >=" => "0"));
+		$CI->User->delete_where(array("userId >=" => "0"));
+		$CI->Measure->delete_where(array("id >=" => "0"));
 	}
 
 }

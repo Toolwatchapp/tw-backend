@@ -175,7 +175,12 @@ class Measure extends ObservableModel {
 
 		if ($this->update($measureId, $data) !== false) {
 
-			$watchMeasure = $this->find($measureId);
+			$watchMeasure = $this
+			->select("measure.*, watch.name as model, watch.brand, user.email,
+				user.firstname, user.name")
+			->join("watch", "watch.watchId = measure.watchId")
+			->join("user", "user.userId = watch.userId")
+			->find($measureId);
 
 			$this->notify(NEW_ACCURACY,
 				array('measure'   => $watchMeasure));

@@ -7,14 +7,6 @@ class Ajax_test extends TestCase {
 
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
-		$CI->emailWatch   = new MY_Model('email_watch');
-		$CI->emailMeasure = new MY_Model('email_measure');
-		$CI->emailUser   = new MY_Model('email_user');
-
-		$CI->emailUser->delete_where(array("id >=" => "0"));
-		$CI->emailWatch->delete_where(array("id >=" => "0"));
-		$CI->emailMeasure->delete_where(array("id >=" => "0"));
-
 		$CI->load->model('User');
 		$CI->load->model('Measure');
 		$CI->load->model('Watch');

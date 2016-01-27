@@ -1,5 +1,8 @@
 <?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
 }
+
+require_once('ObservableModel.php');
+
 /**
  * Watch model. This class is responsible for handling any watch related
  * transaction.

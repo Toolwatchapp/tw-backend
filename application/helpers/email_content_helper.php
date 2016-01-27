@@ -199,3 +199,29 @@ function oneMonthAccuracyContent($firstName, $watches){
       spreading the love for mechanical timepieces!'
     );
 }
+
+function watchResultContent($firstname, $brand, $model, $accuracy){
+  return array(
+    'title' => 'Hurray '.$firstname.'!',
+    'content' =>
+      'We are happy to share with you the results for the accuracy of
+      your mechanical watch !
+      <br /><br />
+      Your '. $brand .' ' . $model . ' is running at <b>' . $accuracy . '</b> seconds per day.
+      <br /><br />
+      You should come back and check regularly that there aren\'t big
+      variations in your watch\'s accuracy. Why not add in your calendar
+      a reminder to come back and check that everything\'s fine in one
+      month ?
+      <br />
+      You might also want to <a href="https://blog.toolwatch.io/watch-tips/">
+      read our tips and advices</a> for keeping your watch running
+      safe and smooth !
+      <br /><br />
+      Take care of yourself and your watch !
+      <br /><br />
+      Happy toolwatching !
+      <br />
+      The Toolwatch Team'
+    );
+}
