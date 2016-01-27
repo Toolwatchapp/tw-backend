@@ -129,9 +129,13 @@ class Hooks extends CI_Controller {
 		//FIXME: The token has to be env value
 		if ($key === "bPiAi9XNEa3p9FF1lQnZfuUY") {
 
-			$this->load->model("email");
-			$this->email->cronCheck($time);
+			$this->load->library("auto_email");
 
+			if($time == 0){
+				$this->auto_email->cronCheck(time());
+			}else{
+				$this->auto_email->cronCheck(time()+60*60*$time);
+			}
 		}
 	}
 }
