@@ -275,7 +275,9 @@ class Auto_email {
 		$async   = false;
 		$ip_pool = 'Main Pool';
 		$send_at = $sendAt;
-		return $this->CI->mandrill->messages->send($message, $async, $ip_pool, $send_at);
+		$mandrillResponse =  $this->CI->mandrill->messages->send($message, $async, $ip_pool, $send_at);
+		log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
+		return $mandrillResponse;
 	}
 
 	/**
