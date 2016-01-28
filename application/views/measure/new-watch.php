@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="yearOfBuy" class="col-sm-3 control-label">Year of buy</label>
+                    <label for="yearOfBuy" class="col-sm-3 control-label">Year of purchase</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="yearOfBuy" placeholder="1998">
                     </div>

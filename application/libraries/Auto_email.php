@@ -293,9 +293,12 @@ class Auto_email {
 		//order to send emails right away when exploring
 		//computation in the future / past
 		$scheduleTime = $scheduleTime  - $this->timeOffset;
-		return date('Y-', $scheduleTime).date('m-', $scheduleTime)
+
+		$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
 		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'
 		.(date('i', $scheduleTime)).date(':s', $scheduleTime);
+
+		return $returnValue;
 	}
 
 	/**
