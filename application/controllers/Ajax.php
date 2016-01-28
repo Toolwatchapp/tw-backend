@@ -312,39 +312,48 @@ class Ajax extends MY_Controller {
 			$email   = $this->input->post('email');
 			$message = $this->input->post('message');
 
-			$this->load->library('email');
+			$this->load->library('mandrill');
 
-			//FIXME: This has to go in a config file.
-			//Futhermore, password must be loaded throught env
-			//variables.
-			//
-			//We could even do it with the mandrillapp api that
-			//we added for #34
-			$config['protocol']  = "smtp";
-			$config['smtp_host'] = "smtp.mandrillapp.com";
-			$config['smtp_port'] = "587";
-			$config['smtp_user'] = "marc@toolwatch.io";
-			$config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-			$config['charset']   = "utf-8";
-			$config['mailtype']  = "html";
-			$config['newline']   = "\r\n";
+			$messageMandrill = array(
+				'html'       => $message,
+				'subject'    => $subject,
+				'from_email' => $email,
+				'from_name'  => $name,
+				'to'         => array(
+					array(
+						'email' => 'marc@toolwatch.io',
+						'name'  => 'Marc',
+						'type'  => 'to',
+					)
+				),
+				'headers'   => array(
+					'Reply-To' => $email,
+				),
+				'important'                 => false,
+				'track_opens'               => true,
+				'track_clicks'              => true,
+				'tags'                      => array($tags),
+				'google_analytics_campaign' => $tags,
+				'google_analytics_domains'  => array('toolwatch.io'),
+				'metadata'                  => array(
+					'website'                  => 'toolwatch.io',
+				)
+			);
 
-			$this->email->initialize($config);
+			$async   = false;
+			$ip_pool = 'Main Pool';
 
-			$this->email->from('contact@toolwatch.io', 'Toolwatch contact');
-			$this->email->to('marc@toolwatch.io', 'Marc');
-			$this->email->reply_to($email, $name);
+			$scheduleTime = time();
 
-			$this->email->subject('Contact Toolwatch from '.$name);
+			$send_at =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
+			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'
+			.(date('i', $scheduleTime)).date(':s', $scheduleTime);
 
-			$bodyMessage = '<b>Name :</b> '.$name.'<br>';
-			$bodyMessage .= '<b>Email :</b> '.$email.'<br>';
-			$bodyMessage .= '<b>Message :</b> <br>';
-			$bodyMessage .= $message;
+			$mandrillResponse =  $this->mandrill->messages->send($messageMandrill, $async, $ip_pool, $send_at);
+			log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
 
-			$this->email->message($bodyMessage);
 
-			if ($this->email->send()) {
+			if ($mandrillResponse[0]['status'] === 'sent') {
 				$result['success'] = true;
 			} else {
 				$result['success'] = false;
