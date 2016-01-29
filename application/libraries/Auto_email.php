@@ -295,7 +295,7 @@ class Auto_email {
 		$scheduleTime = $scheduleTime  - $this->timeOffset;
 
 		$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
-		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'
+		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
 		.(date('i', $scheduleTime)).date(':s', $scheduleTime);
 
 		return $returnValue;

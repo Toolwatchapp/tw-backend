@@ -10,7 +10,7 @@
     <meta name="keywords" content="toolwatch, toolwatchapp, accuracy, precision, measure, mechanical watch, manual winding, automatic winding">
     <meta name="description" content="<?php if (isset($meta_description)) {echo $meta_description;
 } else {
-	echo 'Toolwatch makes it super easy to measure the accuracy of a mechanical watch. Keep your watch's accuracy at its best and know if you should service your watch';
+	echo 'Toolwatch makes it super easy to measure the accuracy of a mechanical watch. Keep your watch\'s accuracy at its best and know if you should service your watch';
 }
 ?>" />
 
@@ -19,7 +19,7 @@
 	echo 'Easily measure and track the accuracy of your mechanical watch';
 }
 ?>" />
-    <meta property="og:description" content="<?php echo 'Toolwatch makes it super easy to measure the accuracy of a mechanical watch. Keep your watch's accuracy at its best and know if you should service your watch' ?>" />
+    <meta property="og:description" content="<?php echo 'Toolwatch makes it super easy to measure the accuracy of a mechanical watch. Keep your watch\'s accuracy at its best and know if you should service your watch' ?>" />
     <meta property="og:image" content="<?php if (isset($meta_img)) {echo $meta_img;
 } else {
 	echo img_url('share.png');
