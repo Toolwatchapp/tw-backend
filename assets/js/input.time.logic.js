@@ -194,6 +194,8 @@ function validateAccuracyMeasure(){
       if(result.success == true)
       {
 
+          $('button.close').click();
+
           $("#sync-button").hide();
           $('button[name="restartCountdown"]').hide();
           $('.sync-success').show();
