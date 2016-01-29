@@ -205,11 +205,15 @@ class Measures extends MY_Controller {
 
 		$this->event->add(MEASURE_LOAD);
 
+		array_push($this->_headerData['javaScripts'], "watch.animation",
+			"time",
+			"input.time.logic"
+		);
+
 		$this->_headerData['headerClass'] = 'blue';
 		$this->load->view('header', $this->_headerData);
 
 		$this->load->view('measure/new-measure', $this->_bodyData);
-		$this->load->view('measure/audio.php');
 
 		$this->load->view('footer');
 	}
@@ -239,29 +243,22 @@ class Measures extends MY_Controller {
 			$this->event->add(ACCURACY_LOAD);
 
 			$this->_headerData['headerClass'] = 'blue';
-			array_push($this->_headerData['javaScripts'], "watch.animation");
+			array_push($this->_headerData['javaScripts'], "watch.animation",
+				"time",
+				"input.time.logic"
+			);
 			$this->load->view('header', $this->_headerData);
 
 			$this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
 			$this->_bodyData['measureId']     = $this->input->post('measureId');
 
 			$this->load->view('measure/get-accuracy', $this->_bodyData);
-			$this->load->view('measure/audio.php');
 
 			$this->load->view('footer');
 
 		} else {
 			redirect('/measures/');
 		}
-	}
-
-	/**
-	 * getReferenceTime. Set the server time to the user session.
-	 *
-	 * This must to be call by the user before accuracyMeasure or baseMeasure
-	 */
-	function getReferenceTime() {
-		$this->session->set_userdata('referenceTime', time());
 	}
 
 	/**
@@ -278,21 +275,14 @@ class Measures extends MY_Controller {
 	 */
 	function baseMeasure() {
 
-		if ($this->expectsPost(array('watchId', 'userTimezone', 'userTime'))) {
-
-			$result = array();
-
-			$watchId       = $this->input->post('watchId');
-
-			//Construct user time
-			$referenceTime = $this->session->userdata('referenceTime');
-			$userTimezone  = $this->input->post('userTimezone');
-			$tempUserTime	 = preg_split('/:/', $this->input->post('userTime'));
-			$userTime 		 = mktime($tempUserTime[0], $tempUserTime[1],
-			 	$tempUserTime[2], date("n"), date("j"), date("Y"));
+		if ($this->expectsPost(array('watchId', 'referenceTimestamp', 'userTimestamp'))) {
 
 			//Add the base measure
-			if ($this->measure->addBaseMesure($watchId, $referenceTime, $userTime)) {
+			if ($this->measure->addBaseMesure(
+				$this->watchId,
+				$this->referenceTimestamp/1000,
+				$this->userTimestamp/1000)
+			) {
 
 				$result['success'] = true;
 
@@ -311,8 +301,6 @@ class Measures extends MY_Controller {
 	 * TODO: When this becomes doable from many endpoints (web, mobile, ...)
 	 * I'll to move it to the model.
 	 *
-	 * FIXME: userTimezone parameter isn't used. Should it ?
-	 *
 	 * @param POST String measureId
 	 * @param POST String userTimezone
 	 * @param POST String userTime
@@ -321,18 +309,14 @@ class Measures extends MY_Controller {
 	 */
 	function accuracyMeasure() {
 
-		if ($this->expectsPost(array('measureId', 'userTimezone', 'userTime'))) {
-
-			//Construct the user time
-			$referenceTime = $this->session->userdata('referenceTime');
-			$userTimezone  = $this->input->post('userTimezone');
-			$tempUserTime = preg_split('/:/', $this->input->post('userTime'));
-			$userTime = mktime($tempUserTime[0], $tempUserTime[1], $tempUserTime[2],
-				date("n"), date("j"), date("Y"));
+		if ($this->expectsPost(array('measureId', 'referenceTimestamp', 'userTimestamp'))) {
 
 			//Add the watch measure
 			$watchMeasure = $this->measure->addAccuracyMesure(
-				$this->input->post('measureId'), $referenceTime, $userTime);
+				$this->measureId,
+				$this->referenceTimestamp,
+				$this->userTimestamp
+			);
 
 			// If the computed accuracy makes sense, we return success
 			if (is_numeric($watchMeasure->accuracy)) {
