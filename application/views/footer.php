@@ -68,5 +68,6 @@
         </div>
 
     </footer>
+    <!--Start Cookie Script--> <script type="text/javascript" charset="UTF-8" src="http://cookie-script.com/s/604de7f1d1d1480a1aafa38a8e1b3a56.js"></script> <!--End Cookie Script-->
 </body>
 </html>
