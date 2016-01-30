@@ -1,11 +1,16 @@
 var offsetedDate;
-var timeoutPopup;
 var clickedDate;
 var isAccuracy = false;
 var validateFunction = "validateBaseMeasure();";
 
+/**
+ * Link button click
+ */
 $( document ).ready(function() {
 
+    // This is shared between the baseMeasure and accuracyMeasure pages.
+    // Here, we do the difference between both and change the validateFunction
+    // used in the clicked function;
     if ($( "#accuracyHolder" ).length){
       isAccuracy = true;
       validateFunction = "validateAccuracyMeasure();";
@@ -28,7 +33,7 @@ $( document ).ready(function() {
               "for your " +
               $('select[name="watchId"]').find(":selected").text()
             );
-            getNextQuarterMinute();
+            getNextMinute();
 
         }
         else
@@ -36,48 +41,53 @@ $( document ).ready(function() {
            $('.watch-error').show();
         }
     });
-
-    $('body').on('click', 'button[name="restartCountdown"]', function(e)
-    {
-      e.preventDefault();
-      reset();
-    });
 });
 
-function getNextQuarterMinute(){
+/**
+ * Compute the next minute
+ */
+function getNextMinute(){
 
   var d = new Date();
   var seconds = d.getSeconds();
-  var offsetSeconds;
+  var offsetSeconds = 0;
 
-  if(seconds < 15){
-    offsetSeconds = 30 - seconds;
-  }else if(seconds < 30){
-    offsetSeconds = 45 - seconds;
-  }else if(seconds < 45){
+  // If it's somewhere between xx:xx:51 and xx:xx:60,
+  // users won't have the time to click.
+  // So, we add a minute.
+  if(seconds >= 50){
     offsetSeconds = 60 - seconds;
-  }else if(seconds < 60){
-    offsetSeconds = 60 - seconds + 15;
+  }else{
+    offsetSeconds = -seconds;
   }
 
-  offsetedDate = new Date(d.getTime()+offsetSeconds*1000);
+  offsetedDate = new Date(d.getTime() + offsetSeconds * 1000 + 60 * 1000);
 
+  console.log(d.toString());
   console.log(seconds);
   console.log(offsetSeconds);
   console.log(offsetedDate.toString());
 
-  $("#sync-button").html("Press this button exactly at <br />"
+  $("#sync-button").html("Press this button when the second hand  <br />"
     + '<span style="font-size:40px">'
-    + constructoffsetedDateString(offsetedDate)
+    + 'is <b>exactly</b>​​ at 12'
     + '</span>'
   );
 
   $("#sync-button").show();
 
+  //The maximum waiting time is 70 secs. If nothing happens in the next 80
+  //sec, we display a popup.
   timeoutPopup = setTimeout(function(){deadlinePassed();},
-    (offsetSeconds + 20) * 1000);
+    80 * 1000);
 }
 
+/**
+ * Helper function to transform a javascript Date in xx:xx:xx
+ *
+ * @param  Date date
+ * @return String
+ */
 function constructoffsetedDateString(date){
   var hours = (date.getHours() < 10) ? "0"+date.getHours() :
     date.getHours();
@@ -91,19 +101,24 @@ function constructoffsetedDateString(date){
   return hours + ":" + minutes + ":" + seconds;
 }
 
+/**
+ * This function is triggererd by a setTimeout function and displays a
+ * popop
+ */
 function deadlinePassed(){
 
   console.log("Deadline Passed");
 
   var deadlinePassedText =
     `<center>
-        <h1>Did you missed it ?</h1>
+        <h1>Is everything ok, doc ?</h1>
         <p>
         To begin measuring the accuracy of your watch, we must first
         synchronize it with Toolwatch's accuracy system.<br><br>
-        You were supposed to click at <b>`
-        + constructoffsetedDateString(offsetedDate)
-        + `</b>.
+        You were supposed to click when the second hand was
+        <b>
+        exactly at 12
+        </b>.
         </p>
         <a class="btn btn-success btn-lg" href="javascript:reset();">Retry</a>
     </center>`;
@@ -115,12 +130,18 @@ function deadlinePassed(){
   });
 }
 
-
+/**
+ * Resets everything
+ */
 function reset(){
   $('button.close').click();
-  getNextQuarterMinute();
+  getNextMinute();
 }
 
+/**
+ * Big ass button has been clicked.
+ * Displays confirmation popup.
+ */
 function clicked(){
 
   clearInterval(timeoutPopup);
@@ -170,16 +191,25 @@ function clicked(){
 
 }
 
+/**
+ * Removes a minute from the offsetedDate
+ */
 function retrieveMinute(){
   offsetedDate = new Date(offsetedDate.getTime()-60*1000);
   $("span#timeSyncAt").text(constructoffsetedDateString(offsetedDate));
 }
 
+/**
+ * Adds a minute from the offsetedDate
+ */
 function addMinute(){
   offsetedDate = new Date(offsetedDate.getTime()+60*1000);
   $("span#timeSyncAt").text(constructoffsetedDateString(offsetedDate));
 }
 
+/**
+ * Validation function fot the accuracyMeasure
+ */
 function validateAccuracyMeasure(){
 
   var measureId = $('input[name="measureId"]').val();
@@ -227,6 +257,9 @@ function validateAccuracyMeasure(){
   );
 }
 
+/**
+ * Validation function for the baseMeasure
+ */
 function validateBaseMeasure(){
   var watchId = $('select[name="watchId"]').val();
 

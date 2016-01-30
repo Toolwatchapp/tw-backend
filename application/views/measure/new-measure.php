@@ -48,7 +48,6 @@
                     <div class="col-sm-12">
                         <center>
                             <button class="btn btn-primary btn-lg" name="startSync">Start now!</button>
-                            <button class="btn btn-primary btn-lg no-display" name="restartCountdown">I missed it</button>
                         </center>
                     </div>
                 </div>
