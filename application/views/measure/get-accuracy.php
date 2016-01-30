@@ -100,7 +100,6 @@
                             <input type="hidden" name="measureId" value="<?php echo $measureId;?>">
                             <button class="btn btn-primary btn-lg" name="startSync">Check now!</button>
                             <a class="btn btn-success btn-lg no-display backToMeasure" href="/measures/">Back to measures</a>
-                            <button class="btn btn-primary btn-lg no-display" name="restartCountdown">I missed it</button>
                         </center>
                     </div>
                 </div>
