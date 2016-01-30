@@ -27,7 +27,6 @@ $( document ).ready(function() {
         if(watchId != null)
         {
             $('button[name="startSync"]').hide();
-            $('button[name="restartCountdown"]').show();
             $('.watch-select').hide();
             $('span#selectedWatch').text(
               "for your " +
