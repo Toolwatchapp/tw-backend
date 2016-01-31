@@ -205,10 +205,7 @@ class Measures extends MY_Controller {
 
 		$this->event->add(MEASURE_LOAD);
 
-		array_push($this->_headerData['javaScripts'], "watch.animation",
-			"time",
-			"input.time.logic"
-		);
+		array_push($this->_headerData['javaScripts'], "input.time.logic");
 
 		$this->_headerData['headerClass'] = 'blue';
 		$this->load->view('header', $this->_headerData);
@@ -242,11 +239,8 @@ class Measures extends MY_Controller {
 
 			$this->event->add(ACCURACY_LOAD);
 
-			$this->_headerData['headerClass'] = 'blue';
-			array_push($this->_headerData['javaScripts'], "watch.animation",
-				"time",
-				"input.time.logic"
-			);
+			array_push($this->_headerData['javaScripts'], "input.time.logic");
+
 			$this->load->view('header', $this->_headerData);
 
 			$this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));

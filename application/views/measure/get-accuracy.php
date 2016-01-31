@@ -107,6 +107,4 @@
         </div>
     </div>
     <img style="display:none" id="watch" src="<?php echo img_url('flatwatch-blank.png');?>">
-
-    <?php $this->load->view("time");?>
 </div>
