@@ -161,7 +161,7 @@ class Auto_email {
 		$this->startANewMeasure($emailsWatchSent);
 
 		if(ENVIRONMENT === "development"){
-			$date = new DateTime("@$time");
+			$date = new DateTime("@" . $this->time);
 			echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
 
 			$this->showSentEmails($emailsUserSent, "User emails");
