@@ -165,8 +165,8 @@ class Auto_email {
 			echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
 
 			$this->showSentEmails($emailsUserSent, "User emails");
-			$thus->showSentEmails($emailsWatchSent, "Watch emails");
-			$thus->showSentEmails($emailsMeasureSent, "Measure emails");
+			$this->showSentEmails($emailsWatchSent, "Watch emails");
+			$this->showSentEmails($emailsMeasureSent, "Measure emails");
 		}
 
 
