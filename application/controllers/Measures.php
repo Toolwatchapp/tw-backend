@@ -22,7 +22,25 @@ class Measures extends MY_Controller {
 		parent::__construct();
 		$this->load->model('watch');
 		$this->load->model('measure');
+		$this->load->library('auto_email');
 	}
+
+	function test()
+{
+    $this->output->_display("");
+    ob_end_flush();
+        echo "test1";
+    ob_start();
+    sleep(3);
+    ob_end_flush();
+        echo "test1";
+    ob_start();
+    sleep(3);
+    ob_end_flush();
+        echo "test1";
+    ob_start();
+}
+
 
 	/**
 	 * Loads the dashboard of an user.
@@ -340,11 +358,27 @@ class Measures extends MY_Controller {
 				//We store the computed accuracy & percentile
 				$result['accuracy'] = $watchMeasure->accuracy;
 				$result['percentile'] = $watchMeasure->percentile;
+
+
+				log_message('info', 'OUT OF HERE');
+
+				$this->output->_display("");
+    		ob_end_flush();
+				echo json_encode($result);
+
+				// Ignore connection-closing by the client/user
+				ignore_user_abort(true);
+
+				$this->auto_email->updateObserver($this, NEW_ACCURACY,
+					array('measure'   => $watchMeasure));
+
+
 			} else {
 				$result['success'] = false;
+					echo json_encode($result);
 			}
 
-			echo json_encode($result);
+
 		}
 	}
 }
