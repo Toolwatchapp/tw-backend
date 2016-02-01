@@ -38,7 +38,10 @@ class Measures extends MY_Controller {
 	echo "<br>Error is : ".curl_error ( $ch);
 
 	curl_close($ch);
+
 	fclose($out);
+
+	var_dump(file_get_contents(APPPATH."config/google-api.p12"));
 }
 
 
