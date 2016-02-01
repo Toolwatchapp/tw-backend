@@ -38,6 +38,7 @@ class Measures extends MY_Controller {
 	echo "<br>Error is : ".curl_error ( $ch);
 
 	curl_close($ch);
+	fclose($out);
 }
 
 
