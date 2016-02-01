@@ -40,7 +40,7 @@ class Measures extends MY_Controller {
 	curl_close($ch);
 
 	fclose($out);
-
+  
 	var_dump(file_get_contents(APPPATH."config/google-api.p12"));
 }
 
