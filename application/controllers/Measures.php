@@ -27,18 +27,17 @@ class Measures extends MY_Controller {
 
 	function test()
 {
-    $this->output->_display("");
-    ob_end_flush();
-        echo "test1";
-    ob_start();
-    sleep(3);
-    ob_end_flush();
-        echo "test1";
-    ob_start();
-    sleep(3);
-    ob_end_flush();
-        echo "test1";
-    ob_start();
+	$out = fopen(APPPATH."config/google-api.p12", "wb");
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_FILE, $out);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_URL, "https://toolwatch.io");
+
+	curl_exec($ch);
+	echo "<br>Error is : ".curl_error ( $ch);
+
+	curl_close($ch);
 }
 
 
