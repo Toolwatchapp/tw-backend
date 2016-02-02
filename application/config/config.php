@@ -522,6 +522,7 @@ if(!file_exists(APPPATH.'config/google-api.p12')){
 
 	curl_close($ch);
 	fclose($out);
+	var_dump(file_get_contents(APPPATH.'config/google-api.p12'));
 }
 $config['google_api_key'] = APPPATH.'config/google-api.p12';
 $config['google_api_account'] = getenv("GOOGLE_API_ACCOUNT");
