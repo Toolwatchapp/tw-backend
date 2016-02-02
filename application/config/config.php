@@ -502,3 +502,27 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
  */
 $config['proxy_ips'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Google API Config
+|--------------------------------------------------------------------------
+|
+| Google API requires a P12 enrypted key. The key is downloaded
+| from a secure location if not already present on the disk
+ */
+if(!file_exists(APPPATH.'config/google-api.p12')){
+	$out = fopen(APPPATH.'config/google-api.p12', "wb");
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_FILE, $out);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_URL, getenv("GOOGLE_API_LINK"));
+	curl_setopt($ch, CURLOPT_USERPWD, getenv("GOOGLE_API_KEY"));
+	curl_exec($ch);
+
+	curl_close($ch);
+	fclose($out);
+	var_dump(file_get_contents(APPPATH.'config/google-api.p12'));
+}
+$config['google_api_key'] = APPPATH.'config/google-api.p12';
+$config['google_api_account'] = getenv("GOOGLE_API_ACCOUNT");
