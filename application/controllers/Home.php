@@ -50,7 +50,7 @@ class Home extends MY_Controller {
 		$randWatches = rand(0, 3);
 
 		$watchBrands = array('Seiko', 'Rolex', 'Omega');
-		$videos      = array('Omega', 'Rolex', 'Zenith', 'Vacheron');
+		$videos      = array('Omega', 'Rolex', 'Vacheron');
 
 		$video = vid_url('Zenith.mp4');
 
