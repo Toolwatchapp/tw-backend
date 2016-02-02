@@ -4,3 +4,4 @@ application/tests/build/*
 vendor/
 .env
 .phpintel/*
+application/config/google-api.p12
