@@ -47,12 +47,10 @@ class Home extends MY_Controller {
 	private function homeMessage() {
 
 		$randBrands  = rand(0, 2);
-		$randWatches = rand(0, 3);
+		$randWatches = rand(0, 2);
 
 		$watchBrands = array('Seiko', 'Rolex', 'Omega');
 		$videos      = array('Omega', 'Rolex', 'Vacheron');
-
-		$video = vid_url('Zenith.mp4');
 
 		if (!$this->user->isLoggedIn()) {
 
