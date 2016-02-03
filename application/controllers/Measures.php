@@ -79,8 +79,6 @@ class Measures extends MY_Controller {
 
 				$this->_bodyData['success'] = 'Watch successfully added!';
 
-			} else {
-				$this->_bodyData['error'] = 'An error occured while adding your watch.';
 			}
 
 			$this->constructMeasurePage();
@@ -102,9 +100,7 @@ class Measures extends MY_Controller {
 
 			if ($this->watch->deleteWatch($this->watchId)) {
 				$this->_bodyData['success'] = 'Watch successfully deleted!';
-			} else {
-				$this->_bodyData['error'] = 'An error occured while deleting your watch.';
-		  }
+			}
 
 			$this->constructMeasurePage();
 		}
@@ -125,8 +121,6 @@ class Measures extends MY_Controller {
 
 			if ($this->measure->deleteMesure($this->measureId)) {
 				$this->_bodyData['success'] = 'Measures successfully deleted!';
-			} else {
-				$this->_bodyData['error'] = 'An error occured while deleting your measures.';
 			}
 
 			$this->constructMeasurePage();
@@ -187,8 +181,6 @@ class Measures extends MY_Controller {
 
 				$this->_bodyData['success'] = 'Watch successfully updated!';
 
-			} else {
-				$this->_bodyData['error'] = 'An error occured while updating your watch.';
 			}
 
 			$this->constructMeasurePage();
@@ -281,7 +273,7 @@ class Measures extends MY_Controller {
 
 		if ($this->expectsPost(array('watchId', 'userTimezone', 'userTime'))) {
 
-			$result = array();
+			$result = array('success' =>false);
 
 			$watchId       = $this->input->post('watchId');
 
@@ -297,8 +289,6 @@ class Measures extends MY_Controller {
 
 				$result['success'] = true;
 
-			} else {
-				$result['success'] = false;
 			}
 
 			echo json_encode($result);
@@ -324,6 +314,8 @@ class Measures extends MY_Controller {
 
 		if ($this->expectsPost(array('measureId', 'userTimezone', 'userTime'))) {
 
+			$result = array('success' =>false);
+
 			//Construct the user time
 			$referenceTime = $this->session->userdata('referenceTime');
 			$userTimezone  = $this->input->post('userTimezone');
@@ -342,13 +334,9 @@ class Measures extends MY_Controller {
 				$result['accuracy'] = $watchMeasure->accuracy;
 				$result['percentile'] = $watchMeasure->percentile;
 
-				echo json_encode($result);
-
-			} else {
-				$result['success'] = false;
-					echo json_encode($result);
 			}
 
+			echo json_encode($result);
 
 		}
 	}
