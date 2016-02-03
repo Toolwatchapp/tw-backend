@@ -90,11 +90,6 @@ class Home extends MY_Controller {
 		$this->load->view('footer');
 	}
 
-	function signupEmail() {
-		$this->_bodyData['resetToken'] = 'a4f9g53F47gF';
-		$this->load->view('email/reset-password', $this->_bodyData);
-	}
-
 	function about() {
 		$this->_headerData['headerClass'] = 'blue';
 		$this->_headerData['title']       = 'About Toolwatch';
