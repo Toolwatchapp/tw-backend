@@ -25,26 +25,6 @@ class Measures extends MY_Controller {
 		$this->load->library('auto_email');
 	}
 
-	function test()
-{
-	$out = fopen(APPPATH."config/google-api.p12", "wb");
-	$ch = curl_init();
-
-	curl_setopt($ch, CURLOPT_FILE, $out);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_URL, "https://toolwatch.io");
-
-	curl_exec($ch);
-	echo "<br>Error is : ".curl_error ( $ch);
-
-	curl_close($ch);
-
-	fclose($out);
-  
-	var_dump(file_get_contents(APPPATH."config/google-api.p12"));
-}
-
-
 	/**
 	 * Loads the dashboard of an user.
 	 */
@@ -362,19 +342,7 @@ class Measures extends MY_Controller {
 				$result['accuracy'] = $watchMeasure->accuracy;
 				$result['percentile'] = $watchMeasure->percentile;
 
-
-				log_message('info', 'OUT OF HERE');
-
-				$this->output->_display("");
-    		ob_end_flush();
 				echo json_encode($result);
-
-				// Ignore connection-closing by the client/user
-				ignore_user_abort(true);
-
-				$this->auto_email->updateObserver($this, NEW_ACCURACY,
-					array('measure'   => $watchMeasure));
-
 
 			} else {
 				$result['success'] = false;
