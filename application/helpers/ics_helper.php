@@ -47,23 +47,32 @@ function escapeString($string) {
 	return preg_replace('/([\,;])/', '\\\$1', $string);
 }
 
-function generateBase64Ics($datestart, $dateend, $description, $summary, $address){
-	
-	$ics = 'BEGIN:VCALENDAR'.
-	'VERSION:2.0'.
-	'PRODID:-//hacksw/handcal//NONSGML v1.0//EN'.
-	'CALSCALE:GREGORIAN'.
-	'BEGIN:VEVENT'.
-	'DTEND:'.dateToCal($dateend) .
-	'UID:'.uniqid().
-	'DTSTAMP:'.dateToCal(time()).
-	'LOCATION:'.escapeString($address).
-	'DESCRIPTION:'.escapeString($description).
-	'URL;VALUE=URI:'. escapeString(base_url() . '/measure') .
-	'SUMMARY:'.escapeString($summary).
-	'DTSTART:'.dateToCal($datestart).
-	'END:VEVENT'.
-	'END:VCALENDAR';
+function generateBase64Ics($datestart, $dateend, $attendeeName,
+	$attendeeEmail, $summary, $uid){
+
+	$ics = 'BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+DTSTART:'.dateToCal($datestart).'
+DTEND:'.dateToCal($dateend).'
+DTSTAMP:'.dateToCal(time()).'
+ORGANIZER;CN=Toolwatch:mailto:hello@toolwatch.com
+UID:'.$uid.'
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN='.$attendeeName.';X-NUM-GUESTS=0:mailto:'.$attendeeEmail.'
+CREATED:'.dateToCal(time()).'
+DESCRIPTION:'.$summary.'
+LAST-MODIFIED:'.dateToCal(time()).'
+LOCATION:https://toolwatch.io
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:'.$summary.'
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR';
 
 	return base64_encode($ics);
 }
