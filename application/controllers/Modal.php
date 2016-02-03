@@ -3,16 +3,6 @@
 class Modal extends MY_Controller
 {
 
-    private function ctaClick(){
-        if($this->input->post('cta') != ""){
-            $cta = 'CTA_' . strtoupper ( $this->input->post('cta') );
-
-            if(property_exists($this->event, $cta)){
-                $this->event->add($this->event->{$cta});
-            }
-        }
-    }
-
     public function accuracyWarning(){
         if($this->input->post('ajax'))
         {
@@ -29,7 +19,6 @@ class Modal extends MY_Controller
 	{
 		if($this->input->post('ajax'))
 		{
-            $this->ctaClick();
             $this->event->add(LOGIN_POPUP);
 			$this->load->view('modal/login');
 		}
@@ -43,9 +32,8 @@ class Modal extends MY_Controller
 	{
 		if($this->input->post('ajax'))
 		{
-            $this->ctaClick();
             $this->event->add(SIGN_UP_POPUP);
-			$this->load->view('modal/sign-up');
+			      $this->load->view('modal/sign-up');
 		}
         else
         {
