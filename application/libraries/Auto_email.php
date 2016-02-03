@@ -161,7 +161,8 @@ class Auto_email {
 		$this->checkAccuracyOneWeek($emailsMeasureSent);
 		$this->startANewMeasure($emailsWatchSent);
 
-		if(ENVIRONMENT === "development"){
+		if(ENVIRONMENT === "development" ||
+			 ENVIRONMENT === "testing"){
 			$date = new DateTime("@".$this->time);
 			echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
 
@@ -587,10 +588,6 @@ class Auto_email {
 
 		if ($measureWithoutAccuracy !== FALSE) {
 
-			if(!is_array($measureWithoutAccuracy)){
-				$measureWithoutAccuracy = array($measureWithoutAccuracy);
-			}
-
 			$measureWithoutAccuracy = $this->CI->__->groupBy($measureWithoutAccuracy, 'email');
 
 			foreach ($measureWithoutAccuracy as $user) {
@@ -786,6 +783,7 @@ class Auto_email {
 	 *
 	 * @param  Measure $measure
 	 * @return Base64String A googe reminder (.ics) as a Base64String.
+	 * @codeCoverageIgnore
 	 */
 	private function createGoogleEvent($measure){
 
