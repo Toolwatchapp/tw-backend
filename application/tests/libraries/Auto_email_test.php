@@ -134,15 +134,15 @@ class Auto_email_test extends TestCase {
 		$mandrillMessage->method('reschedule')->willReturn($returnReschedule);
 		$mandrillMessage->method('cancelScheduled')->willReturn($returnSend);
 
-		$CI->load->library('auto_email');
 		$CI->load->model('Watch');
 		$CI->load->model('Measure');
+		$CI->load->library('auto_email');
 
 		$CI->auto_email->CI->mandrill->messages = $mandrillMessage;
 		$CI->auto_email->CI->mcapi = $mcapi;
 
-		$this->email      = $CI->auto_email;
-		$this->watchModel = $CI->Watch;
+		$this->email        = $CI->auto_email;
+		$this->watchModel   = $CI->Watch;
 		$this->measureModel = $CI->Measure;
 	}
 
@@ -352,7 +352,6 @@ class Auto_email_test extends TestCase {
 
  	$this->assertEquals($emails['watches'][0]['emailType'],
  		$this->email->START_NEW_MEASURE);
-
   $this->assertEquals($emails['watches'][0]['content'],
  	$startNewMeasureContent);
 
@@ -389,24 +388,18 @@ class Auto_email_test extends TestCase {
 
  	$this->assertEquals($emails['users'][1]['userId'], self::$users['ernest']->userId);
  	$this->assertEquals($emails['users'][1]['emailType'], $this->email->COMEBACK);
-	$this->assertEquals($emails['users'][1]['content'], $comebackContent);
-
 
  	$this->assertEquals($emails['users'][2]['userId'], self::$users['anatole']->userId);
  	$this->assertEquals($emails['users'][2]['emailType'], $this->email->COMEBACK);
-	$this->assertEquals($emails['users'][2]['content'], $comebackContent);
 
  	$this->assertEquals($emails['users'][3]['userId'], self::$users['phillibert']->userId);
  	$this->assertEquals($emails['users'][3]['emailType'], $this->email->COMEBACK);
-	$this->assertEquals($emails['users'][3]['content'], $comebackContent);
 
  	$this->assertEquals($emails['users'][4]['userId'], self::$users['hippolyte']->userId);
  	$this->assertEquals($emails['users'][4]['emailType'], $this->email->COMEBACK);
-	$this->assertEquals($emails['users'][4]['content'], $comebackContent);
 
  	$this->assertEquals($emails['users'][5]['userId'], self::$users['raymond']->userId);
  	$this->assertEquals($emails['users'][5]['emailType'], $this->email->COMEBACK);
-	$this->assertEquals($emails['users'][5]['content'], $comebackContent);
 
  	//Check that the email is sent only once
  	$emails = $this->email->cronCheck(101*25*60*60);
@@ -436,21 +429,11 @@ class Auto_email_test extends TestCase {
 	//The watch is added at time() + 24*39*61*60
 	$emails = $this->email->cronCheck(102*25*60*60);
 
-	$addFirstMeasureContent = file_get_contents("emails/add_first_measure.html",
-	 FILE_USE_INCLUDE_PATH);
 
 	$this->assertEquals(sizeof($emails['users']), 0);
-	$this->assertEquals(sizeof($emails['watches']), 1);
+	$this->assertEquals(sizeof($emails['watches']), 0);
 	$this->assertEquals(sizeof($emails['measures']), 0);
 
-	$this->assertEquals($emails['watches'][0]['watchId'],
-		self::$watchId);
-
-	$this->assertEquals($emails['watches'][0]['emailType'],
-			$this->email->START_FIRST_MEASURE);
-
-	$this->assertEquals($emails['watches'][0]['content'],
-	 $addFirstMeasureContent);
 
 			//Check that the email is sent only once
 		$emails = $this->email->cronCheck(24*1*62*60);

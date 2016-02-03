@@ -67,7 +67,7 @@ class Auto_email {
 	private $day            = 86400;
 	private $cancelledEmail = 1;
 	private $timeOffset 		= 0;
-	private $time;
+	private $time						= 0;
 	private $lastBatchDate  = 0;
 	private $emailBatchModel;
 
@@ -85,6 +85,7 @@ class Auto_email {
 		$this->CI->load->model("user");
 		$this->CI->load->helper("email_content");
 		$this->CI->load->library("mcapi");
+		$this->CI->config->load('config');
 	}
 
 	/**
@@ -161,7 +162,7 @@ class Auto_email {
 		$this->startANewMeasure($emailsWatchSent);
 
 		if(ENVIRONMENT === "development"){
-			$date = new DateTime("@" . $this->time);
+			$date = new DateTime("@".$this->time);
 			echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
 
 			$this->showSentEmails($emailsUserSent, "User emails");
@@ -197,7 +198,7 @@ class Auto_email {
 			throw new Exception("Email Batch model can't be empty", 1);
 		}
 
-		return (float) $this->emailBatchModel
+		return (int) $this->emailBatchModel
 			->select("time")
 			->order_by("id", "desc")
 			->limit(1)
@@ -217,8 +218,7 @@ class Auto_email {
 		echo "<h2> ".$title." </h2>";
 
 		foreach ($emails as $email) {
-			echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email
-				. " " . $this->idToType[$email['emailType']];
+			echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
 			echo '\n'; var_dump($email['mandrill']); echo '\n';
 			echo $email['content'];
 		}
@@ -325,12 +325,43 @@ class Auto_email {
 		);
 	}
 
+	/**
+	 * Computes the upperBound for a given $timeCondition
+	 *
+	 * @param  Long $timeCondition seconds to go back
+	 * @return Long an upper bound depending on $timeCondition and
+	 * $this->time;
+	 */
 	private function getBatchUpperBound($timeCondition){
-		return $this->time-$timeCondition;
+
+		$upperBound = $this->time-$timeCondition;
+		$date = new DateTime("@" . $upperBound);
+
+		log_message('info', 'Upper Bound (' .$upperBound. ') '
+			. $date->format('Y-m-d H:i:s')
+		);
+
+		return $upperBound;
 	}
 
+	/**
+	 * Computes the lower bound for a give $timeCondition
+	 *
+	 * @param  Long $timeCondition A time condition to go back to
+	 * @return Long A lower bound depending on $timeCondition, $this->time
+	 * and $this->lastBatchDate
+	 */
 	private function getBatchLowerBound($timeCondition){
-		return $this->time-$timeCondition-($this->time-$this->lastBatchDate);
+
+		$lowerBound = $this->time-$timeCondition-($this->time-$this->lastBatchDate);
+		$date = new DateTime("@" . $lowerBound);
+		$last = new DateTime("@" . $this->lastBatchDate);
+
+		log_message('info', 'Lower Bound (' .$lowerBound. ') '
+			. $date->format('Y-m-d H:i:s') . ' ' . $last->format('Y-m-d H:i:s')
+		);
+
+		return $lowerBound;
 	}
 
 	/**
@@ -340,6 +371,9 @@ class Auto_email {
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
 	private function inactiveUser(&$queuedEmail) {
+
+		log_message('info', 'inactiveUser');
+
 		$inactiveUsers = $this->CI
 			->user
 			->select()
@@ -381,6 +415,8 @@ class Auto_email {
 	 */
 	private function userWithoutWatch(&$queuedEmail) {
 
+		log_message('info', 'userWithoutWatch');
+
 		$userWithoutWatch = $this->CI
 			->user
 			->select('user.userId, user.name, firstname, email, lastLogin')
@@ -421,12 +457,16 @@ class Auto_email {
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
 	private function userWithWatchWithoutMeasure(&$queuedEmail) {
+
+		log_message('info', 'userWithWatchWithoutMeasure');
+
 		$userWithWatchWithoutMeasure = $this->CI
 			->watch
 			->select('watch.watchId, watch.brand, watch.name as watchName,
 			user.name, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
+			->where('(select count(1) from watch where watch.userId = user.userId) = ', 1)
 			->where('creationDate < ', $this->getBatchUpperBound($this->day))
 			->where('creationDate > ', $this->getBatchLowerBound($this->day))
 			->as_array()
@@ -471,6 +511,8 @@ class Auto_email {
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
 	private function userWithOneCompleteMeasureAndOneWatch(&$queuedEmail) {
+
+		log_message('info', 'userWithOneCompleteMeasureAndOneWatch');
 
 		$userWithOneCompleteMeasureAndOneWatch = $this->CI
 			->user
@@ -528,10 +570,12 @@ class Auto_email {
 	 */
 	private function checkAccuracy(&$queuedEmail) {
 
+		log_message('info', 'checkAccuracy');
+
 		$measureWithoutAccuracy = $this->CI
 			->measure
 			->select('measure.id as measureId, measure.*, watch.*,
-								watch.name as watchName, user.userId, user.name,
+								watch.name as watchName, user.userId, user.name as lastname,
 								user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
@@ -547,18 +591,22 @@ class Auto_email {
 				$measureWithoutAccuracy = array($measureWithoutAccuracy);
 			}
 
-			$this->CI->__->groupBy($measureWithoutAccuracy, 'email');
+			$measureWithoutAccuracy = $this->CI->__->groupBy($measureWithoutAccuracy, 'email');
 
 			foreach ($measureWithoutAccuracy as $user) {
 
-				$user = (object) $user;
-
-				$emailcontent = $this->CI->load->view('email/generic',
-					checkAccuracyContent($user->firstname, $user), true);
+				$emailcontent = $this->CI->load->view(
+					'email/generic',
+						checkAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
+						),
+				true);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
-					$user->measureId,
+					$user[0]['measureId'],
 					$this->CHECK_ACCURACY,
 					$this->time,
 					'measureId',
@@ -566,8 +614,8 @@ class Auto_email {
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
 						$emailcontent,
-						$user->name.' '.$user->firstname,
-						$user->email,
+						$user[0]['lastname'].' '.$user[0]['firstname'],
+						$user[0]['email'],
 						'check_accuracy_email',
 						$this->sendAtString($this->time)
 					)
@@ -583,10 +631,13 @@ class Auto_email {
 	 * @param  array $queuedEmail queue to store the computed email
 	 */
 	private function checkAccuracyOneWeek(&$queuedEmail) {
+
+		log_message('info', 'checkAccuracyOneWeek');
+
 		$measureWithoutAccuracy = $this->CI
 			->measure
 			->select('measure.id as measureId, watch.*, user.userId,
-			measure.*, watch.name as watchName, user.name, user.firstname, email')
+			measure.*, watch.name as watchName, user.name as lastname, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 1)
@@ -597,18 +648,22 @@ class Auto_email {
 
 		if ($measureWithoutAccuracy !== FALSE) {
 
-			$this->CI->__->groupBy($measureWithoutAccuracy, 'email');
+			$measureWithoutAccuracy = $this->CI->__->groupBy($measureWithoutAccuracy, 'email');
 
 			foreach ($measureWithoutAccuracy as $user) {
 
-				$user = (object) $user;
-
-				$emailcontent = $this->CI->load->view('email/generic',
-					oneWeekAccuracyContent($user->firstname, $user), true);
+				$emailcontent = $this->CI->load->view(
+					'email/generic',
+						oneWeekAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
+						),
+				true);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
-					$user->measureId,
+					$user[0]['measureId'],
 					$this->CHECK_ACCURACY_1_WEEK,
 					$this->time,
 					'measureId',
@@ -616,8 +671,8 @@ class Auto_email {
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
 						$emailcontent,
-						$user->name.' '.$user->firstname,
-						$user->email,
+						$user[0]['lastname'].' '.$user[0]['firstname'],
+						$user[0]['email'],
 						'check_accuracy_email',
 						$this->sendAtString($this->time)
 					)
@@ -634,10 +689,12 @@ class Auto_email {
 	 */
 	private function startANewMeasure(&$queuedEmail) {
 
-		$userWithWatchWithoutMeasure = $this->CI
+		log_message('info', 'startANewMeasure');
+
+		$watchesInNeedOfNewMeasure = $this->CI
 			->measure
 			->select('watch.watchId, watch.name as watchName, watch.brand,
-			user.userId, user.name, user.firstname, email, measure.*')
+			user.userId, user.name as lastname, user.firstname, email, measure.*')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
 			->where('statusId', 2)
@@ -646,20 +703,25 @@ class Auto_email {
 			->as_array()
 			->find_all();
 
-		if ($userWithWatchWithoutMeasure !== FALSE) {
+		if ($watchesInNeedOfNewMeasure !== FALSE) {
 
-			$this->CI->__->groupBy($userWithWatchWithoutMeasure, 'email');
+			$watchesInNeedOfNewMeasure =
+				$this->CI->__->groupBy($watchesInNeedOfNewMeasure, 'email');
 
-			foreach ($userWithWatchWithoutMeasure as $user) {
+			foreach ($watchesInNeedOfNewMeasure as $user) {
 
-				$user = (object) $user;
-
-				$emailcontent = 	$this->CI->load->view('email/generic',
-						oneMonthAccuracyContent($user->firstname, $user), true);
+				$emailcontent = $this->CI->load->view(
+					'email/generic',
+						oneMonthAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
+						),
+				true);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
-					$user->watchId,
+					$user[0]['watchId'],
 					$this->START_NEW_MEASURE,
 					$this->time,
 					'watchId',
@@ -667,8 +729,8 @@ class Auto_email {
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
 						$emailcontent,
-						$user->name.' '.$user->firstname,
-						$user->email,
+						$user[0]['lastname'].' '.$user[0]['firstname'],
+						$user[0]['email'],
 						'check_accuracy_email',
 						$this->sendAtString($this->time)
 					)
@@ -688,7 +750,10 @@ class Auto_email {
 
 		return $this->sendMandrillEmail(
 			'Welcome to Toolwatch! ⌚',
-			$this->CI->load->view('email/signup', '', true),
+			$this->CI->load->view(
+				'email/generic',
+				signupContent($user->firstname),
+				true),
 			$user->name.' '.$user->firstname,
 			$user->email,
 			'signup',
@@ -705,12 +770,108 @@ class Auto_email {
 	private function resetPassword($email, $token) {
 		return $this->sendMandrillEmail(
 			'Your Toolwatch password ⌚',
-			$this->CI->load->view('email/reset-password', array('resetToken'=>$token), true),
+			$this->CI->load->view(
+				'email/generic',
+				resetPasswordContent($token),
+				true),
 			'',
 			$email,
 			'reset_password',
 			$this->sendAtString(time())
 		);
+	}
+
+	/**
+	 * Create a google reminder
+	 *
+	 * @param  Measure $measure
+	 * @return Base64String A googe reminder (.ics) as a Base64String.
+	 */
+	private function createGoogleEvent($measure){
+
+			/**
+			 * FIXME: Worst hack ever.
+			 *
+			 * When running phpunit, the proc doesn't have the right to /tmp
+			 * which result in the following exception:
+			 *
+			 * write on Google_Cache_Exception: Could not create storage directory: /tmp/Google_Client/a4
+			 *
+			 * A mock is not doable (at least I don't know how) because
+			 * this method is called by the notify mechanism of observer/ovbersee
+			 * pattern. Auto_email is an observer of almost all models throught
+			 * ObservableModel and $_observers in ObservableModel is private static.
+			 *
+			 * I might be able to do something better #123 (https://github.com/MathieuNls/tw/issues/123)
+			 * Like open the circuit breaker when calling addAccuracyMesure of
+			 * the measureModel...
+			 */
+			if(ENVIRONMENT !== "testing"){
+				// Create the date and description
+				$description = "Check the accuracy of my ".$measure->brand.' '.$measure->model;
+				$in30days = time() + 30*24*60*60;
+				$in30daysAndOneHour = time() + 30*24*60*60+(60*60);
+				$date = new DateTime("@".$in30days);
+				$dateEnd = new DateTime("@".$in30daysAndOneHour);
+
+				require_once(APPPATH.'libraries/Google/autoload.php');
+
+				//A google event as defined https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+				$event = new Google_Service_Calendar_Event(array(
+				  'summary' => "Check the accuracy of my ".$measure->brand.' '.$measure->model,
+				  'location' => 'https://toolwatch.io',
+				  'description' => "Check the accuracy of my ".$measure->brand.' '.$measure->model,
+				  'start' => array(
+				    'dateTime' =>  $date->format('Y-m-d').'T'.$date->format("H:i:s").'-00:00',
+				    'timeZone' => 'Europe/London',
+				  ),
+				  'end' => array(
+				    'dateTime' => $dateEnd->format('Y-m-d').'T'.$dateEnd->format("H:i:s").'-00:00',
+				    'timeZone' => 'Europe/London',
+				  ),
+				  'attendees' => array(
+				    array('email' => $measure->email)
+				  )
+				));
+
+				//Create a google client an authenticate it
+				$client = new Google_Client();
+				$client->setApplicationName("Client_Calendar_Toolwatch");
+				$service = new Google_Service_Calendar($client);
+
+				$key = file_get_contents($this->CI->config->item('google_api_key'));
+				$cred = new Google_Auth_AssertionCredentials(
+				    $this->CI->config->item('google_api_account'),
+				    array('https://www.googleapis.com/auth/calendar'),
+				    $key
+				);
+
+				$client->setAssertionCredentials($cred);
+				if ($client->getAuth()->isAccessTokenExpired()) {
+				  $client->getAuth()->refreshTokenWithAssertion($cred);
+				}
+
+				//Create the event
+				$event = $service->events->insert('primary', $event);
+
+				//Generate the base64String representing the .ics file
+				//using the returned event and processed variable
+
+				$this->CI->load->helper('ics');
+
+				return generateBase64Ics(
+					$in30days,
+					$in30daysAndOneHour,
+					$event->displayName,
+					$event->email,
+					$description,
+					$event->iCalUID
+				);
+			}else{
+				//"A google event" encoded in base 64
+				return "QSBnb29nbGUgZXZlbnQ=";
+			}
+
 	}
 
 	/**
@@ -721,22 +882,29 @@ class Auto_email {
 	private function newResult($measure) {
 
 		$attachments = array();
-		$description = "Check the accuracy of my ".$measure->brand.' '.$measure->model;
-		$this->CI->load->helper('ics');
-		$in30days = time() + 30*24*60*60;
+
 
 		array_push($attachments, array(
 				'type'    => 'text/calendar',
-				'name'    => 'Check my watch accuracy',
-				'content' => generateBase64Ics($in30days, $in30days, $description, 'Check my watch accuracy', 'Toolwatch.io')
-			));
+				'name'    => 'Check my watch accuracy.ics',
+				'content' =>  $this->createGoogleEvent($measure)
+		));
 
-		$emailcontent = $this->CI->load->view('email/generic',
-					watchResultContent($measure->firstname, $measure->brand,
-					$measure->model, $measure->accuracy), true);
+
+		$emailcontent = $this->CI->load->view(
+					'email/generic',
+					watchResultContent(
+						$measure->firstname,
+						$measure->brand,
+						$measure->model,
+						$measure->accuracy,
+						$this->CI->measure->getMeasuresByUser($measure->userId)
+					),
+					true
+		);
 
 		$this->sendMandrillEmail(
-			'The result of your watch’s accuracy! ⌚',
+			'The result of your watch\'s accuracy ! ⌚',
 			$this->CI->load->view('email/generic', $emailcontent, true),
 			$measure->name.' '.$measure->firstname,
 			$measure->email,
