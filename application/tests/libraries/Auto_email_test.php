@@ -47,7 +47,6 @@ class Auto_email_test extends TestCase {
 
 		$emailBatch = new MY_Model("email_batch");
 		$emailBatch->delete_where(array("id >="      => "0"));
-		$emailBatch->insert(array("time"=>0, "amount"=>0));
 
 		$CI->measure->delete_where(array("id >="      => "0"));
 		$CI->Watch->delete_where(array("watchId >="   => "0"));
@@ -193,6 +192,14 @@ class Auto_email_test extends TestCase {
  	);
  }
 
+ /**
+  *  @expectedException Exception
+  */
+ public function test_cronFail(){
+
+	 $this->email->cronCheck(time()-60*60*60);
+ }
+
   /**
    * Nestor adds a watch and a baseMeasure.
    * 24h later, he have reminder for the accuracyMeasure.
@@ -201,6 +208,9 @@ class Auto_email_test extends TestCase {
    * @return pass|fail
    */
  public function test_AccuracyAndAddFirstWatch(){
+
+	 $emailBatch = new MY_Model("email_batch");
+	 $emailBatch->insert(array("time"=>0, "amount"=>0));
 
  	self::$watchId = $this->watchModel->addWatch(
  		self::$users['nestor']->userId,
@@ -415,6 +425,8 @@ class Auto_email_test extends TestCase {
 	*/
  public function test_addFirstMeasure(){
 
+	$this->watchModel->delete_where(array("watchId >=" => "0"));
+
 	$data = array(
 		'userId'    =>  self::$users['nestor']->userId,
 		'brand'     =>  'rolex',
@@ -431,7 +443,7 @@ class Auto_email_test extends TestCase {
 
 
 	$this->assertEquals(sizeof($emails['users']), 0);
-	$this->assertEquals(sizeof($emails['watches']), 0);
+	$this->assertEquals(sizeof($emails['watches']), 1);
 	$this->assertEquals(sizeof($emails['measures']), 0);
 
 
