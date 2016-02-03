@@ -277,7 +277,9 @@ class Auto_email {
 		$ip_pool = 'Main Pool';
 		$send_at = $sendAt;
 		$mandrillResponse =  $this->CI->mandrill->messages->send($message, $async, $ip_pool, $send_at);
-		log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
+		log_message('info', 'Mandrill email: '
+			. print_r($mandrillResponse, true) .
+			' at ' . $sendAt);
 		return $mandrillResponse;
 	}
 
@@ -293,7 +295,17 @@ class Auto_email {
 		//We remove $this->timeOffset to $scheduleTime in
 		//order to send emails right away when exploring
 		//computation in the future / past
-		$scheduleTime = $scheduleTime  - $this->timeOffset;
+		$scheduleTime = $scheduleTime - $this->timeOffset;
+
+		//So, Mailchimp provides a best effort service.
+		//If we tell them, we want our email at time(),
+		//they'll answer that the email is scheduled
+		//and it'll take 30/90 min for it to be effectively
+		//sent according to my observations.
+		//Agressively scheduling emails in the past seams
+		//to provide better results, i.e, the emails are
+		//sent right away.
+		$scheduleTime = $scheduleTime-48*60*60;
 
 		$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
 		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
