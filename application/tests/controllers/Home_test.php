@@ -27,13 +27,6 @@ class Home_test extends TestCase {
 		$this->assertContains('<form class="form-horizontal" name="contact">', $output);
 	}
 
-	public function test_signupEmail() {
-
-		$output = $this->request('GET', ['Home', 'signupEmail']);
-
-		$this->assertContains('<div style="margin-top: 20px; font-family:', $output);
-	}
-
 	public function test_resetPassword() {
 		$output = $this->request('GET', ['Home', 'resetPassword']);
 		$this->assertContains('<div class="col-md-12"><center><h1>Reset your password</h1></center></div>', $output);
