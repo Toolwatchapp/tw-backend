@@ -6,6 +6,11 @@ class Event {
 		$this->add($event);
 	}
 
+	/**
+	 * Send an event to the reporting tool
+	 * @param String $event
+	 * @codeCoverageIgnore
+	 */
 	public function add($event) {
 
 		if (ENVIRONMENT === 'production') {
