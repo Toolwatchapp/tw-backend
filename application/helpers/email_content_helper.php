@@ -85,27 +85,20 @@ function comebackContent($firstName){
  * @param String $firstName of the recipient
  * @param Array $watches represents the control panel of given user
  */
-function checkAccuracyContent($firstName, $watches){
+function checkAccuracyContent($firstName, $watchesToCheck, $watches){
 
-  // if the user has only one watch to be checked now
-  $content = 'You\'ve synchronized your ' .
-    $watches->brand.' '.$watches->watchName . ' with
-    Toolwatch one day ago and now is the time to see the results
-    of your watch\'s accuracy !<br>';
+  $content = 'One day ago, you\'ve synchronized the following watch(es): <ul>';
 
-  // override the one watch version in case we have many watches to report
-  if(sizeof($watches) > 1){
+  var_dump($watches);
 
-    $content = 'You’ve synchronized the following watches <ul>';
-
-    foreach ($watches as $watch) {
-      $content += '<li>'.$watch->brand.' '.$watch->watchName.'</li>';
-    }
-
-    $content += "</ul> with
-    Toolwatch one day ago and now is the time to see the results
-    of your watch’s accuracy !<br>";
+  foreach ($watchesToCheck as $watch) {
+    $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
   }
+
+  $content .= "</ul> with
+    Toolwatch and now is the time to see the results
+    of your watch's accuracy !<br>";
+
 
   return array(
     'title' => 'Hey '.$firstName.'!',
@@ -125,27 +118,18 @@ function checkAccuracyContent($firstName, $watches){
  * @param String $firstName of the recipient
  * @param Array $watches represents the control panel of given user
  */
-function oneWeekAccuracyContent($firstName, $watches){
+function oneWeekAccuracyContent($firstName, $watchesToCheck, $watches){
 
-  // if the user has only one watch to be checked now
-  $content = 'You\'ve synchronized your ' .
-    $watches->brand.' '.$watches->watchName . ' with
-    Toolwatch one week ago and now is the time to see the results
-    of your watch\'s accuracy !<br>';
 
-  // override the one watch version in case we have many watches to report
-  if(sizeof($watches) > 1){
+  $content = 'One week ago, you\'ve synchronized the following watch(es): <ul>';
 
-    $content = 'You\'ve synchronized the following watches <ul>';
-
-    foreach ($watches as $watch) {
-      $content += '<li>'.$watch->brand.' '.$watch->watchName.'</li>';
-    }
-
-    $content += "</ul> with
-    Toolwatch one week ago and now is the time to see the results
-    of your watch\'s accuracy !<br>";
+  foreach ($watchesToCheck as $watch) {
+      $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
   }
+
+  $content .= "</ul> with
+    Toolwatch and now is the time to see the results
+    of your watch's accuracy !<br>";
 
   return array(
     'title' => 'Hey '.$firstName.'!',
@@ -160,23 +144,15 @@ function oneWeekAccuracyContent($firstName, $watches){
   );
 }
 
-function oneMonthAccuracyContent($firstName, $watches){
+function oneMonthAccuracyContent($firstName, $watchesToCheck, $watches){
 
-  // if the user has only one watch to be checked now
-  $content = 'Last month you measured your ' .
-    $watches->brand.' '.$watches->watchName;
+  $content = 'Last month you measured the following watch(es): <ul>';
 
-    // override the one watch version in case we have many watches to report
-    if(sizeof($watches) > 1){
+  foreach ($watchesToCheck as $watch) {
+      $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
+  }
 
-      $content = 'Last month you measured the followin watches <ul>';
-
-      foreach ($watches as $watch) {
-        $content += '<li>'.$watch->brand.' '.$watch->watchName.'</li>';
-      }
-
-      $content += "</ul>";
-    }
+  $content .= "</ul>";
 
   return array(
     'title' => 'Hey '.$firstName.'!',
@@ -196,11 +172,13 @@ function oneMonthAccuracyContent($firstName, $watches){
       <a href="https://twitter.com/toolwatchapp">Twitter</a> or
       <a href="https://www.instagram.com/Toolwatchapp/">Instagram</a>
       using our <a href="https://twitter.com/hashtag/toolwatchapp?f=tweets&src=hash">#ToolwatchApp</a> hashtag and join us
-      spreading the love for mechanical timepieces!'
+      spreading the love for mechanical timepieces!',
+      'summary' => $watches
     );
 }
 
-function watchResultContent($firstname, $brand, $model, $accuracy){
+function watchResultContent($firstname, $brand, $model,
+  $accuracy, $watches){
   return array(
     'title' => 'Hurray '.$firstname.'!',
     'content' =>
@@ -213,7 +191,7 @@ function watchResultContent($firstname, $brand, $model, $accuracy){
       variations in your watch\'s accuracy. Why not add in your calendar
       a reminder to come back and check that everything\'s fine in one
       month ?
-      <br />
+      <br /><br />
       You might also want to <a href="https://blog.toolwatch.io/watch-tips/">
       read our tips and advices</a> for keeping your watch running
       safe and smooth !
@@ -222,6 +200,41 @@ function watchResultContent($firstname, $brand, $model, $accuracy){
       <br /><br />
       Happy toolwatching !
       <br />
-      The Toolwatch Team'
+      The Toolwatch Team',
+      'summary' => $watches
     );
 }
+
+function signupContent($firstname){
+
+  return array(
+    'title' => 'Hey '.$firstname.'!',
+    'content' =>
+      'We are very happy to welcome you to Toolwatch ! <br>
+      <br>
+      Every single one of us is here for you to help you getting the most from your mechanical watch. Drop us a line anytime at <a href="mailto:hello@toolwatch.io">hello@toolwatch.io</a> or tweet us <a href="https://twitter.com/toolwatchapp/">@toolwatchapp</a>.<br>
+      <br>
+      If there is just one single tip we’d share for taking care of your watch, we’d say try to keep your watch away from magnetic fields such as the speakers of your laptop or your radio alarm clock for example. That’s it !<br>
+      <br>
+      That being said, we can’t wait for helping you starting <a href="http://www.toolwatch.io/">measuring</a> the accuracy of your watch now !<br>
+      <br>
+      Happy toolwatching !<br>
+      <br>
+      The Toolwatch Team<br>'
+  );
+}
+
+function resetPasswordContent($resetToken){
+
+    return array(
+      'title' => 'Hey !',
+      'content' =>
+        'We saw that you\'ve forgotten your password. No worries, we got you covered !<br>
+        <br>
+        Simply click on the following link and you’ll be asked to chose a new one : <a href="http://www.toolwatch.io/reset-password/'. $resetToken . '">http://www.toolwatch.io/reset-password/'.$resetToken.'</a><br>
+        <br>
+        Happy toolwatching !<br>
+        <br>
+        The Toolwatch Team<br>'
+    );
+  }
