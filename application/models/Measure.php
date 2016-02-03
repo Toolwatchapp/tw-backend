@@ -72,13 +72,18 @@ class Measure extends ObservableModel {
 		if(is_numeric($watchMeasure->accuracyUserTime)
 		&& is_numeric($watchMeasure->measureUserTime)
 		&& is_numeric($watchMeasure->accuracyReferenceTime)
-		&& is_numeric($watchMeasure->measureReferenceTime))
+		&& is_numeric($watchMeasure->measureReferenceTime)
+		&& !is_null($watchMeasure->accuracyReferenceTime)
+		&& !is_null($watchMeasure->measureReferenceTime))
 		{
 			$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
 			$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
 			$accuracy  = ($userDelta*86400/$refDelta)-86400;
 			$accuracy  = sprintf("%.1f", $accuracy);
 			$watchMeasure->accuracy = $accuracy;
+
+			$watchMeasure->accuracyAge =
+				round((time() - $watchMeasure->accuracyReferenceTime) / 86400);
 		}
 
 		//Compute 1.5 status. When a measure is less than 12 hours old
@@ -177,13 +182,14 @@ class Measure extends ObservableModel {
 
 			$watchMeasure = $this
 			->select("measure.*, watch.name as model, watch.brand, user.email,
-				user.firstname, user.name")
+				user.firstname, user.name, user.userId")
 			->join("watch", "watch.watchId = measure.watchId")
 			->join("user", "user.userId = watch.userId")
 			->find($measureId);
 
+
 			$this->notify(NEW_ACCURACY,
-				array('measure'   => $watchMeasure));
+								array('measure'   => $watchMeasure));
 
 			$watchMeasure->percentile =
 				$this->computePercentileAccuracy($watchMeasure->accuracy);
