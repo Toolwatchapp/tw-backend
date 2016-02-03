@@ -178,7 +178,8 @@ class Measure extends ObservableModel {
 			'accuracyUserTime'      => $userTime,
 			'statusId'              => 2);
 
-		if ($this->update($measureId, $data) !== false) {
+		if ($this->update($measureId, $data) !== false
+			&& $this->affected_rows() === 1) {
 
 			$watchMeasure = $this
 			->select("measure.*, watch.name as model, watch.brand, user.email,
