@@ -42,10 +42,6 @@
 function dateToCal($timestamp) {
 	return date('Ymd\THis\Z', $timestamp);
 }
-// Escapes a string of characters
-function escapeString($string) {
-	return preg_replace('/([\,;])/', '\\\$1', $string);
-}
 
 function generateBase64Ics($datestart, $dateend, $attendeeName,
 	$attendeeEmail, $summary, $uid){
