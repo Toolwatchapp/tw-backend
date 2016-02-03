@@ -93,6 +93,9 @@ class Home extends MY_Controller {
 	function about() {
 		$this->_headerData['headerClass'] = 'blue';
 		$this->_headerData['title']       = 'About Toolwatch';
+		$this->_headerData['meta_description'] = 'Toolwatch is where
+		watch aficionados measure the accuracy and precision of their watch.
+		More than 5000 people use Toolwatch to take care of their watch.';
 		$this->load->view('header', $this->_headerData);
 		$this->load->view('about');
 		$this->load->view('footer');
@@ -101,6 +104,10 @@ class Home extends MY_Controller {
 	function contact() {
 		$this->_headerData['headerClass'] = 'blue';
 		$this->_headerData['title']       = 'Contact';
+		$this->_headerData['meta_description'] = 'Contact the Toolwatch
+		Team. We are here to answer questions about watch accuracy,
+		precision, maintenance for watches and lots of other
+		interesting topics.';
 		$this->load->view('header', $this->_headerData);
 		$this->load->view('contact');
 		$this->load->view('footer');
