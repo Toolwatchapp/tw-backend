@@ -22,19 +22,20 @@ class Measures_test extends TestCase {
 		);
 
 		$CI->User->login('mathieu@gmail.com', 'azerty');
-
 		self::$userId = $CI->session->userdata('userId');
-
-		$CI->emailWatch   = new MY_Model('email_watch');
-		$CI->emailMeasure = new MY_Model('email_measure');
-		$CI->emailUser   = new MY_Model('email_user');
-
-		$CI->emailUser->delete_where(array("id >=" => "0"));
-		$CI->emailWatch->delete_where(array("id >=" => "0"));
-		$CI->emailMeasure->delete_where(array("id >=" => "0"));
 
 		$CI->Watch->delete_where(array("watchId >=" => "0"));
 		$CI->Measure->delete_where(array("id >="    => "0"));
+
+		self::$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'brand',
+			'name',
+			2015,
+			28,
+			014
+		);
+
 	}
 
 	public function test_index(){
@@ -60,6 +61,53 @@ class Measures_test extends TestCase {
 		$this->assertContains('Watch successfully added!', $output);
 	}
 
+	public function test_editWatchFailForm(){
+		$output = $this->request(
+			'POST',
+			['Measures', 'edit_watch_p'],
+			[
+				'watchId' => 0
+			]
+		);
+
+		$this->assertEquals(null, $output);
+	}
+
+	public function test_editwatchForm(){
+		$output = $this->request(
+			'POST',
+			['Measures', 'edit_watch_p'],
+			[
+				'watchId' => self::$watchId
+			]
+		);
+
+		$this->assertContains("Edit your watch", $output);
+	}
+
+	public function test_new_measure_for_watchFail(){
+		$output = $this->request(
+			'POST',
+			['Measures', 'new_measure_for_watch'],
+			[
+			]
+		);
+
+		$this->assertEquals(null, $output);
+	}
+
+	public function test_new_measure_for_watch(){
+		$output = $this->request(
+			'POST',
+			['Measures', 'new_measure_for_watch'],
+			[
+				'watchId' => self::$watchId
+			]
+		);
+
+		$this->assertContains("New measure", $output);
+	}
+
 	public function test_indexDeleteMeasures(){
 		$output = $this->request(
 			'POST',
@@ -70,6 +118,36 @@ class Measures_test extends TestCase {
 		);
 
 		$this->assertContains('Measures successfully deleted!', $output);
+	}
+
+	public function test_indexEditWatch(){
+		$CI = &get_instance();
+		$CI->load->model('Watch');
+		$watch = $CI->Watch->find_by('userId', self::$userId);
+
+		$output = $this->request(
+			'POST',
+			['Measures', 'edit_watch'],
+			[
+				'watchId' => $watch->watchId,
+				'brand'      => 'branda',
+				'name'      => 'nama',
+				'yearOfBuy'      => 2014,
+				'serial'      => 2013,
+				'caliber'      => 2012
+			]
+		);
+
+		$this->assertContains('Watch successfully updated!', $output);
+
+		$watch = $CI->Watch->find_by('watchId', $watch->watchId);
+
+		$this->assertEquals($watch->brand, "branda");
+		$this->assertEquals($watch->name, "nama");
+		$this->assertEquals($watch->yearOfBuy, 2014);
+		$this->assertEquals($watch->serial, 2013);
+		$this->assertEquals($watch->caliber, 2012);
+
 	}
 
 	public function test_indexDeleteWatch(){

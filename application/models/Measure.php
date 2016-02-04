@@ -72,13 +72,18 @@ class Measure extends ObservableModel {
 		if(is_numeric($watchMeasure->accuracyUserTime)
 		&& is_numeric($watchMeasure->measureUserTime)
 		&& is_numeric($watchMeasure->accuracyReferenceTime)
-		&& is_numeric($watchMeasure->measureReferenceTime))
+		&& is_numeric($watchMeasure->measureReferenceTime)
+		&& !is_null($watchMeasure->accuracyReferenceTime)
+		&& !is_null($watchMeasure->measureReferenceTime))
 		{
 			$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
 			$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
 			$accuracy  = ($userDelta*86400/$refDelta)-86400;
 			$accuracy  = sprintf("%.1f", $accuracy);
 			$watchMeasure->accuracy = $accuracy;
+
+			$watchMeasure->accuracyAge =
+				round((time() - $watchMeasure->accuracyReferenceTime) / 86400);
 		}
 
 		//Compute 1.5 status. When a measure is less than 12 hours old
@@ -100,6 +105,31 @@ class Measure extends ObservableModel {
 		}
 
 		return $watchMeasure;
+	}
+
+	/**
+	 * Computes the percentile for an accuracy, i.e, the percentage
+	 * of watches that are less accurate than $accuracy.
+	 *
+	 * The percentile excludes bugged measure (+/- 300 spd)
+	 *
+	 * @param  float $accuracy A complete measure with computed
+	 * @return int the percentile for this accuracy.
+	 */
+	function computePercentileAccuracy($accuracy){
+
+		//This have to be kept in line with the computeAccuracy method
+		$precisionFormulae = 'ABS(((measure.accuracyUserTime
+		- measure.measureUserTime)*86400)/
+		(measure.accuracyReferenceTime - measure.measureReferenceTime)
+		-86400)';
+
+		$moreAccurateCount = $this->count_by($precisionFormulae . ' <',
+			abs($accuracy));
+
+		$valideMeasuresCount = $this->count_by($precisionFormulae . ' <', 300);
+
+		return round(100 - (($moreAccurateCount / $valideMeasuresCount) * 100));
 	}
 
 	/**
@@ -148,12 +178,22 @@ class Measure extends ObservableModel {
 			'accuracyUserTime'      => $userTime,
 			'statusId'              => 2);
 
-		if ($this->update($measureId, $data) !== false) {
+		if ($this->update($measureId, $data) !== false
+			&& $this->affected_rows() === 1) {
 
-			$watchMeasure = $this->find($measureId);
+			$watchMeasure = $this
+			->select("measure.*, watch.name as model, watch.brand, user.email,
+				user.firstname, user.name, user.userId")
+			->join("watch", "watch.watchId = measure.watchId")
+			->join("user", "user.userId = watch.userId")
+			->find($measureId);
+
 
 			$this->notify(NEW_ACCURACY,
-				array('measure'   => $watchMeasure));
+								array('measure'   => $watchMeasure));
+
+			$watchMeasure->percentile =
+				$this->computePercentileAccuracy($watchMeasure->accuracy);
 
 			return $watchMeasure;
 		}

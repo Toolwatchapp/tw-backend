@@ -8,7 +8,7 @@
         <div class="col-md-6 col-md-offset-3">
             <form class="form-horizontal" method="post" name="newAccuracy">
 
-                
+
                 <div id="mainExplanation" class="form-group">
                      <center>
                          At the end of the countdown, please enter below the exact time as it is on your watch. <br>Let's check the accuracy of your watch!
@@ -43,43 +43,64 @@
                     </div>
                 </div>
 
-                <div class="form-group sync-success" style="display:none; text-align: center">  
+                <div class="form-group sync-success" style="display:none; text-align: center">
 
                     <div class="col-sm-12">
 
                         <canvas class="col-sm-4" id="canvas_animated_watch" width="250" height="250"></canvas>
                         <div class="col-sm-8">
-                            
+
                             <div class="col-sm-8">
                                 <h1>Congratulations!</h1> <br/> <p class="accuracy-subtitle"> The accuracy of your <strong><span class="watch-brand"><?php echo $selectedWatch->brand;?></span></strong> is </p>
                             </div>
                             <div class="col-sm-8">
-                                <strong><span class="watch-accuracy"></span> seconds a day!</strong> 
+                                <strong><span class="watch-accuracy"></span> seconds a day!</strong>
                             </div>
                         </div>
 
                         <div class="share-plugin col-md-offset-1 col-sm-10">
-                            <center><p><br /><br />We are happy to have you around, help us spread the love for mechanical watches and share your accuracy on:</p></center>
-                           
+                            <center><p><br /><br />Your watch is <b>more accurate than <span class="watch-percentile"></span>%</b> of all tested watches.</p></center>
+
                         <div class="col-sm-12">
-                            <div class="share-button" id="twitter" data-url="<?php echo base_url() . 'result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on @toolwatchapp"></div>
-                            <div class="share-button" id="facebook" data-url="<?php echo base_url() . 'result' ;?>" data-text="My <?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on https://www.facebook.com/Toolwatch"></div>
-                            <div class="share-button" id="googleplus" data-url="<?php echo base_url() . 'result' ;?>" data-text="My #<?php echo $selectedWatch->brand;?> runs at {WatchAccuracy} spd on https://plus.google.com/104724190750629608501/"></div>        
+                          <a class="share-button"
+                          href="https://twitter.com/intent/tweet?text=My watch is more accurate than {WatchPercentile}%25 of all tested watches on @ToolWatchApp&url=https://toolwatch.io"
+                          target="_blank">
+                            <img src="<?php echo base_url();?>assets/img/tweet.png" alt="Tweet on tweeter" />
+                          </a>
+
+                          <a class="share-button"
+                          href="http://www.facebook.com/sharer.php?s=100&p[url]=https://toolwatch.io&p[title]=I just tested the accuracy of my watch&p[summary]=My watch is more accurate than {WatchPercentile}%25 of all tested watches on https://www.facebook.com/Toolwatch"
+                          target="_blank">
+                            <img src="<?php echo base_url();?>assets/img/facebook.png" alt="Share on timeline" />
+                          </a>
+
+                          <a class="share-button"
+                          href="https://plus.google.com/share?url=https://toolwatch.io"
+                          target="_blank">
+                            <img src="<?php echo base_url();?>assets/img/google-plus.png" alt="Share on timeline" />
+                          </a>
+
+                          <a class="share-button"
+                          href="mailto:?to=&Subject=I just tested the accuracy of my watch&body=My watch is more accurate than {WatchPercentile}%25 of all tested watches on https://toolwatch.io"
+                          target="_top">
+                            <img src="<?php echo base_url();?>assets/img/email-share.png" alt="Share by email" />
+                          </a>
                         </div>
-                           
+
+                        <br/>
 
                         <center><p><br /><br />We <i style="color:#4d77a7" class="fa fa-heart"></i> <a href="https://instagram.com/toolwatchapp/">Instagram</a>, tag us with your wristshots and share your results using #ToolwatchApp !</p></center>
-                           
+
                             <!-- www.intagme.com -->
                         <iframe src="http://www.intagme.com/in/?u=dG9vbHdhdGNoYXBwfGlufDEwMHw0fDJ8fHllc3w1fHVuZGVmaW5lZHx5ZXM=" allowTransparency="true" frameborder="0" scrolling="no" style="margin-left:5px; border:none; overflow:hidden; width:auto; height: 230px" ></iframe>
 
                         </div>
-                        
+
                     </div>
 
                 </div>
 
-                    
+
                 </div>
 
                 <div class="form-group">
