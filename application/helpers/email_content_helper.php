@@ -22,19 +22,28 @@ function addFirstWatchContent($firstName){
  * util function to create the content emails
  * @param String $firstName of the recipient
  */
-function makeFirstMeasureContent($firstName, $firstWatchName){
+function makeFirstMeasureContent($firstName, $watchesToCheck, $watches){
+
+  $content = 'You\'ve added the following watch(es) on
+  <a href="https://toolwatch.io">Toolwatch.io</a> : <ul>';
+
+  foreach ($watchesToCheck as $watch) {
+    $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
+  }
+
   return array(
         'title' => 'Hey '.$firstName.'!',
         'content' =>
-          'You\'ve added your first watch on
-          <a href="https://toolwatch.io">Toolwatch.io</a> and we\'re thrilled to
-          have you onboard!<br>
-          You can now start the <a href="https://toolwatch.io/measures/">first measuring for
-          the accuracy</a> of your '.$firstWatchName.'. <br/>
-          Is your watch really accurate or should it be serviced?
-          Let\'s begin by starting your
-          <a href="https://toolwatch.io/measures/">first measure</a> and find out now!
-          '
+          $content . '</ul>
+          We\'re thrilled to
+          have you onboard!<br /><br />
+
+          You can now start <a href="https://toolwatch.io/measures/">
+          to measure the accuracy of your watch(es)</a>.<br/><br />
+
+          Are your watches really accurate or should they be serviced?
+          Find out now!',
+          'summary' => $watches
     );
 }
 
@@ -43,20 +52,21 @@ function makeFirstMeasureContent($firstName, $firstWatchName){
  * @param String $firstName of the recipient
  * @param String $firstWatchName
  */
-function addSecondWatchContent($firstName, $firstWatchName){
+function addSecondWatchContent($firstName, $firstWatchName, $watches){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
       '2 days ago, you did your first measure on Toolwatch and we\'re so proud
-      of that! Thank you for your trust, it means a lot to us.<br>
+      of that! Thank you for your trust, it means a lot to us.<br/><br/>
       If, like 37% of Toolwatch\'s users you have another mechanical watch,
       <a href="https://toolwatch.io/measures">let\'s start a new measure</a>
        and see how it compares to your '.$firstWatchName.'.
-      <br>
+      <br/><br/>
       If you don\'t have another watch, you can still make our day by
       <a href="https://www.facebook.com/sharer/sharer.php?u=www.toolwatch.io">
       spreading the word about Toolwatch on social medias</a>
-      (it works no matter how many watch you own!).'
+      (it works no matter how many watch you own!).',
+      'summary' => $watches
   );
 }
 
@@ -64,7 +74,7 @@ function addSecondWatchContent($firstName, $firstWatchName){
  * util function to create the content emails
  * @param String $firstName of the recipient
  */
-function comebackContent($firstName){
+function comebackContent($firstName, $watches){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
@@ -76,7 +86,8 @@ function comebackContent($firstName){
       <br>
       <a href="https://toolwatch.io/measures">Let\'s start a new measure</a>
       and do not hesitate to also say hi on
-      <a href="https://twitter.com/toolwatchapp">Twitter</a>!'
+      <a href="https://twitter.com/toolwatchapp">Twitter</a>!',
+      'summary' => $watches
   );
 }
 
@@ -89,14 +100,11 @@ function checkAccuracyContent($firstName, $watchesToCheck, $watches){
 
   $content = 'One day ago, you\'ve synchronized the following watch(es): <ul>';
 
-  var_dump($watches);
-
   foreach ($watchesToCheck as $watch) {
     $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
   }
 
-  $content .= "</ul> with
-    Toolwatch and now is the time to see the results
+  $content .= "</ul> Now is the time to see the results
     of your watch's accuracy !<br>";
 
 
@@ -127,8 +135,7 @@ function oneWeekAccuracyContent($firstName, $watchesToCheck, $watches){
       $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
   }
 
-  $content .= "</ul> with
-    Toolwatch and now is the time to see the results
+  $content .= "</ul> Now is the time to see the results
     of your watch's accuracy !<br>";
 
   return array(
@@ -157,9 +164,7 @@ function oneMonthAccuracyContent($firstName, $watchesToCheck, $watches){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
-      $content . ' on
-      <a href="https://toolwatch.io/">Toolwatch</a> and
-      we\'re happy to count you as a cool member of the Toolwatch community!
+      $content . ' We\'re happy to count you as a cool member of the Toolwatch community!
       <br>
       The accuracy of a watch should be regularly checked to make sure everything
       is fine and that you can continue enjoying this work of art and mechanics on
