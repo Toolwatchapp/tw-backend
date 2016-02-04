@@ -908,7 +908,7 @@ class MY_Model extends CI_Model {
 			return true;
 		}
 
-		$this->error = sprintf(lang('ff_model_db_error'), $this->get_db_error_message());
+		$this->error = $this->get_db_error_message();
 
 		return false;
 	}//end delete()
@@ -957,7 +957,7 @@ class MY_Model extends CI_Model {
 			return $result;
 		}
 
-		$this->error = lang('ff_model_db_error').$this->get_db_error_message();
+		$this->error = $this->get_db_error_message();
 
 		return false;
 	}//end delete_where()

@@ -7,14 +7,6 @@ class Ajax_test extends TestCase {
 
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
-		$CI->emailWatch   = new MY_Model('email_watch');
-		$CI->emailMeasure = new MY_Model('email_measure');
-		$CI->emailUser   = new MY_Model('email_user');
-
-		$CI->emailUser->delete_where(array("id >=" => "0"));
-		$CI->emailWatch->delete_where(array("id >=" => "0"));
-		$CI->emailMeasure->delete_where(array("id >=" => "0"));
-
 		$CI->load->model('User');
 		$CI->load->model('Measure');
 		$CI->load->model('Watch');
@@ -45,7 +37,6 @@ class Ajax_test extends TestCase {
 				'password'    => 'password',
 				'name'        => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'false',
 			]
@@ -102,7 +93,6 @@ class Ajax_test extends TestCase {
 				'password'    => 'password',
 				'name'        => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'false',
 			]
@@ -121,7 +111,6 @@ class Ajax_test extends TestCase {
 				'id'          => '10',
 				'last_name'        => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'false',
 			]
@@ -140,7 +129,6 @@ class Ajax_test extends TestCase {
 				'id'          => '10',
 				'last_name'   => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'false',
 			]
@@ -160,7 +148,6 @@ class Ajax_test extends TestCase {
 				'id'          => '11',
 				'last_name'   => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country',
 				'mailingList' => 'email',
 			]
@@ -223,6 +210,20 @@ class Ajax_test extends TestCase {
 			[
 				'resetToken' => $user->resetToken,
 				'password' => 'abcd'
+			]
+		);
+
+		$this->assertContains('true', $output);
+	}
+
+	public function test_contact(){
+		$output = $this->request(
+			'POST',
+			['Ajax', 'contact'],
+			[
+				'name' => 'Mathieu',
+				'email' => 'mathieu@gmail.com',
+				'message' => 'hello'
 			]
 		);
 

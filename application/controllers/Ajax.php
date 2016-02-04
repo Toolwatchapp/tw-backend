@@ -61,8 +61,6 @@ class Ajax extends MY_Controller {
 			}
 
 			echo json_encode($result);
-		}else{
-			echo "POST FAIL";
 		}
 
 	}
@@ -123,7 +121,7 @@ class Ajax extends MY_Controller {
 		$result['success'] = false;
 
 		if ($this->expectsPost(array('email', 'id', 'last_name',
-			'firstname', 'timezone', 'country'))) {
+			'firstname', 'country'))) {
 
 			/**
 			 * Getting all the posts
@@ -131,7 +129,6 @@ class Ajax extends MY_Controller {
 			$email     = $this->input->post('email');
 			$name      = $this->input->post('last_name');
 			$firstname = $this->input->post('firstname');
-			$timezone  = $this->input->post('timezone');
 			$country   = $this->input->post('country');
 			/**
 			 * For fb user, we don't have their fb password (obviously).
@@ -154,7 +151,7 @@ class Ajax extends MY_Controller {
 				 * remove the if, if yes, provide a else with a dedicated response
 				 * code.
 				 */
-				if ($this->user->signup($email, $password, $name, $firstname, $timezone, $country)) {
+				if ($this->user->signup($email, $password, $name, $firstname, $country)) {
 
 					$result['success'] = "signup";
 					$this->user->login($email, $password);
@@ -194,7 +191,7 @@ class Ajax extends MY_Controller {
 		$result['success'] = false;
 
 		if ($this->expectsPost(array('email','password','name','firstname',
-			'timezone','country'))) {
+			'country'))) {
 
 			$result = array();
 
@@ -202,7 +199,6 @@ class Ajax extends MY_Controller {
 			$password    = $this->input->post('password');
 			$name        = $this->input->post('name');
 			$firstname   = $this->input->post('firstname');
-			$timezone    = $this->input->post('timezone');
 			$country     = $this->input->post('country');
 
 			//If the email isn't already in used
@@ -211,16 +207,13 @@ class Ajax extends MY_Controller {
 				// Create the account
 				if ($this->user->signup(
 						$email, $password, $name, $firstname,
-						$timezone, $country)) {
+						$country)) {
 
 					$result['success'] = true;
 
 					//Log the user will create his session and so on
 					$this->user->login($email, $password);
 
-				} else {
-
-					$result['success'] = false;
 				}
 
 			//The email is already in use
@@ -308,49 +301,57 @@ class Ajax extends MY_Controller {
 	function contact() {
 
 		if ($this->expectsPost(array('name', 'email', 'message'))) {
-			$result = array();
+
+			$result['success'] = false;
 
 			$name    = $this->input->post('name');
 			$email   = $this->input->post('email');
 			$message = $this->input->post('message');
 
-			$this->load->library('email');
+			$this->load->library('mandrill');
 
-			//FIXME: This has to go in a config file.
-			//Futhermore, password must be loaded throught env
-			//variables.
-			//
-			//We could even do it with the mandrillapp api that
-			//we added for #34
-			$config['protocol']  = "smtp";
-			$config['smtp_host'] = "smtp.mandrillapp.com";
-			$config['smtp_port'] = "587";
-			$config['smtp_user'] = "marc@toolwatch.io";
-			$config['smtp_pass'] = "pUOMLUusBKdoR604DpcOnQ";
-			$config['charset']   = "utf-8";
-			$config['mailtype']  = "html";
-			$config['newline']   = "\r\n";
+			$messageMandrill = array(
+				'html'       => $message,
+				'subject'    => $subject,
+				'from_email' => $email,
+				'from_name'  => $name,
+				'to'         => array(
+					array(
+						'email' => 'marc@toolwatch.io',
+						'name'  => 'Marc',
+						'type'  => 'to',
+					)
+				),
+				'headers'   => array(
+					'Reply-To' => $email,
+				),
+				'important'                 => false,
+				'track_opens'               => true,
+				'track_clicks'              => true,
+				'tags'                      => array($tags),
+				'google_analytics_campaign' => $tags,
+				'google_analytics_domains'  => array('toolwatch.io'),
+				'metadata'                  => array(
+					'website'                  => 'toolwatch.io',
+				)
+			);
 
-			$this->email->initialize($config);
+			$async   = false;
+			$ip_pool = 'Main Pool';
 
-			$this->email->from('contact@toolwatch.io', 'Toolwatch contact');
-			$this->email->to('marc@toolwatch.io', 'Marc');
-			$this->email->reply_to($email, $name);
+			$scheduleTime = time();
 
-			$this->email->subject('Contact Toolwatch from '.$name);
+			$send_at =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
+			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'
+			.(date('i', $scheduleTime)).date(':s', $scheduleTime);
 
-			$bodyMessage = '<b>Name :</b> '.$name.'<br>';
-			$bodyMessage .= '<b>Email :</b> '.$email.'<br>';
-			$bodyMessage .= '<b>Message :</b> <br>';
-			$bodyMessage .= $message;
+			$mandrillResponse =  $this->mandrill->messages->send($messageMandrill, $async, $ip_pool, $send_at);
+			log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
 
-			$this->email->message($bodyMessage);
 
-			if ($this->email->send()) {
+			if ($mandrillResponse[0]['status'] === 'sent') {
 				$result['success'] = true;
-			} else {
-				$result['success'] = false;
-			}
+			} 
 
 			echo json_encode($result);
 		}

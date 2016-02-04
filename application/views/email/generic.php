@@ -91,9 +91,16 @@
                                     <td valign="top" style="color:#000000;font-family:Helvetica;font-size:14px;font-weight:normal;text-align:left;word-break:break-word;line-height:150%">
                                         <div style="text-align:center">Quick view of your Toolwatch <a href="https://toolwatch.io/measures/?utm_source=Toolwatch+blog&amp;utm_campaign=e1c9cc363f-Toolwatch_Test&amp;utm_medium=email&amp;utm_term=0_73aaa65a62-e1c9cc363f-" title="Toolwath dashboard" style="color:#656565;font-weight:normal;text-decoration:underline" target="_blank">dashboard</a> :</div>
 
-<ul>
-  <?php foreach ($summary as $watch) { ?>
-    <li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd"><?php echo $watch->brand .' '.$watch->name . ' : ' . $watch->accuracy; ?></span></li>
+<ul><?php foreach ($summary as $watch) { $watch = (object) $watch; ?>
+    <li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd"><?php if($watch->statusId === 1.5){
+        echo ' ' . $watch->brand.' '.$watch->name.': Check accuracy in '.$watch->accuracy.' hours.';
+      }else if($watch->statusId == 1){
+        echo ' ' . $watch->brand .' '.$watch->name .': <a href="'.base_url().'/measures">Check accuracy now</a>.';
+      }else if($watch->statusId == null){
+        echo ' ' . $watch->brand .' '.$watch->name .': <a href="'.base_url().'/measures">Measure now</a>.';
+      }else{
+        echo ' ' . $watch->brand .' '.$watch->name .': Runs at ' . $watch->accuracy . ' spd (' . (($watch->accuracyAge == 0) ? 'today).' : $watch->accuracyAge  . ' day(s) ago).');
+      }?></span></li>
   <?php } ?>
 	</ul>
 Have you tested your watch recently? Measure it <a href="https://toolwatch.io?utm_source=Toolwatch+blog&amp;utm_campaign=e1c9cc363f-Toolwatch_Test&amp;utm_medium=email&amp;utm_term=0_73aaa65a62-e1c9cc363f-" title="Toolwatch.io" style="color:#656565;font-weight:normal;text-decoration:underline" target="_blank">NO</a><a href="https://Toolwatch.io?utm_source=Toolwatch+blog&amp;utm_campaign=e1c9cc363f-Toolwatch_Test&amp;utm_medium=email&amp;utm_term=0_73aaa65a62-e1c9cc363f-" title="Toolwatch.io" style="color:#656565;font-weight:normal;text-decoration:underline" target="_blank">W</a>!
