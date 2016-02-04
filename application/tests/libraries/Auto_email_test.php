@@ -226,41 +226,28 @@ class Auto_email_test extends TestCase {
  	//1 day later and 1 sec later
  	// Should have 5 add first and 1 check
  	$emails = $this->email->cronCheck(24*60*61);
-
-  $addWatchContent = file_get_contents("emails/add_watch.html",
- 	FILE_USE_INCLUDE_PATH);
-  $checkAccuracyContent = file_get_contents("emails/check_accuracy.html",
- 	FILE_USE_INCLUDE_PATH);
-
  	$this->assertEquals(sizeof($emails['users']), 5);
 
  	$this->assertEquals($emails['users'][0]['userId'], self::$users['ernest']->userId);
  	$this->assertEquals($emails['users'][0]['emailType'], $this->email->ADD_FIRST_WATCH);
-  $this->assertEquals($emails['users'][0]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][1]['userId'], self::$users['anatole']->userId);
  	$this->assertEquals($emails['users'][1]['emailType'], $this->email->ADD_FIRST_WATCH);
-  $this->assertEquals($emails['users'][1]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][2]['userId'], self::$users['phillibert']->userId);
  	$this->assertEquals($emails['users'][2]['emailType'], $this->email->ADD_FIRST_WATCH);
-  $this->assertEquals($emails['users'][2]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][3]['userId'], self::$users['hippolyte']->userId);
  	$this->assertEquals($emails['users'][3]['emailType'], $this->email->ADD_FIRST_WATCH);
-  $this->assertEquals($emails['users'][3]['content'], $addWatchContent);
 
  	$this->assertEquals($emails['users'][4]['userId'], self::$users['raymond']->userId);
  	$this->assertEquals($emails['users'][4]['emailType'], $this->email->ADD_FIRST_WATCH);
-  $this->assertEquals($emails['users'][4]['content'], $addWatchContent);
 
  	$this->assertEquals(sizeof($emails['watches']), 0);
 
  	$this->assertEquals(sizeof($emails['measures']), 1);
  	$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
  	$this->assertEquals($emails['measures'][0]['emailType'], $this->email->CHECK_ACCURACY);
-  $this->assertEquals($emails['measures'][0]['content'], $checkAccuracyContent);
-
  }
 
  /**
@@ -274,9 +261,6 @@ class Auto_email_test extends TestCase {
  	// Should have 1 CHECK_ACCURACY_1_WEEK
  	$emails = $this->email->cronCheck(24*8*60*61);
 
- 	$checkAccuracy1wContent = file_get_contents("emails/check_accuracy_1w.html",
- 	FILE_USE_INCLUDE_PATH);
-
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['watches']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 1);
@@ -284,7 +268,6 @@ class Auto_email_test extends TestCase {
  	$this->assertEquals($emails['measures'][0]['measureId'], self::$baseMeasureId);
  	$this->assertEquals($emails['measures'][0]['emailType'],
  	$this->email->CHECK_ACCURACY_1_WEEK);
- 	$this->assertEquals($emails['measures'][0]['content'], $checkAccuracy1wContent);
  }
 
  /**
@@ -317,9 +300,6 @@ class Auto_email_test extends TestCase {
  	//2 days later
  	$emails = $this->email->cronCheck(24*10*61*60);
 
-  $addSecondWatch = file_get_contents("emails/add_second_watch.html",
- 	FILE_USE_INCLUDE_PATH);
-
  	$this->assertEquals(sizeof($emails['users']), 1);
 
  	$this->assertEquals($emails['users'][0]['userId'],
@@ -327,8 +307,6 @@ class Auto_email_test extends TestCase {
 
  	$this->assertEquals($emails['users'][0]['emailType'],
  		$this->email->ADD_SECOND_WATCH);
-
-  $this->assertEquals($emails['users'][0]['content'], $addSecondWatch);
 
  	$this->assertEquals(sizeof($emails['watches']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);
@@ -352,9 +330,6 @@ class Auto_email_test extends TestCase {
  	//The accuracy measure was at time()+(24*8*60*60)
  	$emails = $this->email->cronCheck(24*39*60*60);
 
-  $startNewMeasureContent = file_get_contents("emails/start_new_measure.html",
- 	FILE_USE_INCLUDE_PATH);
-
  	$this->assertEquals(sizeof($emails['watches']), 1);
 
  	$this->assertEquals($emails['watches'][0]['watchId'],
@@ -362,8 +337,6 @@ class Auto_email_test extends TestCase {
 
  	$this->assertEquals($emails['watches'][0]['emailType'],
  		$this->email->START_NEW_MEASURE);
-  $this->assertEquals($emails['watches'][0]['content'],
- 	$startNewMeasureContent);
 
  	$this->assertEquals(sizeof($emails['users']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);
@@ -385,16 +358,12 @@ class Auto_email_test extends TestCase {
  	//Last Login was at time()
  	$emails = $this->email->cronCheck(100*25*60*60);
 
-	$comebackContent = file_get_contents("emails/comeback.html",
-		FILE_USE_INCLUDE_PATH);
-
  	$this->assertEquals(sizeof($emails['users']), 6);
  	$this->assertEquals(sizeof($emails['watches']), 0);
  	$this->assertEquals(sizeof($emails['measures']), 0);
 
  	$this->assertEquals($emails['users'][0]['userId'], self::$users['nestor']->userId);
  	$this->assertEquals($emails['users'][0]['emailType'], $this->email->COMEBACK);
-	$this->assertEquals($emails['users'][0]['content'], $comebackContent);
 
  	$this->assertEquals($emails['users'][1]['userId'], self::$users['ernest']->userId);
  	$this->assertEquals($emails['users'][1]['emailType'], $this->email->COMEBACK);
@@ -426,6 +395,7 @@ class Auto_email_test extends TestCase {
  public function test_addFirstMeasure(){
 
 	$this->watchModel->delete_where(array("watchId >=" => "0"));
+	$this->measureModel->delete_where(array("id >=" => "0"));
 
 	$data = array(
 		'userId'    =>  self::$users['nestor']->userId,
@@ -435,6 +405,15 @@ class Auto_email_test extends TestCase {
 		'serial'    => '0000-0000',
 		'caliber'   => 'caliber',
 		'creationDate' => time() + 101*25*60*60);
+
+		$data = array(
+			'userId'    =>  self::$users['nestor']->userId,
+			'brand'     =>  'rolex',
+			'name'      => 'marolex2',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time() + 101*25*60*60);
 
 	self::$watchId = $this->watchModel->insert($data);
 
@@ -447,12 +426,15 @@ class Auto_email_test extends TestCase {
 	$this->assertEquals(sizeof($emails['measures']), 0);
 
 
-			//Check that the email is sent only once
-		$emails = $this->email->cronCheck(24*1*62*60);
+	//test en ajoutant une autre montre
 
-		$this->assertEquals(sizeof($emails['users']), 0);
-		$this->assertEquals(sizeof($emails['watches']), 0);
-		$this->assertEquals(sizeof($emails['measures']), 0);
+
+	//Check that the email is sent only once
+	$emails = $this->email->cronCheck(24*1*62*60);
+
+	$this->assertEquals(sizeof($emails['users']), 0);
+	$this->assertEquals(sizeof($emails['watches']), 0);
+	$this->assertEquals(sizeof($emails['measures']), 0);
  }
 
  public static function tearDownAfterClass() {

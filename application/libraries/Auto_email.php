@@ -217,7 +217,6 @@ class Auto_email {
 	private function showSentEmails($emails, $title){
 
 		echo "<h2> ".$title." </h2>";
-
 		foreach ($emails as $email) {
 			echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
 			echo '\n'; var_dump($email['mandrill']); echo '\n';
@@ -397,8 +396,13 @@ class Auto_email {
 		if ($inactiveUsers !== FALSE) {
 			foreach ($inactiveUsers as $user) {
 
-				$emailcontent = $this->CI->load->view('email/generic',
-					comebackContent($user->firstname), true);
+				$emailcontent = $this->CI->load->view(
+					'email/generic',
+					comebackContent(
+						$user->firstname,
+						$this->CI->measure->getMeasuresByUser($user->userId)
+					), true
+				);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
@@ -475,11 +479,10 @@ class Auto_email {
 
 		$userWithWatchWithoutMeasure = $this->CI
 			->watch
-			->select('watch.watchId, watch.brand, watch.name as watchName,
-			user.name, user.firstname, email')
+			->select('user.userId, watch.watchId, watch.brand, watch.name as watchName,
+			user.name as lastname, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
-			->where('(select count(1) from watch where watch.userId = user.userId) = ', 1)
 			->where('creationDate < ', $this->getBatchUpperBound($this->day))
 			->where('creationDate > ', $this->getBatchLowerBound($this->day))
 			->as_array()
@@ -487,19 +490,23 @@ class Auto_email {
 
 		if ($userWithWatchWithoutMeasure !== FALSE) {
 
-			$this->CI->__->groupBy($userWithWatchWithoutMeasure, 'email');
+			$userWithWatchWithoutMeasure = $this->CI->__->groupBy($userWithWatchWithoutMeasure, 'email');
 
 			foreach ($userWithWatchWithoutMeasure as $user) {
 
-				$user = (object) $user;
-
-				$emailcontent = $this->CI->load->view('email/generic',
-					makeFirstMeasureContent($user->firstname,
-					$user->brand . ' ' . $user->watchName), true);
+				$emailcontent = $this->CI->load->view(
+					'email/generic',
+					makeFirstMeasureContent(
+						$user->firstname,
+						$user,
+						$this->CI->measure->getMeasuresByUser($user[0]['userId'])
+					),
+					true
+				);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
-					$user->watchId,
+					$user[0]['watchId'],
 					$this->START_FIRST_MEASURE,
 					$this->time,
 					'watchId',
@@ -507,8 +514,8 @@ class Auto_email {
 					$this->sendMandrillEmail(
 						'Let’s start measuring! ⌚',
 						$emailcontent,
-						$user->name.' '.$user->firstname,
-						$user->email,
+						$user[0]['lastname'].' '.$user[0]['firstname'],
+						$user[0]['email'],
 						'make_first_measure_email',
 						$this->sendAtString($this->time)
 					)
@@ -549,11 +556,15 @@ class Auto_email {
 					->select('brand, name')
 					->find_by('userid', $user->userId);
 
-				$emailcontent = $this->CI->load->view('email/generic',
-					addSecondWatchContent($user->firstname,
-					$watch->brand . " " .
-					$watch->name)
-					, true);
+				$emailcontent = $this->CI->load->view(
+					'email/generic',
+					addSecondWatchContent(
+						$user->firstname,
+						$watch->brand . " " . $watch->name,
+						$this->CI->measure->getMeasuresByUser($user->userId)
+					),
+					true
+				);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
