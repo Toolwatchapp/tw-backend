@@ -8,14 +8,14 @@
                 <div class="form-group">
                     <label for="brand" class="col-sm-3 control-label">Brand<i>*</i></label>
                     <div class="col-sm-9">
-                        <input value="<?php echo $brand;?>" type="text" class="form-control" name="brand" placeholder="Jaeger-LeCoultre">
+                        <input id="brand" value="<?php echo $brand;?>" type="text" class="form-control" name="brand" placeholder="Jaeger-LeCoultre">
                         <span class="watch-error brand-error">This field is required.</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="name" class="col-sm-3 control-label">Model</label>
                     <div class="col-sm-9">
-                        <input value="<?php echo $name;?>" type="text" class="form-control" name="name" placeholder="Duometre">
+                        <input id="model" value="<?php echo $name;?>" type="text" class="form-control" name="name" placeholder="Duometre">
                     </div>
                 </div>
                 <div class="form-group">
