@@ -4,6 +4,7 @@ class Measure_test extends TestCase {
 
 	private static $userId;
 	private static $watchId;
+	private static $watchId2;
 	private static $measureId;
 	private static $watch;
 	private static $watchMeasure;
@@ -41,6 +42,15 @@ class Measure_test extends TestCase {
 			014
 		);
 
+		self::$watchId2 = $CI->Watch->addWatch(
+			self::$userId,
+			'brand',
+			'name',
+			2015,
+			28,
+			014
+		);
+
 		self::$watch = $CI->Watch->getWatch(self::$watchId);
 	}
 
@@ -61,13 +71,22 @@ class Measure_test extends TestCase {
 		);
 
 		$this->assertEquals(true, is_numeric(self::$measureId));
+
+		$this->assertEquals(
+			true,
+			is_numeric(
+				$this->obj->addBaseMesure(
+					self::$watchId2,
+					time()-11*60*60,
+					time()-11*60*60
+				)
+			)
+		);
 	}
 
 	public function test_getMeasuresByUser() {
 		$measures = $this->obj->getMeasuresByUser(
-			self::$userId,
-			array(self::$watch)
-		);
+			self::$userId);
 
 		$this->assertEquals(true, is_array($measures));
 		$this->assertEquals(
@@ -75,9 +94,29 @@ class Measure_test extends TestCase {
 			$measures[0]->statusId,
 			'it\'s been less than 12 hours'
 		);
+
+		$this->assertEquals(
+			1.5,
+			$measures[1]->statusId,
+			'it\'s been less than 12 hours'
+		);
+
+		$this->assertEquals(
+			" < 1",
+			$measures[1]->accuracy,
+			'Testable in less than one hours'
+		);
 	}
 
 	public function test_addAccuracyMesure() {
+
+		$this->assertEquals(false,
+		$this->obj->addAccuracyMesure(
+			1,
+			time()+86400000, //+1 Day
+			time()+86400000
+		), 'This measure does not exist');
+
 		$watchMeasure = $this->obj->addAccuracyMesure(
 			self::$measureId,
 			time()+86400000, //+1 Day
@@ -253,7 +292,7 @@ class Measure_test extends TestCase {
 
 	public function test_getMeasuresCountByWatchBrand() {
 		$count = $this->obj->getMeasuresCountByWatchBrand('brand');
-		$this->assertEquals(6, $count);
+		$this->assertEquals(7, $count);
 	}
 
 	public function test_computePercentileAccuracy(){

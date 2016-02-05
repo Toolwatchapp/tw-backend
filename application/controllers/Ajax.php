@@ -61,8 +61,6 @@ class Ajax extends MY_Controller {
 			}
 
 			echo json_encode($result);
-		}else{
-			echo "POST FAIL";
 		}
 
 	}
@@ -216,9 +214,6 @@ class Ajax extends MY_Controller {
 					//Log the user will create his session and so on
 					$this->user->login($email, $password);
 
-				} else {
-
-					$result['success'] = false;
 				}
 
 			//The email is already in use
@@ -306,7 +301,8 @@ class Ajax extends MY_Controller {
 	function contact() {
 
 		if ($this->expectsPost(array('name', 'email', 'message'))) {
-			$result = array();
+
+			$result['success'] = false;
 
 			$name    = $this->input->post('name');
 			$email   = $this->input->post('email');
@@ -355,9 +351,7 @@ class Ajax extends MY_Controller {
 
 			if ($mandrillResponse[0]['status'] === 'sent') {
 				$result['success'] = true;
-			} else {
-				$result['success'] = false;
-			}
+			} 
 
 			echo json_encode($result);
 		}

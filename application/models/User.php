@@ -153,10 +153,7 @@ class User extends ObservableModel {
 			$this->notify($event, $user);
 
 			$res = true;
-		} else {
-
-			$this->notify($event.'_FAIL', $user);
-		}
+		} 
 
 		return $res;
 	}
