@@ -19,10 +19,14 @@
 			<directory suffix=".php">../libraries</directory>
 			<directory suffix=".php">../helpers</directory>
 			<directory suffix=".php">../hooks</directory>
+			<exclude>
+				<file>../libraries/__.php</file>
+				<file>../libraries/Mcapi.php</file>
+        <file>../libraries/Mandrill.php</file>
+				<directory suffix=".php">../libraries/Mandrill</directory>
+        <directory suffix=".php">../libraries/Google</directory>
+      </exclude>
 		</whitelist>
-		<blacklist>
-			<directory>../libraries/Mandrill</directory>
-		</blacklist>
 	</filter>
 	<logging>
 		<log type="coverage-html" target="build/coverage"/>

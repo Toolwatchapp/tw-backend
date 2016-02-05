@@ -130,12 +130,24 @@ class Hooks extends CI_Controller {
 		if ($key === "bPiAi9XNEa3p9FF1lQnZfuUY") {
 
 			$this->load->library("auto_email");
+			$this->auto_email->cronCheck(60*60*$time);
+		}
+	}
 
-			if($time == 0){
-				$this->auto_email->cronCheck(time());
-			}else{
-				$this->auto_email->cronCheck(time()+60*60*$time);
-			}
+	public function reset_email($key){
+
+		//FIXME: The token has to be env value
+		if ($key === "bPiAi9XNEa3p9FF1lQnZfuUY") {
+
+			$emailBatch = new MY_MODEL("email_batch");
+			$emailBatch->truncate();
+			$emailBatch->insert(array("time"=>time(), "amount"=>0));
+
+
+			$date = new DateTime("@".time());
+
+			echo "<h1> Reset success. New last batch at " . $date->format('Y-m-d H:i:s') . "</h1>";
+
 		}
 	}
 }

@@ -215,4 +215,18 @@ class Ajax_test extends TestCase {
 
 		$this->assertContains('true', $output);
 	}
+
+	public function test_contact(){
+		$output = $this->request(
+			'POST',
+			['Ajax', 'contact'],
+			[
+				'name' => 'Mathieu',
+				'email' => 'mathieu@gmail.com',
+				'message' => 'hello'
+			]
+		);
+
+		$this->assertContains('true', $output);
+	}
 }
