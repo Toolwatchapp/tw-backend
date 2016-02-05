@@ -123,7 +123,7 @@ class User extends ObservableModel {
 	 * @param  String $country
 	 * @return boolean   false an faillure
 	 */
-	function signup($email, $password, $name, $firstname, $timezone, $country) {
+	function signup($email, $password, $name, $firstname, $country) {
 
 		$event = SIGN_UP;
 
@@ -137,7 +137,6 @@ class User extends ObservableModel {
 			'password'     => hash('sha256', $password),
 			'name'         => $name,
 			'firstname'    => $firstname,
-			'timezone'     => $timezone,
 			'country'      => $country,
 			'registerDate' => time(),
 			'lastLogin'    => time()
@@ -154,10 +153,7 @@ class User extends ObservableModel {
 			$this->notify($event, $user);
 
 			$res = true;
-		} else {
-
-			$this->notify($event.'_FAIL', $user);
-		}
+		} 
 
 		return $res;
 	}
@@ -176,7 +172,7 @@ class User extends ObservableModel {
 			$this->checkUserEmail($email) === true &&
 			$this->update_where('email', $email, array('resetToken' => $resetToken))
 			&& $this->affected_rows() === 1){
-			$this->notify(RESET_PASSWORD,  array('email' => $email));
+			$this->notify(RESET_PASSWORD,  array('email' => $email, 'token'=>$resetToken));
 			return $resetToken;
 		}
 

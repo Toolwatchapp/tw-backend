@@ -272,6 +272,20 @@ $(document).ready(function()
 
      });
 
+     $('body').on('submit', 'form[name="editWatch"]', function(e)
+     {
+
+         $('.watch-error').hide();
+
+         var brand = $('input[name="brand"]').val();
+
+         if(brand == ""){
+             $('.brand-error').show();
+              e.preventDefault();
+         }
+
+      });
+
 
     $('body').on('submit', 'form[name="newAccuracy"]', function(e)
     {
@@ -308,13 +322,11 @@ $(document).ready(function()
                         }
 
                         $('.watch-accuracy').html(result.accuracy);
-
+                        $('.watch-percentile').html(result.percentile);
 
                         $('.share-button').each(function(index){
-                            $(this).attr("data-text", $(this).attr("data-text").replace("{WatchAccuracy}", result.accuracy));
+                            $(this).attr("href", $(this).attr("href").replace("{WatchPercentile}", result.percentile));
                         });
-
-                        initShareButton();
 
                     }
                 }
@@ -468,6 +480,13 @@ $(document).ready(function()
         {
             $('form[name="delete-watch-'+watchId+'"]').submit();
         }
+    });
+
+    $('body').on('click', '.submitEditWatch', function(e)
+    {
+        e.preventDefault();
+        var watchId = $(this).attr('data-watch');
+        $('form[name="edit-watch-'+watchId+'"]').submit();
     });
 
     $('body').on('click', '.submitNewMeasure', function(e)

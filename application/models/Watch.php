@@ -1,5 +1,8 @@
 <?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
 }
+
+require_once('ObservableModel.php');
+
 /**
  * Watch model. This class is responsible for handling any watch related
  * transaction.
@@ -49,6 +52,41 @@ class Watch extends ObservableModel {
 		$this->notify(ADD_WATCH, arrayToObject($data));
 
 		return $res;
+	}
+
+	/**
+	 * Edit a watch given an userId and a watchId
+	 *
+	 * @param int $userId    		id of the user adding the watch
+	 * @param int $watchId   		id of the watch
+	 * @param String $brand     Brand of the watch
+	 * @param String $name      Given name of the watch
+	 * @param String $yearOfBuy Year of buy for the watch
+	 * @param String $serial    Serial number of the watch
+	 * @param String $caliber   Caliber of the watch
+	 * @return boolean          Update results
+	 */
+	function editWatch($userId, $watchId, $brand, $name, $yearOfBuy, $serial, $caliber){
+		$res = false;
+
+		$data = array(
+			'brand'     => $brand,
+			'name'      => $name,
+			'yearOfBuy' => $yearOfBuy,
+			'serial'    => $serial,
+			'caliber'   => $caliber
+		);
+
+		$where = array(
+			'userId'    => $userId,
+			'watchId'	  => $watchId
+		);
+
+		$res = $this->update($where, $data);
+
+		$this->notify(UPDATE_WATCH, arrayToObject($data));
+
+		return $res === true && $this->affected_rows() === 1;
 	}
 
 	/**
