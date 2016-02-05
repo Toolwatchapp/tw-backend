@@ -18,6 +18,21 @@
     },
     "NEW_RELIC_CONFIG_FILE": {
       "required": true
+    },
+    "MANDRILL_APIKEY":{
+      "required":true
+    },
+    "MC_APIKEY": {
+      "required":true
+    },
+    "GOOGLE_API_ACCOUNT":{
+      "required":true
+    },
+    "GOOGLE_API_KEY":{
+      "required":true
+    },
+    "GOOGLE_API_LINK":{
+      "required":true
     }
   },
   "addons": [

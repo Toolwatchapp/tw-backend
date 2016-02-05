@@ -22,6 +22,7 @@ class Measures extends MY_Controller {
 		parent::__construct();
 		$this->load->model('watch');
 		$this->load->model('measure');
+		$this->load->library('auto_email');
 	}
 
 	/**
@@ -39,7 +40,12 @@ class Measures extends MY_Controller {
 	 * @return mixed|html Board view
 	 */
 	private function constructMeasurePage(){
+
 		$this->_headerData['headerClass'] = 'blue';
+		if (!$this->agent->is_mobile()) {
+			array_push($this->_headerData['javaScripts'], "watch.animation", "time");
+		}
+
 		$this->load->view('header', $this->_headerData);
 
 		$this->_bodyData['allMeasure'] = $this->measure->getMeasuresByUser(
@@ -73,8 +79,6 @@ class Measures extends MY_Controller {
 
 				$this->_bodyData['success'] = 'Watch successfully added!';
 
-			} else {
-				$this->_bodyData['error'] = 'An error occured while adding your watch.';
 			}
 
 			$this->constructMeasurePage();
@@ -96,9 +100,7 @@ class Measures extends MY_Controller {
 
 			if ($this->watch->deleteWatch($this->watchId)) {
 				$this->_bodyData['success'] = 'Watch successfully deleted!';
-			} else {
-				$this->_bodyData['error'] = 'An error occured while deleting your watch.';
-		  }
+			}
 
 			$this->constructMeasurePage();
 		}
@@ -119,8 +121,6 @@ class Measures extends MY_Controller {
 
 			if ($this->measure->deleteMesure($this->measureId)) {
 				$this->_bodyData['success'] = 'Measures successfully deleted!';
-			} else {
-				$this->_bodyData['error'] = 'An error occured while deleting your measures.';
 			}
 
 			$this->constructMeasurePage();
@@ -139,6 +139,53 @@ class Measures extends MY_Controller {
 		$this->load->view('measure/new-watch', $this->_bodyData);
 
 		$this->load->view('footer');
+	}
+
+	/**
+	 * Serves the edit watch page
+	 * TODO: Is there a clean way to separate serving page
+	 * functions and processing inputs functions ?
+	 * TODO: A watch controller start to makes sense
+	 * to separate things.
+	 * @return Views
+	 */
+	public function edit_watch_p(){
+
+		if($this->expectsPost(array('watchId'))){
+
+			$watch = $this->watch->getWatch($this->watchId);
+
+			if($watch){
+
+				$this->_headerData['headerClass'] = 'blue';
+				$this->load->view('header', $this->_headerData);
+				$this->load->view('measure/edit-watch', $watch);
+				$this->load->view('footer');
+			}
+		}
+	}
+
+	/**
+	 * Receive an edited watch post form
+	 * @return body messages
+	 */
+	public function edit_watch(){
+		if($this->expectsPost(array('watchId','brand', 'name', 'yearOfBuy',
+			'serial', 'caliber'))){
+
+			if ($this->watch->editWatch($this->session->userdata('userId'),
+						$this->watchId,
+						$this->brand, $this->name,
+						$this->yearOfBuy, $this->serial,
+						$this->caliber)) {
+
+				$this->_bodyData['success'] = 'Watch successfully updated!';
+
+			}
+
+			$this->constructMeasurePage();
+		}
+		echo "not all posts";
 	}
 
 	/**
@@ -185,7 +232,7 @@ class Measures extends MY_Controller {
 			$this->event->add(ACCURACY_LOAD);
 
 			$this->_headerData['headerClass'] = 'blue';
-			array_push($this->_headerData['javaScripts'], "jquery.sharrre.min", "sharrre.logic", "watch.animation");
+			array_push($this->_headerData['javaScripts'], "watch.animation");
 			$this->load->view('header', $this->_headerData);
 
 			$this->_bodyData['selectedWatch'] = $this->watch->getWatch($this->input->post('watchId'));
@@ -226,7 +273,7 @@ class Measures extends MY_Controller {
 
 		if ($this->expectsPost(array('watchId', 'userTimezone', 'userTime'))) {
 
-			$result = array();
+			$result = array('success' =>false);
 
 			$watchId       = $this->input->post('watchId');
 
@@ -242,8 +289,6 @@ class Measures extends MY_Controller {
 
 				$result['success'] = true;
 
-			} else {
-				$result['success'] = false;
 			}
 
 			echo json_encode($result);
@@ -269,6 +314,8 @@ class Measures extends MY_Controller {
 
 		if ($this->expectsPost(array('measureId', 'userTimezone', 'userTime'))) {
 
+			$result = array('success' =>false);
+
 			//Construct the user time
 			$referenceTime = $this->session->userdata('referenceTime');
 			$userTimezone  = $this->input->post('userTimezone');
@@ -280,17 +327,17 @@ class Measures extends MY_Controller {
 			$watchMeasure = $this->measure->addAccuracyMesure(
 				$this->input->post('measureId'), $referenceTime, $userTime);
 
-			//We store the computed accuracy
-			$result['accuracy'] = $watchMeasure->accuracy;
-
 			// If the computed accuracy makes sense, we return success
 			if (is_numeric($watchMeasure->accuracy)) {
 				$result['success'] = true;
-			} else {
-				$result['success'] = false;
+				//We store the computed accuracy & percentile
+				$result['accuracy'] = $watchMeasure->accuracy;
+				$result['percentile'] = $watchMeasure->percentile;
+
 			}
 
 			echo json_encode($result);
+
 		}
 	}
 }

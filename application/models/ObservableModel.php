@@ -13,20 +13,12 @@
  */
 abstract class ObservableModel extends MY_Model {
 
-	private $_observers = array();
-
+	private static $_observers = null;
 	/**
 	 * Default constructor
 	 */
 	public function __construct() {
 		parent::__construct();
-
-		$this->load->model('email');
-
-		if(isset($this->email)){
-			$this->_observers[0] = $this->email;
-			$this->_observers[1] = $this->event;
-		}
 	}
 
 	/**
@@ -37,10 +29,14 @@ abstract class ObservableModel extends MY_Model {
 	 */
 	public function notify($event, $data) {
 
-		foreach ($this->_observers as $observer) {
-			if($observer !== null){
+		if(self::$_observers === null){
+			self::$_observers = array(new Auto_email(), new Event());
+		}
+
+		log_message('info', 'Notify: ' . $event . " : " . print_r($data, true));
+
+		foreach (self::$_observers as $observer) {
 				$observer->updateObserver($this, $event, $data);
-			}
 		}
 	}
 }
