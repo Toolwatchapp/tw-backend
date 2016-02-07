@@ -624,6 +624,8 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => sprintf($this->lang->line('text_rest_invalid_api_key'), $this->rest->key)
                 ], self::HTTP_FORBIDDEN);
+
+            return;
         }
 
         // Check to see if this key has access to the requested controller
@@ -638,6 +640,8 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_unauthorized')
                 ], self::HTTP_UNAUTHORIZED);
+
+            return;
         }
 
         // Sure it exists, but can they do anything with it?
@@ -657,6 +661,7 @@ abstract class REST_Controller extends CI_Controller {
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_time_limit')];
                 $this->response($response, self::HTTP_UNAUTHORIZED);
+                return;
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -672,8 +677,11 @@ abstract class REST_Controller extends CI_Controller {
             }
 
             // They don't have good enough perms
-            $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
-            $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
+            if($authorized == false){
+                $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
+                $this->response($response, self::HTTP_UNAUTHORIZED);
+                return;
+            }
         }
 
         // No key stuff, but record that stuff is happening
@@ -709,7 +717,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param bool $continue TRUE to flush the response to the client and continue
      * running the script; otherwise, exit
      */
-    public function response($data = NULL, $http_code = NULL, $continue = FALSE)
+    public function response($data = NULL, $http_code = NULL)
     {
         // If the HTTP status is not NULL, then cast as an integer
         if ($http_code !== NULL)
@@ -770,17 +778,7 @@ abstract class REST_Controller extends CI_Controller {
             $this->_log_response_code($http_code);
         }
 
-        // Output the data
-        $this->output->set_output($output);
-
-        if ($continue === FALSE)
-        {
-            // Display the data and exit execution
-            $this->output->_display();
-            exit;
-        }
-
-        // Otherwise dump the output automatically
+        $this->output->_display($output);
     }
 
     /**
@@ -963,6 +961,14 @@ abstract class REST_Controller extends CI_Controller {
         // Work out the name of the SERVER entry based on config
         $key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $api_key_variable));
 
+        // echo PHP_EOL.PHP_EOL.'=========API KEY========='.PHP_EOL;
+        // echo "here".PHP_EOL.$key_name.PHP_EOL;
+        // echo "args".PHP_EOL;
+        // var_dump($this->_args);
+        // echo '$this->input->server('.$key_name.')'.PHP_EOL;
+        // var_dump($this->input->server($key_name));
+        // echo PHP_EOL.'========================'.PHP_EOL.PHP_EOL;
+
         $this->rest->key = NULL;
         $this->rest->level = NULL;
         $this->rest->user_id = NULL;
@@ -980,6 +986,7 @@ abstract class REST_Controller extends CI_Controller {
 
             isset($row->user_id) && $this->rest->user_id = $row->user_id;
             isset($row->level) && $this->rest->level = $row->level;
+            isset($row->id) && $this->rest->key_id = $row->id;
             isset($row->ignore_limits) && $this->rest->ignore_limits = $row->ignore_limits;
 
             $this->_apiuser = $row;
@@ -1067,22 +1074,33 @@ abstract class REST_Controller extends CI_Controller {
     protected function _log_request($authorized = FALSE)
     {
         // Insert the request into the log table
-        $is_inserted = $this->rest->db
-            ->insert(
-                $this->config->item('rest_logs_table'), [
-                'uri' => $this->uri->uri_string(),
-                'method' => $this->request->method,
-                'params' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
-                'api_key' => isset($this->rest->key) ? $this->rest->key : '',
-                'ip_address' => $this->input->ip_address(),
-                'time' => time(),
-                'authorized' => $authorized
-            ]);
+        // $is_inserted = $this->rest->db
+        //     ->insert(
+        //         $this->config->item('rest_logs_table'), [
+        //         'uri' => $this->uri->uri_string(),
+        //         'method' => $this->request->method,
+        //         'params' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
+        //         'api_key' => isset($this->rest->key) ? $this->rest->key : '',
+        //         'ip_address' => $this->input->ip_address(),
+        //         'time' => time(),
+        //         'authorized' => $authorized
+        //     ]);
+        //
+        // // Get the last insert id to update at a later stage of the request
+        // $this->_insert_id = $this->rest->db->insert_id();
 
-        // Get the last insert id to update at a later stage of the request
-        $this->_insert_id = $this->rest->db->insert_id();
+        log_message('INFO', print_r([
+            'uri' => $this->uri->uri_string(),
+            'method' => $this->request->method,
+            'params' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
+            'api_key' => isset($this->rest->key) ? $this->rest->key : '',
+            'ip_address' => $this->input->ip_address(),
+            'time' => time(),
+            'authorized' => $authorized
+        ], true));
 
-        return $is_inserted;
+        //return $is_inserted;
+        return 1;
     }
 
     /**
@@ -1424,6 +1442,12 @@ abstract class REST_Controller extends CI_Controller {
            // If no filetype is provided, then there are probably just arguments
            $this->_put_args = $this->input->input_stream();
         }
+
+
+        if(sizeof($this->_put_args) === 0){
+          $this->_parse_post();
+          $this->_put_args = $this->_post_args;
+        }
     }
 
     /**
@@ -1488,6 +1512,11 @@ abstract class REST_Controller extends CI_Controller {
         if ($this->input->method() === 'delete')
         {
             $this->_delete_args = $this->input->input_stream();
+        }
+
+        if(sizeof($this->_delete_args) === 0){
+          $this->_parse_post();
+          $this->_delete_args = $this->_post_args;
         }
     }
 
