@@ -72,5 +72,8 @@ $route['contact'] = "home/contact";
 | -------------------------------------------------------------------------
 */
 
-$route['api/example/users/(:num)'] = 'api/user/create/$1'; // Example 4
-$route['api/example/users/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/example/users/id/$1/format/$3$4'; // Example 8
+$route['api/(:any)'] = 'api/$1_api';
+
+//
+// $route['api/example/users/(:num)'] = 'api/user/create/$1'; // Example 4
+// $route['api/example/users/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/example/users/id/$1/format/$3$4'; // Example 8
