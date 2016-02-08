@@ -34,6 +34,43 @@ class User_test extends TestCase {
 
 	}
 
+	public function test_signup_fb(){
+		$result = $this->obj->signup(
+			'mathieu@fb.com',
+			'FB_azerty',
+			'math',
+			'nay',
+			'Canada'
+		);
+
+		$this->assertEquals(true, $result);
+	}
+
+	public function test_login_fb() {
+		$result = $this->obj->login(
+			'mathieu@fb.com',
+			'FB_azerty'
+		);
+
+		$this->assertEquals(
+			true,
+			is_numeric($this->session->userdata('userId')),
+			'Wrong id generated'
+		);
+
+		$this->assertNotEquals(false, $result, "Not logged");
+
+		$this->assertEquals(
+			'mathieu@fb.com',
+			$this->session->userdata('email'),
+			'Not good email'
+		);
+
+		$this->assertEquals(true, $this->obj->isLoggedIn());
+
+	}
+
+
 	public function test_login() {
 		$result = $this->obj->login(
 			'mathieu@gmail.com',
@@ -47,12 +84,6 @@ class User_test extends TestCase {
 		);
 
 		$this->assertNotEquals(false, $result, "Not logged");
-
-		$this->assertEquals(
-			'mathieu@gmail.com',
-			$this->session->userdata('email'),
-			'Not good email'
-		);
 
 		$this->assertEquals(
 			'mathieu@gmail.com',
