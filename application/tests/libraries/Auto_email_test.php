@@ -47,7 +47,6 @@ class Auto_email_test extends TestCase {
 
 		$emailBatch = new MY_Model("email_batch");
 		$emailBatch->delete_where(array("id >="      => "0"));
-
 		$CI->measure->delete_where(array("id >="      => "0"));
 		$CI->Watch->delete_where(array("watchId >="   => "0"));
 		$CI->User->delete_where(array("userId >="     => "0"));
@@ -438,13 +437,13 @@ class Auto_email_test extends TestCase {
  }
 
  public static function tearDownAfterClass() {
-	 $CI = &get_instance();
-	 $CI->load->model('User');
-	 $CI->load->model('Watch');
-	 $CI->load->model('Measure');
-	 $CI->watch->delete_where(array("watchId >=" => "0"));
-	 $CI->User->delete_where(array("userId >=" => "0"));
-	 $CI->Measure->delete_where(array("id >=" => "0"));
+  $CI = &get_instance();
+  $CI->load->model('User');
+  $CI->load->model('Watch');
+  $CI->load->model('Measure');
+  $CI->watch->delete_where(array("watchId >=" => "0"));
+  $CI->User->delete_where(array("userId >=" => "0"));
+  $CI->Measure->delete_where(array("id >=" => "0"));
  }
 
 }
