@@ -22,6 +22,8 @@ class Key extends MY_MODEL {
 	 */
   public function generate_key($user)
   {
+			$finalKey = false;
+
       do
       {
           // Generate a random salt
@@ -40,8 +42,10 @@ class Key extends MY_MODEL {
         ($this->insert($data) !== false
         && $this->affected_rows() === 1)){
 
-          return $new_key;
+          $finalKey = $new_key;
       }
+
+			return $finalKey;
   }
 
 	/**
