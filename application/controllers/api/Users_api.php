@@ -7,17 +7,28 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 class Users_api extends REST_Controller {
 
+    /**
+     * Defines which methods are protected by
+     * an API key
+     * @var Array
+     */
     protected $methods = [
       'index_put' => ['key' => false],
       'index_post' => ['key' => false],
       'index_delete' => ['key' => true]
      ];
 
+     /**
+      * Default constructor
+      */
     public function __construct(){
       parent::__construct();
       $this->load->model("key");
     }
 
+    /**
+     * Login endpoint
+     */
     public function index_put()
     {
         $email = $this->put('email');
@@ -26,6 +37,16 @@ class Users_api extends REST_Controller {
         $this->loginAndAuth($email, $password);
     }
 
+    /**
+     * Fetches an user according to $email and $password.
+     * Create or refresh API key for the given user.
+     *
+     * @param  String $email
+     * @param  String $password
+     * @return HTTP_OK
+     * @return HTTP_UNAUTHORIZED (login failed)
+     * @return HTTP_BAD_REQUEST (if $email or $password is missing)
+     */
     private function loginAndAuth($email, $password){
 
       if($email !== NULL && $password !== NULL){
@@ -50,6 +71,10 @@ class Users_api extends REST_Controller {
 
     }
 
+    /**
+     * Signup enpoints
+     * @return HTTP_BAD_REQUEST if email is taken
+     */
     public function index_post()
     {
       $email       = $this->post('email');
@@ -76,6 +101,11 @@ class Users_api extends REST_Controller {
 			}
     }
 
+    /**
+     * Delete an user
+     * @return HTTP_INTERNAL_SERVER_ERROR (delete failed)
+     * @return HTTP_NO_CONTENT on success
+     */
     public function index_delete()
     {
 
