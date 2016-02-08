@@ -78,22 +78,9 @@ class CIPHPUnitTestRequest
 
 		try {
 
-			echo PHP_EOL;
-			echo PHP_EOL;
-			echo PHP_EOL;
-			echo "=========UNIT =======".PHP_EOL;
-
-			var_dump($header);
-
 			foreach ($header as $key => $value) {
 				$_SERVER['HTTP_'.$key] = $value;
-				echo PHP_EOL. $_SERVER['HTTP_'.$key] . PHP_EOL.PHP_EOL;
 			}
-
-				echo "====================";
-				echo PHP_EOL;
-				echo PHP_EOL;
-				echo PHP_EOL;
 
 			if (is_array($argv))
 			{
