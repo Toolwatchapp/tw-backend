@@ -134,6 +134,15 @@ class Measures extends MY_Controller {
 		$this->event->add(ADD_WATCH_LOAD);
 
 		$this->_headerData['headerClass'] = 'blue';
+
+		array_push($this->_headerData['javaScripts'],
+			"jquery.easy-autocomplete.min", "watch.autocomplete");
+
+		array_push($this->_headerData['styleSheets'],
+			"easy-autocomplete.min",
+			"easy-autocomplete.themes.min"
+		);
+
 		$this->load->view('header', $this->_headerData);
 
 		$this->load->view('measure/new-watch', $this->_bodyData);
@@ -156,6 +165,14 @@ class Measures extends MY_Controller {
 			$watch = $this->watch->getWatch($this->watchId);
 
 			if($watch){
+
+				array_push($this->_headerData['javaScripts'],
+					"jquery.easy-autocomplete.min", "watch.autocomplete");
+
+				array_push($this->_headerData['styleSheets'],
+					"easy-autocomplete.min",
+					"easy-autocomplete.themes.min"
+				);
 
 				$this->_headerData['headerClass'] = 'blue';
 				$this->load->view('header', $this->_headerData);
