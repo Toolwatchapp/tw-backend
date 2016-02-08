@@ -55,3 +55,17 @@
         </div>
     </div>
 </div>
+
+<?php
+if(isset($selected_watch)){
+?>
+
+<script>
+  $( document ).ready(function() {
+    createCTA();
+  });
+</script>
+
+<?php
+}
+?>
