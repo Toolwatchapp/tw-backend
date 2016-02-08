@@ -14,6 +14,7 @@ $( document ).ready(function() {
     if ($( "#accuracyHolder" ).length){
       isAccuracy = true;
       validateFunction = "validateAccuracyMeasure();";
+      createCTA();
     }
 
     console.log(isAccuracy);
@@ -21,26 +22,33 @@ $( document ).ready(function() {
     $('body').on('click', 'button[name="startSync"]', function(e)
     {
         e.preventDefault();
-        var watchId = $('select[name="watchId"]').val();
-        $('.watch-error').hide();
-
-        if(watchId != null)
-        {
-            $('button[name="startSync"]').hide();
-            $('.watch-select').hide();
-            $('span#selectedWatch').text(
-              "for your " +
-              $('select[name="watchId"]').find(":selected").text()
-            );
-            getNextMinute();
-
-        }
-        else
-        {
-           $('.watch-error').show();
-        }
+        createCTA();
     });
 });
+
+/**
+ * Check if a watch is selected and displays the CTA
+ */
+function createCTA(){
+  var watchId = $('select[name="watchId"]').val();
+  $('.watch-error').hide();
+
+  if(watchId != null)
+  {
+      $('button[name="startSync"]').hide();
+      $('.watch-select').hide();
+      $('span#selectedWatch').text(
+        "for your " +
+        $('select[name="watchId"]').find(":selected").text()
+      );
+      getNextMinute();
+
+  }
+  else
+  {
+     $('.watch-error').show();
+  }
+}
 
 /**
  * Compute the next minute
@@ -62,15 +70,11 @@ function getNextMinute(){
 
   offsetedDate = new Date(d.getTime() + offsetSeconds * 1000 + 60 * 1000);
 
-  console.log(d.toString());
-  console.log(seconds);
-  console.log(offsetSeconds);
-  console.log(offsetedDate.toString());
-
-  $("#sync-button").html("Press this button when the second hand  <br />"
-    + '<span style="font-size:40px">'
-    + 'is <b>exactly</b>​​ at 12'
-    + '</span>'
+  $("#sync-button").html("<span style='"+computeFontSize()+"'>"
+    + "Press this button when <br /> the second-hand  <br /><br />​​"
+    + '<img src="../../assets/img/stepnew.jpg" style="width:30%;" />'
+    + "<br /><br />"
+    + "reaches <i><b>exactly</b></i>&nbsp; the twelve <br /> o'clock position </span> <br />"
   );
 
   $("#sync-button").show();
@@ -79,6 +83,19 @@ function getNextMinute(){
   //sec, we display a popup.
   timeoutPopup = setTimeout(function(){deadlinePassed();},
     80 * 1000);
+}
+
+/**
+ * Bootstrap css doesn't like us to override the
+ * default font for buttons...
+ * @return font-size depending on the screen
+ */
+function computeFontSize(){
+  var style = "";
+  if(document.body.clientWidth > 500){
+    style = "font-size:20px";
+  }
+  return style;
 }
 
 /**
@@ -110,7 +127,7 @@ function deadlinePassed(){
 
   var deadlinePassedText =
     `<center>
-        <h1>Is everything ok, doc ?</h1>
+        <h1>Is everything ok, Doc ?</h1>
         <p>
         To begin measuring the accuracy of your watch, we must first
         synchronize it with Toolwatch's accuracy system.<br><br>
