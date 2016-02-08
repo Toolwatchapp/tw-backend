@@ -205,6 +205,14 @@ class User_test extends TestCase {
 		);
 	}
 
+	public function test_delete(){
+
+		$this->assertEquals(true, $this->obj->delete(self::$userId));
+		$user = $this->obj->getUser(self::$userId);
+		$this->assertEquals("deleted@user.com", $user->email);
+
+	}
+
 	public static function tearDownAfterClass() {
 		$CI = &get_instance();
 		$CI->load->model('User');

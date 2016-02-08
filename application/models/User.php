@@ -16,6 +16,7 @@ class User extends ObservableModel {
 	function __construct() {
 		parent::__construct();
 		$this->table_name = "user";
+		$this->key = "userId";
 	}
 
 	/**
@@ -28,7 +29,8 @@ class User extends ObservableModel {
 	function login($email, $password) {
 		$res = false;
 
-		$user = $this->select('*')
+		$user = $this->select('userId, email, name, firstname,
+		 	timezone, country, registerDate')
 		     ->where('email', $email)
 		     ->where('password', hash('sha256', $password))
 				 ->find_all();
@@ -85,6 +87,26 @@ class User extends ObservableModel {
 		$this->notify(LOGOUT, array());
 
 		return true;
+	}
+
+	/**
+	 * Soft delete users
+	 * @param  int $userId
+	 * @return boolean
+	 */
+	function delete($id = NULL){
+
+		return $this->update($id,
+			[
+				'email' => 'deleted@user.com',
+				'password' => 'deleted user',
+				'firstname' => 'deleted user',
+				'name' => 'deleted user',
+				'timezone' => 'deleted user',
+				'country' => 'deleted user',
+				'isActive' => 0,
+			]
+		) && $this->affected_rows() === 1;
 	}
 
 	/**
@@ -153,7 +175,7 @@ class User extends ObservableModel {
 			$this->notify($event, $user);
 
 			$res = true;
-		} 
+		}
 
 		return $res;
 	}
