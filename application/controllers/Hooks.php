@@ -70,10 +70,15 @@ class Hooks extends CI_Controller {
 			$text           = $this->input->post('text');
 			$quote          = $this->quotes[rand(0, 18)];
 			$result["text"] = $quote;
+			$activeUser = new MY_MODEL("active_user");
+
 
 			if (startsWith($text, "Jack nbusers")) {
 
-				$result["text"] = $this->user->count_all().". ".$quote;
+				$activeUserCount = $activeUser->count_all();
+				$deletedUser = $this->user->count_all() - $activeUserCount;
+
+				$result["text"] = $activeUserCount ." (".$deletedUser." deleted users). ".$quote;
 
 			} else if (startsWith($text, "Jack nbmeasures")) {
 
@@ -86,19 +91,16 @@ class Hooks extends CI_Controller {
 			//FIXME: Doesn't work in production. Add tests
 			} else if (startsWith($text, "Jack whois")) {
 
-				$user = $this->user->select(" user.userId, user.name, firstname,
-                    DATE_FORMAT(FROM_UNIXTIME(`registerDate`), '%e %b %Y') AS 'register',
-                    DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
+				$user = $activeUser
 				->find_by('email', str_replace("Jack whois ", "", $text));
 
 				if ($user) {
-					$watches  = $this->watch->getWatches($user->userId);
-					$measures = $this->measure->getMeasuresByUser($user->userId, $watches);
+
 
 					$result["text"] = "Id ".$user->userId.", Name ".$user->name.
 					" ,Firstname ".$user->firstname." ,Register ".$user->register.
-					" ,LastLogin ".$user->lastLogin." ,Watches ".sizeof($watches).
-					" ,Measures ".sizeof($measures);
+					" ,LastLogin ".$user->lastLogin." ,Watches ".$user->watches.
+					" ,Measures ".$user->measures;
 
 				} else {
 					$result["text"] = "User not found. ".$this->db->last_query();
