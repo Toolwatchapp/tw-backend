@@ -83,8 +83,8 @@
                         <center><p><br /><br />We <i style="color:#4d77a7" class="fa fa-heart"></i> <a href="https://instagram.com/toolwatchapp/">Instagram</a>, tag us with your wristshots and share your results using #ToolwatchApp !</p></center>
                         <br />
                         <!-- INSTANSIVE WIDGET -->
-                        <script src="//instansive.com/widget/js/instansive.js"></script>
-                        <iframe src="//instansive.com/widgets/3eea3b0bb6345272b1e1944fd14859aa.html" id="instansive_3eea3b0bb6" name="instansive_3eea3b0bb6"  scrolling="no" allowtransparency="true" class="instansive-widget" style="width: 100%; border: 0; overflow: hidden;"></iframe>
+                        <script src="http://instansive.com/widget/js/instansive.js"></script>
+                        <iframe src="http://instansive.com/widgets/3eea3b0bb6345272b1e1944fd14859aa.html" id="instansive_3eea3b0bb6" name="instansive_3eea3b0bb6"  scrolling="no" allowtransparency="true" class="instansive-widget" style="width: 100%; border: 0; overflow: hidden;"></iframe>
                         </div>
 
                     </div>
