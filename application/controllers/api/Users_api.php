@@ -15,7 +15,7 @@ class Users_api extends REST_Controller {
     protected $methods = [
       'index_put' => ['key' => false],
       'index_post' => ['key' => false],
-      'index_delete' => ['key' => true]
+      'index_delete' => ['key' => true, 'limit' => 20]
      ];
 
      /**
