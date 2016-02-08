@@ -22,11 +22,20 @@ class Measures_test extends TestCase {
 		);
 
 		$CI->User->login('mathieu@gmail.com', 'azerty');
-
 		self::$userId = $CI->session->userdata('userId');
 
 		$CI->Watch->delete_where(array("watchId >=" => "0"));
 		$CI->Measure->delete_where(array("id >="    => "0"));
+
+		self::$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'brand',
+			'name',
+			2015,
+			28,
+			014
+		);
+
 	}
 
 	public function test_index(){
@@ -50,6 +59,53 @@ class Measures_test extends TestCase {
 		);
 
 		$this->assertContains('Watch successfully added!', $output);
+	}
+
+	public function test_editWatchFailForm(){
+		$output = $this->request(
+			'POST',
+			['Measures', 'edit_watch_p'],
+			[
+				'watchId' => 0
+			]
+		);
+
+		$this->assertEquals(null, $output);
+	}
+
+	public function test_editwatchForm(){
+		$output = $this->request(
+			'POST',
+			['Measures', 'edit_watch_p'],
+			[
+				'watchId' => self::$watchId
+			]
+		);
+
+		$this->assertContains("Edit your watch", $output);
+	}
+
+	public function test_new_measure_for_watchFail(){
+		$output = $this->request(
+			'POST',
+			['Measures', 'new_measure_for_watch'],
+			[
+			]
+		);
+
+		$this->assertEquals(null, $output);
+	}
+
+	public function test_new_measure_for_watch(){
+		$output = $this->request(
+			'POST',
+			['Measures', 'new_measure_for_watch'],
+			[
+				'watchId' => self::$watchId
+			]
+		);
+
+		$this->assertContains("New measure", $output);
 	}
 
 	public function test_indexDeleteMeasures(){

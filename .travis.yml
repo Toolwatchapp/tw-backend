@@ -6,4 +6,6 @@ notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
 
-script: cd application/tests/ && phpunit --coverage-text
+script:
+  - cd application/tests/ && phpunit --coverage-text
+  - php coverage-checker.php build/logs/clover.xml 100

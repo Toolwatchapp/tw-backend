@@ -1,6 +1,6 @@
 <div class="container container-fluid content first">
     <div class="row">
-        <div class="col-md-12"><center><h1>Add a new watch</h1></center></div>
+        <div class="col-md-12"><center><h1>Edit your watch</h1></center></div>
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
