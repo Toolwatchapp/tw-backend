@@ -132,4 +132,16 @@ class Users_api_test extends TestCase {
 
     $this->assertResponseCode(204);
   }
+
+  public static function tearDownAfterClass() {
+   $CI = &get_instance();
+   $CI->load->model('User');
+   $CI->load->model('Measure');
+   $CI->load->model('Watch');
+   $CI->load->model('Key');
+   $CI->Key->delete_where(array("id >=" => "0"));
+   $CI->User->delete_where(array("userId >="   => "0"));
+   $CI->Measure->delete_where(array("id >="    => "0"));
+   $CI->Watch->delete_where(array("watchId >=" => "0"));
+  }
 }
