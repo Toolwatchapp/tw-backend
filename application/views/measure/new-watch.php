@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
 <div class="container container-fluid content first">
     <div class="row">
         <div class="col-md-12"><center><h1>Add a new watch</h1></center></div>
@@ -8,14 +10,14 @@
                 <div class="form-group">
                     <label for="brand" class="col-sm-3 control-label">Brand <i>*</i></label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="brand" placeholder="Jaeger-LeCoultre">
+                        <input id="brand" type="text" class="form-control" name="brand" placeholder="Jaeger-LeCoultre">
                         <span class="watch-error brand-error">This field is required.</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="name" class="col-sm-3 control-label">Model</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="name" placeholder="Duometre">
+                        <input id="model" type="text" class="form-control" name="name" placeholder="Duometre">
                     </div>
                 </div>
                 <div class="form-group">
