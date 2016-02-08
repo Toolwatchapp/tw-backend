@@ -70,7 +70,7 @@ class Hooks extends CI_Controller {
 			$text           = $this->input->post('text');
 			$quote          = $this->quotes[rand(0, 18)];
 			$result["text"] = $quote;
-			$activeUser = new MY_MODEL("active_user");
+			$activeUser 		= new MY_MODEL("active_user");
 
 
 			if (startsWith($text, "Jack nbusers")) {
