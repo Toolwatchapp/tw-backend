@@ -34,7 +34,8 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('1. ', $output);
+		$this->assertContains('1', $output);
+		$this->assertContains('deleted', $output);
 	}
 
 	public function test_indexMeasures() {
