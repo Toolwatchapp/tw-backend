@@ -239,7 +239,10 @@ class Measures extends MY_Controller {
 
 			$this->event->add(ACCURACY_LOAD);
 
-			array_push($this->_headerData['javaScripts'], "input.time.logic");
+
+			$this->_headerData['headerClass'] = 'blue';
+			array_push($this->_headerData['javaScripts'], "input.time.logic",
+			"watch.animation");
 
 			$this->load->view('header', $this->_headerData);
 
@@ -308,8 +311,8 @@ class Measures extends MY_Controller {
 			//Add the watch measure
 			$watchMeasure = $this->measure->addAccuracyMesure(
 				$this->measureId,
-				$this->referenceTimestamp,
-				$this->userTimestamp
+				$this->referenceTimestamp/1000,
+				$this->userTimestamp/1000
 			);
 
 			// If the computed accuracy makes sense, we return success
