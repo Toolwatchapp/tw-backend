@@ -40,6 +40,16 @@ class Key_test extends TestCase {
 
   }
 
+  public static function tearDownAfterClass() {
+    $CI = &get_instance();
+    $CI->load->model('User');
+    $CI->load->model('Watch');
+    $CI->load->model('Key');
+    $CI->Key->delete_where(array("key >=" => "0"));  
+    $CI->watch->delete_where(array("watchId >=" => "0"));
+    $CI->User->delete_where(array("userId >=" => "0"));
+  }
+
 
 }
 ?>
