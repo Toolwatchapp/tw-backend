@@ -98,7 +98,7 @@ class Measures extends MY_Controller {
 
 		if($this->expectsPost(array('watchId'))){
 
-			if ($this->watch->deleteWatch($this->watchId)) {
+			if ($this->watch->deleteWatch($this->watchId, $this->session->userdata('userId'))) {
 				$this->_bodyData['success'] = 'Watch successfully deleted!';
 			}
 

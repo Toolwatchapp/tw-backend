@@ -86,7 +86,7 @@ class Watch extends ObservableModel {
 
 		$this->notify(UPDATE_WATCH, arrayToObject($data));
 
-		return $res === true && $this->affected_rows() === 1;
+		return $res && $this->affected_rows() === 1;
 	}
 
 	/**
