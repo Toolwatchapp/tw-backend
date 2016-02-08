@@ -327,7 +327,7 @@ $config['rest_key_column'] = 'key';
 | $config['rest_limits_method'] = 'ROUTED_URL';  // Put a limit on the routed URL
 |
 */
-$config['rest_limits_method'] = 'ROUTED_URL';
+$config['rest_limits_method'] = 'METHOD_NAME';
 
 /*
 |--------------------------------------------------------------------------
