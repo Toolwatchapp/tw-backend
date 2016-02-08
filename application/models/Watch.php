@@ -128,9 +128,15 @@ class Watch extends ObservableModel {
 	 * @param  int $watchId The watch to delete
 	 * @return boolean
 	 */
-	function deleteWatch($watchId) {
+	function deleteWatch($watchId, $userId) {
+
+		$whereClause = [
+			'watchId' => $watchId,
+			'userId' => $userId
+		];
+
 		$data = array('status' => 4);
-		$res  = $this->update($watchId, $data) !== false;
+		$res  = $this->update($whereClause, $data) && $this->affected_rows() === 1;
 
 		$this->notify(DELETE_WATCH,
 			array('user' => arrayToObject($this->session->all_userdata()),
