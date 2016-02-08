@@ -1157,7 +1157,7 @@ abstract class REST_Controller extends CI_Controller {
         // Get data about a keys' usage and limit to one row
         $result = $this->rest->db
             ->where('uri', $limited_uri)
-            ->where('api_key', $this->rest->key)
+            ->where('api_key_id', $this->rest->key_id)
             ->get($this->config->item('rest_limits_table'))
             ->row();
 
@@ -1167,7 +1167,7 @@ abstract class REST_Controller extends CI_Controller {
             // Create a new row for the following key
             $this->rest->db->insert($this->config->item('rest_limits_table'), [
                 'uri' => $limited_uri,
-                'api_key' => isset($this->rest->key) ? $this->rest->key : '',
+                'api_key_id' => isset($this->rest->key_id) ? $this->rest->key_id : '',
                 'count' => 1,
                 'hour_started' => time()
             ]);
@@ -1179,7 +1179,7 @@ abstract class REST_Controller extends CI_Controller {
             // Reset the started period and count
             $this->rest->db
                 ->where('uri', $limited_uri)
-                ->where('api_key', isset($this->rest->key) ? $this->rest->key : '')
+                ->where('api_key_id', isset($this->rest->key_id) ? $this->rest->key_id : '')
                 ->set('hour_started', time())
                 ->set('count', 1)
                 ->update($this->config->item('rest_limits_table'));
@@ -1197,7 +1197,7 @@ abstract class REST_Controller extends CI_Controller {
             // Increase the count by one
             $this->rest->db
                 ->where('uri', $limited_uri)
-                ->where('api_key', $this->rest->key)
+                ->where('api_key_id', $this->rest->key_id)
                 ->set('count', 'count + 1', FALSE)
                 ->update($this->config->item('rest_limits_table'));
         }
