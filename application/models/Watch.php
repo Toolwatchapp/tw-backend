@@ -123,6 +123,17 @@ class Watch extends ObservableModel {
 	}
 
 	/**
+	 * Checks if a watch belongs to a given suer
+	 * @param  int  $watchId
+	 * @param  int  $userId
+	 * @return boolean
+	 */
+	function isOwnedBy($watchId, $userId){
+		return $this->where("watchId", $watchId)
+		->count_by("userId", $userId) > 0;
+	}
+
+	/**
 	 * Soft delete watch $watchId
 	 *
 	 * @param  int $watchId The watch to delete

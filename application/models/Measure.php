@@ -158,6 +158,9 @@ class Measure extends ObservableModel {
 
 		$returnValue = $this->insert($data);
 
+		$this->notify(NEW_MEASURE,
+							array('measure'   => $data));
+
 		return $returnValue;
 	}
 
@@ -217,6 +220,19 @@ class Measure extends ObservableModel {
 				'measure'   => $measureId));
 
 		return $this->update($measureId, $data) !== false;
+	}
+
+	/**
+	 * Determine if a measure is owned by an user
+	 *
+	 * @param  int  $measureId
+	 * @param  int  $userId
+	 * @return boolean
+	 */
+	function isOwnedBy($measureId, $userId){
+		return $this->join("watch", "watch.watchId = measure.watchId")
+		->where("id", $measureId)
+		->count_by("watch.userId", $userId) === 1;
 	}
 
 	/**
