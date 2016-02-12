@@ -2,6 +2,7 @@ var offsetedDate;
 var clickedDate;
 var isAccuracy = false;
 var validateFunction = "validateBaseMeasure();";
+var ctaText = "All good, take me home scotty";
 
 /**
  * Link button click
@@ -14,6 +15,7 @@ $( document ).ready(function() {
     if ($( "#accuracyHolder" ).length){
       isAccuracy = true;
       validateFunction = "validateAccuracyMeasure();";
+      ctaText = "Give my accuracy, baby";
       createCTA();
     }
 
@@ -174,7 +176,7 @@ function clicked(){
 
         <a class="btn btn-success btn-lg"
         href="javascript:` + validateFunction + `">
-        All good, take me home scotty
+        `+ctaText+`
         </a>
 
         <br /><br />
