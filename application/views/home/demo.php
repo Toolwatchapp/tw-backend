@@ -9,7 +9,7 @@
 
 
         <div  id="demo-first-step" class="form-group">
-            <div class="col-sm-5">
+            <div class="col-sm-offset-1 col-sm-4">
               <center>
                 <br />
                 <br />
