@@ -42,7 +42,7 @@ function initDemo(){
 
   $("#sync-button").html("<span>"
     + "Press this button when <br /> the second-hand  <br /><br />​​"
-    + '<img src="../../assets/img/stepnew.jpg" style="width:30%;" />'
+    + '<img src="../../assets/img/stepnew.png" style="width:30%;" />'
     + "<br /><br />"
     + "reaches <i><b>exactly</b></i>&nbsp; the twelve <br /> o'clock position </span> <br />"
   );
