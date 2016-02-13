@@ -15,16 +15,16 @@
                 <br />
                 <br />
                 <a
-                  style="display:none"
+                  style="display:none; background-color:#1763A5"
                   id="sync-button"
-                  class="btn btn-primary  btn-lg">
+                  class="btn btn-primary  btn-lg" disabled="disabled">
                 </a>
               </center>
             </div>
         </div>
 
 
-        <div style="margin-top:100px;" id="demo-second-step" class="col-sm-5" >
+        <div style="margin-top:90px;" id="demo-second-step" class="col-sm-5" >
             <div class="col-sm-12">
                 <h1>Congratulations!</h1> <br/> <p class="accuracy-subtitle"> The accuracy of your <strong><span class="watch-brand">watch</span></strong> is </p>
             </div>
