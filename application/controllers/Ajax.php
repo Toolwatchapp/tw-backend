@@ -304,17 +304,15 @@ class Ajax extends MY_Controller {
 
 			$result['success'] = false;
 
-			$name    = $this->input->post('name');
-			$email   = $this->input->post('email');
-			$message = $this->input->post('message');
+			$tags 	 = "contact";
 
 			$this->load->library('mandrill');
 
 			$messageMandrill = array(
-				'html'       => $message,
-				'subject'    => $subject,
-				'from_email' => $email,
-				'from_name'  => $name,
+				'html'       => $this->message,
+				'subject'    => "Contact information",
+				'from_email' => $this->email,
+				'from_name'  => $this->name,
 				'to'         => array(
 					array(
 						'email' => 'marc@toolwatch.io',
@@ -323,7 +321,7 @@ class Ajax extends MY_Controller {
 					)
 				),
 				'headers'   => array(
-					'Reply-To' => $email,
+					'Reply-To' => $this->email,
 				),
 				'important'                 => false,
 				'track_opens'               => true,
@@ -341,9 +339,9 @@ class Ajax extends MY_Controller {
 
 			$scheduleTime = time();
 
-			$send_at =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
-			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'
-			.(date('i', $scheduleTime)).date(':s', $scheduleTime);
+			$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
+			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
+			.(date('i', $scheduleTime)).':'.(date('s', $scheduleTime));
 
 			$mandrillResponse =  $this->mandrill->messages->send($messageMandrill, $async, $ip_pool, $send_at);
 			log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
@@ -351,7 +349,7 @@ class Ajax extends MY_Controller {
 
 			if ($mandrillResponse[0]['status'] === 'sent') {
 				$result['success'] = true;
-			} 
+			}
 
 			echo json_encode($result);
 		}
