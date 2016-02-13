@@ -306,9 +306,14 @@ class Auto_email {
 		//sent right away.
 		$scheduleTime = $scheduleTime-48*60*60;
 
+		log_message('info', 'Date ' . print_r($scheduleTime, true));
+
+
 		$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
 		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
-		.(date('i', $scheduleTime)).date(':s', $scheduleTime);
+		.(date('i', $scheduleTime)).':'.(date('s', $scheduleTime));
+
+		log_message('info', 'Date ' . print_r($returnValue, true));
 
 		return $returnValue;
 	}
