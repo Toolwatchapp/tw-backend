@@ -24,56 +24,16 @@ $( document ).ready(function() {
   });
 
   initSize();
-  initDemo();
 
   $('video,audio').mediaelementplayer({
       enableAutosize: true,
       features: []
   });
 
-
-
+  $(".watch-accuracy").html(delta.toFixed(1));
+  $("#demo-second-step").show();
 
 });
-
-var timeoutClick;
-
-function initDemo(){
-
-  $("#sync-button").html("<span>"
-    + "Press this button when <br /> the second-hand  <br /><br />​​"
-    + '<img src="../../assets/img/stepnew.png" style="width:30%;" />'
-    + "<br /><br />"
-    + "reaches <i><b>exactly</b></i>&nbsp; the twelve <br /> o'clock position </span> <br />"
-  );
-
-  $("#sync-button").show();
-  $("#demo-first-step").show();
-  $("#demo-second-step").hide();
-
-  var d = new Date();
-  var seconds = d.getSeconds();
-
-  timeoutClick = setTimeout(
-    function(){$( "#sync-button" ).click()},
-    (60 - seconds+1) * 1000);
-
-  $( "#sync-button" ).click(function() {
-
-      clearInterval(timeoutClick);
-
-      var result = delta;
-
-      $("#demo-first-step").hide();
-      $("#demo-second-step").fadeToggle();
-      $(".watch-accuracy").html(result.toFixed(1));
-
-      setTimeout(
-        function(){initDemo();},
-        10 * 1000);
-    });
-
-}
 
 function initSize(){
 
