@@ -8,18 +8,18 @@
 
 ?></title>
     <meta name="keywords" content="toolwatch, toolwatchapp, accuracy, precision, measure, mechanical watch, manual winding, automatic winding">
-    <meta name="description" content="Toolwatch makes it super easy to measure the accuracy of any mechanical watch. Keep your watch’s accuracy at its best with Toolwatch.">
+    <meta name="description" content="<?php if (isset($meta_description)) {echo $meta_description;
+} else {
+	echo 'Toolwatch makes it super easy to measure the accuracy of a mechanical watch. Keep your watch\'s accuracy at its best and know if you should service your watch';
+}
+?>" />
 
     <meta property="og:title" content="<?php if (isset($title)) {echo $title;
 } else {
 	echo 'Easily measure and track the accuracy of your mechanical watch';
 }
 ?>" />
-    <meta property="og:description" content="<?php if (isset($meta_description)) {echo $meta_description;
-} else {
-	echo 'Toolwatch makes it super easy to measure the accuracy of any mechanical watch. Keep your watch’s accuracy at its best with Toolwatch.';
-}
-?>" />
+    <meta property="og:description" content="<?php echo 'Toolwatch makes it super easy to measure the accuracy of a mechanical watch. Keep your watch\'s accuracy at its best and know if you should service your watch' ?>" />
     <meta property="og:image" content="<?php if (isset($meta_img)) {echo $meta_img;
 } else {
 	echo img_url('share.png');
@@ -82,7 +82,6 @@ m.parentNode.insertBefore(a,m)
     }
     </script>
     <script type="text/javascript">CRISP_WEBSITE_ID = "-K4rBEcM_Qbt6JrISVzu";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
-
     <meta name="p:domain_verify" content="9f4eefba8c49cf4a79b31c72a7e388a9"/>
 <?php
 foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">';}
@@ -92,6 +91,17 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <!-- <script type="text/javascript" src="<?php echo js_url('jquery.cookiesdirective');?>"/> -->
+
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":"https://toolwatch.io/about","theme":"<?php echo base_url();?>assets/css/cookie.css"};
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+<!-- End Cookie Consent plugin -->
+
+
 </head>
 <body>
 	<div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="pageModal" aria-hidden="true" data-keyboard="true" data-backdrop="static">

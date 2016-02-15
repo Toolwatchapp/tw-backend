@@ -32,14 +32,6 @@ if ( ! function_exists('js_url'))
     }
 }
 
-if ( ! function_exists('pdf_url'))
-{
-    function pdf_url($nom)
-    {
-	    return base_url() . 'assets/pdf/' . $nom . '.pdf';
-    }
-}
-
 if ( ! function_exists('img_url'))
 {
     function img_url($nom)
@@ -59,5 +51,11 @@ if ( ! function_exists('img'))
 if ( ! function_exists('event_url')){
     function event_url(){
         return getenv("TW_EVENT_URL");
+    }
+}
+
+if(! function_exists('exception_url')){
+    function exception_url(){
+      return getenv("SLACK_EXCEPTION");
     }
 }

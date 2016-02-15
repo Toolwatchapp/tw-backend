@@ -56,14 +56,14 @@ $( document ).ready(function() {
         ctx.drawImage(img, 4, 7, dimensions.width, dimensions.height);
 
 
-       
+
     }
 
     function drawTime(ctx, radius){
         var now = new Date();
         var hour = now.getHours();
         var minute = now.getMinutes();
-        var second = now.getSeconds();
+        var second = now.getSeconds()-1;
         var ms = now.getMilliseconds();
 
         //hour
@@ -87,7 +87,7 @@ $( document ).ready(function() {
         }else{
            ctx.strokeStyle='#2d639a';
         }
-        
+
         ctx.lineWidth = width;
         ctx.lineCap = "square";
         ctx.moveTo(0,0);

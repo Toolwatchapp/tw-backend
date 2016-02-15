@@ -3,10 +3,10 @@
 	colors="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
-	stopOnError="false"
-	stopOnFailure="false"
-	stopOnIncomplete="false"
-	stopOnSkipped="false">
+	stopOnError="true"
+	stopOnFailure="true"
+	stopOnIncomplete="true"
+	stopOnSkipped="true">
 	<testsuites>
 		<testsuite name="CodeIgniter Application Test Suite">
 			<directory suffix="test.php">./</directory>
@@ -16,15 +16,20 @@
 		<whitelist>
 			<directory suffix=".php">../controllers</directory>
 			<directory suffix=".php">../models</directory>
-			<directory suffix=".php">../views</directory>
 			<directory suffix=".php">../libraries</directory>
 			<directory suffix=".php">../helpers</directory>
-			<directory suffix=".php">../hooks</directory>
+			<exclude>
+				<file>../libraries/__.php</file>
+				<file>../libraries/Mcapi.php</file>
+        <file>../libraries/Mandrill.php</file>
+				<directory suffix=".php">../libraries/Mandrill</directory>
+        <directory suffix=".php">../libraries/Google</directory>
+      </exclude>
 		</whitelist>
 	</filter>
 	<logging>
 		<log type="coverage-html" target="build/coverage"/>
 		<log type="coverage-clover" target="build/logs/clover.xml"/>
-		<log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
+		<log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="true"/>
 	</logging>
 </phpunit>

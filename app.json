@@ -1,5 +1,6 @@
 {
-  "name": "app.json",
+  "name": "tw-review",
+  "description": "",
   "scripts": {
   },
   "env": {
@@ -12,11 +13,30 @@
     "TW_EVENT_URL": {
       "required": true
     },
-    "TW_WP_DB_URL": {
+    "NEW_RELIC_APP_NAME": {
       "required": true
+    },
+    "NEW_RELIC_CONFIG_FILE": {
+      "required": true
+    },
+    "MANDRILL_APIKEY":{
+      "required":true
+    },
+    "MC_APIKEY": {
+      "required":true
+    },
+    "GOOGLE_API_ACCOUNT":{
+      "required":true
+    },
+    "GOOGLE_API_KEY":{
+      "required":true
+    },
+    "GOOGLE_API_LINK":{
+      "required":true
     }
   },
   "addons": [
-    "cleardb"
+    "cleardb",
+    "newrelic"
   ]
 }

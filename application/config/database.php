@@ -84,15 +84,10 @@ $db['default'] = array(
 	'save_queries' => TRUE
 );
 
-if (ENVIRONMENT == 'development') {
-	$db['default']['hostname'] = 'localhost';
-	$db['default']['username'] = 'root';
-	$db['default']['password'] = '';
-	$db['default']['database'] = 'toolwatch';
-} else {
-	$url                       = parse_url(getenv("TW_DB_URL"));
-	$db['default']['hostname'] = $url["host"];
-	$db['default']['username'] = $url["user"];
-	$db['default']['password'] = $url["pass"];
-	$db['default']['database'] = substr($url["path"], 1);
-}
+
+$url                       = parse_url(getenv("TW_DB_URL"));
+$db['default']['hostname'] = $url["host"];
+$db['default']['username'] = $url["user"];
+$db['default']['password'] = $url["pass"];
+$db['default']['database'] = substr($url["path"], 1);
+
