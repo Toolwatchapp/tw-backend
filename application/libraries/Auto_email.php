@@ -488,6 +488,7 @@ class Auto_email {
 			user.name as lastname, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
+			->where('watch.status', 1)
 			->where('creationDate < ', $this->getBatchUpperBound($this->day))
 			->where('creationDate > ', $this->getBatchLowerBound($this->day))
 			->as_array()
