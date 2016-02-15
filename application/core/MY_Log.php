@@ -72,6 +72,23 @@ class MY_Log {
             return FALSE;
         }
 
+        if($level === 'error' || $level === 'ERROR'){
+          $data = 'payload={"text": "'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'\n\r'.$msg.'"}';
+
+          $ch = curl_init(exception_url());
+
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+              'Content-Type: application/json',
+              'Content-Length: '.strlen($data))
+          );
+
+          $result = curl_exec($ch);
+          log_message("info", "SEND ERROR TO SLACK ". print_r($result, true));
+        }
+
         file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
 
         return TRUE;
