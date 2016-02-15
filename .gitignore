@@ -5,3 +5,5 @@ vendor/
 .env
 .phpintel/*
 application/config/google-api.p12
+.htaccess
+application/tests/phpunit.xml
