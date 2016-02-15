@@ -1,431 +1,357 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) {exit('No direct script access allowed');}
 
-class Ajax extends CI_Controller 
-{
-    function __construct()
-    {
-        parent::__construct();
-        
-        date_default_timezone_set('Europe/Paris');
-    }
-    
-    function login()
-    {        
-        if($this->input->post('email') && $this->input->post('password'))
-        {
-            $result = array();
-            
-            $email = $this->input->post('email');   
-            $password = $this->input->post('password');   
-            if($this->user->login($email, $password))
-            {
-                $this->event->add($this->event->LOGIN_EMAIL);
-                $result['success'] = true;
-            }
-            else
-            {
-                $this->event->add($this->event->LOGIN_FAIL);
-                $result['success'] = false;
-            }
-            
-            echo json_encode($result);
-        }   
-    }
-    
-    function checkEmail()
-    {
-        if($this->input->post('email'))
-        {
-            $result = array();
-            
-            if(!$this->user->checkUserEmail($this->input->post('email')))
-            {
-                $result['success'] = true;
-            }
-            else
-            {
-                $result['success'] = false;
-            }
-            
-            echo json_encode($result);
-        }
-    }
+/**
+ * Ajax controller.
+ *
+ * This controller is in charge of every ajax call.
+ *
+ * TODO: Having an Ajax controller doesn't make much sense to me.
+ * In my opignion, methods containes here should be distributed in
+ * related controller and properly documented as method expecting
+ * Ajax behaviour.
+ */
+class Ajax extends MY_Controller {
 
-    function facebookSignup()
-    {
-        $result['success'] = false;
+	/**
+	 * Default constructor that invokes CI_Controller
+	 * constructor.
+	 */
+	function __construct() {
+		parent::__construct();
 
-        if($this->input->post('email'))
-        {
+		/**
+		 * All measure are took relative to the Paris timezone.
+		 */
+		date_default_timezone_set('Europe/Paris');
+	}
 
-            $email = $this->input->post('email');
-            $password = "FB_"+$this->input->post('id');
-            $name = $this->input->post('last_name');
-            $firstname = $this->input->post('firstname');
-            $timezone = $this->input->post('timezone');
-            $country = $this->input->post('country');
+	/**
+	 * Email password login method
+	 *
+	 * @param POST String Email
+	 * @param POST String password (encoded)
+	 * @return Boolean Login status (JSON)
+	 */
+	function login() {
 
-            $emailExists = $this->user->checkUserEmail($email);
+		if ($this->expectsPost(array('email', 'password'))) {
 
-            if(!$emailExists){
+			$result = array();
 
-                if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
-                {
+			$email    = $this->input->post('email');
+			$password = $this->input->post('password');
 
-                    $this->event->add($this->event->SIGN_UP_FB);
+			/**
+			 * We disallow login with password beginning by FB_
+			 * as this are fb user that must use the fb login button
+			 * @see facebookSignup
+			 */
+			if(startsWith($password, "FB_")){
 
-                    $this->load->helper('mcapi');                    
-                    $api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
-                    $api->listSubscribe('7f94c4aa71', $email, ''); 
+				$result['success'] = false;
 
-                    $this->load->library('email');
-                    
-                    $config['protocol'] = "smtp";
-                    $config['smtp_host'] = "smtp.mandrillapp.com";
-                    $config['smtp_port'] = "587";
-                    $config['smtp_user'] = "marc@toolwatch.io"; 
-                    $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
-                    $config['charset'] = "utf-8";
-                    $config['mailtype'] = "html";
-                    $config['newline'] = "\r\n";
+			//Login atttempt
+			}else if ($this->user->login($email, $password)) {
 
-                    $this->email->initialize($config);
-                    
-                    $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                    $this->email->to($email, $name.' '.$firstname);
-                    $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+				$result['success'] = true;
 
-                    $this->email->subject('Welcome to Toolwatch!');
-                    
-                    $message = $this->load->view('email/signup', '', true);
-                    $this->email->message($message);
+			//If the login attempt was infructuous
+			} else {
+				$result['success'] = false;
+			}
 
-                    if($this->email->send())
-                    {
-                        $result['success'] = "signup";   
-                        $this->user->login($email, $password);
-                    }
+			echo json_encode($result);
+		}
 
-                }
-            }else if($this->user->login($email, $password)){
+	}
 
-                $this->event->add($this->event->LOGIN_FB);
+	/**
+	 * Checks if a given email already exists in the db
+	 *
+	 * //TODO: This doesn't seams to be called from the client side
+	 * but only used as helper method.
+	 * If so, it should go private or relocated elsewhere.
+	 *
+	 * @param POST String email
+	 *
+	 * @return boolean JSON
+	 */
+	function checkEmail() {
 
-                $result['success'] = "signin"; 
+		if ($this->expectsPost(array('email'))) {
+			$result = array();
 
-            }else{
-                
-                $result['success'] = "email"; 
-            }
-        }
+			if (!$this->user->checkUserEmail($this->input->post('email'))) {
+				$result['success'] = true;
+			} else {
+				$result['success'] = false;
+			}
 
-        echo json_encode($result);
-    }
-    
-    function signup()
-    {
-        if($this->input->post('email'))
-        {
-            $result = array();
-            
-            $email = $this->input->post('email');
-            $password = $this->input->post('password');
-            $name = $this->input->post('name');
-            $firstname = $this->input->post('firstname');
-            $timezone = $this->input->post('timezone');
-            $country = $this->input->post('country');
-            $mailingList = $this->input->post('mailingList');
-            
-            if($this->user->signup($email, $password, $name, $firstname, $timezone, $country))
-            {
+			echo json_encode($result);
+		}
+	}
 
-                $this->event->add($this->event->SIGN_UP);
-                
-                if('true' == $mailingList)
-                {
-                    $this->load->helper('mcapi');
-                    
-                    $api = new MCAPI('eff18c4c882e5dc9b4c708a733239c82-us9');
-                    $api->listSubscribe('7f94c4aa71', $email, ''); 
-                }
-                
-                
-                $this->load->library('email');
-                
-                $config['protocol'] = "smtp";
-                $config['smtp_host'] = "smtp.mandrillapp.com";
-                $config['smtp_port'] = "587";
-                $config['smtp_user'] = "marc@toolwatch.io"; 
-                $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
-                $config['charset'] = "utf-8";
-                $config['mailtype'] = "html";
-                $config['newline'] = "\r\n";
+	/**
+	 * Facebook signup
+	 *
+	 * Handle the signup and the signin for facebook signin button.
+	 * If the user never signin with facebook on tw, we create an account
+	 * for him. Otherwise, we just log him in his previously created account.
+	 *
+	 * This method will return 'email' if the user tries to signup/signin with
+	 * a facebook that habe an associated email we already have in our db.
+	 *
+	 * @param POST String email
+	 * @param POST String id
+	 * @param POST String last_name
+	 * @param POST String firstname
+	 * @param POST String timezone
+	 * @param POST String country
+	 *
+	 * TODO: Is success a good name for a variable that isn't boolean ?
+	 *
+	 * @return JSON success == signup. An new account has been created
+	 * @return JSON success == signin. We logged the user in his account
+	 * @return JSON success == email. The email associated with the Facebook
+	 * account is already used. Most likely, the user forgot that he has an email
+	 * account.
+	 *
+	 */
+	function facebookSignup() {
+		$result['success'] = false;
 
-                $this->email->initialize($config);
-                
-                $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                $this->email->to($email, $name.' '.$firstname);
-                $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+		if ($this->expectsPost(array('email', 'id', 'last_name',
+			'firstname', 'country'))) {
 
-                $this->email->subject('Welcome to Toolwatch!');
-                
-                $message = $this->load->view('email/signup', '', true);
-                $this->email->message($message);
+			/**
+			 * Getting all the posts
+			 */
+			$email     = $this->input->post('email');
+			$name      = $this->input->post('last_name');
+			$firstname = $this->input->post('firstname');
+			$country   = $this->input->post('country');
+			/**
+			 * For fb user, we don't have their fb password (obviously).
+			 * Yet, having a password is mandatory in tw and I don't feel
+			 * like having a specialized type of user for facebook users.
+			 * So, we use as password FB_ concatenated with the FB id of
+			 * the user.
+			 *
+			 * Email + password login are forbidden
+			 * @see login
+			 */
+			$password  = "FB_"+$this->input->post('id');
 
-                if($this->email->send())
-                {
-                    $result['success'] = true;   
-                    $this->user->login($email, $password);
-                }
-                else
-                {
-                    $result['success'] = false;   
-                } 
-            }
-            else
-            {
-                $this->event->add($this->event->SIGN_UP_FAIL);
+			// If the email doesn't exists yet
+			if (!$this->user->checkUserEmail($email)) {
 
-                $result['success'] = false;
-            }
-            
-            echo json_encode($result);
-        }
-    }
-    
-    function askResetPassword()
-    {
-        if($this->input->post('email'))
-        {
-            $email = $this->input->post('email');
-            
-            $result = array();
-            $data = array();
-            
-            $resetToken = $this->user->askResetPassword($email);
-            
-            if($resetToken != '')
-            {
-                $this->event->add($this->event->RESET_PASSWORD);
+				/**
+				 * Signup attempt
+				 * TODO: Can this fail ? If so, under which circonstances ? If not,
+				 * remove the if, if yes, provide a else with a dedicated response
+				 * code.
+				 */
+				if ($this->user->signup($email, $password, $name, $firstname, $country)) {
 
-                $this->load->library('email');
-                
-                $config['protocol'] = "smtp";
-                $config['smtp_host'] = "smtp.mandrillapp.com";
-                $config['smtp_port'] = "587";
-                $config['smtp_user'] = "marc@toolwatch.io"; 
-                $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
-                $config['charset'] = "utf-8";
-                $config['mailtype'] = "html";
-                $config['newline'] = "\r\n";
+					$result['success'] = "signup";
+					$this->user->login($email, $password);
 
-                $this->email->initialize($config);
-                
-                $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                $this->email->to($email, '');
-                $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+				}
 
-                $this->email->subject('Your Toolwatch password');
-                
-                $data['resetToken'] = $resetToken;
-                
-                $message = $this->load->view('email/reset-password', $data, true);
-                $this->email->message($message);
+			// The email was already in the db, so we try to log the user
+			// using a potentially existing account
+			} else if ($this->user->login($email, $password)) {
 
-                if($this->email->send())
-                {
-                   $result['success'] = true;  
-                }
-                else
-                {
-                    $result['success'] = false; 
-                }     
-            }
-            else
-            {
-                $result['success'] = false;   
-            }
-            
-            echo json_encode($result);
-        }
-    }
-    
-    function resetPassword()
-    {
-        if($this->input->post('resetToken'))
-        {
+				$result['success'] = "signin";
 
-            $this->event->add($this->event->RESET_PASSWORD_USE);
+			// The email is already taken by a classical account
+			} else {
 
-            $result = array();
-            
-            $resetToken = $this->input->post('resetToken');
-            $password = $this->input->post('password');
-            
-            if($this->user->resetPassword($resetToken, $password))
-            {
-                $result['success'] = true;
-            }
-            else
-            {
-               $result['success'] = false;
-            }
-            
-            echo json_encode($result);
-        }   
-    }
-    
-    function getReferenceTime()
-    {
-        $this->session->set_userdata('referenceTime', time());   
-    }
+				$result['success'] = "email";
+			}
+		}
 
-    function accuracyMeasure(){
-        if($this->input->post('measureId'))
-        {
+		echo json_encode($result);
+	}
 
-            $this->event->add($this->event->NEW_ACCURACY);
+	/**
+	 * Signup method. Create an accound for a new user.
+	 *
+	 * @param POST String email
+	 * @param POST String password
+	 * @param POST String name
+	 * @param POST String firstname
+	 * @param POST String timezone
+	 * @param POST String country
+	 * @return boolean|mixed Produces an 'email' output is the email
+	 * already exists
+	 */
+	function signup() {
 
-            $referenceTime = $this->session->userdata('referenceTime');
-            $userTimezone = $this->input->post('userTimezone');
-                        
-            $tempUserTime = preg_split('/:/', $this->input->post('userTime'));
-            
-            $userTime = mktime($tempUserTime[0], $tempUserTime[1], $tempUserTime[2], date("n"), date("j"), date("Y"));
-            
-            $this->load->model('measure');
+		$result['success'] = false;
 
-            $watchMeasure = $this->measure->addAccuracyMesure($this->input->post('measureId'), $referenceTime, $userTime);
+		if ($this->expectsPost(array('email','password','name','firstname',
+			'country'))) {
 
-            $result['accuracy'] = $watchMeasure->accuracy;
+			$result = array();
 
-            if($watchMeasure->accuracy)
-            {
-                $result['success'] = true;
-            }else{
-                $result['success'] = false;
-            }
+			$email       = $this->input->post('email');
+			$password    = $this->input->post('password');
+			$name        = $this->input->post('name');
+			$firstname   = $this->input->post('firstname');
+			$country     = $this->input->post('country');
 
-            echo json_encode($result);
-        }
-    }
-    
-    function baseMeasure()
-    {
-        if($this->input->post('watchId'))
-        {
-            $this->event->add($this->event->NEW_MEASURE);
-            
-            $result = array();
-            
-            $watchId = $this->input->post('watchId');
-            $referenceTime = $this->session->userdata('referenceTime');
-            $userTimezone = $this->input->post('userTimezone');
-                        
-            $tempUserTime = preg_split('/:/', $this->input->post('userTime'));
-            
-            $userTime = mktime($tempUserTime[0], $tempUserTime[1], $tempUserTime[2], date("n"), date("j"), date("Y"));
-            
-            $this->load->model('measure');
-            
-            if($this->measure->addBaseMesure($watchId, $referenceTime, $userTime))
-            {
-                $user = $this->user->getUserFromWatchId($watchId);
+			//If the email isn't already in used
+			if (!$this->user->checkUserEmail($email)) {
 
-                $this->load->library('email');
+				// Create the account
+				if ($this->user->signup(
+						$email, $password, $name, $firstname,
+						$country)) {
 
-                $config['protocol'] = "smtp";
-                $config['smtp_host'] = "smtp.mandrillapp.com";
-                $config['smtp_port'] = "587";
-                $config['smtp_user'] = "marc@toolwatch.io"; 
-                $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
-                $config['charset'] = "utf-8";
-                $config['mailtype'] = "html";
-                $config['newline'] = "\r\n";
+					$result['success'] = true;
 
-                $this->email->initialize($config);
+					//Log the user will create his session and so on
+					$this->user->login($email, $password);
 
-                $this->email->from('hello@toolwatch.io', 'Toolwatch');
-                $this->email->to($user->email, $user->name.' '.$user->firstname);
-                $this->email->reply_to('hello@toolwatch.io', 'Toolwatch');
+				}
 
-                $scheduleTime = time()+86400;
-                $sentAt = date('Y-', $scheduleTime).date('m-', $scheduleTime).(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'.(date('i', $scheduleTime)).date(':s', $scheduleTime);
-                $this->email->set_header('X-MC-SendAt',$sentAt); 
+			//The email is already in use
+			} else {
+				$result['success'] = 'email';
+			}
 
-                $this->email->subject('It\'s time to check your watch\'s accuracy !');
+			echo json_encode($result);
+		}
+	}
 
-                $data['watchBrand'] = $user->brand;
-                $data['watchName'] = $user->name;
+	/**
+	 * Reset the password
+	 *
+	 * @param POST String email
+	 * @return boolean success
+	 */
+	function askResetPassword() {
+		$result['success'] = false;
 
-                $message = $this->load->view('email/remind-check-accuracy', $data, true);
-                $this->email->message($message);
+		if ($this->expectsPost(array('email'))) {
 
-                if($this->email->send())
-                {
-                   $result['success'] = true; 
-                }
-                else
-                {
-                    $result['success'] = false;   
-                } 
-            }
-            else
-            {
-                $result['success'] = true;
-            }
-            
-            echo json_encode($result);
-        }
-    }
-    
-    function contact()
-    {
-        if($this->input->post('name'))
-        {
-            $result = array();
-            
-            $name = $this->input->post('name');
-            $email = $this->input->post('email');
-            $message = $this->input->post('message');
-            
-            $this->load->library('email');
-                
-            $config['protocol'] = "smtp";
-            $config['smtp_host'] = "smtp.mandrillapp.com";
-            $config['smtp_port'] = "587";
-            $config['smtp_user'] = "marc@toolwatch.io"; 
-            $config['smtp_pass'] = "72rd6UM9tLUpfbrGUct4sw";
-            $config['charset'] = "utf-8";
-            $config['mailtype'] = "html";
-            $config['newline'] = "\r\n";
+			$email = $this->input->post('email');
 
-            $this->email->initialize($config);
+			$result = array();
 
-            $this->email->from('contact@toolwatch.io', 'Toolwatch contact');
-            $this->email->to('marc@toolwatch.io', 'Marc');
-            $this->email->reply_to($email, $name);
+			//We don't send the token over the network, we just
+			//make sure that a token has been generated.
+			//The token will be transfered in an email.
+			$resetToken = $this->user->askResetPassword($email);
 
-            $this->email->subject('Contact Toolwatch from '.$name);
+			if ($resetToken) {
 
-            $bodyMessage ='<b>Name :</b> '.$name.'<br>';
-            $bodyMessage .= '<b>Email :</b> '.$email.'<br>';
-            $bodyMessage .= '<b>Message :</b> <br>';
-            $bodyMessage .= $message;
-            
-            $this->email->message($bodyMessage);
+				$result['success'] = true;
 
-            if($this->email->send())
-            {
-               $result['success'] = true;   
-            }
-            else
-            {
-                $result['success'] = false;   
-            }  
-            
-            echo json_encode($result);
-        }
-    }
-                
+			} else {
+				$result['success'] = false;
+			}
+
+		}
+		echo json_encode($result);
+	}
+
+	/**
+	 * Reset the password of an user
+	 *
+	 * @param POST String $resetToken The reset token sent by email
+	 * @param POST String $password		The new password for the usser
+	 *
+	 * @return boolean success
+	 */
+	function resetPassword() {
+
+		if ($this->expectsPost(array('resetToken', 'password'))) {
+
+			$result = array();
+
+			$resetToken = $this->input->post('resetToken');
+			$password   = $this->input->post('password');
+
+			//Attempting to reset the password given the token and the
+			//new password
+			if ($this->user->resetPassword($resetToken, $password)) {
+
+				$result['success'] = true;
+			} else {
+				$result['success'] = false;
+			}
+
+			echo json_encode($result);
+		}
+	}
+
+	/**
+	 * Send an email to tw team through the contact form
+	 *
+	 * TODO: Is this the right place for this ?
+	 *
+	 * @param POST String name
+	 * @param POST String email
+	 * @param POST String message
+	 *
+	 * @return boolean success json
+	 */
+	function contact() {
+
+		if ($this->expectsPost(array('name', 'email', 'message'))) {
+
+			$result['success'] = false;
+
+			$tags 	 = "contact";
+
+			$this->load->library('mandrill');
+
+			$messageMandrill = array(
+				'html'       => $this->message,
+				'subject'    => "Contact information",
+				'from_email' => $this->email,
+				'from_name'  => $this->name,
+				'to'         => array(
+					array(
+						'email' => 'marc@toolwatch.io',
+						'name'  => 'Marc',
+						'type'  => 'to',
+					)
+				),
+				'headers'   => array(
+					'Reply-To' => $this->email,
+				),
+				'important'                 => false,
+				'track_opens'               => true,
+				'track_clicks'              => true,
+				'tags'                      => array($tags),
+				'google_analytics_campaign' => $tags,
+				'google_analytics_domains'  => array('toolwatch.io'),
+				'metadata'                  => array(
+					'website'                  => 'toolwatch.io',
+				)
+			);
+
+			$async   = false;
+			$ip_pool = 'Main Pool';
+
+			$scheduleTime = time();
+
+			$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
+			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
+			.(date('i', $scheduleTime)).':'.(date('s', $scheduleTime));
+
+			$mandrillResponse =  $this->mandrill->messages->send($messageMandrill, $async, $ip_pool, $send_at);
+			log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
+
+
+			if ($mandrillResponse[0]['status'] === 'sent') {
+				$result['success'] = true;
+			}
+
+			echo json_encode($result);
+		}
+	}
 }

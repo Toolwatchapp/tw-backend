@@ -28,7 +28,7 @@ class MY_Model extends CI_Model {
 	 * @var string
 	 * @access protected
 	 */
-	protected $table_name = '';
+	public $table_name = '';
 
 	/**
 	 * The primary key of the table. Used as the 'id' throughout.
@@ -355,8 +355,12 @@ class MY_Model extends CI_Model {
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct($table = false) {
 		parent::__construct();
+
+		if ($table !== false) {
+			$this->table_name = $table;
+		}
 
 		// If there are specific DB connection settings used in the model, load
 		// the database using those settings.
@@ -553,8 +557,6 @@ class MY_Model extends CI_Model {
 	 */
 	public function find_by($field = '', $value = '', $type = 'and') {
 		if (empty($field) || (!is_array($field) && empty($value))) {
-			$this->error = lang('ff_model_find_error');
-			$this->logit('['.get_class($this).': '.__METHOD__ .'] '.lang('ff_model_find_error'));
 
 			return false;
 		}
@@ -906,7 +908,7 @@ class MY_Model extends CI_Model {
 			return true;
 		}
 
-		$this->error = sprintf(lang('ff_model_db_error'), $this->get_db_error_message());
+		$this->error = $this->get_db_error_message();
 
 		return false;
 	}//end delete()
@@ -955,7 +957,7 @@ class MY_Model extends CI_Model {
 			return $result;
 		}
 
-		$this->error = lang('ff_model_db_error').$this->get_db_error_message();
+		$this->error = $this->get_db_error_message();
 
 		return false;
 	}//end delete_where()
@@ -976,8 +978,6 @@ class MY_Model extends CI_Model {
 	 */
 	public function is_unique($field = '', $value = '') {
 		if (empty($field) || empty($value)) {
-			$this->error = lang('ff_model_unique_error');
-			$this->logit('['.get_class($this).': '.__METHOD__ .'] '.lang('ff_model_unique_error'));
 
 			return false;
 		}
@@ -1020,8 +1020,6 @@ class MY_Model extends CI_Model {
 	 */
 	public function count_by($field = '', $value = null) {
 		if (empty($field)) {
-			$this->error = lang('ff_model_count_error');
-			$this->logit('['.get_class($this).': '.__METHOD__ .'] '.lang('ff_model_count_error'));
 
 			return false;
 		}
@@ -1887,7 +1885,7 @@ class MY_Model extends CI_Model {
 	public function where_not_in($key = null, $values = null) {$this->db->where_not_in($key, $values);return $this;}
 	public function or_where_not_in($key = null, $values = null) {$this->db->or_where_not_in($key, $values);return $this;}
 	public function like($field, $match = '', $side = 'both') {$this->db->like($field, $match, $side);return $this;}
-	public function not_like($field, $match = '', $side = 'both') {$this->db->not_like($field, $match, $side);return $this;}
+	public function nto_like($field, $match = '', $side = 'both') {$this->db->not_like($field, $match, $side);return $this;}
 	public function or_like($field, $match = '', $side = 'both') {$this->db->or_like($field, $match, $side);return $this;}
 	public function or_not_like($field, $match = '', $side = 'both') {$this->db->or_not_like($field, $match, $side);return $this;}
 	public function group_by($by) {$this->db->group_by($by);return $this;}
@@ -1899,5 +1897,6 @@ class MY_Model extends CI_Model {
 	public function affected_rows() {return $this->db->affected_rows();}
 	public function last_query() {return $this->db->last_query();}
 	public function truncate() {$this->db->truncate($this->table_name);}
+	public function inserted_id() {return $this->db->insert_id();}
 
 }

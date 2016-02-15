@@ -1,160 +1,220 @@
 <?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
 }
 
-class User extends MY_Model {
+include_once('ObservableModel.php');
+
+/**
+ * User model.
+ *
+ * Handles everything related to the user account;
+ */
+class User extends ObservableModel {
+
+	/**
+	 * Default constructor
+	 */
 	function __construct() {
 		parent::__construct();
 		$this->table_name = "user";
 	}
 
+	/**
+	 * Login. Tries to log an user with $email and $password
+	 *
+	 * @param  String $email    The email password
+	 * @param  String $password The passwod
+	 * @return User           	The user
+	 */
 	function login($email, $password) {
 		$res = false;
 
-		$this->db->select('*')
-		     ->from('user')
+		$user = $this->select('*')
 		     ->where('email', $email)
-		     ->where('password', hash('sha256', $password));
+		     ->where('password', hash('sha256', $password))
+				 ->find_all();
 
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			$res  = true;
-			$data = $query->row();
+		$event = LOGIN_EMAIL;
 
-			$this->session->set_userdata('userId', $data->userId);
-			$this->session->set_userdata('email', $data->email);
-			$this->session->set_userdata('name', $data->name);
-			$this->session->set_userdata('firstname', $data->firstname);
-			$this->session->set_userdata('timezone', $data->timezone);
-			$this->session->set_userdata('country', $data->country);
-			$this->session->set_userdata('registerDate', $data->registerDate);
-
-			$update = array('lastLogin' => time());
-
-			$this->db->where('userId', $data->userId);
-			$this->db->update('user', $update);
+		if (strrpos($password, 'FB_') === 0) {
+			$event = LOGIN_FB;
 		}
 
-		return $res;
+
+		if (is_array($user)
+		//That's not a mistake, the tranformation from array
+		//to a single user is made here.
+		//Not super intuitive nor conform to coding rules
+		&& $user = $user[0]) {
+
+			$this->session->set_userdata('userId', $user->userId);
+			$this->session->set_userdata('email', $user->email);
+			$this->session->set_userdata('name', $user->name);
+			$this->session->set_userdata('firstname', $user->firstname);
+			$this->session->set_userdata('timezone', $user->timezone);
+			$this->session->set_userdata('country', $user->country);
+			$this->session->set_userdata('registerDate', $user->registerDate);
+
+			$this->update_where('userId', $user->userId, array('lastLogin' => time()));
+
+			$this->notify($event, $user);
+
+		} else {
+			$this->notify($event.'_FAIL', $user);
+		}
+
+		return $user;
 	}
 
+	/**
+	 * Checks if the user is logged in according to its session
+	 * @return boolean
+	 */
 	function isLoggedIn() {
-		$res = false;
 
-		if ($this->session->userdata('userId')) {
-			$res = true;
-		}
-
-		return $res;
+		return !empty($this->session->userdata('userId'));
 	}
 
+	/**
+	 * Logout an user
+	 */
 	function logout() {
-		$this->session->sess_destroy();
+
+		//Workaround for automated tests
+		session_unset();
+
+		$this->notify(LOGOUT, array());
+
 		return true;
 	}
 
+	/**
+	 * Checks $email is linked with an account on tw
+	 * @param  String $email The email to check against the db
+	 * @return boolean wether or not the email is already taken
+	 */
 	function checkUserEmail($email) {
 		$res = false;
-		$this->db->select('*')
-		     ->from('user')
-		     ->where('email', $email);
 
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
+		if ($this->find_by('email', $email)) {
 			$res = true;
 		}
 
 		return $res;
 	}
 
+	/**
+	 * Retrieve an user by its id
+	 * @param  int $userId the user id
+	 * @return boolean|User False in case of faillure
+	 */
 	function getUser($userId) {
-		$data = array();
-		$this->db->select('*')
-		     ->from('user')
-		     ->where('userId', $userId);
 
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			$data = $query->row();
-		}
-
-		return $data;
+		return $this->find_by('userId', $userId);
 	}
 
-	function signup($email, $password, $name, $firstname, $timezone, $country) {
+	/**
+	 * Signup (register) a new user.
+	 *
+	 * @param  String $email
+	 * @param  String $password
+	 * @param  String $name
+	 * @param  String $firstname
+	 * @param  String $timezone
+	 * @param  String $country
+	 * @return boolean   false an faillure
+	 */
+	function signup($email, $password, $name, $firstname, $country) {
+
+		$event = SIGN_UP;
+
+		if (strrpos($password, 'FB_') === 0) {
+			$event = SIGN_UP_FB;
+		}
+
 		$res  = false;
 		$data = array(
 			'email'        => $email,
 			'password'     => hash('sha256', $password),
 			'name'         => $name,
 			'firstname'    => $firstname,
-			'timezone'     => $timezone,
 			'country'      => $country,
 			'registerDate' => time(),
 			'lastLogin'    => time()
 		);
 
-		$this->db->insert('user', $data);
 
-		if ($this->db->affected_rows() > 0) {
+		if ($this->insert($data)) {
+
+			//So we don't have to fetch it.
+			$user         = arrayToObject($data);
+			//Get the inseserted id to complete the object
+			$user->userId = $this->inserted_id();
+
+			$this->notify($event, $user);
+
 			$res = true;
-		}
+		} 
 
 		return $res;
 	}
 
+	/**
+	 * Get a reset token for $email
+	 * @param String $email
+	 *
+	 * @return boolean|String the reset token or false on faillure
+	 */
 	function askResetPassword($email) {
+
 		$resetToken = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
 
-		$update = array('resetToken' => $resetToken);
-
-		$this->db->where('email', $email);
-		$this->db->update('user', $update);
-
-		$this->db->select('*')
-		     ->from('user')
-		     ->where('resetToken', $resetToken);
-
-		$query = $this->db->get();
-		if ($query->num_rows() <= 0) {
-			$resetToken = '';
+		if(
+			$this->checkUserEmail($email) === true &&
+			$this->update_where('email', $email, array('resetToken' => $resetToken))
+			&& $this->affected_rows() === 1){
+			$this->notify(RESET_PASSWORD,  array('email' => $email, 'token'=>$resetToken));
+			return $resetToken;
 		}
 
-		return $resetToken;
+		return false;
 	}
 
+	/**
+	 * Change an account's password given a $resetToken and a new $password
+	 * @param String $resetToken The reset token
+	 * @param String $password   The new password
+	 */
 	function resetPassword($resetToken, $password) {
-		$res = false;
 
-		$update = array('resetToken' => '', 'password' => hash('sha256', $password));
-
-		$this->db->where('resetToken', $resetToken);
-		$this->db->update('user', $update);
-
-		$this->db->select('*')
-		     ->from('user')
-		     ->where('password', hash('sha256', $password));
-
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			$res = true;
+		/**
+		 * TODO:The update is based on the reset token generated in the askResetPassword
+		 * method. While being highly unlikely, it is possible for two accounts
+		 * to have the same token. In such a case, the wrong account can be
+		 * updated...
+		 *
+		 * Note that reset token are blanked after reset, so the generator would
+		 * have to generate the same reset token for two different peoples and
+		 * one of them have to leave it this way (not using the token) for
+		 * problems to happen.
+		 */
+		if($this->update_where('resetToken', $resetToken,
+			array('resetToken' => '', 'password' => hash('sha256', $password)))
+			&& $this->affected_rows() === 1){
+				return true;
 		}
-
-		return $res;
+		return false;
 	}
 
+	/**
+	 * Get an user base on a $watchId
+	 * @param  int $watchId The watchId to seatch
+	 * @return boolean|User  The user associated to $watchId or false
+	 */
 	function getUserFromWatchId($watchId) {
-		$data = array();
 
-		$this->db->select('*')
-		     ->from('user, watch')
-		     ->where('`user`.`userId`=`watch`.`userId`')
-		     ->where('watchId', $watchId);
+		return $this->select('user.*')
+			->join('watch', '`user`.`userId`=`watch`.`userId`')
+			->find_by('watchId', $watchId);
 
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			$data = $query->row();
-		}
-
-		return $data;
 	}
 }

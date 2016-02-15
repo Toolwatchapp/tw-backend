@@ -30,8 +30,10 @@ class Watch_test extends TestCase {
 	public function setUp() {
 		$this->CI = &get_instance();
 		$this->CI->load->model('Watch');
+		$this->CI->load->model('Measure');
 		$this->CI->load->library('Session');
 		$this->session = $this->CI->session;
+		$this->measure = $this->CI->measure;
 		$this->obj     = $this->CI->Watch;
 	}
 
@@ -84,6 +86,61 @@ class Watch_test extends TestCase {
 		$this->assertEquals('28', $watch->serial);
 		$this->assertEquals('12', $watch->caliber);
 		$this->assertEquals('1', $watch->status);
+	}
+
+	public function test_getWatchByMeasureId(){
+		$measureId = $this->measure->addBaseMesure(
+			self::$watchId,
+			time(),
+			time()
+		);
+
+		$watch = $this->obj->getWatchByMeasureId($measureId);
+
+		$this->assertEquals(self::$watchId, $watch->watchId);
+
+	}
+
+	public function test_editWatch(){
+		$watch = $this->obj->getWatch(self::$watchId);
+
+		$result = $this->obj->editWatch(
+			self::$userId,
+			self::$watchId,
+			"branda",
+			"nama",
+			2014,
+			2013,
+			2012
+		);
+
+		$watch = $this->obj->getWatch(self::$watchId);
+
+		$this->assertEquals($result, true);
+
+		$this->assertEquals($watch->brand, "branda");
+		$this->assertEquals($watch->name, "nama");
+		$this->assertEquals($watch->yearOfBuy, 2014);
+		$this->assertEquals($watch->serial, 2013);
+		$this->assertEquals($watch->caliber, 2012);
+	}
+
+	public function test_editWatchWrongUserId(){
+		$watch = $this->obj->getWatch(self::$watchId);
+
+		$result = $this->obj->editWatch(
+			999,
+			self::$watchId,
+			"branda",
+			"nama",
+			2014,
+			2013,
+			2012
+		);
+
+		$watch = $this->obj->getWatch(self::$watchId);
+
+		$this->assertEquals($result, false);
 	}
 
 	public function test_getWatchWrongId() {

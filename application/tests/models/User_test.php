@@ -2,10 +2,14 @@
 
 class User_test extends TestCase {
 
+	private static $userId;
+
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
 		$CI->load->model('User');
+
 		$CI->User->delete_where(array("userId >=" => "0"));
+
 	}
 
 	public function setUp() {
@@ -23,13 +27,49 @@ class User_test extends TestCase {
 			'azerty',
 			'math',
 			'nay',
-			'-5',
 			'Canada'
 		);
 
 		$this->assertEquals(true, $result);
 
 	}
+
+	public function test_signup_fb(){
+		$result = $this->obj->signup(
+			'mathieu@fb.com',
+			'FB_azerty',
+			'math',
+			'nay',
+			'Canada'
+		);
+
+		$this->assertEquals(true, $result);
+	}
+
+	public function test_login_fb() {
+		$result = $this->obj->login(
+			'mathieu@fb.com',
+			'FB_azerty'
+		);
+
+		$this->assertEquals(
+			true,
+			is_numeric($this->session->userdata('userId')),
+			'Wrong id generated'
+		);
+
+		$this->assertNotEquals(false, $result, "Not logged");
+
+		$this->assertEquals(
+			'mathieu@fb.com',
+			$this->session->userdata('email'),
+			'Not good email'
+		);
+
+		$this->assertEquals(true, $this->obj->isLoggedIn());
+
+	}
+
 
 	public function test_login() {
 		$result = $this->obj->login(
@@ -43,13 +83,7 @@ class User_test extends TestCase {
 			'Wrong id generated'
 		);
 
-		$this->assertEquals(true, $result, "Not logged");
-
-		$this->assertEquals(
-			'mathieu@gmail.com',
-			$this->session->userdata('email'),
-			'Not good email'
-		);
+		$this->assertNotEquals(false, $result, "Not logged");
 
 		$this->assertEquals(
 			'mathieu@gmail.com',
@@ -77,15 +111,10 @@ class User_test extends TestCase {
 	}
 
 	public function test_logout() {
+
 		$this->assertEquals(
 			true,
 			$this->obj->logout(),
-			'Should by true'
-		);
-
-		$this->assertEquals(
-			null,
-			$this->session->userdata('userId'),
 			'Should by true'
 		);
 	}
@@ -106,8 +135,6 @@ class User_test extends TestCase {
 		$this->assertEquals('math', $user->name);
 
 		$this->assertEquals('nay', $user->firstname);
-
-		$this->assertEquals('-5', $user->timezone);
 
 		$this->assertEquals('Canada', $user->country);
 
@@ -141,9 +168,9 @@ class User_test extends TestCase {
 			'azerty'
 		);
 
-		$userId = $this->session->userdata('userId');
+		self::$userId = $this->session->userdata('userId');
 
-		$user = $this->obj->getUser($userId);
+		$user = $this->obj->getUser(self::$userId);
 
 		$token = $this->obj->askResetPassword($user->email);
 
@@ -151,7 +178,7 @@ class User_test extends TestCase {
 
 		$this->assertEquals(true, $res);
 
-		$user = $this->obj->getUser($userId);
+		$user = $this->obj->getUser(self::$userId);
 
 		$this->assertEquals(hash('sha256', 'azerty'), $user->password);
 
@@ -159,9 +186,21 @@ class User_test extends TestCase {
 
 	public function test_getUserFromWatchId() {
 
+		$CI = &get_instance();
+		$CI->load->model('Watch');
+
+		$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'brand',
+			'name',
+			2015,
+			28,
+			014
+		);
+
 		$this->assertEquals(
 			true,
-			is_array($this->obj->getUserFromWatchId(1)),
+			is_object($this->obj->getUserFromWatchId($watchId)),
 			'should return an array'
 		);
 	}
@@ -169,6 +208,8 @@ class User_test extends TestCase {
 	public static function tearDownAfterClass() {
 		$CI = &get_instance();
 		$CI->load->model('User');
+		$CI->load->model('Watch');
+		$CI->watch->delete_where(array("watchId >=" => "0"));
 		$CI->User->delete_where(array("userId >=" => "0"));
 	}
 

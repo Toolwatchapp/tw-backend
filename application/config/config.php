@@ -17,6 +17,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
  */
+
+if (isset($_SERVER['HTTP_HOST']) == false) {
+	$_SERVER['HTTP_HOST'] = "";
+}
+
 $root               = ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))?"https://":"http://").$_SERVER['HTTP_HOST'];
 $config['base_url'] = $root;
 
@@ -211,7 +216,7 @@ $config['directory_trigger']    = 'd';
 | your log files will fill up very fast.
 |
  */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 4;
 
 /*
 |--------------------------------------------------------------------------
@@ -355,13 +360,13 @@ $config['encryption_key'] = 'BXdE8HoAUMSdj5ukKwww24n5BwIW1NZ5';
 | except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
  */
-$config['sess_driver']             = 'database';
-$config['sess_cookie_name']        = 'ci_session';
-$config['sess_expiration']         = 1440;
-$config['sess_save_path']          = 'ci_sessions';
-$config['sess_match_ip']           = FALSE;
-$config['sess_time_to_update']     = 300;
-$config['sess_regenerate_destroy'] = FALSE;
+ $config['sess_driver']             = 'database';
+ $config['sess_cookie_name']        = 'ci_session';
+ $config['sess_expiration']         = 1440;
+ $config['sess_save_path']          = 'ci_sessions';
+ $config['sess_match_ip']           = FALSE;
+ $config['sess_time_to_update']     = 300;
+ $config['sess_regenerate_destroy'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -497,3 +502,26 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
  */
 $config['proxy_ips'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Google API Config
+|--------------------------------------------------------------------------
+|
+| Google API requires a P12 enrypted key. The key is downloaded
+| from a secure location if not already present on the disk
+ */
+if(!file_exists(APPPATH.'config/google-api.p12')){
+	$out = fopen(APPPATH.'config/google-api.p12', "wb");
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_FILE, $out);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_URL, getenv("GOOGLE_API_LINK"));
+	curl_setopt($ch, CURLOPT_USERPWD, getenv("GOOGLE_API_KEY"));
+	curl_exec($ch);
+
+	curl_close($ch);
+	fclose($out);
+}
+$config['google_api_key'] = APPPATH.'config/google-api.p12';
+$config['google_api_account'] = getenv("GOOGLE_API_ACCOUNT");

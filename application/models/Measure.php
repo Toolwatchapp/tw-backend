@@ -1,153 +1,233 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) {exit('No direct script access allowed');
+}
 
-class Measure extends MY_Model 
-{
-    function __construct()
-    {
-        parent::__construct();
-        $this->table_name = "measure";
-    }
-    
-    function getMeasuresByWatchId($watchId)
-    {
-        return $this->select()->find_by('watchId', $watchId);
-    }
-    
-    
-    function getMeasuresByUser($userId, $userWatches)
-    {
-        
-        $data = array();
-        $dataPushing = 0;
+/**
+ * Measure model.
+ *
+ * Measure model is responsible for all measure related transactions.
+ * Also, measure model extends ObservableModel in order to send
+ * information about transactions to attached observers.
+ */
+class Measure extends ObservableModel {
 
-        if(is_array($userWatches) && sizeof($userWatches) > 0 ){
+	/**
+	 * Default constructeur
+	 */
+	function __construct() {
+		parent::__construct();
+		$this->table_name = "measure";
 
-            foreach($userWatches as $watch)
-            {
-                //Construct array of result
-                $data[$dataPushing]['watchId'] = $watch->watchId;
-                $data[$dataPushing]['brand'] = $watch->brand;
-                $data[$dataPushing]['name'] = $watch->name;
-                $data[$dataPushing]['yearOfBuy'] = $watch->yearOfBuy;
-                $data[$dataPushing]['serial'] = $watch->serial;
-                $data[$dataPushing]['statusId'] = 0;
-                
-                //Get measure couple that are on measure or accuracy status
-                $watchMeasures = $this->select()->where('watchId', $watch->watchId)
-                    ->where('(`statusId` = 1 OR `statusId` = 2)', null, false)
-                    ->find_all();
+		//The computeAccuracy method will be executed
+		//with each row of any fetch from the database.
+		//I decided to do this (instead of storing the field in the database,
+		//for example) because, if the formulae changed, we can ship a new
+		//version and provide new computation of the base materials
+		//(times of measure).
+		//
+		//The downsides are that we compute the accuracy each time the user
+		//requests each dashboard and database exports are painfull if you want
+		//the accuracy as you have to make sure that the formulae of the db export
+		//matches this one.
+		$this->after_find = array('computeAccuracy');
+	}
 
-                if($watchMeasures){
+	/**
+	 * Get the last measure of each $userWatches
+	 *
+	 * @param  int $userId      id of the user
+	 * @return array The last measure per of $userId
+	 */
+	function getMeasuresByUser($userId) {
 
-                    foreach ($watchMeasures as $watchMeasure) {
-                        //Compute accuracy
-                        if( $watchMeasure->statusId == 2 ){
-                            $data[$dataPushing]['accuracy'] = sprintf("%.1f", $this->computeAccuracy($watchMeasure));
-                            $data[$dataPushing]['statusId'] = $watchMeasure->statusId;
-                        //Check if the measure was made less than 12 hours ago
-                        } else if ( ((time() - $watchMeasure->measureReferenceTime)/3600 ) < 12 ){
-                            $data[$dataPushing]['statusId'] = 1.5;
-                            $watchMeasure->statusId = 1.5;
-                            $ellapsedTime = ( (time() - $watchMeasure->measureReferenceTime)/3600 );
-                            $watchMeasure->accuracy = round(12 - round($ellapsedTime, 1));
-                            if($watchMeasure->accuracy <= 1){
-                                $watchMeasure->accuracy = " < 1";
-                            }
-                            $data[$dataPushing]['statusId'] = $watchMeasure->statusId;
-                            $data[$dataPushing]['accuracy'] = $watchMeasure->accuracy;
-                        // If not, the baseMeasure is here and we are ready for the accuracy
-                        } else {
-                            $data[$dataPushing]['statusId'] = 1;
-                        }
+		return $this->select()
+				->join("watch", "watch.watchId = measure.watchId
+							AND measure.statusId < 3", "right")
+				->where("watch.userId", $userId)
+				->where("watch.status <", 4)
+				->group_by("watch.watchId")
+				->find_all();
+	}
 
-                        $data[$dataPushing]['measureId'] = $watchMeasure->id;
-                    }   
+	/**
+	 * Compute the accuracy of a watch given the raw data of the database
+	 *
+	 * @param  Measure $watchMeasure A watchMeasure object containing row data
+	 * about the timing of measure
+	 */
+	public function computeAccuracy($watchMeasure) {
 
-                }
+		//Some models (email model for example) require
+		//data to be selected as array (mainly for grouping).
+		//In the following lines, I typecast an eventual array
+		//to object.
+		$wasArray = false;
 
-                $dataPushing++; 
-            }
-        }
+		if(is_array($watchMeasure)){
+			$watchMeasure = (object) $watchMeasure;
+			$wasArray = true;
+		}
 
-        return $data;
-    }
+		//Compute the accuracy if all the data are available
+		//Both measure have been performed
+		if(is_numeric($watchMeasure->accuracyUserTime)
+		&& is_numeric($watchMeasure->measureUserTime)
+		&& is_numeric($watchMeasure->accuracyReferenceTime)
+		&& is_numeric($watchMeasure->measureReferenceTime)
+		&& !is_null($watchMeasure->accuracyReferenceTime)
+		&& !is_null($watchMeasure->measureReferenceTime))
+		{
+			$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
+			$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
+			$accuracy  = ($userDelta*86400/$refDelta)-86400;
+			$accuracy  = sprintf("%.1f", $accuracy);
+			$watchMeasure->accuracy = $accuracy;
 
-    private function computeAccuracy($watchMeasure){
-        $userDelta = $watchMeasure->accuracyUserTime - $watchMeasure->measureUserTime;
-        $refDelta =  $watchMeasure->accuracyReferenceTime - $watchMeasure->measureReferenceTime;
-        $accuracy = ($userDelta*86400/$refDelta)-86400;
-        $accuracy = sprintf("%.1f", $accuracy);
-        return $accuracy;
-    }
+			$watchMeasure->accuracyAge =
+				round((time() - $watchMeasure->accuracyReferenceTime) / 86400);
+		}
 
-    function addBaseMesure($watchId, $referenceTime, $userTime)
-    {
+		//Compute 1.5 status. When a measure is less than 12 hours old
+		if ($watchMeasure->statusId === "1" &&
+			(((time()-$watchMeasure->measureReferenceTime)/3600) < 12)) {
 
-        //Archive previous measure couples
-        $data = array('statusId' => 3);
+			$watchMeasure->statusId         = 1.5;
+			$ellapsedTime                   = ((time()-$watchMeasure->measureReferenceTime)/3600);
+			$watchMeasure->accuracy         = round(12-round($ellapsedTime, 1));
+			if ($watchMeasure->accuracy <= 1) {
+				$watchMeasure->accuracy = " < 1";
+			}
+		}
 
-        $this->where('watchId', $watchId)
-            ->where('(`statusId` = 1 OR `statusId` = 2)', null, false)
-            ->update(null, $data);
+		//If the measure was an array,
+		//I typecast it back to array.
+		if($wasArray){
+			$watchMeasure = (array) $watchMeasure;
+		}
 
-        //Create new couple
-        $data = array(
-            'watchId' => $watchId,
-            'measureReferenceTime' => $referenceTime,
-            'measureUserTime' =>  $userTime,
-            'statusId' => 1);
-        
-        return $this->insert($data);
-    }
+		return $watchMeasure;
+	}
 
-    function addAccuracyMesure($measureId, $referenceTime, $userTime){
+	/**
+	 * Computes the percentile for an accuracy, i.e, the percentage
+	 * of watches that are less accurate than $accuracy.
+	 *
+	 * The percentile excludes bugged measure (+/- 300 spd)
+	 *
+	 * @param  float $accuracy A complete measure with computed
+	 * @return int the percentile for this accuracy.
+	 */
+	function computePercentileAccuracy($accuracy){
 
-        $data = array(
-            'accuracyReferenceTime' => $referenceTime,
-            'accuracyUserTime' =>  $userTime,
-            'statusId' => 2);
+		//This have to be kept in line with the computeAccuracy method
+		$precisionFormulae = 'ABS(((measure.accuracyUserTime
+		- measure.measureUserTime)*86400)/
+		(measure.accuracyReferenceTime - measure.measureReferenceTime)
+		-86400)';
 
-        if($this->update($measureId, $data) !== false){
+		$moreAccurateCount = $this->count_by($precisionFormulae . ' <',
+			abs($accuracy));
 
-            $watchMeasure = $this->find($measureId);
-            $watchMeasure->accuracy = $this->computeAccuracy($watchMeasure);
+		$valideMeasuresCount = $this->count_by($precisionFormulae . ' <', 300);
 
-           return $watchMeasure;
-        }
+		return round(100 - (($moreAccurateCount / $valideMeasuresCount) * 100));
+	}
 
-        return false;
-        
-    }
+	/**
+	 * Add a base measure (1/2) to $watchId given $referenceTime and $userTime
+	 *
+	 * All previous measures, completed or not, will be archived (status = 3)
+	 * at the creation of a new measure.
+	 *
+	 * @param int $watchId       The watch being mesured
+	 * @param Long $referenceTime the reference time in ms
+	 * @param Long $userTime      the user time in ms
+	 */
+	function addBaseMesure($watchId, $referenceTime, $userTime) {
 
-    function deleteMesure($measureId){
-        
-        $data = array('statusId' => 4);
-        return $this->update($measureId, $data) !== false;
-    }
+		//Archive previous measure couples
+		$this->where('watchId', $watchId)
+		     ->where('(`statusId` = 1 OR `statusId` = 2)', null, false)
+		     ->update(null, array('statusId' => 3));
 
-    function getMeasuresCountByWatchBrand($watchBrand){
-        return $this->select("count(1) as cnt")
-             ->join("watch", "watch.watchId = measure.watchId")
-             ->find_by("UPPER(brand)", strtoupper($watchBrand))
-             ->cnt;
-    }
+		//Create new couple
+		$data = array(
+			'watchId'              => $watchId,
+			'measureReferenceTime' => $referenceTime,
+			'measureUserTime'      => $userTime,
+			'statusId'             => 1);
 
-    function getMeasuresWeeklyAverageAccuracy(){
-        
-        $totalAccuracy = 0;
+		$returnValue = $this->insert($data);
 
-        $measures = $this->select()
-            ->where('statusId', 2)
-            ->where('accuracyReferenceTime >=', microtime() - 604800000)
-            ->find_all();
+		return $returnValue;
+	}
 
-        foreach ($measures as $measure) {
-            $totalAccuracy = $totalAccuracy + 
-                $this->computeAccuracy($measure);
-        }
+	/**
+	 * Add an accuracy measure (2/2) for $measureId given $referenceTime and
+	 * $userTime
+	 *
+	 * @param [type] $measureId     [description]
+	 * @param [type] $referenceTime [description]
+	 * @param [type] $userTime      [description]
+	 *
+	 * @return mixed|boolean The new accuracy measure.
+	 */
+	function addAccuracyMesure($measureId, $referenceTime, $userTime) {
 
-        return sprintf("%.2f", $totalAccuracy / sizeof($measures));
+		$data = array(
+			'accuracyReferenceTime' => $referenceTime,
+			'accuracyUserTime'      => $userTime,
+			'statusId'              => 2);
 
-    }
+		if ($this->update($measureId, $data) !== false
+			&& $this->affected_rows() === 1) {
+
+			$watchMeasure = $this
+			->select("measure.*, watch.name as model, watch.brand, user.email,
+				user.firstname, user.name, user.userId")
+			->join("watch", "watch.watchId = measure.watchId")
+			->join("user", "user.userId = watch.userId")
+			->find($measureId);
+
+
+			$this->notify(NEW_ACCURACY,
+								array('measure'   => $watchMeasure));
+
+			$watchMeasure->percentile =
+				$this->computePercentileAccuracy($watchMeasure->accuracy);
+
+			return $watchMeasure;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * (Soft) Delete the $measureId measure.
+	 *
+	 * @param  int $measureId MeasureId of the measure to be deleted
+	 * @return boolean
+	 */
+	function deleteMesure($measureId) {
+
+		$data = array('statusId' => 4);
+
+		$this->notify(DELETE_MEASURE,
+			array('user' => arrayToObject($this->session->all_userdata()),
+				'measure'   => $measureId));
+
+		return $this->update($measureId, $data) !== false;
+	}
+
+	/**
+	 * Count the amount of watch of $watchBrand
+	 *
+	 * @param  String $watchBrand The watchBrand of interest
+	 * @return int How many watches belong tp $watchBrand
+	 */
+	function getMeasuresCountByWatchBrand($watchBrand) {
+		return $this->join("watch", "watch.watchId = measure.watchId")
+		            ->count_by("UPPER(brand)", strtoupper($watchBrand));
+	}
 
 }
