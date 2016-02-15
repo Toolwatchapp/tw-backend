@@ -11,12 +11,6 @@ class MY_Exceptions extends CI_Exceptions {
     	$severity = ( ! isset($this->levels[$severity])) ? $severity : $this->levels[$severity];
     	$filepath = str_replace("\\", "/", $filepath);
 
-
-    	ob_start();
-    	include(APPPATH.'errors/error_php'.EXT);
-    	$buffer = ob_get_contents();
-    	ob_end_clean();
-
       $header = $severity. ' exception
       . occurred with message: '.$message
       .' in File '.$filepath
