@@ -120,8 +120,8 @@ class Ajax extends MY_Controller {
 	function facebookSignup() {
 		$result['success'] = false;
 
-		if ($this->expectsPost(array('email', 'id', 'last_name',
-			'firstname', 'country'))) {
+		if ($this->expectsPost(array('email', 'last_name',
+			'firstname'))) {
 
 			/**
 			 * Getting all the posts
