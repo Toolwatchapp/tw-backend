@@ -119,7 +119,7 @@ class Measures extends MY_Controller {
 
 		if($this->expectsPost(array('deleteMeasures'))){
 
-			if ($this->measure->deleteMesure($this->measureId)) {
+			if ($this->measure->deleteMesure($this->deleteMeasures)) {
 				$this->_bodyData['success'] = 'Measures successfully deleted!';
 			}
 
