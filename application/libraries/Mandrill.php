@@ -57,7 +57,6 @@ class Mandrill {
 	);
 
 	public function __construct() {
-		$apikey = "vZMIOmGRBA1KWow4yfRcfQ";
 
 		if (!$apikey) {$apikey = getenv('MANDRILL_APIKEY');
 		}
