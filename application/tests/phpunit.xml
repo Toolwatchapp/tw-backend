@@ -18,7 +18,6 @@
 			<directory suffix=".php">../models</directory>
 			<directory suffix=".php">../libraries</directory>
 			<directory suffix=".php">../helpers</directory>
-			<directory suffix=".php">../hooks</directory>
 			<exclude>
 				<file>../libraries/__.php</file>
 				<file>../libraries/Mcapi.php</file>
