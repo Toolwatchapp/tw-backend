@@ -15,9 +15,9 @@ class MY_Exceptions extends CI_Exceptions {
       . occurred with message: '.$message
       .' in File '.$filepath
       .' at Line '.$line
-      .' at URL  '.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+      .' at URL  '.$_SERVER['HTTP_HOST'];
 
-      $data = 'payload={"text": "'.$header.'"}';
+      $data = '{"text": "'.$header.'"}';
 
       $ch = curl_init(exception_url());
 
