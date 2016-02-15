@@ -20,7 +20,7 @@ class ExceptionHook
 
     log_message('error', $header.$msg, TRUE);
 
-    $data = 'payload={"text": "'.$header.'```'.$msg.'```"}';
+    $data = '{"text": "'.$header.'```'.$msg.'```"}';
 
     $ch = curl_init(exception_url());
 
