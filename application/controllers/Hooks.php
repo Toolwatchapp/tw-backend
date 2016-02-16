@@ -85,25 +85,58 @@ class Hooks extends CI_Controller {
 
 				$result["text"] = $this->watch->count_all().". ".$quote;
 
-			//FIXME: Doesn't work in production. Add tests
 			} else if (startsWith($text, "Jack whois")) {
 
+				if(strpos($text, "<mailto:") !== false){
+
+					log_message("info", "Incoming from slack");
+
+					$text = substr($text, strpos($text, "|")+1);
+					$text = str_replace(">", "", $text);
+				}
+
+				$text = str_replace("Jack whois ", "", $text);
+
+				log_message("info", "Computed email " . print_r($text, true));
 				$user = $this->user->select(" user.userId, user.name, firstname,
                     DATE_FORMAT(FROM_UNIXTIME(`registerDate`), '%e %b %Y') AS 'register',
                     DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
-				->find_by('email', str_replace("Jack whois ", "", $text));
+				->find_by('email', $text);
 
 				log_message("info", print_r($this->db->last_query(), true));
 				log_message("info", print_r($user, true));
 
-				if ($user) {
-					$watches  = $this->watch->getWatches($user->userId);
-					$measures = $this->measure->getMeasuresByUser($user->userId, $watches);
+				if (is_object($user)) {
 
-					$result["text"] = "Id ".$user->userId.", Name ".$user->name.
-					" ,Firstname ".$user->firstname." ,Register ".$user->register.
-					" ,LastLogin ".$user->lastLogin." ,Watches ".sizeof($watches).
-					" ,Measures ".sizeof($measures);
+					$measures = $this->measure->getMeasuresByUser($user->userId);
+
+					$result["text"] = "```  ID   |    Name    |   Firstname   | LastLogin | Register \r\n".
+					$user->userId . "|" . $user->name . "|" . $user->firstname .
+					 "|" . $user->register . "|" . $user->lastLogin . "```\r\n"
+					 . "```Dashboard\r\n"
+					 . "   ID   | WatchName | WatchBrand | Measure 1 (UTC)
+					 	| Measure 2 (UTC) | Accuracy | status \r\n";
+
+					 foreach ($measures as $measure) {
+					 	$result["text"] .= $measure->id . "|" . $measure->name
+						. "|" . $measure->brand
+						. "|" . $measure->measureReferenceTime
+						. "|" . $measure->accuracyReferenceTime;
+
+						if($measure->statusId == 1.5){
+							$result["text"] .=  "|" . "In ".$measure->accuracy." hours";
+							$result["text"] .=  "|" . "Waiting accuracy";
+						}else if($measure->statusId == 1){
+							$result["text"] .=  "|" . "TBD";
+							$result["text"] .=  "|" . "Waiting accuracy";
+						}else if($measure->statusId == 2){
+							$result["text"] .=  "|" .$measure->accuracy;
+							$result["text"] .=  "|" . "Done";
+						}else{
+							$result["text"] .=  "|" . "TBD";
+							$result["text"] .=  "|" . "Never measured";
+						}
+					}
 
 				} else {
 					$result["text"] = "User not found. ".$quote;
