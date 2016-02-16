@@ -753,7 +753,7 @@ class Auto_email {
 					'watchId',
 					$emailcontent,
 					$this->sendMandrillEmail(
-						'Let’s check your watch accuracy! ⌚',
+						'Let’s start a new measure! ⌚',
 						$emailcontent,
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
