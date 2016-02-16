@@ -85,7 +85,7 @@ class Hooks_test extends TestCase {
 		$CI->Measure->addAccuracyMesure(
 			$measureId,
 			time()-12*60*60,
-			time()-12*60*60
+			time()-12*61*61
 		);
 
 
@@ -140,7 +140,7 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('ID ', $output);
+		$this->assertContains('ID', $output);
 	}
 
 	public function test_indexWhoisSlackVersion() {
@@ -153,7 +153,7 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('ID ', $output);
+		$this->assertContains('ID', $output);
 	}
 
 	public function test_indexWhoisFail(){
