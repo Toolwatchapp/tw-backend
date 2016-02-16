@@ -71,7 +71,7 @@ class Hooks extends CI_Controller {
 			$quote          = $this->quotes[rand(0, 18)];
 			$result["text"] = $quote;
 
-			log_message("info", print_r($text));
+			log_message("info", print_r($text, true));
 
 			if (startsWith($text, "Jack nbusers")) {
 
@@ -93,8 +93,8 @@ class Hooks extends CI_Controller {
                     DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
 				->find_by('email', str_replace("Jack whois ", "", $text));
 
-				log_message("info", print_r($this->db->last_query()));
-				log_message("info", print_r($user));
+				log_message("info", print_r($this->db->last_query(), true));
+				log_message("info", print_r($user, true));
 
 				if ($user) {
 					$watches  = $this->watch->getWatches($user->userId);
