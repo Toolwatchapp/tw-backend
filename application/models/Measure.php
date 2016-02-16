@@ -220,6 +220,19 @@ class Measure extends ObservableModel {
 	}
 
 	/**
+	 * Determine if a measure is owned by an user
+	 *
+	 * @param  int  $measureId
+	 * @param  int  $userId
+	 * @return boolean
+	 */
+	function isOwnedBy($measureId, $userId){
+		return $this->join("watch", "watch.watchId = measure.watchId")
+		->where("id", $measureId)
+		->count_by("watch.userId", $userId) === 1;
+	}
+
+	/**
 	 * Count the amount of watch of $watchBrand
 	 *
 	 * @param  String $watchBrand The watchBrand of interest
