@@ -757,7 +757,7 @@ class Auto_email {
 						$emailcontent,
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
-						'check_accuracy_email',
+						'start_new_measure_email',
 						$this->sendAtString($this->time)
 					)
 				);
