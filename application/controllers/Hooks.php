@@ -110,34 +110,36 @@ class Hooks extends CI_Controller {
 
 					$measures = $this->measure->getMeasuresByUser($user->userId);
 
-					$result["text"] = "```  ID   |    Name    |   Firstname   | LastLogin | Register \r\n".
-					$user->userId . "|" . $user->name . "|" . $user->firstname .
-					 "|" . $user->register . "|" . $user->lastLogin . "```\r\n"
-					 . "```Dashboard\r\n"
-					 . "   ID   | WatchName | WatchBrand | Measure 1 (UTC)
-					 	| Measure 2 (UTC) | Accuracy | status \r\n";
+					$result["text"] = "ID;Name;Firstname;LastLogin;register \r\n".
+					"```". $user->userId . ";" . $user->name . ";" . $user->firstname .
+					 ";" . $user->register . ";" . $user->lastLogin . "```\r\n"
+					 . "Dashboard\r\n"
+					 . "ID;WatchName;WatchBrand;Measure 1 (UTC);Measure 2 (UTC);Accuracy;status\r\n";
 
-					 foreach ($measures as $measure) {
-					 	$result["text"] .= $measure->id . "|" . $measure->name
-						. "|" . $measure->brand
-						. "|" . $measure->measureReferenceTime
-						. "|" . $measure->accuracyReferenceTime;
+						if($measures){
+							foreach ($measures as $measure) {
+							 $result["text"] .= '```'.$measure->id . ";" . $measure->name
+							 . ";" . $measure->brand
+							 . ";" . $measure->measureReferenceTime
+							 . ";" . $measure->accuracyReferenceTime;
 
-						if($measure->statusId == 1.5){
-							$result["text"] .=  "|" . "In ".$measure->accuracy." hours";
-							$result["text"] .=  "|" . "Waiting accuracy";
-						}else if($measure->statusId == 1){
-							$result["text"] .=  "|" . "TBD";
-							$result["text"] .=  "|" . "Waiting accuracy";
-						}else if($measure->statusId == 2){
-							$result["text"] .=  "|" .$measure->accuracy;
-							$result["text"] .=  "|" . "Done";
-						}else{
-							$result["text"] .=  "|" . "TBD";
-							$result["text"] .=  "|" . "Never measured";
+							 if($measure->statusId == 1.5){
+								 $result["text"] .=  ";" . "In ".$measure->accuracy." hours";
+								 $result["text"] .=  ";" . "Waiting accuracy";
+							 }else if($measure->statusId == 1){
+								 $result["text"] .=  ";" . "TBD";
+								 $result["text"] .=  ";" . "Waiting accuracy";
+							 }else if($measure->statusId == 2){
+								 $result["text"] .=  ";" .$measure->accuracy;
+								 $result["text"] .=  ";" . "Done";
+							 }else{
+								 $result["text"] .=  ";" . "TBD";
+								 $result["text"] .=  ";" . "Never measured";
+							 }
+							 $result["text"] .= "```\r\n";
+						 }
+
 						}
-					}
-
 				} else {
 					$result["text"] = "User not found. ".$quote;
 				}
