@@ -120,8 +120,8 @@ class Hooks extends CI_Controller {
 							foreach ($measures as $measure) {
 							 $result["text"] .= '```'.$measure->id . ";" . $measure->name
 							 . ";" . $measure->brand
-							 . ";" . $measure->measureReferenceTime
-							 . ";" . $measure->accuracyReferenceTime;
+							 . ";" . date('Y-m-d H:i:s', $measure->measureReferenceTime)
+							 . ";" . date('Y-m-d H:i:s', $measure->accuracyReferenceTime);
 
 							 if($measure->statusId == 1.5){
 								 $result["text"] .=  ";" . "In ".$measure->accuracy." hours";
