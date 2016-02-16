@@ -110,7 +110,7 @@ class Hooks extends CI_Controller {
 
 					$measures = $this->measure->getMeasuresByUser($user->userId);
 
-					$result["text"] = "ID;Name;Firstname;LastLogin;register \r\n".
+					$result["text"] = "ID;Name;Firstname;register;lastLogin \r\n".
 					"```". $user->userId . ";" . $user->name . ";" . $user->firstname .
 					 ";" . $user->register . ";" . $user->lastLogin . "```\r\n"
 					 . "Dashboard\r\n"
