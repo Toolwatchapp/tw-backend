@@ -71,6 +71,8 @@ class Hooks extends CI_Controller {
 			$quote          = $this->quotes[rand(0, 18)];
 			$result["text"] = $quote;
 
+			log_message("info", print_r($text));
+
 			if (startsWith($text, "Jack nbusers")) {
 
 				$result["text"] = $this->user->count_all().". ".$quote;
@@ -91,6 +93,9 @@ class Hooks extends CI_Controller {
                     DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
 				->find_by('email', str_replace("Jack whois ", "", $text));
 
+				log_message("info", print_r($this->db->last_query()));
+				log_message("info", print_r($user));
+
 				if ($user) {
 					$watches  = $this->watch->getWatches($user->userId);
 					$measures = $this->measure->getMeasuresByUser($user->userId, $watches);
@@ -101,7 +106,7 @@ class Hooks extends CI_Controller {
 					" ,Measures ".sizeof($measures);
 
 				} else {
-					$result["text"] = "User not found. ".$this->db->last_query();
+					$result["text"] = "User not found. ".$quote;
 				}
 
 			} else if (startsWith($text, "Jack help")) {
