@@ -84,7 +84,8 @@
                         <br />
                         <!-- INSTANSIVE WIDGET -->
                         <script src="http://instansive.com/widget/js/instansive.js"></script>
-                        <iframe src="http://instansive.com/widgets/3eea3b0bb6345272b1e1944fd14859aa.html" id="instansive_3eea3b0bb6" name="instansive_3eea3b0bb6"  scrolling="no" allowtransparency="true" class="instansive-widget" style="width: 100%; border: 0; overflow: hidden;"></iframe>
+
+                        <div id="instansive_3eea3b0bb6" name="instansive_3eea3b0bb6"  scrolling="no" allowtransparency="true" class="instansive-widget" style="width: 100%; border: 0; overflow: hidden;"><?php  echo stream_get_contents(fopen('http://instansive.com/widgets/3eea3b0bb6345272b1e1944fd14859aa.html', "rb"));?></div>
                         </div>
 
                     </div>
