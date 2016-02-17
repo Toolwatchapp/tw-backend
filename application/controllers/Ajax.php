@@ -25,6 +25,13 @@ class Ajax extends MY_Controller {
 		date_default_timezone_set('Europe/Paris');
 	}
 
+	function reportClientError(){
+		if($this->expectsPost(array("error"))){
+
+			sendExceptionToSlack($this->error);
+		}
+	}
+
 	/**
 	 * Email password login method
 	 *
