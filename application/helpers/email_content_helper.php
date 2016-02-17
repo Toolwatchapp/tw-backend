@@ -173,7 +173,7 @@ function oneMonthAccuracyContent($firstName, $watchesToCheck, $watches){
       <a href="https://toolwatch.io/measures">Let\'s start a new measure</a>
       and see how it compares to last time!
       <br>
-      And don\'t forget to share a wristshot or
+      And don\'t forget to share a wristshot on
       <a href="https://twitter.com/toolwatchapp">Twitter</a> or
       <a href="https://www.instagram.com/Toolwatchapp/">Instagram</a>
       using our <a href="https://twitter.com/hashtag/toolwatchapp?f=tweets&src=hash">#ToolwatchApp</a> hashtag and join us
