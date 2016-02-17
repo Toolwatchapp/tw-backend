@@ -73,7 +73,7 @@ class MY_Log {
         }
 
         if($level === 'error' || $level === 'ERROR'){
-          $data = '{"text": "'.$_SERVER['HTTP_HOST'].'\n\r'.$msg.'"}';
+          $data = json_encode(["text"=>$_SERVER['HTTP_HOST'].'\n\r'.$msg]);
 
           $ch = curl_init(exception_url());
 
