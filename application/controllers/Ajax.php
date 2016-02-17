@@ -28,7 +28,10 @@ class Ajax extends MY_Controller {
 	function reportClientError(){
 		if($this->expectsPost(array("error"))){
 
-			log_message("error", $this->error);
+			log_message("error", $this->error . "\r\n" .
+				"USER_ID:".($this->session->userdata('userId')?
+				$this->session->userdata('userId'):0)
+			);
 		}
 	}
 

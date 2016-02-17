@@ -105,13 +105,11 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
 <script type="text/javascript">
   window.onerror = function(message, file, line) {
     $.post( "ajax/reportClientError", { error:  file + "(" + line + "): "
-      + message + "["+navigator.userAgent+","+navigator.platform+"]" })
+      + message + " ["+navigator.userAgent+","+navigator.platform+"]" })
     .done(function( data ) {
       console.log("logged");
     });
   }
-
-  console.log(qdqzdqdq);
 </script>
 
 </head>
