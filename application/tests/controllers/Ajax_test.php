@@ -95,6 +95,19 @@ class Ajax_test extends TestCase {
 		$this->assertContains('{"success":false}', $output);
 	}
 
+	public function test_loginFailFb() {
+		$output = $this->request(
+			'POST',
+			['Ajax', 'login'],
+			[
+				'email'    => 'mathieu@gmail.com',
+				'password' => 'FB_sqdq'
+			]
+		);
+
+		$this->assertContains('{"success":false}', $output);
+	}
+
 	public function test_signupFail() {
 
 		$output = $this->request(
