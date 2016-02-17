@@ -85,7 +85,7 @@ $autoload['drivers'] = array();
 |	$autoload['helper'] = array('url', 'file');
  */
 
-$autoload['helper'] = array('url', 'assets', 'language', 'array', 'string');
+$autoload['helper'] = array('url', 'assets', 'language', 'array', 'string', 'slack');
 
 /*
 | -------------------------------------------------------------------

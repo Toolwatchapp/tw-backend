@@ -14,21 +14,8 @@ class MY_Exceptions extends CI_Exceptions {
       $header = $severity. ' exception
       . occurred with message: '.$message
       .' in File '.$filepath
-      .' at Line '.$line
-      .' at URL  '.$_SERVER['HTTP_HOST'];
+      .' at Line '.$line;
 
-      $data = json_encode(["text"=>$header]);
-
-      $ch = curl_init(exception_url());
-
-      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-          'Content-Type: application/json',
-          'Content-Length: '.strlen($data))
-      );
-
-      $result = curl_exec($ch);
+      sendExceptionToSlack($header);
     }
 }

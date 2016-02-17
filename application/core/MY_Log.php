@@ -72,21 +72,9 @@ class MY_Log {
             return FALSE;
         }
 
-        if($level === 'error' || $level === 'ERROR'){
-          $data = json_encode(["text"=>$_SERVER['HTTP_HOST'].'\n\r'.$msg]);
+        if($level === 'ERROR'){
 
-          $ch = curl_init(exception_url());
-
-          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-          curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-              'Content-Type: application/json',
-              'Content-Length: '.strlen($data))
-          );
-
-          $result = curl_exec($ch);
-          log_message("info", "SEND ERROR TO SLACK ". print_r($result, true));
+          sendExceptionToSlack($msg);
         }
 
         file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
