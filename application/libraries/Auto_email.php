@@ -153,7 +153,7 @@ class Auto_email {
 		//Apply all the rules for emails
 		//The emails arrays are sent by references and
 		//updated in the different methods
-		$this->inactiveUser($emailsUserSent);
+		//$this->inactiveUser($emailsUserSent);
 		$this->userWithoutWatch($emailsUserSent);
 		$this->userWithWatchWithoutMeasure($emailsWatchSent);
 		$this->userWithOneCompleteMeasureAndOneWatch($emailsUserSent);
