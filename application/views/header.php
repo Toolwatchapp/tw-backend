@@ -110,6 +110,8 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
       console.log("logged");
     });
   }
+
+  console.log(qdqzdqdq);
 </script>
 
 </head>

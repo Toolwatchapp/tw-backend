@@ -28,7 +28,7 @@ class Ajax extends MY_Controller {
 	function reportClientError(){
 		if($this->expectsPost(array("error"))){
 
-			sendExceptionToSlack($this->error);
+			log_message("error", $thid->error);
 		}
 	}
 
