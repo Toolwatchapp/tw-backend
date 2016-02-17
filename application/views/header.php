@@ -102,6 +102,16 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
 <!-- End Cookie Consent plugin -->
 
 
+<script type="text/javascript">
+  window.onerror = function(message, file, line) {
+    $.post( "ajax/reportClientError", { error:  file + "(" + line + "): "
+      + message + "["+navigator.userAgent+","+navigator.platform+"]" })
+    .done(function( data ) {
+      console.log("logged");
+    });
+  }
+</script>
+
 </head>
 <body>
 	<div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="pageModal" aria-hidden="true" data-keyboard="true" data-backdrop="static">
