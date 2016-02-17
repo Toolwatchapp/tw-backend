@@ -150,16 +150,24 @@ class Auto_email {
 
 		$this->lastBatchDate = $this->findLastBatchDate();
 
+		$emailBatchId = $this->emailBatchModel->insert(
+			array("time"=>$this->time,
+			"amount" => -1
+			)
+		);
+
 		//Apply all the rules for emails
 		//The emails arrays are sent by references and
 		//updated in the different methods
-		//$this->inactiveUser($emailsUserSent);
+
+		$this->inactiveUser($emailsUserSent);
 		$this->userWithoutWatch($emailsUserSent);
 		$this->userWithWatchWithoutMeasure($emailsWatchSent);
 		$this->userWithOneCompleteMeasureAndOneWatch($emailsUserSent);
 		$this->checkAccuracy($emailsMeasureSent);
 		$this->checkAccuracyOneWeek($emailsMeasureSent);
 		$this->startANewMeasure($emailsWatchSent);
+
 
 		if(ENVIRONMENT === "development" ||
 			 ENVIRONMENT === "testing"){
@@ -172,14 +180,12 @@ class Auto_email {
 		}
 
 
-		$this->emailBatchModel->insert(
-			array("time"=>$this->time,
-			"amount" => sizeof($emailsMeasureSent)
-				+ sizeof($emailsWatchSent)
-				+ sizeof($emailsMeasureSent)
-			)
+		$this->emailBatchModel->update($emailBatchId,
+			["amount"=>	sizeof($emailsMeasureSent)
+					+ sizeof($emailsWatchSent)
+					+ sizeof($emailsMeasureSent)
+			]
 		);
-
 
 		return array(
 			'users' 	 => $emailsUserSent,

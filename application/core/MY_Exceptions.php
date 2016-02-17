@@ -17,7 +17,7 @@ class MY_Exceptions extends CI_Exceptions {
       .' at Line '.$line
       .' at URL  '.$_SERVER['HTTP_HOST'];
 
-      $data = '{"text": "'.$header.'"}';
+      $data = json_encode(["text"=>$header]);
 
       $ch = curl_init(exception_url());
 
