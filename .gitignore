@@ -7,3 +7,5 @@ vendor/
 application/config/google-api.p12
 .htaccess
 application/tests/phpunit.xml
+
+tests/_output/*
