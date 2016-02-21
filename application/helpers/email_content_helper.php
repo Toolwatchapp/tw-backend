@@ -219,6 +219,11 @@ function signupContent($firstname){
       <br>
       Every single one of us is here for you to help you getting the most from your mechanical watch. Drop us a line anytime at <a href="mailto:hello@toolwatch.io">hello@toolwatch.io</a> or tweet us <a href="https://twitter.com/toolwatchapp/">@toolwatchapp</a>.<br>
       <br>
+      We also have a little bonus for you. We\'ve pulled a resource with stats from the whole watchmaking industry after having measured 10k+ watches.
+      <br>
+      If you <b><a href="mailto:?bcc=bonus@toolwatch.io&subject=I%20think%20you%20will%20like%20this&body=I+found+this+free+tool+for+measuring+and+tracking+the+accuracy+of+your+mechanical+watches+-+https%3A%2F%2Ftoolwatch.io%2F++It+helps+you+taking+care+of+your+mechanical+watches+and+see+how+they+compete+versus+other+watches+from+the+same+brand.+I%27m+taking+it+and+think+it+could+be+really+cool.">
+      click here to email a friend about Toolwatch</b></a>, we’ll send this bonus to you right away. Just leave "bonus@toolwatch.io" BCC\'d so we know you sent it :)
+      <br>
       If there is just one single tip we’d share for taking care of your watch, we’d say try to keep your watch away from magnetic fields such as the speakers of your laptop or your radio alarm clock for example. That’s it !<br>
       <br>
       That being said, we can’t wait for helping you starting <a href="http://www.toolwatch.io/">measuring</a> the accuracy of your watch now !<br>
