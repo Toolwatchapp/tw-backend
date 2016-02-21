@@ -128,18 +128,18 @@ function deadlinePassed(){
   console.log("Deadline Passed");
 
   var deadlinePassedText =
-    `<center>
-        <h1>Is everything ok, Doc ?</h1>
-        <p>
-        To begin measuring the accuracy of your watch, we must first
-        synchronize it with Toolwatch's accuracy system.<br><br>
-        You were supposed to click when the second hand was
-        <b>
-        exactly at 12
-        </b>.
-        </p>
-        <a class="btn btn-success btn-lg" href="javascript:reset();">Retry</a>
-    </center>`;
+    '<center>'
+    +'    <h1>Is everything ok, Doc ?</h1>'
+    +'    <p>'
+    +'    To begin measuring the accuracy of your watch, we must first'
+    +'    synchronize it with Toolwatch\'s accuracy system.<br><br>'
+    +'    You were supposed to click when the second hand was'
+    +'    <b>'
+    +'    exactly at 12'
+    +'    </b>.'
+    +'    </p>'
+    +'    <a class="btn btn-success btn-lg" href="javascript:reset();">Retry</a>'
+    +'</center>';
 
   $('#pageModal .modal-body').html(deadlinePassedText);
 
@@ -166,40 +166,40 @@ function clicked(){
   clickedDate = new Date();
 
   var clickedText =
-    `<center>
-        <h1>Almost there youngling</h1>
-        <br />
-        <p>You've synchronized you watch at <b>
-        <span style="font-size:25px" id="timeSyncAt">`
-        + constructoffsetedDateString(offsetedDate) +
-        `</span></b> <br /></p>
+    '<center>'
+    +'    <h1>Almost there youngling</h1>'
+    +'    <br />'
+    +'    <p>You\'ve synchronized you watch at <b>'
+    +'    <span style="font-size:25px" id="timeSyncAt">'
+    +     constructoffsetedDateString(offsetedDate)
+    +'    </span></b> <br /></p>'
 
-        <a class="btn btn-success btn-lg"
-        href="javascript:` + validateFunction + `">
-        `+ctaText+`
-        </a>
+    +'    <a class="btn btn-success btn-lg"'
+    +'    href="javascript:' + validateFunction + '">'
+    +     ctaText
+    +'    </a>'
 
-        <br /><br />
+    +'    <br /><br />'
 
-        <p><i>One does not simply</i> have a timepiece without drift !
-        Press the following
-        button to add/retrieve a minute or
-        <a href="javascript:reset()">click here to retry.</a></p>
+    +'    <p><i>One does not simply</i> have a timepiece without drift !'
+    +'    Press the following'
+    +'    button to add/retrieve a minute or'
+    +'    <a href="javascript:reset()">click here to retry.</a></p>'
 
-        <br />
+    +'    <br />'
 
-        <a style="float:left" class="btn btn-success btn-lg"
-        href="javascript:retrieveMinute();">
-        -1 minute
-        </a>
+    +'    <a style="float:left" class="btn btn-success btn-lg"'
+    +'    href="javascript:retrieveMinute();">'
+    +'    -1 minute'
+    +'    </a>'
 
-        <a style="float:right" class="btn btn-success btn-lg"
-        href="javascript:addMinute();">
-        +1 minute
-        </a>
-        <br />
-        <br />
-    </center>`;
+    +'    <a style="float:right" class="btn btn-success btn-lg"'
+    +'    href="javascript:addMinute();">'
+    +'    +1 minute'
+    +'    </a>'
+    +'    <br />'
+    +'    <br />'
+    +'</center>';
 
     $('#pageModal .modal-body').html(clickedText);
 
