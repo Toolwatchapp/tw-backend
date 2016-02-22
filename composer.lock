@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ef14ec5b0463ec36e014a9b3890f5825",
-    "content-hash": "80cd7a0a7f9499246cdc3c501c4b07cc",
+    "hash": "047e3e4b691788ac2563f3549ff90628",
+    "content-hash": "6b08a27917505ec1879f9281424a8dff",
     "packages": [
         {
             "name": "codeception/codeception",
@@ -140,6 +140,49 @@
                 "instantiate"
             ],
             "time": "2015-06-14 21:17:01"
+        },
+        {
+            "name": "ejsmont-artur/php-circuit-breaker",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ejsmont-artur/php-circuit-breaker.git",
+                "reference": "5e63a6b8774166bf6e5a591559bf25030e8dcce7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ejsmont-artur/php-circuit-breaker/zipball/5e63a6b8774166bf6e5a591559bf25030e8dcce7",
+                "reference": "5e63a6b8774166bf6e5a591559bf25030e8dcce7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Ejsmont": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Artur Ejsmont",
+                    "homepage": "http://artur.ejsmont.org/blog/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Circuit Breaker component",
+            "homepage": "https://github.com/ejsmont-artur/php-circuit-breaker",
+            "keywords": [
+                "circuit breaker",
+                "error handling",
+                "graceful"
+            ],
+            "time": "2013-03-17 09:59:05"
         },
         {
             "name": "facebook/webdriver",
@@ -354,47 +397,6 @@
                 "uri"
             ],
             "time": "2016-01-23 01:23:02"
-        },
-        {
-            "name": "jakoch/phantomjs-installer",
-            "version": "2.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jakoch/phantomjs-installer.git",
-                "reference": "b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jakoch/phantomjs-installer/zipball/b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85",
-                "reference": "b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*"
-            },
-            "type": "custom-installer",
-            "autoload": {
-                "psr-0": {
-                    "PhantomInstaller\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jens-André Koch",
-                    "email": "jakoch@web.de"
-                }
-            ],
-            "description": "A Composer package which installs the PhantomJS binary (Linux, Windows, Mac) into `/bin` of your project.",
-            "keywords": [
-                "binaries",
-                "headless",
-                "phantomjs"
-            ],
-            "time": "2016-01-25 16:30:30"
         },
         {
             "name": "monolog/monolog",
@@ -1898,6 +1900,47 @@
                 "php"
             ],
             "time": "2016-02-08 23:53:13"
+        },
+        {
+            "name": "jakoch/phantomjs-installer",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jakoch/phantomjs-installer.git",
+                "reference": "b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jakoch/phantomjs-installer/zipball/b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85",
+                "reference": "b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*"
+            },
+            "type": "custom-installer",
+            "autoload": {
+                "psr-0": {
+                    "PhantomInstaller\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jens-André Koch",
+                    "email": "jakoch@web.de"
+                }
+            ],
+            "description": "A Composer package which installs the PhantomJS binary (Linux, Windows, Mac) into `/bin` of your project.",
+            "keywords": [
+                "binaries",
+                "headless",
+                "phantomjs"
+            ],
+            "time": "2016-01-25 16:30:30"
         },
         {
             "name": "mikey179/vfsStream",
