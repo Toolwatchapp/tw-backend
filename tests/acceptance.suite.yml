@@ -9,5 +9,15 @@ modules:
     enabled:
         - WebDriver:
             url: http://localhost/
-            browser: firefox 
+            browser: firefox
+            window_size: 1280x1024
+            wait: 2s
+        - Db:
+           dsn: 'mysql:dbname=tw_ci;host=localhost'
+           user: 'root'
+           password: ''
+           dump: '_data/dump.sql'
+           populate: true
+           cleanup: false
+           reconnect: true
         - \Helper\Acceptance
