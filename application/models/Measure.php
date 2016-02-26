@@ -49,6 +49,105 @@ class Measure extends ObservableModel {
 	}
 
 	/**
+	 * Retrieves the last $limit measures of an user
+	 * grouped by watch
+	 *
+	 * @param  int $userId
+	 * @param  int $limit
+	 * @return array
+	 */
+	function getNLastMeasuresByUserByWatch($userId, $limit = 5){
+
+		/**
+		 * The following is counter-intuitive yet intended and
+		 * efficient performance wise.
+		 *
+		 * I first select all measures right join on the watches
+		 * so watches without measures pop out. Then, these rows
+		 * are grouped by watch Id and mapped so we can have a nice
+		 * array structure [id, brand, ..., [measures]] for serialization
+		 * or display.
+		 *
+		 * Because of the right join, measures related part of the
+		 * result row can be null, so I remove them through a reject
+		 * and then, I map them with only the needed values.
+		 *
+		 * Performance-wise, this is way better than selecting all
+		 * the non-deleted watches and for each watch, select $limit
+		 * non-deleted measure because this will trigger $watch+1
+		 * requests to the non-local database.
+		 *
+		 * Here, we only do one database request and then play around
+		 * with $measures arrays.
+		 */
+
+		//we are going to use this inside callbacks
+		$this->limit = $limit;
+
+		return $this->__->map(
+				//We group the results watchId
+				$this->__->groupBy(
+						// Selects all informations for all non-deleted measure
+						// right join to also get non-deleted watches without measure
+						$this->select('watch.watchId, watch.brand,
+						watch.name, watch.yearOfBuy, watch.serial,
+						watch.caliber, measure.measureUserTime, measure.id,
+						measure.measureReferenceTime, measure.accuracyUserTime,
+						measure.accuracyReferenceTime, measure.statusId')
+						->join('watch', 'measure.watchId = watch.watchId
+						and measure.statusId < 4', 'right')
+						->where("watch.userId", $userId)
+						->where("watch.status <", 4)
+						->as_array()
+						->find_all(),
+						'watchId'
+					),
+				//Mapping function starts here
+				function ($watch, $row){
+
+					//Eleminates null measures resulting from the
+					//right join
+					$measures = $this->__->reject($watch, function($watch){
+						return $watch['statusId'] == null;
+					});
+
+					//Mapping non-null measure to remove the data
+					//duplicated by the group by (about the watch)
+					//and the measure that are over $limit
+					$measures = $this->__->map($measures, function($measure, $row){
+						if($row >= $this->limit){
+							return null;
+						}else{
+							return array(
+								//The result array is explicitly typed
+								//so we can json_encode this easily
+								"measureUserTime"=> (double)$measure['measureUserTime'],
+								"measureReferenceTime"=> (double)$measure['measureReferenceTime'],
+								"accuracyUserTime"=> (double)$measure['accuracyUserTime'],
+								"accuracyReferenceTime"=> (double)$measure['accuracyReferenceTime'],
+								"accuracy"=> (float)$measure['accuracy'],
+								"accuracyAge"=> $measure['accuracyAge'],
+								"statusId"=> (float)$measure['statusId'],
+								'id'=>(int)$measure["id"]
+							);
+						}
+					});
+					
+					//Construct and return the final array
+					return array(
+						// Same here
+						"watchId"=> (int)$watch[0]["watchId"],
+						"brand"=>$watch[0]["brand"],
+						"name"=>$watch[0]["name"],
+						"yearOfBuy"=>(int)$watch[0]["yearOfBuy"],
+						"serial"=>$watch[0]["serial"],
+						"caliber"=>$watch[0]["caliber"],
+						"measures" => $measures
+						);
+				});
+	}
+
+	/**
 	 * Compute the accuracy of a watch given the raw data of the database
 	 *
 	 * @param  Measure $watchMeasure A watchMeasure object containing row data
