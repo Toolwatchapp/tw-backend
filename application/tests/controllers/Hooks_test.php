@@ -22,6 +22,9 @@ class Hooks_test extends TestCase {
 			'Canada'
 		);
 
+		$emailBatch = new MY_Model("email_batch");
+ 	 	$emailBatch->insert(array("time"=>0, "amount"=>0));
+
 	}
 
 	public function test_index() {

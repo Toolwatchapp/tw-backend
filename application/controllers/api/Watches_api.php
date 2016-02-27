@@ -39,7 +39,7 @@ class Watches_api extends REST_Controller {
   public function index_get(){
 
     $this->response(
-      $this->measure->getMeasuresByUser($this->rest->user_id),
+      $this->measure->getNLastMeasuresByUserByWatch($this->rest->user_id),
       REST_Controller::HTTP_OK
     );
   }
