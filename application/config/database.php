@@ -65,9 +65,9 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn'          => '',
 	'hostname'     => 'localhost',
-	'username'     => '',
+	'username'     => 'root',
 	'password'     => '',
-	'database'     => '',
+	'database'     => 'tw_ci',
 	'dbdriver'     => 'mysqli',
 	'dbprefix'     => '',
 	'pconnect'     => FALSE,
@@ -90,4 +90,3 @@ $db['default']['hostname'] = $url["host"];
 $db['default']['username'] = $url["user"];
 $db['default']['password'] = $url["pass"];
 $db['default']['database'] = substr($url["path"], 1);
-

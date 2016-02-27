@@ -25,6 +25,16 @@ class Ajax extends MY_Controller {
 		date_default_timezone_set('Europe/Paris');
 	}
 
+	function reportClientError(){
+		if($this->expectsPost(array("error"))){
+
+			log_message("error", $this->error . "\r\n" .
+				"USER_ID:".($this->session->userdata('userId')?
+				$this->session->userdata('userId'):0)
+			);
+		}
+	}
+
 	/**
 	 * Email password login method
 	 *
@@ -120,8 +130,8 @@ class Ajax extends MY_Controller {
 	function facebookSignup() {
 		$result['success'] = false;
 
-		if ($this->expectsPost(array('email', 'id', 'last_name',
-			'firstname', 'country'))) {
+		if ($this->expectsPost(array('email', 'last_name',
+			'firstname'))) {
 
 			/**
 			 * Getting all the posts

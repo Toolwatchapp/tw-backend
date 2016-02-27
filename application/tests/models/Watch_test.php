@@ -9,6 +9,7 @@ class Watch_test extends TestCase {
 		$CI = &get_instance();
 		$CI->load->model('User');
 		$CI->load->model('Watch');
+		$CI->load->model('Measure');
 		$CI->load->library('Session');
 
 		$CI->User->signup(
@@ -25,6 +26,7 @@ class Watch_test extends TestCase {
 		self::$userId = $CI->session->userdata('userId');
 
 		$CI->Watch->delete_where(array("watchId >=" => "0"));
+		$CI->Measure->delete_where(array("id >=" => "0"));
 	}
 
 	public function setUp() {
@@ -148,7 +150,11 @@ class Watch_test extends TestCase {
 	}
 
 	public function test_deleteWatch() {
-		$this->assertEquals(true, $this->obj->deleteWatch(self::$watchId));
+
+		$this->assertEquals(
+			true,
+			$this->obj->deleteWatch(self::$watchId, self::$userId)
+		);
 	}
 
 	public function test_getWatchDeletedWatch() {
