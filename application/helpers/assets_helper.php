@@ -53,9 +53,3 @@ if ( ! function_exists('event_url')){
         return getenv("TW_EVENT_URL");
     }
 }
-
-if(! function_exists('exception_url')){
-    function exception_url(){
-      return getenv("SLACK_EXCEPTION");
-    }
-}

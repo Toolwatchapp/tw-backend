@@ -150,9 +150,16 @@ class Auto_email {
 
 		$this->lastBatchDate = $this->findLastBatchDate();
 
+		$emailBatchId = $this->emailBatchModel->insert(
+			array("time"=>$this->time,
+			"amount" => -1
+			)
+		);
+
 		//Apply all the rules for emails
 		//The emails arrays are sent by references and
 		//updated in the different methods
+
 		$this->inactiveUser($emailsUserSent);
 		$this->userWithoutWatch($emailsUserSent);
 		$this->userWithWatchWithoutMeasure($emailsWatchSent);
@@ -160,6 +167,7 @@ class Auto_email {
 		$this->checkAccuracy($emailsMeasureSent);
 		$this->checkAccuracyOneWeek($emailsMeasureSent);
 		$this->startANewMeasure($emailsWatchSent);
+
 
 		if(ENVIRONMENT === "development" ||
 			 ENVIRONMENT === "testing"){
@@ -172,14 +180,12 @@ class Auto_email {
 		}
 
 
-		$this->emailBatchModel->insert(
-			array("time"=>$this->time,
-			"amount" => sizeof($emailsMeasureSent)
-				+ sizeof($emailsWatchSent)
-				+ sizeof($emailsMeasureSent)
-			)
+		$this->emailBatchModel->update($emailBatchId,
+			["amount"=>	sizeof($emailsMeasureSent)
+					+ sizeof($emailsWatchSent)
+					+ sizeof($emailsMeasureSent)
+			]
 		);
-
 
 		return array(
 			'users' 	 => $emailsUserSent,
@@ -488,6 +494,7 @@ class Auto_email {
 			user.name as lastname, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
+			->where('watch.status', 1)
 			->where('creationDate < ', $this->getBatchUpperBound($this->day))
 			->where('creationDate > ', $this->getBatchLowerBound($this->day))
 			->as_array()
@@ -752,11 +759,11 @@ class Auto_email {
 					'watchId',
 					$emailcontent,
 					$this->sendMandrillEmail(
-						'Let’s check your watch accuracy! ⌚',
+						'Let’s start a new measure! ⌚',
 						$emailcontent,
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
-						'check_accuracy_email',
+						'start_new_measure_email',
 						$this->sendAtString($this->time)
 					)
 				);

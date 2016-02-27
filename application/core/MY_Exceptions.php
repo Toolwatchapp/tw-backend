@@ -14,12 +14,11 @@ class MY_Exceptions extends CI_Exceptions {
       $header = $severity. ' exception
       . occurred with message: '.$message
       .' in File '.$filepath
-      .' at Line '.$line
-      .' at URL  '.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+      .' at Line '.$line;
 
-      $data = 'payload={"text": "'.$header.'"}';
+      $data = json_encode(["text"=>$_SERVER['HTTP_HOST']."\r\n".$header]);
 
-      $ch = curl_init(exception_url());
+      $ch = curl_init(getenv("SLACK_EXCEPTION"));
 
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -30,5 +29,7 @@ class MY_Exceptions extends CI_Exceptions {
       );
 
       $result = curl_exec($ch);
+
+      log_message("info", "slack exception:".print_r($result, true));
     }
 }
