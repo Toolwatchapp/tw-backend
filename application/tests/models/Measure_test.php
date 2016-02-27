@@ -275,6 +275,17 @@ class Measure_test extends TestCase {
 		$this->assertEquals(3, $archivedMeasure->statusId);
 	}
 
+	public function test_getNLastMeasuresByUserByWatch(){
+		$measures = $this->obj->getNLastMeasuresByUserByWatch(
+			self::$userId);
+
+		$this->assertEquals(2, sizeof($measures));
+		$this->assertEquals(5, sizeof($measures[0]['measures']));
+		$this->assertEquals(null, $measures[0]['measures'][2]);
+		$this->assertEquals(1, sizeof($measures[1]['measures']));
+
+	}
+
 	public function test_deleteMeasure() {
 
 		self::$measureId = $this->obj->addBaseMesure(

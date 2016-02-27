@@ -56,7 +56,7 @@ class Measure extends ObservableModel {
 	 * @param  int $limit
 	 * @return array
 	 */
-	function getNLastMeasuresByUserByWatch($userId, $limit = 5){
+	function getNLastMeasuresByUserByWatch($userId, $limit = 2){
 
 		/**
 		 * The following is counter-intuitive yet intended and
@@ -132,7 +132,7 @@ class Measure extends ObservableModel {
 							);
 						}
 					});
-					
+
 					//Construct and return the final array
 					return array(
 						// Same here
@@ -183,6 +183,8 @@ class Measure extends ObservableModel {
 
 			$watchMeasure->accuracyAge =
 				round((time() - $watchMeasure->accuracyReferenceTime) / 86400);
+		}else{
+			$watchMeasure->accuracyAge = 0;
 		}
 
 		//Compute 1.5 status. When a measure is less than 12 hours old
