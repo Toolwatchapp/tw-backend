@@ -116,7 +116,6 @@ Have you tested your watch recently? Measure it <a href="https://toolwatch.io?ut
             </td>
         </tr>
     </tbody>
-  <?php } ?>
 </table><table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse;table-layout:fixed!important">
     <tbody>
         <tr>
@@ -132,7 +131,8 @@ Have you tested your watch recently? Measure it <a href="https://toolwatch.io?ut
             </td>
         </tr>
     </tbody>
-</table><table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+</table>
+<?php } ?><table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
     <tbody>
         <tr>
             <td valign="top">
