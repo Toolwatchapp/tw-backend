@@ -17,7 +17,7 @@
                     <div class="col-md-2">
                         <div class="logo"></div>
                     </div>
-                    <div class="links col-md-offset-1 col-sm-1">
+                    <div class="links col-sm-1">
                         <a href="<?php echo base_url(); ?>#demo-screen">Features</a>
                     </div>
                     <div class="links col-sm-1">
@@ -30,8 +30,8 @@
                             echo '<div class="links col-sm-1">
                                 <a href="/logout">Logout</a>
                             </div>
-                            <div class="links col-sm-1">
-                                <a href="/measures/">Measures</a>
+                            <div class="links col-sm-2">
+                                <a href="/measures/">My Measures</a>
                             </div>';
                         }
                         else
@@ -39,8 +39,8 @@
                             echo '<div class="links col-sm-1">
                                 <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a>
                             </div>
-                            <div class="links col-sm-1">
-                                <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a>
+                            <div class="links col-sm-2">
+                                <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">My Measures</a>
                             </div>';
                         }
                     ?>
