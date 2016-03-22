@@ -151,11 +151,11 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
 <?php
 if ($userIsLoggedIn) {
 	echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="/logout/" title="Logout">Logout</a></div>';
-	echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" href="/measures/" title="Measures">Measures</a></div>';
+	echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" href="/measures/" title="Measures">My Measures</a></div>';
 } else {
 
 	echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></div>';
-	echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" title="Measures" data-toggle="modal" data-cta="MEASURES" data-target="#pageModal" data-modal-update="true" data-href="/login/">Measures</a></div>';
+	echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" title="Measures" data-toggle="modal" data-cta="MEASURES" data-target="#pageModal" data-modal-update="true" data-href="/login/">My Measures</a></div>';
 }
 ?>
                     </div>
