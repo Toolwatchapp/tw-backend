@@ -9,7 +9,7 @@
 <form method="post" name="login">
 
     <div class="form-group">
-       <strong class="line-thru">or</strong>
+       <strong class="line-thru"></strong>
     </div>
 	<div class="form-group">
         <span id="email_error" class="signup-error login-error"></span>
