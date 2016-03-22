@@ -182,28 +182,8 @@ textarea:focus, textarea:hover, textarea:active
   text-align: center;
   width: 100%;
   z-index: 1;
-}
-
-.line-thru:before {
-  width: 40px;
-  height: 10px;
-  background-color: #fff;
-  content: '';
-  margin: -5px 0 0 -20px;
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  z-index: -1;
-}
-
-.line-thru:after {
+  height: 1px;
   border-bottom: 1px solid #dfe0e6;
-  content: '';
-  display: block;
-  position: absolute;
-  top: 49%;
-  width: 100%;
-  z-index: -2;
 }
 
 .line
