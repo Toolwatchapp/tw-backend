@@ -21,7 +21,7 @@
                         <a href="<?php echo base_url(); ?>#demo-screen">Features</a>
                     </div>
                     <div class="links col-sm-1">
-                        <a href="<?php echo base_url(); ?>/blog/watch-tips/">Blog</a>
+                        <a href="https://blog.toolwatch.io/watch-tips/">Blog</a>
                     </div>
 
                     <?php
