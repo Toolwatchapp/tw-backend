@@ -104,7 +104,6 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
 <?php if(!$this->agent->is_mobile()){?>
 
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
-  <!-- End Cookie Consent plugin -->
   <script type="text/javascript">CRISP_WEBSITE_ID = "-K4rBEcM_Qbt6JrISVzu";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.im/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
   <meta name="p:domain_verify" content="9f4eefba8c49cf4a79b31c72a7e388a9"/>
 
