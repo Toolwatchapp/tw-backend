@@ -2,7 +2,10 @@
   Login in allows you to access and track all your measures in one place.
 </div>
 <div class="form-group">
-   <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">Log in with Facebook<i class="fa fa-spinner fa-pulse"></i></button></center>
+   <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">
+     <span style="font-size: 30px;
+    margin-right: 10px;" class="fa fa-facebook-square"></span>
+     <span style="margin-top:-10px;">Log in with Facebook</span><i class="fa fa-spinner fa-pulse"></i></button></center>
    <span id="fb_error" class="signup-error login-error"></span>
 </div>
 
