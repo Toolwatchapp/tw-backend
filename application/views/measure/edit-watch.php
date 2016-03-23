@@ -4,7 +4,9 @@
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" action="/measures/edit_watch" method="post" name="editWatch">
+
+          <?php echo form_open('/measures/edit_watch', array('name'=>'editWatch', 'class'=>'form-horizontal'));?>
+          
                 <div class="form-group">
                     <label for="brand" class="col-sm-3 control-label">Brand<i>*</i></label>
                     <div class="col-sm-9">

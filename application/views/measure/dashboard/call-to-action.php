@@ -1,8 +1,8 @@
 <?php if(is_null($statusId) || $statusId == '0')
 {
 
-  echo '<td><a class="submitNewMeasure" data-watch="'.$watchId.'">Measure me!</a>
-    <form method="post" action="/measures/new-measure-for-watch/" name="start-new-measure-'.$watchId.'">
+  echo '<td><a class="submitNewMeasure" data-watch="'.$watchId.'">Measure me!</a>' .
+  form_open('/measures/new-measure-for-watch/', array('name'=>'start-new-measure-'.$watchId)).'
       <input type="hidden" name="watchId" value="'.$watchId.'">
     </form></td>';
 
