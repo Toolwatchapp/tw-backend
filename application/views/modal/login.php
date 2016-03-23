@@ -9,7 +9,7 @@
    <span id="fb_error" class="signup-error login-error"></span>
 </div>
 
-<form method="post" name="login">
+<?php echo form_open('', array('name'=>'login'));?>
 
     <div class="form-group">
        <strong class="line-thru"></strong>

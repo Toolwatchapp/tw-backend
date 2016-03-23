@@ -23,7 +23,7 @@ class MY_Controller extends CI_Controller {
 		$this->_headerData['userIsLoggedIn'] = $this->user->isLoggedIn();
 		$this->_headerData['styleSheets']    = array('main');
 		$this->_headerData['javaScripts']    = array('jquery.min', 'bootstrap.min', 'application', 'MediaElement/mediaelement-and-player.min',
-			'facebook');
+			'facebook', "js.cookie");
 		$this->_headerData['headerClass'] = '';
 
 		if ($this->_needLoggedIn && !$this->user->isLoggedIn()) {
@@ -51,7 +51,7 @@ class MY_Controller extends CI_Controller {
 			}
 
 			//Add the variable in $this
-			$this->{$postName} = $this->input->post($postName);
+			$this->{$postName} = $this->security->xss_clean($this->input->post($postName));
 		}
 
 		return true;
