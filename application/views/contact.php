@@ -26,7 +26,7 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <span>An error occured while sending your contact form. Please try again later.</span>
             </div>
-            <?php echo form_open('', array('name'=>'contact', 'class'=>'form-horizontal'));?>
+            <?php echo form_open('/home/contact', array('name'=>'contact', 'class'=>'form-horizontal'));?>
                 <div class="form-group">
                     <input type="text" class="form-control" name="name" placeholder="Your name *">
                     <span class="contact-error name-error">This field is required.</span>
