@@ -78,7 +78,6 @@
             <div class="row">
               <ul>
                 <li>Jeff Jackson</li>
-                <li>Philippemalone0</li>
                 <li>Ahmed Adel Abdelfattah</li>
               </ul>
             </div>
