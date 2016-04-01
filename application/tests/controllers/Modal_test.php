@@ -28,7 +28,7 @@ class Modal_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('<form method="post" name="login">', $output);
+		$this->assertContains('name="login" method="post"', $output);
 	}
 
 	public function test_loginFail(){
@@ -45,7 +45,7 @@ class Modal_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('<form method="post" name="signup">', $output);
+		$this->assertContains('name="signup" method="post"', $output);
 	}
 
 	public function test_signUpFail(){

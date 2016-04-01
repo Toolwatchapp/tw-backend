@@ -125,13 +125,6 @@ class Measures extends MY_Controller {
 
 		if($this->expectsPost(array('deleteMeasures'))){
 
-
-					var_dump($this->session->userdata('userId'));
-					var_dump($this->deleteMeasures);
-					var_dump($this->measure->isOwnedBy(
-						$this->deleteMeasures,
-						$this->session->userdata('userId')));
-
 			if (
 				$this->measure->isOwnedBy(
 					$this->deleteMeasures,
@@ -220,7 +213,6 @@ class Measures extends MY_Controller {
 
 			$this->constructMeasurePage();
 		}
-		echo "not all posts";
 	}
 
 	/**
