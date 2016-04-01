@@ -5,7 +5,8 @@
     <div class="row">
         <div class="col-md-12">
             <center>
-                <form method="post" class="col-md-6 col-md-offset-3" name="resetPassword">
+
+              <?php echo form_open('', array('name'=>'resetPassword', 'class'=>'col-md-6 col-md-offset-3'));?>
                     <div class="alert alert-danger alert-dismissible" role="alert" style="display: none";>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <span>We cannot reset the password for this token (<?php echo $resetToken;?>). Please, check the link you received or ask a reset again.</span>

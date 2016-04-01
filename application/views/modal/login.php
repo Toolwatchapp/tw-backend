@@ -2,14 +2,17 @@
   Login in allows you to access and track all your measures in one place.
 </div>
 <div class="form-group">
-   <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">Log in with Facebook<i class="fa fa-spinner fa-pulse"></i></button></center>
+   <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">
+     <span style="font-size: 30px;
+    margin-right: 10px;" class="fa fa-facebook-square"></span>
+     <span style="margin-top:-10px;">Log in with Facebook</span><i class="fa fa-spinner fa-pulse"></i></button></center>
    <span id="fb_error" class="signup-error login-error"></span>
 </div>
 
-<form method="post" name="login">
+<?php echo form_open('', array('name'=>'login'));?>
 
     <div class="form-group">
-       <strong class="line-thru">or</strong>
+       <strong class="line-thru"></strong>
     </div>
 	<div class="form-group">
         <span id="email_error" class="signup-error login-error"></span>
@@ -25,7 +28,7 @@
 		<center><button type="submit" name="login" class="btn btn-primary btn-lg btn-spinner btn-full">Log in <i class="fa fa-spinner fa-pulse"></i></button></center>
 	</div>
 	<div class="form-group">
-		  <center>Not registered yet? <a class="signup-here" data-href="/sign-up/" data-modal-update="true">Sign up here!</a> or <br />
+		  <center>Not registered yet? <a class="signup-here" data-href="/sign-up/" data-modal-update="true">Sign up here!</a> <br />
 		</center>
 	</div>
 </form>
