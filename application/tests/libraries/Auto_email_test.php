@@ -44,6 +44,7 @@ class Auto_email_test extends TestCase {
 		$CI->load->model('Watch');
 		$CI->load->model('User');
 		$CI->load->model('measure');
+		$CI->load->model('emailpreferences');
 
 		$emailBatch = new MY_Model("email_batch");
 		$emailBatch->delete_where(array("id >="      => "0"));
@@ -52,35 +53,21 @@ class Auto_email_test extends TestCase {
 		$CI->Watch->delete_where(array("watchId >="   => "0"));
 		$CI->User->delete_where(array("userId >="     => "0"));
 
-		$data = array(
-			'email'        => 'nestor@nestor.com',
-			'password'     => hash('sha256', 'azerty'),
-			'name'         => 'math',
-			'firstname'    => 'nay',
-			'timezone'     => -5,
-			'country'      => 'Canada',
-			'registerDate' => time(),
-			'lastLogin'    => time()
-		);
-		$CI->User->insert($data);
+		$CI->User->signup(	'nestor@nestor.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'ernest@ernest.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'ernest@ernest.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'anatole@anatole.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'anatole@anatole.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'phillibert@phillibert.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'phillibert@phillibert.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'hippolyte@hippolyte.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'hippolyte@hippolyte.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'raymond@raymond.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'raymond@raymond.com','azerty','math','nay','Canada');
+
+		$CI->User->signup(	'unsubscribe@unsubscribe.com','azerty','math','nay','Canada');
 
 		$tmp = $CI->User->select()->find_all();
-
 
 		self::$users['nestor'] = $tmp[0];
 		self::$users['ernest'] = $tmp[1];
@@ -88,6 +75,9 @@ class Auto_email_test extends TestCase {
 		self::$users['phillibert'] = $tmp[3];
 		self::$users['hippolyte'] = $tmp[4];
 		self::$users['raymond'] = $tmp[5];
+		self::$users['unsubscribe'] = $tmp[6];
+
+		$CI->emailpreferences->updateEmailPreferences(0, 0, 0, 0, 0, 0, 0, 0, self::$users['unsubscribe']->userId);
 	}
 
 	public function setUp() {
@@ -437,14 +427,14 @@ class Auto_email_test extends TestCase {
 	$this->assertEquals(sizeof($emails['measures']), 0);
  }
 
- public static function tearDownAfterClass() {
-	 $CI = &get_instance();
-	 $CI->load->model('User');
-	 $CI->load->model('Watch');
-	 $CI->load->model('Measure');
-	 $CI->watch->delete_where(array("watchId >=" => "0"));
-	 $CI->User->delete_where(array("userId >=" => "0"));
-	 $CI->Measure->delete_where(array("id >=" => "0"));
- }
+ // public static function tearDownAfterClass() {
+ //  $CI = &get_instance();
+ //  $CI->load->model('User');
+ //  $CI->load->model('Watch');
+ //  $CI->load->model('Measure');
+ //  $CI->watch->delete_where(array("watchId >=" => "0"));
+ //  $CI->User->delete_where(array("userId >=" => "0"));
+ //  $CI->Measure->delete_where(array("id >=" => "0"));
+ // }
 
 }
