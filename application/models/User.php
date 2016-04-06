@@ -152,8 +152,11 @@ class User extends ObservableModel {
 
 			$this->notify($event, $user);
 
+			$this->load->model("emailPreferences");
+			$this->emailPreferences->newUser($user->userId);
+
 			$res = true;
-		} 
+		}
 
 		return $res;
 	}
