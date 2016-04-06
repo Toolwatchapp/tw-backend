@@ -83,7 +83,9 @@ class Auto_email {
 		$this->CI->load->model("watch");
 		$this->CI->load->model("measure");
 		$this->CI->load->model("user");
+		$this->CI->load->model("emailpreferences");
 		$this->CI->load->helper("email_content");
+		$this->CI->load->helper("alphaid");
 		$this->CI->load->library("mcapi");
 		$this->CI->config->load('config');
 	}
@@ -400,6 +402,7 @@ class Auto_email {
 		$inactiveUsers = $this->CI
 			->user
 			->select()
+			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.comeback = 1')
 			->where('lastLogin <', $this->getBatchUpperBound($this->day*100))
 			->where('lastLogin >', $this->getBatchLowerBound($this->day*100))
 			->find_all();
@@ -411,7 +414,8 @@ class Auto_email {
 					'email/generic',
 					comebackContent(
 						$user->firstname,
-						$this->CI->measure->getMeasuresByUser($user->userId)
+						$this->CI->measure->getMeasuresByUser($user->userId),
+						alphaID($user->userId)
 					), true
 				);
 
@@ -447,6 +451,7 @@ class Auto_email {
 
 		$userWithoutWatch = $this->CI
 			->user
+			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.comeback = 1')
 			->select('user.userId, user.name, firstname, email, lastLogin')
 			->where('(select count(1) from watch where user.userId = watch.userId) =', 0)
 			->where('lastLogin <', $this->getBatchUpperBound($this->day))
@@ -457,7 +462,10 @@ class Auto_email {
 			foreach ($userWithoutWatch as $user) {
 
 				$emailcontent = $this->CI->load->view('email/generic',
-					addFirstWatchContent($user->firstname), true);
+					addFirstWatchContent(
+						$user->firstname,
+						alphaID($user->userId)
+					), true);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
@@ -493,6 +501,7 @@ class Auto_email {
 			->select('user.userId, watch.watchId, watch.brand, watch.name as watchName,
 			user.name as lastname, user.firstname, email')
 			->join('user', 'watch.userId = user.userId')
+			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.firstMeasure = 1')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
 			->where('watch.status', 1)
 			->where('creationDate < ', $this->getBatchUpperBound($this->day))
@@ -511,7 +520,8 @@ class Auto_email {
 					makeFirstMeasureContent(
 						$user->firstname,
 						$user,
-						$this->CI->measure->getMeasuresByUser($user[0]['userId'])
+						$this->CI->measure->getMeasuresByUser($user[0]['userId']),
+						alphaID($user[0]['userId'])
 					),
 					true
 				);
@@ -549,6 +559,7 @@ class Auto_email {
 		$userWithOneCompleteMeasureAndOneWatch = $this->CI
 			->user
 			->select('user.userId, user.name, firstname, email')
+			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.secondWatch = 1')
 			->where('(select count(1) from watch where user.userId = watch.userId) = ', 1)
 			->where('(select count(1) from measure
 					join watch on measure.watchId = watch.watchId
@@ -573,7 +584,8 @@ class Auto_email {
 					addSecondWatchContent(
 						$user->firstname,
 						$watch->brand . " " . $watch->name,
-						$this->CI->measure->getMeasuresByUser($user->userId)
+						$this->CI->measure->getMeasuresByUser($user->userId),
+						alphaID($user->userId)
 					),
 					true
 				);
@@ -615,6 +627,7 @@ class Auto_email {
 								user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
+			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.dayAccuracy = 1')
 			->where('statusId', 1)
 			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day))
 			->where('measureReferenceTime >', $this->getBatchLowerBound($this->day))
@@ -632,7 +645,8 @@ class Auto_email {
 						checkAccuracyContent(
 							$user[0]['firstname'],
 							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
 						),
 				true);
 
@@ -672,6 +686,7 @@ class Auto_email {
 			measure.*, watch.name as watchName, user.name as lastname, user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
+			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.weekAccuracy = 1')
 			->where('statusId', 1)
 			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day*7))
 			->where('measureReferenceTime >', $this->getBatchLowerBound($this->day*7))
@@ -689,7 +704,8 @@ class Auto_email {
 						oneWeekAccuracyContent(
 							$user[0]['firstname'],
 							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
 						),
 				true);
 
@@ -729,6 +745,7 @@ class Auto_email {
 			user.userId, user.name as lastname, user.firstname, email, measure.*')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('user', 'watch.userId = user.userId')
+			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.newMeasure = 1')
 			->where('statusId', 2)
 			->where('accuracyReferenceTime <', $this->getBatchUpperBound($this->day*30))
 			->where('accuracyReferenceTime >', $this->getBatchLowerBound($this->day*30))
@@ -747,7 +764,8 @@ class Auto_email {
 						oneMonthAccuracyContent(
 							$user[0]['firstname'],
 							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
 						),
 				true);
 
@@ -914,41 +932,40 @@ class Auto_email {
 	 */
 	private function newResult($measure) {
 
-		$attachments = array();
+		if($this->CI->emailpreferences->select('result')->find_by("userId", $measure->userId) == 1){
+
+			$attachments = array();
 
 
-		array_push($attachments, array(
-				'type'    => 'text/calendar',
-				'name'    => 'Check my watch accuracy.ics',
-				'content' =>  $this->createGoogleEvent($measure)
-		));
+			array_push($attachments, array(
+					'type'    => 'text/calendar',
+					'name'    => 'Check my watch accuracy.ics',
+					'content' =>  $this->createGoogleEvent($measure)
+			));
 
 
-		$emailcontent = $this->CI->load->view(
-					'email/generic',
-					watchResultContent(
-						$measure->firstname,
-						$measure->brand,
-						$measure->model,
-						$measure->accuracy,
-						$this->CI->measure->getMeasuresByUser($measure->userId)
-					),
-					true
-		);
+			$emailcontent = $this->CI->load->view(
+						'email/generic',
+						watchResultContent(
+							$measure->firstname,
+							$measure->brand,
+							$measure->model,
+							$measure->accuracy,
+							$this->CI->measure->getMeasuresByUser($measure->userId),
+							alphaID($measure->userId)
+						),
+						true
+			);
 
-		$this->sendMandrillEmail(
-			'The result of your watch\'s accuracy ! ⌚',
-			$this->CI->load->view('email/generic', $emailcontent, true),
-			$measure->name.' '.$measure->firstname,
-			$measure->email,
-			'result_email',
-			$this->sendAtString(time()),
-			$attachments
-		);
-
-		// We don't store these ones as we don't want
-		// to cancel them, ever.
-		return true;
+			$this->sendMandrillEmail(
+				'The result of your watch\'s accuracy ! ⌚',
+				$this->CI->load->view('email/generic', $emailcontent, true),
+				$measure->name.' '.$measure->firstname,
+				$measure->email,
+				'result_email',
+				$this->sendAtString(time()),
+				$attachments
+			);
+		}
 	}
-
 }

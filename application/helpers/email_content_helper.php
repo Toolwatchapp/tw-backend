@@ -4,7 +4,7 @@
  * util function to create the content emails
  * @param String $firstName of the recipient
  */
-function addFirstWatchContent($firstName){
+function addFirstWatchContent($firstName, $alphaId){
   return array(
         'title' => 'Hey '.$firstName.'!',
         'content' =>
@@ -14,7 +14,8 @@ function addFirstWatchContent($firstName){
           You can now start to measure the accuracy of your mechanical watches.
           Is your watch really accurate or should it be serviced?
           Let\'s start by adding your first watch and find out
-          <a href="https://toolwatch.io/measures">now</a>!'
+          <a href="https://toolwatch.io/measures">now</a>!',
+          'alphaId' => $alphaId
     );
 }
 
@@ -22,7 +23,7 @@ function addFirstWatchContent($firstName){
  * util function to create the content emails
  * @param String $firstName of the recipient
  */
-function makeFirstMeasureContent($firstName, $watchesToCheck, $watches){
+function makeFirstMeasureContent($firstName, $watchesToCheck, $watches, $alphaId){
 
   $content = 'You\'ve added the following watch(es) on
   <a href="https://toolwatch.io">Toolwatch.io</a> : <ul>';
@@ -43,7 +44,8 @@ function makeFirstMeasureContent($firstName, $watchesToCheck, $watches){
 
           Are your watches really accurate or should they be serviced?
           Find out now!',
-          'summary' => $watches
+          'summary' => $watches,
+          'alphaId' => $alphaId
     );
 }
 
@@ -52,7 +54,7 @@ function makeFirstMeasureContent($firstName, $watchesToCheck, $watches){
  * @param String $firstName of the recipient
  * @param String $firstWatchName
  */
-function addSecondWatchContent($firstName, $firstWatchName, $watches){
+function addSecondWatchContent($firstName, $firstWatchName, $watches, $alphaId){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
@@ -66,7 +68,8 @@ function addSecondWatchContent($firstName, $firstWatchName, $watches){
       <a href="https://www.facebook.com/sharer/sharer.php?u=www.toolwatch.io">
       spreading the word about Toolwatch on social medias</a>
       (it works no matter how many watch you own!).',
-      'summary' => $watches
+      'summary' => $watches,
+      'alphaId' => $alphaId
   );
 }
 
@@ -74,7 +77,7 @@ function addSecondWatchContent($firstName, $firstWatchName, $watches){
  * util function to create the content emails
  * @param String $firstName of the recipient
  */
-function comebackContent($firstName, $watches){
+function comebackContent($firstName, $watches, $alphaId){
   return array(
     'title' => 'Hey '.$firstName.'!',
     'content' =>
@@ -87,7 +90,8 @@ function comebackContent($firstName, $watches){
       <a href="https://toolwatch.io/measures">Let\'s start a new measure</a>
       and do not hesitate to also say hi on
       <a href="https://twitter.com/toolwatchapp">Twitter</a>!',
-      'summary' => $watches
+      'summary' => $watches,
+      'alphaId' => $alphaId
   );
 }
 
@@ -96,7 +100,7 @@ function comebackContent($firstName, $watches){
  * @param String $firstName of the recipient
  * @param Array $watches represents the control panel of given user
  */
-function checkAccuracyContent($firstName, $watchesToCheck, $watches){
+function checkAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId){
 
   $content = 'One day ago, you\'ve synchronized the following watch(es): <ul>';
 
@@ -117,7 +121,8 @@ function checkAccuracyContent($firstName, $watchesToCheck, $watches){
       <br>
       See you there !
       <br>',
-    'summary' => $watches
+    'summary' => $watches,
+    'alphaId' => $alphaId
   );
 }
 
@@ -126,7 +131,7 @@ function checkAccuracyContent($firstName, $watchesToCheck, $watches){
  * @param String $firstName of the recipient
  * @param Array $watches represents the control panel of given user
  */
-function oneWeekAccuracyContent($firstName, $watchesToCheck, $watches){
+function oneWeekAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId){
 
 
   $content = 'One week ago, you\'ve synchronized the following watch(es): <ul>';
@@ -147,11 +152,12 @@ function oneWeekAccuracyContent($firstName, $watchesToCheck, $watches){
       <br>
       See you there !
       <br>',
-    'summary' => $watches
+    'summary' => $watches,
+    'alphaId' => $alphaId
   );
 }
 
-function oneMonthAccuracyContent($firstName, $watchesToCheck, $watches){
+function oneMonthAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId){
 
   $content = 'Last month you measured the following watch(es): <ul>';
 
@@ -178,12 +184,13 @@ function oneMonthAccuracyContent($firstName, $watchesToCheck, $watches){
       <a href="https://www.instagram.com/Toolwatchapp/">Instagram</a>
       using our <a href="https://twitter.com/hashtag/toolwatchapp?f=tweets&src=hash">#ToolwatchApp</a> hashtag and join us
       spreading the love for mechanical timepieces!',
-      'summary' => $watches
+      'summary' => $watches,
+      'alphaId' => $alphaId
     );
 }
 
 function watchResultContent($firstname, $brand, $model,
-  $accuracy, $watches){
+  $accuracy, $watches, $alphaId){
   return array(
     'title' => 'Hurray '.$firstname.'!',
     'content' =>
@@ -206,7 +213,8 @@ function watchResultContent($firstname, $brand, $model,
       Happy toolwatching !
       <br />
       The Toolwatch Team',
-      'summary' => $watches
+      'summary' => $watches,
+      'alphaId' => $alphaId
     );
 }
 
