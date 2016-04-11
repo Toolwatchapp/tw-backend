@@ -2,6 +2,8 @@
 
 class Hooks_test extends TestCase {
 
+	private static $userId;
+
 	public static function setUpBeforeClass() {
 		$CI = &get_instance();
 		$CI->load->model('User');
@@ -22,8 +24,69 @@ class Hooks_test extends TestCase {
 			'Canada'
 		);
 
-		$emailBatch = new MY_Model("email_batch");
- 	 	$emailBatch->insert(array("time"=>0, "amount"=>0));
+		$CI->User->login('mathieu@gmail.com', 'azerty');
+
+		self::$userId = $CI->session->userdata('userId');
+
+		$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'brand',
+			'name',
+			2015,
+			28,
+			014
+		);
+
+		$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'branda',
+			'nama',
+			2015,
+			28,
+			014
+		);
+
+		$CI->Measure->addBaseMesure(
+			$watchId,
+			time(),
+			time()
+		);
+
+		$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'branda',
+			'nama',
+			2015,
+			28,
+			014
+		);
+
+		$CI->Measure->addBaseMesure(
+			$watchId,
+			time()-12*60*60,
+			time()-12*60*60
+		);
+
+		$watchId = $CI->Watch->addWatch(
+			self::$userId,
+			'branda',
+			'nama',
+			2015,
+			28,
+			014
+		);
+
+		$measureId = $CI->Measure->addBaseMesure(
+			$watchId,
+			time()-12*60*60,
+			time()-12*60*60
+		);
+
+		$CI->Measure->addAccuracyMesure(
+			$measureId,
+			time()-12*60*60,
+			time()-12*61*61
+		);
 
 	}
 
@@ -51,7 +114,7 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('0. ', $output);
+		$this->assertContains('3. ', $output);
 	}
 
 	public function test_indexWatch() {
@@ -64,7 +127,7 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('0. ', $output);
+		$this->assertContains('4. ', $output);
 	}
 
 	public function test_indexWhois() {
@@ -77,7 +140,20 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('Id ', $output);
+		$this->assertContains('ID', $output);
+	}
+
+	public function test_indexWhoisSlackVersion() {
+		$output = $this->request(
+			'POST',
+			['Hooks', 'index'],
+			[
+				'token' => 'bPiAi9XNEa3p9FF1lQnZfuUY',
+				'text'  => 'Jack whois <mailto:mathieu@gmail.com|mathieu@gmail.com>'
+			]
+		);
+
+		$this->assertContains('ID', $output);
 	}
 
 	public function test_indexWhoisFail(){

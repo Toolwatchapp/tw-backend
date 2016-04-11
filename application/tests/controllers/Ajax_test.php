@@ -15,6 +15,18 @@ class Ajax_test extends TestCase {
 		$CI->Watch->delete_where(array("watchId >=" => "0"));
 	}
 
+	public function test_reportClientError(){
+		$output = $this->request(
+			'POST',
+			['Ajax', 'reportClientError'],
+			[
+				'error' => 'qzdqzd'
+			]
+		);
+
+		$this->assertResponseCode(200);
+	}
+
 	public function test_checkEmail() {
 		$output = $this->request(
 			'POST',
@@ -77,6 +89,19 @@ class Ajax_test extends TestCase {
 			[
 				'email'    => 'mathieu@gmail.com',
 				'password' => 'password2'
+			]
+		);
+
+		$this->assertContains('{"success":false}', $output);
+	}
+
+	public function test_loginFailFb() {
+		$output = $this->request(
+			'POST',
+			['Ajax', 'login'],
+			[
+				'email'    => 'mathieu@gmail.com',
+				'password' => 'FB_sqdq'
 			]
 		);
 

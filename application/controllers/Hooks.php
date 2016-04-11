@@ -73,6 +73,8 @@ class Hooks extends CI_Controller {
 			$activeUser 		= new MY_MODEL("active_user");
 
 
+			log_message("info", print_r($text, true));
+
 			if (startsWith($text, "Jack nbusers")) {
 
 				$activeUserCount = $activeUser->count_all();
@@ -88,22 +90,64 @@ class Hooks extends CI_Controller {
 
 				$result["text"] = $this->watch->count_all().". ".$quote;
 
-			//FIXME: Doesn't work in production. Add tests
 			} else if (startsWith($text, "Jack whois")) {
 
-				$user = $activeUser
-				->find_by('email', str_replace("Jack whois ", "", $text));
 
-				if ($user) {
+				if(strpos($text, "<mailto:") !== false){
 
+					log_message("info", "Incoming from slack");
 
-					$result["text"] = "Id ".$user->userId.", Name ".$user->name.
-					" ,Firstname ".$user->firstname." ,Register ".$user->register.
-					" ,LastLogin ".$user->lastLogin." ,Watches ".$user->watches.
-					" ,Measures ".$user->measures;
+					$text = substr($text, strpos($text, "|")+1);
+					$text = str_replace(">", "", $text);
+				}
 
+				$text = str_replace("Jack whois ", "", $text);
+
+				log_message("info", "Computed email " . print_r($text, true));
+				$user = $this->user->select(" user.userId, user.name, firstname,
+                    DATE_FORMAT(FROM_UNIXTIME(`registerDate`), '%e %b %Y') AS 'register',
+                    DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
+				->find_by('email', $text);
+
+				log_message("info", print_r($this->db->last_query(), true));
+				log_message("info", print_r($user, true));
+
+				if (is_object($user)) {
+
+					$measures = $this->measure->getMeasuresByUser($user->userId);
+
+					$result["text"] = "ID;Name;Firstname;register;lastLogin \r\n".
+					"```". $user->userId . ";" . $user->name . ";" . $user->firstname .
+					 ";" . $user->register . ";" . $user->lastLogin . "```\r\n"
+					 . "Dashboard\r\n"
+					 . "ID;WatchName;WatchBrand;Measure 1 (UTC);Measure 2 (UTC);Accuracy;status\r\n";
+
+						if($measures){
+							foreach ($measures as $measure) {
+							 $result["text"] .= '```'.$measure->id . ";" . $measure->name
+							 . ";" . $measure->brand
+							 . ";" . date('Y-m-d H:i:s', $measure->measureReferenceTime)
+							 . ";" . date('Y-m-d H:i:s', $measure->accuracyReferenceTime);
+
+							 if($measure->statusId == 1.5){
+								 $result["text"] .=  ";" . "In ".$measure->accuracy." hours";
+								 $result["text"] .=  ";" . "Waiting accuracy";
+							 }else if($measure->statusId == 1){
+								 $result["text"] .=  ";" . "TBD";
+								 $result["text"] .=  ";" . "Waiting accuracy";
+							 }else if($measure->statusId == 2){
+								 $result["text"] .=  ";" .$measure->accuracy;
+								 $result["text"] .=  ";" . "Done";
+							 }else{
+								 $result["text"] .=  ";" . "TBD";
+								 $result["text"] .=  ";" . "Never measured";
+							 }
+							 $result["text"] .= "```\r\n";
+						 }
+
+						}
 				} else {
-					$result["text"] = "User not found. ".$this->db->last_query();
+					$result["text"] = "User not found. ".$quote;
 				}
 
 			} else if (startsWith($text, "Jack help")) {

@@ -26,7 +26,6 @@ class Users_api_test extends TestCase {
 				'password'    => 'password',
 				'name'        => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country'
 			]
 		);
@@ -44,7 +43,6 @@ class Users_api_test extends TestCase {
 				'password'    => 'password',
 				'name'        => 'name',
 				'firstname'   => 'firstname',
-				'timezone'    => 'timezone',
 				'country'     => 'country'
 			]
     );

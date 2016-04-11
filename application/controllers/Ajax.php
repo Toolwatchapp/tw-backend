@@ -25,6 +25,16 @@ class Ajax extends MY_Controller {
 		date_default_timezone_set('Europe/Paris');
 	}
 
+	function reportClientError(){
+		if($this->expectsPost(array("error"))){
+
+			log_message("error", $this->error . "\r\n" .
+				"USER_ID:".($this->session->userdata('userId')?
+				$this->session->userdata('userId'):0)
+			);
+		}
+	}
+
 	/**
 	 * Email password login method
 	 *
@@ -81,7 +91,7 @@ class Ajax extends MY_Controller {
 		if ($this->expectsPost(array('email'))) {
 			$result = array();
 
-			if (!$this->user->checkUserEmail($this->input->post('email'))) {
+			if (!$this->user->checkUserEmail($this->email)) {
 				$result['success'] = true;
 			} else {
 				$result['success'] = false;
@@ -120,16 +130,9 @@ class Ajax extends MY_Controller {
 	function facebookSignup() {
 		$result['success'] = false;
 
-		if ($this->expectsPost(array('email', 'id', 'last_name',
-			'firstname', 'country'))) {
+		if ($this->expectsPost(array('email', 'last_name',
+			'firstname'))) {
 
-			/**
-			 * Getting all the posts
-			 */
-			$email     = $this->input->post('email');
-			$name      = $this->input->post('last_name');
-			$firstname = $this->input->post('firstname');
-			$country   = $this->input->post('country');
 			/**
 			 * For fb user, we don't have their fb password (obviously).
 			 * Yet, having a password is mandatory in tw and I don't feel
@@ -143,7 +146,7 @@ class Ajax extends MY_Controller {
 			$password  = "FB_"+$this->input->post('id');
 
 			// If the email doesn't exists yet
-			if (!$this->user->checkUserEmail($email)) {
+			if (!$this->user->checkUserEmail($this->email)) {
 
 				/**
 				 * Signup attempt
@@ -151,16 +154,16 @@ class Ajax extends MY_Controller {
 				 * remove the if, if yes, provide a else with a dedicated response
 				 * code.
 				 */
-				if ($this->user->signup($email, $password, $name, $firstname, $country)) {
+				if ($this->user->signup($this->email, $password, $this->firstname, $this->last_name, "")) {
 
 					$result['success'] = "signup";
-					$this->user->login($email, $password);
+					$this->user->login($this->email, $password);
 
 				}
 
 			// The email was already in the db, so we try to log the user
 			// using a potentially existing account
-			} else if ($this->user->login($email, $password)) {
+			} else if ($this->user->login($this->email, $password)) {
 
 				$result['success'] = "signin";
 
@@ -195,24 +198,18 @@ class Ajax extends MY_Controller {
 
 			$result = array();
 
-			$email       = $this->input->post('email');
-			$password    = $this->input->post('password');
-			$name        = $this->input->post('name');
-			$firstname   = $this->input->post('firstname');
-			$country     = $this->input->post('country');
-
 			//If the email isn't already in used
-			if (!$this->user->checkUserEmail($email)) {
+			if (!$this->user->checkUserEmail($this->email)) {
 
 				// Create the account
 				if ($this->user->signup(
-						$email, $password, $name, $firstname,
-						$country)) {
+						$this->email, $this->password, $this->name, $this->firstname,
+						$this->country)) {
 
 					$result['success'] = true;
 
 					//Log the user will create his session and so on
-					$this->user->login($email, $password);
+					$this->user->login($this->email, $this->password);
 
 				}
 
@@ -236,14 +233,12 @@ class Ajax extends MY_Controller {
 
 		if ($this->expectsPost(array('email'))) {
 
-			$email = $this->input->post('email');
-
 			$result = array();
 
 			//We don't send the token over the network, we just
 			//make sure that a token has been generated.
 			//The token will be transfered in an email.
-			$resetToken = $this->user->askResetPassword($email);
+			$resetToken = $this->user->askResetPassword($this->email);
 
 			if ($resetToken) {
 
@@ -271,12 +266,9 @@ class Ajax extends MY_Controller {
 
 			$result = array();
 
-			$resetToken = $this->input->post('resetToken');
-			$password   = $this->input->post('password');
-
 			//Attempting to reset the password given the token and the
 			//new password
-			if ($this->user->resetPassword($resetToken, $password)) {
+			if ($this->user->resetPassword($this->resetToken, $this->password)) {
 
 				$result['success'] = true;
 			} else {
@@ -304,17 +296,15 @@ class Ajax extends MY_Controller {
 
 			$result['success'] = false;
 
-			$name    = $this->input->post('name');
-			$email   = $this->input->post('email');
-			$message = $this->input->post('message');
+			$tags 	 = "contact";
 
 			$this->load->library('mandrill');
 
 			$messageMandrill = array(
-				'html'       => $message,
-				'subject'    => $subject,
-				'from_email' => $email,
-				'from_name'  => $name,
+				'html'       => $this->message,
+				'subject'    => "Contact information",
+				'from_email' => $this->email,
+				'from_name'  => $this->name,
 				'to'         => array(
 					array(
 						'email' => 'marc@toolwatch.io',
@@ -323,7 +313,7 @@ class Ajax extends MY_Controller {
 					)
 				),
 				'headers'   => array(
-					'Reply-To' => $email,
+					'Reply-To' => $this->email,
 				),
 				'important'                 => false,
 				'track_opens'               => true,
@@ -341,9 +331,9 @@ class Ajax extends MY_Controller {
 
 			$scheduleTime = time();
 
-			$send_at =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
-			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)-1).':'
-			.(date('i', $scheduleTime)).date(':s', $scheduleTime);
+			$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
+			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
+			.(date('i', $scheduleTime)).':'.(date('s', $scheduleTime));
 
 			$mandrillResponse =  $this->mandrill->messages->send($messageMandrill, $async, $ip_pool, $send_at);
 			log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
@@ -351,7 +341,7 @@ class Ajax extends MY_Controller {
 
 			if ($mandrillResponse[0]['status'] === 'sent') {
 				$result['success'] = true;
-			} 
+			}
 
 			echo json_encode($result);
 		}

@@ -108,18 +108,6 @@ class Measures_test extends TestCase {
 		$this->assertContains("New measure", $output);
 	}
 
-	public function test_indexDeleteMeasures(){
-		$output = $this->request(
-			'POST',
-			['Measures', 'delete_measure'],
-			[
-				'deleteMeasures' => 28
-			]
-		);
-
-		$this->assertContains('Measures successfully deleted!', $output);
-	}
-
 	public function test_indexEditWatch(){
 		$CI = &get_instance();
 		$CI->load->model('Watch');
@@ -173,7 +161,7 @@ class Measures_test extends TestCase {
 
 	public function test_newMeasure(){
 		$output = $this->request('GET', ['Measures', 'new_measure']);
-		$this->assertContains('<h1>New measure</h1>', $output);
+		$this->assertContains('<h1>New measure', $output);
 	}
 
 	public function test_getAccuracyFail(){
@@ -191,17 +179,7 @@ class Measures_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('<h1 id="mainTitle">Check the accuracy</h1>', $output);
-	}
-
-	public function test_getReferenceTime() {
-		$CI = &get_instance();
-		$CI->load->model('User');
-		$CI->load->library('Session');
-
-		$output = $this->request('GET', ['Measures', 'getReferenceTime']);
-
-		$this->assertEquals($CI->session->userdata('referenceTime'), time());
+		$this->assertContains('<h1 id="mainTitle">Check the accuracy', $output);
 	}
 
 	public function test_baseMesure() {
@@ -227,8 +205,8 @@ class Measures_test extends TestCase {
 			['Measures', 'baseMeasure'],
 			[
 				'watchId'      => self::$watchId,
-				'userTime'     => '10:13:12',
-				'userTimezone' => '5'
+				'referenceTimestamp'     => microtime(),
+				'userTimestamp' => microtime()
 			]
 		);
 
@@ -242,15 +220,13 @@ class Measures_test extends TestCase {
 
 		$measure = $CI->Measure->find_by('watchId', self::$watchId);
 
-		$CI->session->set_userdata('referenceTime', time());
-
 		$output = $this->request(
 			'POST',
 			['Measures', 'accuracyMeasure'],
 			[
 				'measureId'    => $measure->id,
-				'userTime'     => '10:16:12',
-				'userTimezone' => '5'
+				'referenceTimestamp' => microtime(),
+				'userTimestamp'     => microtime()
 			]
 		);
 
@@ -259,6 +235,27 @@ class Measures_test extends TestCase {
 		$this->assertContains('true', $output);
 
 	}
+
+	public function test_indexDeleteMeasures(){
+
+		$CI = &get_instance();
+		$CI->load->model("User");
+		$CI->load->model('Measure');
+		$CI->User->login('mathieu@gmail.com', 'azerty');
+
+		$measure = $CI->Measure->find_by('watchId', self::$watchId);
+
+		$output = $this->request(
+			'POST',
+			['Measures', 'delete_measure'],
+			[
+				'deleteMeasures' => $measure->id
+			]
+		);
+
+		$this->assertContains('Measures successfully deleted!', $output);
+	}
+
 
 
 }
