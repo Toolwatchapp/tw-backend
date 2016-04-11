@@ -23,7 +23,6 @@ $( document ).ready(function() {
 
   });
 
-  initCounDown();
   initSize();
 
   $('video,audio').mediaelementplayer({
@@ -31,28 +30,10 @@ $( document ).ready(function() {
       features: []
   });
 
-  $( "#demo-cta" ).click(function() {
-
-      var result = delta;
-
-      $("#demo-pointer").hide();
-      $("#demo-third-step").hide();
-      $("#demo-fourth-step").fadeToggle();
-      $(".watch-accuracy").html(result.toFixed(1));
-    });
-
+  $(".watch-accuracy").html(delta.toFixed(1));
+  $("#demo-second-step").show();
 
 });
-
-function initCounDown(){
-  $("#demo-second-step").show();
-  $("#demo-third-step").hide();
-  $("#demo-fourth-step").hide();
-  $("#demo-sync-time").html(5);
-  $("#inputUserTime").val("");
-  $("#demo-pointer").removeAttr('style');
-  timeouts.push(setTimeout(countDownDisplay, 1000));
-}
 
 function initSize(){
 
@@ -77,81 +58,4 @@ function initSize(){
         marginTop: "-=300"
     }, 2000);
 
-}
-
-function countDownDisplay(){
-    var countdown = $("#demo-sync-time").html();
-
-    $("#demo-sync-time").html(countdown - 1);
-    if(countdown > 1){
-        timeouts.push(setTimeout(countDownDisplay, 1000));
-    }else{
-        d = new Date(new Date().getTime());
-        similateInput();
-    }
-}
-
-function similateInput(){
-    $("#demo-second-step").hide();
-    $("#demo-third-step").fadeToggle("slow", function (){
-
-        var leftDelta = $("#demo-pointer").position().left
-            - $("#inputUserTime").position().left;
-
-        var topDelta = $("#demo-pointer").position().top
-            - $("#inputUserTime").position().top - $("#inputUserTime").height() /2;
-
-        $( "#demo-pointer" ).animate({
-            marginTop: "-="+topDelta,
-            marginLeft: "-="+leftDelta
-        }, 2000, function(){
-
-            var seconds = (d.getSeconds() + Math.floor(Math.abs(delta)));
-            if(seconds <= 9){
-                seconds = "0"+seconds;
-            }
-
-            var hours = d.getHours();
-
-            if(hours <= 9){
-                hours = "0"+seconds;
-            }
-
-            var minutes = d.getMinutes();
-
-            if(minutes <= 9){
-                minutes = "0"+minutes;
-            }
-
-            var date = hours + ':' + minutes  + ':' + seconds;
-            writeToInput(date, 0);
-        });
-    });
-}
-
-function writeToInput(text, i){
-
-    if(i < text.length){
-        $("#inputUserTime").val($("#inputUserTime").val() + text.charAt(i));
-        i = i +1;
-        timeouts.push(setTimeout(writeToInput, Math.round(Math.random() * (300 - 100) + 100), text, i));
-    }else{
-        clickCTA();
-    }
-}
-
-function clickCTA(){
-    var leftDelta = $("#demo-pointer").position().left - $("#demo-cta").position().left + $("#demo-cta").width() * 2 + 30;
-
-    var topDelta = $("#demo-pointer").position().top - $("#demo-cta").position().top + $("#demo-cta").height() * 3;
-
-    $( "#demo-pointer" ).animate({
-                marginTop: "+="+topDelta,
-                marginLeft: "+="+leftDelta
-    }, 2000, function(){
-        $("#demo-cta").click();
-    });
-
-    timeouts = [];
-    setTimeout(initCounDown, 10000);
 }

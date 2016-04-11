@@ -6,12 +6,12 @@
 
 <div class="home-picto">
     <div id="demo-screen" class="container container-fluid">
-        
-        <?php 
-            $this->load->view('home/demo'); 
-            $this->load->view('home/slogan'); 
+
+        <?php
+            $this->load->view('home/demo');
+            $this->load->view('home/slogan');
         ?>
-         
+
     </div>
 </div>
 

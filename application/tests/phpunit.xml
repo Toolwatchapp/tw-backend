@@ -18,7 +18,6 @@
 			<directory suffix=".php">../models</directory>
 			<directory suffix=".php">../libraries</directory>
 			<directory suffix=".php">../helpers</directory>
-			<directory suffix=".php">../hooks</directory>
 			<exclude>
 				<file>../libraries/__.php</file>
 				<file>../libraries/Mcapi.php</file>
@@ -35,4 +34,7 @@
 		<log type="coverage-clover" target="build/logs/clover.xml"/>
 		<log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="true"/>
 	</logging>
+	<php>
+		<server name='HTTP_HOST' value='http://phpunit'/>
+	</php>
 </phpunit>

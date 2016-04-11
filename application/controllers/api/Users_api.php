@@ -81,16 +81,13 @@ class Users_api extends REST_Controller {
       $password    = $this->post('password');
       $name        = $this->post('name');
       $firstname   = $this->post('firstname');
-      $timezone    = $this->post('timezone');
       $country     = $this->post('country');
 
       //If the email isn't already in used
 			if (!$this->user->checkUserEmail($email)) {
 
 				// Create the account
-				if ($this->user->signup(
-						$email, $password, $name, $firstname,
-						$timezone, $country)) {
+				if ($this->user->signup($email, $password, $name, $firstname, $country)) {
 
 					$this->loginAndAuth($email, $password);
 				}

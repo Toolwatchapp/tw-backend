@@ -1,27 +1,27 @@
 <div class="container container-fluid first about">
-    <div class="row">
+    <div style="margin-top:70px" class="row">
         <div class="col-md-8 col-md-offset-2"><center><h1>About</h1></center><span class="line black"></span></div>
     </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
                 <strong>About Toolwatch</strong>
                 <br>
-                Toolwatch is the most convenient and easy way to measure the accuracy of your mechanical watch. 
+                Toolwatch is the most convenient and easy way to measure the accuracy of your mechanical watch.
                 <br>
-                Accuracy has always been the holy grail of watchmaking. 
-                Throughout the ages, watchmakers have been competing for building the most accurate and precise watch movement but the consumers do not have the tools to appreciate that effort. 
+                Accuracy has always been the holy grail of watchmaking.
+                Throughout the ages, watchmakers have been competing for building the most accurate and precise watch movement but the consumers do not have the tools to appreciate that effort.
                 Now, with Toolwatch, every watch enthusiast is able to keep an eye on the accuracy of his watch(es)!<br><br>
         </div>
-    </div> 
+    </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
                 <strong>Why using Toolwatch?</strong>
                 <br>
-                Professional tools used by watchmakers are expensive (Toolwatch is free!) and heavy (Toolwatch is light!) and measure the watch in different positions 
-                (up, down, on a side etc) that do not reflect the actual way the watch is worn by its possessor. With Toolwatch, the accuracy is measured following your lifestyle. 
+                Professional tools used by watchmakers are expensive (Toolwatch is free!) and heavy (Toolwatch is light!) and measure the watch in different positions
+                (up, down, on a side etc) that do not reflect the actual way the watch is worn by its possessor. With Toolwatch, the accuracy is measured following your lifestyle.
                 Unlike measuring by yourself, Toolwatch calculates for you the accuracy of your watch anytime and anywhere in an easy to use and reliable way.<br><br>
         </div>
-    </div> 
+    </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
                 <strong>The Toolwatch Team </strong><br>
@@ -59,6 +59,27 @@
                 <div class="col-md-8 infos">
                     <p  style="margin: 5px;">Mathieu, the last but not least of the adventure, is the master of development. He is the type of man wearing at the same time both a smart and a mechanical watch. However he is still wondering which one is the most useful..(we haven’t told him yet!). Trying to survive in Canada, he has now reached higher latitude to quietly develop his passion for <s>computer</s> watches!</p>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2"><center><h1>Hall of fame</h1></center><span class="line black"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+                <strong>About the hall of fame</strong>
+                <br>
+                The toolwatch hall of fame lists users that helped us build a better service for watch aficionados around the world by reporting bug. If you see something that seems out of place, don't hesitate to contact us using our online chat.
+                <br>
+        </div>
+    </div>
+    <div class="row pres">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="row">
+              <ul>
+                <li>Jeff Jackson</li>
+                <li>Ahmed Adel Abdelfattah</li>
+              </ul>
             </div>
         </div>
     </div>

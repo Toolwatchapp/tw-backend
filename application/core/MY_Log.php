@@ -72,7 +72,27 @@ class MY_Log {
             return FALSE;
         }
 
+
         file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
+
+        if($level === 'ERROR'){
+
+          $data = json_encode(["text"=>$_SERVER['HTTP_HOST']."\r\n".$msg]);
+
+          $ch = curl_init(getenv("SLACK_EXCEPTION"));
+
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+              'Content-Type: application/json',
+              'Content-Length: '.strlen($data))
+          );
+
+          $result = curl_exec($ch);
+
+          log_message("info", "slack exception:".print_r($result, true));
+        }
 
         return TRUE;
     }

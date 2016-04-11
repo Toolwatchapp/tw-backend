@@ -150,9 +150,16 @@ class Auto_email {
 
 		$this->lastBatchDate = $this->findLastBatchDate();
 
+		$emailBatchId = $this->emailBatchModel->insert(
+			array("time"=>$this->time,
+			"amount" => -1
+			)
+		);
+
 		//Apply all the rules for emails
 		//The emails arrays are sent by references and
 		//updated in the different methods
+
 		$this->inactiveUser($emailsUserSent);
 		$this->userWithoutWatch($emailsUserSent);
 		$this->userWithWatchWithoutMeasure($emailsWatchSent);
@@ -160,6 +167,7 @@ class Auto_email {
 		$this->checkAccuracy($emailsMeasureSent);
 		$this->checkAccuracyOneWeek($emailsMeasureSent);
 		$this->startANewMeasure($emailsWatchSent);
+
 
 		if(ENVIRONMENT === "development" ||
 			 ENVIRONMENT === "testing"){
@@ -172,14 +180,12 @@ class Auto_email {
 		}
 
 
-		$this->emailBatchModel->insert(
-			array("time"=>$this->time,
-			"amount" => sizeof($emailsMeasureSent)
-				+ sizeof($emailsWatchSent)
-				+ sizeof($emailsMeasureSent)
-			)
+		$this->emailBatchModel->update($emailBatchId,
+			["amount"=>	sizeof($emailsMeasureSent)
+					+ sizeof($emailsWatchSent)
+					+ sizeof($emailsMeasureSent)
+			]
 		);
-
 
 		return array(
 			'users' 	 => $emailsUserSent,
@@ -310,9 +316,14 @@ class Auto_email {
 		//sent right away.
 		$scheduleTime = $scheduleTime-48*60*60;
 
+		log_message('info', 'Date ' . print_r($scheduleTime, true));
+
+
 		$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
 		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
-		.(date('i', $scheduleTime)).date(':s', $scheduleTime);
+		.(date('i', $scheduleTime)).':'.(date('s', $scheduleTime));
+
+		log_message('info', 'Date ' . print_r($returnValue, true));
 
 		return $returnValue;
 	}
@@ -485,6 +496,7 @@ class Auto_email {
 			active_user.name as lastname, firstname, email')
 			->join('active_user', 'watch.userId = active_user.userId')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
+			->where('watch.status', 1)
 			->where('creationDate < ', $this->getBatchUpperBound($this->day))
 			->where('creationDate > ', $this->getBatchLowerBound($this->day))
 			->as_array()
@@ -748,11 +760,11 @@ class Auto_email {
 					'watchId',
 					$emailcontent,
 					$this->sendMandrillEmail(
-						'Let’s check your watch accuracy! ⌚',
+						'Let’s start a new measure! ⌚',
 						$emailcontent,
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
-						'check_accuracy_email',
+						'start_new_measure_email',
 						$this->sendAtString($this->time)
 					)
 				);

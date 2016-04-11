@@ -115,6 +115,7 @@ class Measure extends ObservableModel {
 					//duplicated by the group by (about the watch)
 					//and the measure that are over $limit
 					$measures = $this->__->map($measures, function($measure, $row){
+						
 						if($row >= $this->limit){
 							return null;
 						}else{
@@ -177,7 +178,26 @@ class Measure extends ObservableModel {
 		{
 			$userDelta = $watchMeasure->accuracyUserTime-$watchMeasure->measureUserTime;
 			$refDelta  = $watchMeasure->accuracyReferenceTime-$watchMeasure->measureReferenceTime;
-			$accuracy  = ($userDelta*86400/$refDelta)-86400;
+
+			/*
+			Until 1.3.0, users were asked to enter the time
+			displayed on their timepiece after a 5 secs countdown.
+
+			Since 1.3.0 users are asked to click when their Watch
+			display a given time. This reverses the accuracy formulae...
+
+			This side effect of the new measure system (https:github.com/MathieuNls/tw/issues/58)
+			was reported (#136 and #137) and ignored on the basis that the test harness would have caught it.
+
+			The following testes if the measure was taken before 1.3 - 15 fev 2016 (epoch 1455537600) (commit d861c8e436b5ea8909cd1949f86fd20a14b272b4) and adapts the formulae.
+			*/
+			if($watchMeasure->accuracyReferenceTime < 1455537600){
+
+				$accuracy  = ($userDelta*86400/$refDelta)-86400;
+			}else{
+				$accuracy  = ($refDelta*86400/$userDelta)-86400;
+			}
+
 			$accuracy  = sprintf("%.1f", $accuracy);
 			$watchMeasure->accuracy = $accuracy;
 
