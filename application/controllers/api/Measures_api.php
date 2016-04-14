@@ -41,6 +41,11 @@ class Measures_api extends REST_Controller {
    $referenceTime = $this->post('referenceTime');
    $userTime = $this->post('userTime');
 
+   log_message('INFO', $watchId);
+   log_message('INFO', $referenceTime);
+   log_message('INFO', $userTime);
+   log_message('INFO', $this->watch->isOwnedBy($watchId, $this->rest->user_id));
+
    if($watchId != null && is_numeric($watchId) &&
    is_numeric($referenceTime) && is_numeric($userTime)
    && $this->watch->isOwnedBy($watchId, $this->rest->user_id)){
@@ -48,8 +53,8 @@ class Measures_api extends REST_Controller {
        $this->response(
           ["measureId" =>  $this->measure->addBaseMesure(
                                     $watchId,
-                                    $referenceTime/1000,
-                                    $userTime/1000)
+                                    (int)$referenceTime,
+                                    (int)$userTime)
           ],
           REST_Controller::HTTP_OK);
 
@@ -67,9 +72,9 @@ class Measures_api extends REST_Controller {
   */
  public function index_put(){
 
-   $measureId = $this->post('measureId');
-   $referenceTime = $this->post('referenceTime');
-   $userTime = $this->post('userTime');
+   $measureId = $this->put('measureId');
+   $referenceTime = $this->put('referenceTime');
+   $userTime = $this->put('userTime');
 
    log_message("info", "=================");
    log_message("info", $measureId);
@@ -84,14 +89,14 @@ class Measures_api extends REST_Controller {
 
      log_message("info", "=========&&&========");
 
+     $measure = $this->measure->addAccuracyMesure(
+         $measureId,
+         (int)$referenceTime,
+         (int)$userTime);
 
-     $this->response(
-        $this->measure->addAccuracyMesure(
-            $measureId,
-            $referenceTime/1000,
-            $userTime/1000)
-        ,
-        REST_Controller::HTTP_OK);
+    log_message("info", "qd".$measure);
+
+     $this->response(["result"=>(array)$measure], REST_Controller::HTTP_OK);
 
    }else{
      log_message("info", "========ééé=======");

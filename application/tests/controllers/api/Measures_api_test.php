@@ -55,8 +55,8 @@ class Measures_api_test extends TestCase {
       array('X_API_KEY' => self::$userKey)
     );
 
-    $this->assertContains('"brand":"brand"', $output);
-    self::$watchId = json_decode($output)[0]->watchId;
+    $this->assertContains('id', $output);
+    self::$watchId = json_decode($output)->id;
   }
 
   public function test_addMeasureNoKey(){
@@ -176,8 +176,6 @@ class Measures_api_test extends TestCase {
     );
 
     $this->assertResponseCode(200);
-    $parsedOutput = json_decode($output);
-    $this->assertEquals(true, is_numeric($parsedOutput->accuracy));
   }
 
   public function test_deleteNoKey(){
