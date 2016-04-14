@@ -84,68 +84,85 @@ class Measure extends ObservableModel {
 		//we are going to use this inside callbacks
 		$this->limit = $limit;
 
-		return $this->__->map(
-				//We group the results watchId
-				$this->__->groupBy(
-						// Selects all informations for all non-deleted measure
-						// right join to also get non-deleted watches without measure
-						$this->select('watch.watchId, watch.brand,
-						watch.name, watch.yearOfBuy, watch.serial,
-						watch.caliber, measure.measureUserTime, measure.id,
-						measure.measureReferenceTime, measure.accuracyUserTime,
-						measure.accuracyReferenceTime, measure.statusId')
-						->join('watch', 'measure.watchId = watch.watchId
-						and measure.statusId < 4', 'right')
-						->where("watch.userId", $userId)
-						->where("watch.status <", 4)
-						->as_array()
-						->find_all(),
-						'watchId'
-					),
-				//Mapping function starts here
-				function ($watch, $row){
+		return $this->__->reject(
+				$this->__->map(
+					//We group the results watchId
+					$this->__->groupBy(
+							// Selects all informations for all non-deleted measure
+							// right join to also get non-deleted watches without measure
+							$this->select('watch.watchId, watch.brand,
+							watch.name, watch.yearOfBuy, watch.serial,
+							watch.caliber, measure.measureUserTime, measure.id,
+							measure.measureReferenceTime, measure.accuracyUserTime,
+							measure.accuracyReferenceTime, measure.statusId')
+							->join('watch', 'measure.watchId = watch.watchId
+							and measure.statusId < 4', 'right')
+							->where("watch.userId", $userId)
+							->where("watch.status <", 4)
+							->as_array()
+							->find_all(),
+							'watchId'
+						),
+					//Mapping function starts here
+					function ($watch, $row){
 
-					//Eleminates null measures resulting from the
-					//right join
-					$measures = $this->__->reject($watch, function($watch){
-						return $watch['statusId'] == null;
-					});
+						//Eleminates null measures resulting from the
+						//right join and incomplete measures that
+						//were archived
+						$measures = $this->__->reject($watch, function($watch){
 
-					//Mapping non-null measure to remove the data
-					//duplicated by the group by (about the watch)
-					//and the measure that are over $limit
-					$measures = $this->__->map($measures, function($measure, $row){
-						
-						if($row >= $this->limit){
-							return null;
-						}else{
-							return array(
-								//The result array is explicitly typed
-								//so we can json_encode this easily
-								"measureUserTime"=> (double)$measure['measureUserTime'],
-								"measureReferenceTime"=> (double)$measure['measureReferenceTime'],
-								"accuracyUserTime"=> (double)$measure['accuracyUserTime'],
-								"accuracyReferenceTime"=> (double)$measure['accuracyReferenceTime'],
-								"accuracy"=> (float)$measure['accuracy'],
-								"accuracyAge"=> $measure['accuracyAge'],
-								"statusId"=> (float)$measure['statusId'],
-								'id'=>(int)$measure["id"]
+							return $watch['statusId'] == null ||
+							($watch['accuracyAge'] == 0 &&
+								$watch['statusId'] == 3);
+						});
+
+						$totalCompleteMeasures = sizeof($measures);
+
+						//Mapping non-null measure to remove the data
+						//duplicated by the group by (about the watch)
+						//and remove the measures that are over $limit
+						$measures = $this->__->reject(
+							$this->__->map(
+								$measures, function($measure, $row){
+
+								if($row < $this->limit){
+									return array(
+										//The result array is explicitly typed
+										//so we can json_encode this easily
+										"measureUserTime"=> (double)$measure['measureUserTime'],
+										"measureReferenceTime"=> (double)$measure['measureReferenceTime'],
+										"accuracyUserTime"=> (double)$measure['accuracyUserTime'],
+										"accuracyReferenceTime"=> (double)$measure['accuracyReferenceTime'],
+										"accuracy"=> (float)$measure['accuracy'],
+										"accuracyAge"=> $measure['accuracyAge'],
+										"statusId"=> (float)$measure['statusId'],
+										'id'=>(int)$measure["id"]
+									);
+								}
+							}),
+							//Measures above $this->limit are equal to null
+							//we reject them
+							function($measure){
+								return $measure == null;
+							});
+
+						//Construct and return the final array
+						return array(
+							// Same here
+							"watchId"=> (int)$watch[0]["watchId"],
+							"brand"=>$watch[0]["brand"],
+							"name"=>$watch[0]["name"],
+							"yearOfBuy"=>(int)$watch[0]["yearOfBuy"],
+							"serial"=>$watch[0]["serial"],
+							"caliber"=>$watch[0]["caliber"],
+							"historySize"=>$totalCompleteMeasures,
+							"measures" => $measures
 							);
-						}
+					// The groupBy produce one empty row if the User
+					// doesn't have any watch. We remove it here.
+					}), function($watch){
+						return $watch["watchId"] == 0;
 					});
-
-					//Construct and return the final array
-					return array(
-						// Same here
-						"watchId"=> (int)$watch[0]["watchId"],
-						"brand"=>$watch[0]["brand"],
-						"name"=>$watch[0]["name"],
-						"yearOfBuy"=>(int)$watch[0]["yearOfBuy"],
-						"serial"=>$watch[0]["serial"],
-						"caliber"=>$watch[0]["caliber"],
-						"measures" => $measures
-						);
-				});
 	}
 
 	/**
