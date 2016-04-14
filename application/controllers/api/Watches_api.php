@@ -64,8 +64,7 @@ class Watches_api extends REST_Controller {
       if($this->watch->editWatch($this->rest->user_id, $watchId,
         $brand, $name, $yearOfBuy, $serial, $caliber)){
 
-          $this->response(
-            $this->measure->getMeasuresByUser($this->rest->user_id),
+          $this->response(["success"=>true],
             REST_Controller::HTTP_OK
           );
       }
@@ -83,17 +82,22 @@ class Watches_api extends REST_Controller {
   {
     $brand = $this->post('brand');
     $name = $this->post('name');
-    $yearOfBuy = $this->post('$yearOfBuy');
+    $yearOfBuy = $this->post('yearOfBuy');
     $serial = $this->post('serial');
     $caliber = $this->post('caliber');
 
     if($brand !== NULL && $name !== NULL &&
        $serial !== NULL && $caliber !== NULL){
 
-      if($this->watch->addWatch($this->rest->user_id, $brand, $name,
-      $yearOfBuy, $serial, $caliber)){
+      $id = $this->watch->addWatch($this->rest->user_id, $brand, $name,
+      $yearOfBuy, $serial, $caliber);
 
-        $this->index_get();
+      if($id){
+
+        $this->response(
+          ["id"=>$id],
+          REST_Controller::HTTP_OK
+        );
       }
 
     } else {
@@ -108,7 +112,7 @@ class Watches_api extends REST_Controller {
    */
   public function brands_get($partialBrand = NULL){
 
-    if(is_string($partialBrand) && strlen($partialBrand) >= 2){
+    if(is_string($partialBrand) && strlen($partialBrand) >= 1){
 
       $partialBrand = strtolower($partialBrand);
 
@@ -125,9 +129,6 @@ class Watches_api extends REST_Controller {
 
       $this->response($matchingBrands, REST_Controller::HTTP_OK);
 
-    } else {
-      $this->response(NULL,
-        REST_Controller::HTTP_BAD_REQUEST);
     }
   }
 
@@ -139,7 +140,7 @@ class Watches_api extends REST_Controller {
 
     if(is_string($brand) &&
       is_string($partialModel)
-      && strlen($partialModel) >= 2
+      && strlen($partialModel) >= 1
       && file_exists(APPPATH.'../assets/json/watch-models/'.$brand.'.json')){
 
       $partialModel = strtolower($partialModel);
@@ -176,6 +177,9 @@ class Watches_api extends REST_Controller {
   {
 
     $watchId = $this->delete('watchId');
+
+    log_message("ERROR", $watchId);
+
 
     if($watchId !== NULL
       && $this->watch->deleteWatch($watchId, $this->rest->user_id)){

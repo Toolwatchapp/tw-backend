@@ -87,9 +87,9 @@ class Watches_api_test extends TestCase {
       array('X_API_KEY' => self::$userKey)
 		);
 
-    $this->assertContains('"brand":"brand"', $output);
+    $this->assertContains('id', $output);
     var_dump($output);
-    self::$watchId = json_decode($output)[0]->watchId;
+    self::$watchId = json_decode($output)->id;
   }
 
   public function test_updateWatchNoKey(){
@@ -141,7 +141,7 @@ class Watches_api_test extends TestCase {
       array('X_API_KEY' => self::$userKey)
     );
 
-    $this->assertContains('"brand":"branda"', $output);
+    $this->assertContains('true', $output);
   }
 
   public function test_brandAutocompleteNoKey(){
@@ -163,7 +163,7 @@ class Watches_api_test extends TestCase {
       array('X_API_KEY' => self::$userKey)
     );
 
-    $this->assertResponseCode(400);
+    $this->assertResponseCode(200);
   }
 
   public function test_brandAutocomplete(){
@@ -196,7 +196,7 @@ class Watches_api_test extends TestCase {
       array('X_API_KEY' => self::$userKey)
     );
 
-    $this->assertResponseCode(400);
+    $this->assertResponseCode(200);
   }
 
   public function test_modelAutocompleteBrandDontExist(){
