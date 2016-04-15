@@ -85,6 +85,9 @@ class Auto_email {
 		$this->CI->load->helper("email_content");
 		$this->CI->load->library("mcapi");
 		$this->CI->config->load('config');
+
+		$factory = new Ejsmont\CircuitBreaker\Factory();
+		$this->circuitBreaker = $factory->getSingleApcInstance(1, 300);
 	}
 
 	/**
@@ -121,77 +124,79 @@ class Auto_email {
 	 */
 	public function cronCheck($timeOffset = 0) {
 
-	 /**
-	  * The computed time will be used
-	  * to compute the rules. However, the time
-	  * at which the email will be sent will be
-	  * $time - $timeOffset (@see sendAtString).
-	  *
-	  * The whole purpose of this $timeOffset
-	  * variable is for testing / staging.
-	  * We want to be able to compute the rules
-	  * in the future and past. However, we want
-	  * the computed emails to be sent right away.
-	  *
-	  * Overall, this should be 0 everytime unless
-	  * testing or staging.
-	  * @var long
-	  */
-		$this->time = time() + $timeOffset;
-		$this->timeOffset = $timeOffset;
+		if($this->circuitBreaker->isAvailable("mandrill")){
+			/**
+	 	  * The computed time will be used
+	 	  * to compute the rules. However, the time
+	 	  * at which the email will be sent will be
+	 	  * $time - $timeOffset (@see sendAtString).
+	 	  *
+	 	  * The whole purpose of this $timeOffset
+	 	  * variable is for testing / staging.
+	 	  * We want to be able to compute the rules
+	 	  * in the future and past. However, we want
+	 	  * the computed emails to be sent right away.
+	 	  *
+	 	  * Overall, this should be 0 everytime unless
+	 	  * testing or staging.
+	 	  * @var long
+	 	  */
+	 		$this->time = time() + $timeOffset;
+	 		$this->timeOffset = $timeOffset;
 
-		//Creating empty array to store email to send
-		$emailsUserSent    = array();
-		$emailsWatchSent   = array();
-		$emailsMeasureSent = array();
+	 		//Creating empty array to store email to send
+	 		$emailsUserSent    = array();
+	 		$emailsWatchSent   = array();
+	 		$emailsMeasureSent = array();
 
-		$this->emailBatchModel = new MY_MODEL("email_batch");
-		$this->activeUser = new MY_MODEL('active_user');
+	 		$this->emailBatchModel = new MY_MODEL("email_batch");
+	 		$this->activeUser = new MY_MODEL('active_user');
 
-		$this->lastBatchDate = $this->findLastBatchDate();
+	 		$this->lastBatchDate = $this->findLastBatchDate();
 
-		$emailBatchId = $this->emailBatchModel->insert(
-			array("time"=>$this->time,
-			"amount" => -1
-			)
-		);
+	 		$emailBatchId = $this->emailBatchModel->insert(
+	 			array("time"=>$this->time,
+	 			"amount" => -1
+	 			)
+	 		);
 
-		//Apply all the rules for emails
-		//The emails arrays are sent by references and
-		//updated in the different methods
+	 		//Apply all the rules for emails
+	 		//The emails arrays are sent by references and
+	 		//updated in the different methods
 
-		$this->inactiveUser($emailsUserSent);
-		$this->userWithoutWatch($emailsUserSent);
-		$this->userWithWatchWithoutMeasure($emailsWatchSent);
-		$this->userWithOneCompleteMeasureAndOneWatch($emailsUserSent);
-		$this->checkAccuracy($emailsMeasureSent);
-		$this->checkAccuracyOneWeek($emailsMeasureSent);
-		$this->startANewMeasure($emailsWatchSent);
+	 		$this->inactiveUser($emailsUserSent);
+	 		$this->userWithoutWatch($emailsUserSent);
+	 		$this->userWithWatchWithoutMeasure($emailsWatchSent);
+	 		$this->userWithOneCompleteMeasureAndOneWatch($emailsUserSent);
+	 		$this->checkAccuracy($emailsMeasureSent);
+	 		$this->checkAccuracyOneWeek($emailsMeasureSent);
+	 		$this->startANewMeasure($emailsWatchSent);
 
 
-		if(ENVIRONMENT === "development" ||
-			 ENVIRONMENT === "testing"){
-			$date = new DateTime("@".$this->time);
-			echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
+	 		if(ENVIRONMENT === "development" ||
+	 			 ENVIRONMENT === "testing"){
+	 			$date = new DateTime("@".$this->time);
+	 			echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
 
-			$this->showSentEmails($emailsUserSent, "User emails");
-			$this->showSentEmails($emailsWatchSent, "Watch emails");
-			$this->showSentEmails($emailsMeasureSent, "Measure emails");
+	 			$this->showSentEmails($emailsUserSent, "User emails");
+	 			$this->showSentEmails($emailsWatchSent, "Watch emails");
+	 			$this->showSentEmails($emailsMeasureSent, "Measure emails");
+	 		}
+
+
+	 		$this->emailBatchModel->update($emailBatchId,
+	 			["amount"=>	sizeof($emailsMeasureSent)
+	 					+ sizeof($emailsWatchSent)
+	 					+ sizeof($emailsMeasureSent)
+	 			]
+	 		);
+
+	 		return array(
+	 			'users' 	 => $emailsUserSent,
+	 			'watches'  => $emailsWatchSent,
+	 			'measures' => $emailsMeasureSent
+	 		);
 		}
-
-
-		$this->emailBatchModel->update($emailBatchId,
-			["amount"=>	sizeof($emailsMeasureSent)
-					+ sizeof($emailsWatchSent)
-					+ sizeof($emailsMeasureSent)
-			]
-		);
-
-		return array(
-			'users' 	 => $emailsUserSent,
-			'watches'  => $emailsWatchSent,
-			'measures' => $emailsMeasureSent
-		);
 	}
 
 	/**
@@ -252,44 +257,54 @@ class Auto_email {
 	private function sendMandrillEmail($subject, $content, $recipientName,
 		$recipientEmail, $tags, $sendAt, $attachments = null) {
 
-		$message = array(
-			'html'       => $content,
-			'subject'    => $subject,
-			'from_email' => 'hello@toolwatch.io',
-			'from_name'  => 'Toolwatch',
-			'to'         => array(
-				array(
-					'email' => $recipientEmail,
-					'name'  => $recipientName,
-					'type'  => 'to',
+		try {
+			$message = array(
+				'html'       => $content,
+				'subject'    => $subject,
+				'from_email' => 'hello@toolwatch.io',
+				'from_name'  => 'Toolwatch',
+				'to'         => array(
+					array(
+						'email' => $recipientEmail,
+						'name'  => $recipientName,
+						'type'  => 'to',
+					)
+				),
+				'headers'   => array(
+					'Reply-To' => 'hello@toolwatch.io',
+				),
+				'important'                 => false,
+				'track_opens'               => true,
+				'track_clicks'              => true,
+				'tags'                      => array($tags),
+				'google_analytics_campaign' => $tags,
+				'google_analytics_domains'  => array('toolwatch.io'),
+				'metadata'                  => array(
+					'website'                  => 'toolwatch.io',
 				)
-			),
-			'headers'   => array(
-				'Reply-To' => 'hello@toolwatch.io',
-			),
-			'important'                 => false,
-			'track_opens'               => true,
-			'track_clicks'              => true,
-			'tags'                      => array($tags),
-			'google_analytics_campaign' => $tags,
-			'google_analytics_domains'  => array('toolwatch.io'),
-			'metadata'                  => array(
-				'website'                  => 'toolwatch.io',
-			)
-		);
+			);
 
-		if ($attachments !== null) {
-			$message['attachments'] = $attachments;
+			if ($attachments !== null) {
+				$message['attachments'] = $attachments;
+			}
+
+			$async   = false;
+			$ip_pool = 'Main Pool';
+			$send_at = $sendAt;
+			$mandrillResponse =  $this->CI->mandrill->messages->send($message, $async, $ip_pool, $send_at);
+
+			log_message('info', 'Mandrill email: '
+				. print_r($mandrillResponse, true) .
+				' at ' . $sendAt);
+
+			$this->circuitBreaker->reportSuccess("mandrill");
+
+			return $mandrillResponse;
+
+		} catch (Mandrill_Error $e) {
+			log_message('error', 'A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage());
+			$this->circuitBreaker->reportFailure("mandrill");
 		}
-
-		$async   = false;
-		$ip_pool = 'Main Pool';
-		$send_at = $sendAt;
-		$mandrillResponse =  $this->CI->mandrill->messages->send($message, $async, $ip_pool, $send_at);
-		log_message('info', 'Mandrill email: '
-			. print_r($mandrillResponse, true) .
-			' at ' . $sendAt);
-		return $mandrillResponse;
 	}
 
 	/**
@@ -779,7 +794,15 @@ class Auto_email {
 	 */
 	private function signup($user) {
 
-		$this->CI->mcapi->listSubscribe('7f94c4aa71', $user->email, '');
+		if($this->circuitBreaker->isAvailable("mailchimp")){
+			try {
+						$this->CI->mcapi->listSubscribe('7f94c4aa71', $user->email, '');
+						$this->circuitBreaker->reportSuccess("mailchimp");
+			} catch (Exception $e) {
+				log_message('error', 'A mailchimp error occurred: ' . get_class($e) . ' - ' . $e->getMessage());
+				$this->circuitBreaker->reportFailure("mailchimp");
+			}
+		}
 
 		return $this->sendMandrillEmail(
 			'Welcome to Toolwatch! ⌚',
@@ -841,66 +864,79 @@ class Auto_email {
 			 * the measureModel...
 			 */
 			if(ENVIRONMENT !== "testing"){
-				// Create the date and description
-				$description = "Check the accuracy of my ".$measure->brand.' '.$measure->model;
-				$in30days = time() + 30*24*60*60;
-				$in30daysAndOneHour = time() + 30*24*60*60+(60*60);
-				$date = new DateTime("@".$in30days);
-				$dateEnd = new DateTime("@".$in30daysAndOneHour);
 
-				require_once(APPPATH.'libraries/Google/autoload.php');
+				if($this->circuitBreaker->isAvailable("google_calendar")){
+					try {
+						// Create the date and description
+						$description = "Check the accuracy of my ".$measure->brand.' '.$measure->model;
+						$in30days = time() + 30*24*60*60;
+						$in30daysAndOneHour = time() + 30*24*60*60+(60*60);
+						$date = new DateTime("@".$in30days);
+						$dateEnd = new DateTime("@".$in30daysAndOneHour);
 
-				//A google event as defined https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-				$event = new Google_Service_Calendar_Event(array(
-				  'summary' => "Check the accuracy of my ".$measure->brand.' '.$measure->model,
-				  'location' => 'https://toolwatch.io',
-				  'description' => "Check the accuracy of my ".$measure->brand.' '.$measure->model,
-				  'start' => array(
-				    'dateTime' =>  $date->format('Y-m-d').'T'.$date->format("H:i:s").'-00:00',
-				    'timeZone' => 'Europe/London',
-				  ),
-				  'end' => array(
-				    'dateTime' => $dateEnd->format('Y-m-d').'T'.$dateEnd->format("H:i:s").'-00:00',
-				    'timeZone' => 'Europe/London',
-				  ),
-				  'attendees' => array(
-				    array('email' => $measure->email)
-				  )
-				));
+						require_once(APPPATH.'libraries/Google/autoload.php');
 
-				//Create a google client an authenticate it
-				$client = new Google_Client();
-				$client->setApplicationName("Client_Calendar_Toolwatch");
-				$service = new Google_Service_Calendar($client);
+						//A google event as defined https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+						$event = new Google_Service_Calendar_Event(array(
+						  'summary' => "Check the accuracy of my ".$measure->brand.' '.$measure->model,
+						  'location' => 'https://toolwatch.io',
+						  'description' => "Check the accuracy of my ".$measure->brand.' '.$measure->model,
+						  'start' => array(
+						    'dateTime' =>  $date->format('Y-m-d').'T'.$date->format("H:i:s").'-00:00',
+						    'timeZone' => 'Europe/London',
+						  ),
+						  'end' => array(
+						    'dateTime' => $dateEnd->format('Y-m-d').'T'.$dateEnd->format("H:i:s").'-00:00',
+						    'timeZone' => 'Europe/London',
+						  ),
+						  'attendees' => array(
+						    array('email' => $measure->email)
+						  )
+						));
 
-				$key = file_get_contents($this->CI->config->item('google_api_key'));
-				$cred = new Google_Auth_AssertionCredentials(
-				    $this->CI->config->item('google_api_account'),
-				    array('https://www.googleapis.com/auth/calendar'),
-				    $key
-				);
+						//Create a google client an authenticate it
+						$client = new Google_Client();
+						$client->setApplicationName("Client_Calendar_Toolwatch");
+						$service = new Google_Service_Calendar($client);
 
-				$client->setAssertionCredentials($cred);
-				if ($client->getAuth()->isAccessTokenExpired()) {
-				  $client->getAuth()->refreshTokenWithAssertion($cred);
+						$key = file_get_contents($this->CI->config->item('google_api_key'));
+						$cred = new Google_Auth_AssertionCredentials(
+						    $this->CI->config->item('google_api_account'),
+						    array('https://www.googleapis.com/auth/calendar'),
+						    $key
+						);
+
+						$client->setAssertionCredentials($cred);
+						if ($client->getAuth()->isAccessTokenExpired()) {
+						  $client->getAuth()->refreshTokenWithAssertion($cred);
+						}
+
+						//Create the event
+						$event = $service->events->insert('primary', $event);
+
+						//Generate the base64String representing the .ics file
+						//using the returned event and processed variable
+
+						$this->CI->load->helper('ics');
+
+						$this->circuitBreaker->reportSuccess('google_calendar');
+
+						return generateBase64Ics(
+							$in30days,
+							$in30daysAndOneHour,
+							$event->displayName,
+							$event->email,
+							$description,
+							$event->iCalUID
+						);
+					} catch (Exception $e) {
+						log_message('error', 'A google_calendar error occurred: ' . get_class($e) . ' - ' . $e->getMessage());
+						$this->circuitBreaker->reportFailure("google_calendar");
+					}
+
 				}
 
-				//Create the event
-				$event = $service->events->insert('primary', $event);
 
-				//Generate the base64String representing the .ics file
-				//using the returned event and processed variable
-
-				$this->CI->load->helper('ics');
-
-				return generateBase64Ics(
-					$in30days,
-					$in30daysAndOneHour,
-					$event->displayName,
-					$event->email,
-					$description,
-					$event->iCalUID
-				);
 			}else{
 				//"A google event" encoded in base 64
 				return "QSBnb29nbGUgZXZlbnQ=";

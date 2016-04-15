@@ -4,10 +4,11 @@
         "ext-mysql": "*",
         "monolog/monolog": "~1.7",
         "codeception/codeception": "*",
-        "ejsmont-artur/php-circuit-breaker": "^0.1.0"
+        "ejsmont-artur/php-circuit-breaker": "*"
   },
   "require-dev": {
       "heroku/heroku-buildpack-php": "*",
-      "mikey179/vfsStream": "1.1.*"
+      "mikey179/vfsStream": "1.1.*",
+      "ejsmont-artur/php-circuit-breaker": "*"
   }
 }

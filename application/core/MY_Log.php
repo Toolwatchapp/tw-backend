@@ -49,6 +49,10 @@ class MY_Log {
         {
             $this->_date_fmt = $config['log_date_format'];
         }
+
+        $factory = new Ejsmont\CircuitBreaker\Factory();
+        $this->circuitBreaker = $factory->getSingleApcInstance(1, 300);
+
     }
 
     // --------------------------------------------------------------------
@@ -75,23 +79,32 @@ class MY_Log {
 
         file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
 
-        if($level === 'ERROR'){
+        if($level === 'ERROR' &&
+        $this->circuitBreaker->isAvailable('slack')){
 
-          $data = json_encode(["text"=>$_SERVER['HTTP_HOST']."\r\n".$msg]);
+          try {
+            $data = json_encode(["text"=>$_SERVER['HTTP_HOST']."\r\n".$msg]);
 
-          $ch = curl_init(getenv("SLACK_EXCEPTION"));
+            $ch = curl_init(getenv("SLACK_EXCEPTION"));
 
-          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-          curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-              'Content-Type: application/json',
-              'Content-Length: '.strlen($data))
-          );
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: '.strlen($data))
+            );
 
-          $result = curl_exec($ch);
+            $result = curl_exec($ch);
 
-          log_message("info", "slack exception:".print_r($result, true));
+            log_message("info", "slack exception:".print_r($result, true));
+
+            $this->circuitBreaker->reportSuccess("slack");
+
+          } catch (Exception $e) {
+            log_message('error', 'A slack error occurred: ' . get_class($e) . ' - ' . $e->getMessage());
+            $this->circuitBreaker->reportFailure("slack");
+          }
         }
 
         return TRUE;
