@@ -5,6 +5,7 @@ class Measure_test extends TestCase {
 	private static $userId;
 	private static $watchId;
 	private static $watchId2;
+	private static $watchId3;
 	private static $measureId;
 	private static $watch;
 	private static $watchMeasure;
@@ -36,7 +37,7 @@ class Measure_test extends TestCase {
 		self::$watchId = $CI->Watch->addWatch(
 			self::$userId,
 			'brand',
-			'name',
+			'name1',
 			2015,
 			28,
 			014
@@ -45,7 +46,16 @@ class Measure_test extends TestCase {
 		self::$watchId2 = $CI->Watch->addWatch(
 			self::$userId,
 			'brand',
-			'name',
+			'name2',
+			2015,
+			28,
+			014
+		);
+
+		self::$watchId3 = $CI->Watch->addWatch(
+			self::$userId,
+			'brand',
+			'name3',
 			2015,
 			28,
 			014
@@ -155,7 +165,8 @@ class Measure_test extends TestCase {
 	mesure : 20:52:30
 	start countdown : 20:52:30 (+3 days)
 	mesure : 20:52:36
-	spd : +2 sec per day
+	spd : -2 sec per day
+	@before 1.3
 	 */
 	public function test_addBaseMesure1() {
 
@@ -209,6 +220,7 @@ class Measure_test extends TestCase {
 	start countdown : 17:30:20 (+1.5 days)
 	mesure : 17:31:26
 	spd : +4 sec per day
+	@before 1.3
 	 */
 	public function test_addBaseMesure2() {
 
@@ -230,6 +242,37 @@ class Measure_test extends TestCase {
 
 		$this->assertEquals(self::$watchId, $watchMeasure->watchId);
 		$this->assertEquals(4.0, $watchMeasure->accuracy, 'it should be 4.0');
+		$this->assertEquals(2, $watchMeasure->statusId);
+	}
+
+	/*
+	start countdown : 09:08:01
+	mesure : 09:08:01
+	start countdown : 09:08:00 (+1 day)
+	mesure : 09:07:55
+	spd : +5 sec per day
+	@after 1.3
+	 */
+	public function test_addBaseMesure3() {
+
+		self::$measureId = $this->obj->addBaseMesure(
+			self::$watchId3,
+			1458634081,
+			1458634081
+		);
+
+		$this->assertEquals(true, is_numeric(self::$measureId));
+	}
+
+	public function test_addAccuracyMesure3() {
+		$watchMeasure = $this->obj->addAccuracyMesure(
+			self::$measureId,
+			1458720480,
+			1458720475
+		);
+
+		$this->assertEquals(self::$watchId3, $watchMeasure->watchId);
+		$this->assertEquals(5.0, $watchMeasure->accuracy, 'it should be 5.0');
 		$this->assertEquals(2, $watchMeasure->statusId);
 	}
 
@@ -275,6 +318,17 @@ class Measure_test extends TestCase {
 		$this->assertEquals(3, $archivedMeasure->statusId);
 	}
 
+	public function test_getNLastMeasuresByUserByWatch(){
+		$measures = $this->obj->getNLastMeasuresByUserByWatch(
+			self::$userId);
+
+		$this->assertEquals(3, sizeof($measures));
+		$this->assertEquals(2, sizeof($measures[0]['measures']));
+		$this->assertEquals(null, $measures[0]['measures'][2]);
+		$this->assertEquals(1, sizeof($measures[1]['measures']));
+
+	}
+
 	public function test_deleteMeasure() {
 
 		self::$measureId = $this->obj->addBaseMesure(
@@ -292,25 +346,25 @@ class Measure_test extends TestCase {
 
 	public function test_getMeasuresCountByWatchBrand() {
 		$count = $this->obj->getMeasuresCountByWatchBrand('brand');
-		$this->assertEquals(7, $count);
+		$this->assertEquals(8, $count);
 	}
 
 	public function test_computePercentileAccuracy(){
 
-		$this->assertEquals(67, $this->obj->computePercentileAccuracy(1.5));
+		$this->assertEquals(75, $this->obj->computePercentileAccuracy(1.5));
 		$this->assertEquals(0, $this->obj->computePercentileAccuracy(7));
 
 	}
 
-	public static function tearDownAfterClass() {
-		$CI = &get_instance();
-		$CI->load->model('User');
-		$CI->load->model('Watch');
-		$CI->load->model('Measure');
-		$CI->watch->delete_where(array("watchId >=" => "0"));
-		$CI->User->delete_where(array("userId >=" => "0"));
-		$CI->Measure->delete_where(array("id >=" => "0"));
-	}
+	// public static function tearDownAfterClass() {
+	// 	$CI = &get_instance();
+	// 	$CI->load->model('User');
+	// 	$CI->load->model('Watch');
+	// 	$CI->load->model('Measure');
+	// 	$CI->watch->delete_where(array("watchId >=" => "0"));
+	// 	$CI->User->delete_where(array("userId >=" => "0"));
+	// 	$CI->Measure->delete_where(array("id >=" => "0"));
+	// }
 
 }
 

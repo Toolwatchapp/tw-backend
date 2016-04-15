@@ -98,11 +98,8 @@ class Measures extends MY_Controller {
 
 		if($this->expectsPost(array('watchId'))){
 
-			if (
-					$this->watch->deleteWatch($this->watchId,
-						$this->session->userdata('userId'))
-			)
-			{
+			if ($this->watch->deleteWatch($this->watchId, $this->session->userdata('userId'))) {
+
 				$this->_bodyData['success'] = 'Watch successfully deleted!';
 			}
 
@@ -124,13 +121,6 @@ class Measures extends MY_Controller {
 
 
 		if($this->expectsPost(array('deleteMeasures'))){
-
-
-					var_dump($this->session->userdata('userId'));
-					var_dump($this->deleteMeasures);
-					var_dump($this->measure->isOwnedBy(
-						$this->deleteMeasures,
-						$this->session->userdata('userId')));
 
 			if (
 				$this->measure->isOwnedBy(
@@ -220,7 +210,6 @@ class Measures extends MY_Controller {
 
 			$this->constructMeasurePage();
 		}
-		echo "not all posts";
 	}
 
 	/**

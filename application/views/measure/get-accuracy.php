@@ -7,7 +7,8 @@
     <span id="accuracyHolder"></span>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" method="post" name="newAccuracy">
+
+          <?php echo form_open('', array('name'=>'newAccuracy', 'class'=>'form-horizontal'));?>
 
               <select style="display:none" class="form-control" name="watchId">
                     <?php echo '<option value="'.$selectedWatch->watchId.'" selected>'.$selectedWatch->brand.' - '.$selectedWatch->name.'</option>'; ?>
@@ -82,10 +83,9 @@
                         <br />
                         <center><p><br /><br />We <i style="color:#4d77a7" class="fa fa-heart"></i> <a href="https://instagram.com/toolwatchapp/">Instagram</a>, tag us with your wristshots and share your results using #ToolwatchApp !</p></center>
                         <br />
-                        <!-- INSTANSIVE WIDGET -->
-                        <script src="http://instansive.com/widget/js/instansive.js"></script>
-
-                        <div id="instansive_3eea3b0bb6" name="instansive_3eea3b0bb6"  scrolling="no" allowtransparency="true" class="instansive-widget" style="width: 100%; border: 0; overflow: hidden;"><?php  echo stream_get_contents(fopen('http://instansive.com/widgets/3eea3b0bb6345272b1e1944fd14859aa.html', "rb"));?></div>
+                        <!-- SnapWidget -->
+                          <script src="http://snapwidget.com/js/snapwidget.js"></script>
+                          <iframe src="http://snapwidget.com/in/?u=dG9vbHdhdGNoYXBwfGlufDEyNXwzfDJ8fG5vfDV8bm9uZXxvblN0YXJ0fHllc3x5ZXM=&ve=290216" title="Instagram Widget" class="snapwidget-widget" allowTransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%;"></iframe>
                         </div>
 
                     </div>
