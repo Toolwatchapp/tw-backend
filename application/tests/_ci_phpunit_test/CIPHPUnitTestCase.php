@@ -11,12 +11,12 @@
 class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 {
 	protected $_error_reporting = -1;
-	
+
 	/**
 	 * @var CIPHPUnitTestRequest
 	 */
 	protected $request;
-	
+
 	/**
 	 * @var CIPHPUnitTestDouble
 	 */
@@ -55,9 +55,9 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	 * @param array        $params      POST parameters/Query string
 	 * @param callable     $callable    [deprecated] function to run after controller instantiation. Use $this->request->setCallable() method instead
 	 */
-	public function request($http_method, $argv, $params = [], $callable = null)
+	public function request($http_method, $argv, $params = [], $callable = null, $header = [])
 	{
-		return $this->request->request($http_method, $argv, $params, $callable);
+		return $this->request->request($http_method, $argv, $params, $callable, $header);
 	}
 
 	/**
@@ -68,10 +68,10 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 	 * @param array        $params      POST parameters/Query string
 	 * @param callable     $callable    [deprecated] function to run after controller instantiation. Use $this->request->setCallable() method instead
 	 */
-	public function ajaxRequest($http_method, $argv, $params = [], $callable = null)
+	public function ajaxRequest($http_method, $argv, $params = [], $callable = null, $header = [])
 	{
 		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
-		return $this->request($http_method, $argv, $params, $callable);
+		return $this->request($http_method, $argv, $params, $callable, $header);
 	}
 
 	/**
@@ -177,7 +177,7 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 
 	/**
 	 * Asserts HTTP response code
-	 * 
+	 *
 	 * @param int $code
 	 */
 	public function assertResponseCode($code)
@@ -194,9 +194,9 @@ class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 
 	/**
 	 * Set Expected Redirect
-	 * 
+	 *
 	 * This method needs <https://github.com/kenjis/ci-phpunit-test/blob/master/application/helpers/MY_url_helper.php>.
-	 * 
+	 *
 	 * @param string $uri  URI to redirect
 	 * @param int    $code Response Code
 	 */

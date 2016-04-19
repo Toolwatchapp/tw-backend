@@ -21,7 +21,9 @@
 			<exclude>
 				<file>../libraries/__.php</file>
 				<file>../libraries/Mcapi.php</file>
-        <file>../libraries/Mandrill.php</file>
+				<file>../libraries/Mandrill.php</file>
+				<file>../libraries/REST_Controller.php</file>
+        <file>../libraries/Format.php</file>
 				<directory suffix=".php">../libraries/Mandrill</directory>
         <directory suffix=".php">../libraries/Google</directory>
       </exclude>
