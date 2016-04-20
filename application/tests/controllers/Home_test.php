@@ -24,7 +24,7 @@ class Home_test extends TestCase {
 	public function test_contact() {
 		$output = $this->request('GET', ['Home', 'contact']);
 		$this->assertContains('<title>Toolwatch • Contact</title>', $output);
-		$this->assertContains('<form class="form-horizontal" name="contact">', $output);
+		$this->assertContains('name="contact" class="form-horizontal"', $output);
 	}
 
 	public function test_resetPassword() {

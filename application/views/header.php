@@ -91,6 +91,7 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
     <script type="text/javascript">
       window.onerror = function(message, file, line) {
         $.post( "https://"+window.location.hostname+ "/ajax/reportClientError", { error:  file + "(" + line + "): "
@@ -99,6 +100,17 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
           console.log("logged");
         });
       }
+
+      $(function($) {
+        // this bit needs to be loaded on every page where an ajax POST may happen
+
+            console.log(Cookies.get('csrf_cookie_name'));
+        $.ajaxSetup({
+            data: {
+                csrf_test_name: Cookies.get('csrf_cookie_name')
+            }
+        });
+      });
     </script>
 
 <?php if(!$this->agent->is_mobile()){?>
@@ -111,7 +123,6 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
         window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":"https://toolwatch.io/about","theme":"<?php echo base_url();?>assets/css/cookie.css"};
   </script>
 <?php } ?>
-
 
 </head>
 <body>

@@ -9,7 +9,7 @@
    <span id="fb_error" class="signup-error login-error"></span>
 </div>
 
-<form method="post" name="login">
+<?php echo form_open('', array('name'=>'login'));?>
 
     <div class="form-group">
        <strong class="line-thru"></strong>
@@ -28,7 +28,7 @@
 		<center><button type="submit" name="login" class="btn btn-primary btn-lg btn-spinner btn-full">Log in <i class="fa fa-spinner fa-pulse"></i></button></center>
 	</div>
 	<div class="form-group">
-		  <center>Not registered yet? <a class="signup-here" data-href="/sign-up/" data-modal-update="true">Sign up here!</a> or <br />
+		  <center>Not registered yet? <a class="signup-here" data-href="/sign-up/" data-modal-update="true">Sign up here!</a> <br />
 		</center>
 	</div>
 </form>

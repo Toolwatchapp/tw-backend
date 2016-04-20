@@ -86,7 +86,7 @@ class Watch extends ObservableModel {
 
 		$this->notify(UPDATE_WATCH, arrayToObject($data));
 
-		return $res === true && $this->affected_rows() === 1;
+		return $res && $this->affected_rows() === 1;
 	}
 
 	/**
@@ -123,20 +123,31 @@ class Watch extends ObservableModel {
 	}
 
 	/**
+	 * Checks if a watch belongs to a given suer
+	 * @param  int  $watchId
+	 * @param  int  $userId
+	 * @return boolean
+	 */
+	function isOwnedBy($watchId, $userId){
+		return $this->where("watchId", $watchId)
+		->count_by("userId", $userId) > 0;
+	}
+
+	/**
 	 * Soft delete watch $watchId
 	 *
 	 * @param  int $watchId The watch to delete
 	 * @return boolean
 	 */
 	function deleteWatch($watchId, $userId) {
-		$data = array('status' => 4);
 
-		$updateConstraints = [
-			"watchId" => $watchId,
-			"userId" => $userId
+		$whereClause = [
+			'watchId' => $watchId,
+			'userId' => $userId
 		];
 
-		$res  = $this->update($updateConstraints, $data) !== false;
+		$data = array('status' => 4);
+		$res  = $this->update($whereClause, $data) && $this->affected_rows() === 1;
 
 		$this->notify(DELETE_WATCH,
 			array('user' => arrayToObject($this->session->all_userdata()),

@@ -6,7 +6,7 @@
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" method="post" name="newMeasure">
+          <?php echo form_open('', array('name'=>'newMeasure', 'class'=>"form-horizontal"));?>
                 <div class="form-group watch-select">
                     <label for="brand" class="col-sm-4 control-label">Select your watch </label>
                     <div class="col-sm-8">
