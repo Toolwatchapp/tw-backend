@@ -123,10 +123,6 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
   </script>
 <?php } ?>
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 80d901c438419a7c0db002186df0935a3e9a35d3
 </head>
 <body>
 	<div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="pageModal" aria-hidden="true" data-keyboard="true" data-backdrop="static">
