@@ -1,4 +1,5 @@
-<form method="post" name="askResetPassword">
+  <?php echo form_open('', array('name'=>'askResetPassword'));?>
+
     <div class="form-group">
 		<h1>Reset password</h1>
 	</div>
@@ -18,5 +19,5 @@
     </fieldset>
 	<div class="form-group">
 		  <center>Oops! I remember it now... <br>So, <a data-modal-update="true" data-href="/login/">log me in!</a></center>
-	</div>  
+	</div>
 </form>

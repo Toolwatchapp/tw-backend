@@ -7,7 +7,8 @@
     <span id="accuracyHolder"></span>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" method="post" name="newAccuracy">
+
+          <?php echo form_open('', array('name'=>'newAccuracy', 'class'=>'form-horizontal'));?>
 
               <select style="display:none" class="form-control" name="watchId">
                     <?php echo '<option value="'.$selectedWatch->watchId.'" selected>'.$selectedWatch->brand.' - '.$selectedWatch->name.'</option>'; ?>
