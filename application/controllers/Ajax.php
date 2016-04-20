@@ -303,8 +303,8 @@ class Ajax extends MY_Controller {
 			$messageMandrill = array(
 				'html'       => $this->message,
 				'subject'    => "Contact information",
-				'from_email' => $this->email,
-				'from_name'  => $this->name,
+				'from_email' => 'contact@toolwatch.io',
+				'from_name'  => $this->name . ' [' . $this->email . ']',
 				'to'         => array(
 					array(
 						'email' => 'marc@toolwatch.io',
@@ -329,13 +329,13 @@ class Ajax extends MY_Controller {
 			$async   = false;
 			$ip_pool = 'Main Pool';
 
-			$scheduleTime = time();
+			$scheduleTime = time() - 86400;
 
 			$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
 			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
 			.(date('i', $scheduleTime)).':'.(date('s', $scheduleTime));
 
-			$mandrillResponse =  $this->mandrill->messages->send($messageMandrill, $async, $ip_pool, $send_at);
+			$mandrillResponse =  $this->mandrill->messages->send($messageMandrill, $async, $ip_pool, $returnValue);
 			log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
 
 
