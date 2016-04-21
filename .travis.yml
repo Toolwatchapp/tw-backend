@@ -2,8 +2,6 @@ language: php
 php:
   - '5.6'
 
-sudo: required
-
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
@@ -11,6 +9,7 @@ notifications:
 before_script:
   - pear config-set preferred_state beta
   - yes '' | pecl install apcu
+  - echo "apc.enable_cli = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer install
 
 script:
