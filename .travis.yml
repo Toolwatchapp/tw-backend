@@ -9,5 +9,6 @@ notifications:
 script:
   - composer install
   - echo "extension = apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "apc.enable_cli = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - cd application/tests/ && phpunit --coverage-text
   - php coverage-checker.php build/logs/clover.xml 100
