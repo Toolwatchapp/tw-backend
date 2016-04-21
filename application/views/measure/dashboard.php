@@ -85,6 +85,8 @@
         </div>
     </div>
 
-    <?php $this->load->view("time");?>
+    <?php if(!$this->agent->is_mobile()){
+       $this->load->view("time");
+    }?>
 
 </div>

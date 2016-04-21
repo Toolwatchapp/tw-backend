@@ -33,6 +33,9 @@
     },
     "GOOGLE_API_LINK":{
       "required":true
+    },
+    "ALPHAID_HASH":{
+      "required":true
     }
   },
   "addons": [
