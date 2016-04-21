@@ -20,6 +20,7 @@ class Event {
 
 		if (ENVIRONMENT === 'production'
 		&& $this->isAvailable('database_reporting')) {
+			$this->CI =& get_instance();
 
 			try {
 				$country = "undefined";
@@ -30,11 +31,11 @@ class Event {
 
 				$data = array(
 					'ip'      => $_SERVER['REMOTE_ADDR'],
-					'user_id' => $this->session->userdata('userId')?
-					$this->session->userdata('userId'):0,
-					'mobile'   => (int) $this->agent->is_mobile(),
-					'browser'  => $this->agent->browser(),
-					'platform' => str_replace(' ', '', $this->agent->platform()),
+					'user_id' => $this->CI->session->userdata('userId')?
+					$this->CI->session->userdata('userId'):0,
+					'mobile'   => (int) $this->CI->agent->is_mobile(),
+					'browser'  => $this->CI->agent->browser(),
+					'platform' => str_replace(' ', '', $this->CI->agent->platform()),
 					'country'  => $country,
 					'date'     => str_replace(' ', 'T', date("Y-m-d H:i:s")),
 					'event'    => $event
@@ -53,6 +54,7 @@ class Event {
 				);
 
 				$result = curl_exec($ch);
+
 
 				$this->circuitBreaker->reportSuccess("database_reporting");
 			} catch (Exception $e) {

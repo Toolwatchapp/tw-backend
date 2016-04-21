@@ -55,7 +55,6 @@
  */
 define('ENVIRONMENT', 'testing');
 include_once './vendor/autoload.php';
-
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
