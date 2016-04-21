@@ -2,7 +2,7 @@
   "require" : {
         "php": "~5.6.5",
         "ext-mysql": "*",
-        "ext-acpu": "*",
+        "ext-apcu": "*",
         "monolog/monolog": "~1.7",
         "codeception/codeception": "*",
         "ejsmont-artur/php-circuit-breaker": "*"
