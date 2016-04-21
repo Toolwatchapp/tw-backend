@@ -88,4 +88,21 @@ class Modal_test extends TestCase {
 		$this->assertResponseCode(302);
 	}
 
+	public function test_resetPasswordMandrillCircuitOpen(){
+
+		$factory = new Ejsmont\CircuitBreaker\Factory();
+		$this->circuitBreaker = $factory->getSingleApcInstance(1, 300);
+		$this->circuitBreaker->reportFailure("mandrill");
+
+		$output = $this->request(
+			'POST',
+			['Modal', 'resetPassword'],
+			[
+				'ajax' => true
+			]
+		);
+
+		$this->assertContains('We are unable to reset your pass', $output);
+	}
+
 }

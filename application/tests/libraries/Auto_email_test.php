@@ -436,6 +436,68 @@ class Auto_email_test extends TestCase {
 	$this->assertEquals(sizeof($emails['measures']), 0);
  }
 
+ public function test_mandrillCircuitBreaker(){
+
+	 		$mandrillMessage = $this->getMockBuilder('Mandrill_Messages')
+	 		                        ->disableOriginalConstructor()
+	 		                        ->getMock();
+
+	 		$mandrillMessage
+			->method('send')
+			->will($this->throwException(new Mandrill_Error));
+
+	 		$this->email->CI->mandrill->messages = $mandrillMessage;
+
+			//Test to send reset pw email.
+			//It'll fail
+			$this->assertEquals(false,
+				$this->email->updateObserver(
+	 			'TEST',
+	 			RESET_PASSWORD,
+	 			array('email' => self::$users['nestor']->email,
+	 			'token' => 'plop' )));
+
+			//Circuit breaker should be open as previous email
+			//failed
+			$factory = new Ejsmont\CircuitBreaker\Factory();
+			$this->circuitBreaker = $factory->getSingleApcInstance(1, 300);
+			$this->assertEquals(false, $this->circuitBreaker->isAvailable("mandrill"));
+
+			$exceptionThrown = false;
+
+			try {
+
+				$emails = $this->email->cronCheck(24*2*62*60);
+			} catch (Exception $e) {
+
+				$exceptionThrown = true;
+			}
+
+			$this->assertEquals(true, $exceptionThrown);
+ }
+
+ public function test_mailChimpCircuitBreaker(){
+
+	 $mcapi = $this->getMockBuilder('Mcapi')
+													 ->disableOriginalConstructor()
+													 ->getMock();
+
+	 $mcapi
+	 ->method('listSubscribe')
+	 ->will($this->throwException(new Exception));
+
+	 $this->email->CI->mcapi = $mcapi;
+
+	 $this->email->updateObserver(
+		 'TEST',
+		 SIGN_UP,
+		 self::$users['nestor']);
+
+		 $factory = new Ejsmont\CircuitBreaker\Factory();
+		 $this->circuitBreaker = $factory->getSingleApcInstance(1, 300);
+		 $this->assertEquals(false, $this->circuitBreaker->isAvailable("mailchimp"));
+ }
+
  public static function tearDownAfterClass() {
   $CI = &get_instance();
   $CI->load->model('User');

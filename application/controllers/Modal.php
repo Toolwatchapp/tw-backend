@@ -44,9 +44,9 @@ class Modal extends MY_Controller
     public function signUpSuccess()
     {
         if($this->input->post('ajax'))
-		{
-			$this->load->view('modal/sign-up-success');
-		}
+    		{
+    			$this->load->view('modal/sign-up-success');
+    		}
         else
         {
             redirect(base_url());
@@ -56,9 +56,16 @@ class Modal extends MY_Controller
     public function resetPassword()
     {
         if($this->input->post('ajax'))
-		{
-			$this->load->view('modal/reset-password');
-		}
+    		{
+          $factory = new Ejsmont\CircuitBreaker\Factory();
+     		  $this->circuitBreaker = $factory->getSingleApcInstance(1, 300);
+
+          if($this->circuitBreaker->isAvailable("mandrill")){
+            $this->load->view('modal/reset-password');
+          }else{
+            $this->load->view('modal/reset-password-unavailable');
+          }
+    		}
         else
         {
             redirect(base_url());

@@ -196,6 +196,8 @@ class Auto_email {
 	 			'watches'  => $emailsWatchSent,
 	 			'measures' => $emailsMeasureSent
 	 		);
+		}else{
+			throw new Exception("Mandrill is down", 1);
 		}
 	}
 
@@ -304,6 +306,7 @@ class Auto_email {
 		} catch (Mandrill_Error $e) {
 			log_message('error', 'A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage());
 			$this->circuitBreaker->reportFailure("mandrill");
+			return false;
 		}
 	}
 
