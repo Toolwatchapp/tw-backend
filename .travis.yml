@@ -12,10 +12,12 @@ before_script:
     - sudo apt-get install autoconf
     - wget http://pecl.php.net/get/apcu-4.0.2.tgz
     - tar zxvf apcu-4.0.2.tgz
+    - cd apcu-4.0.2
     - phpize && ./configure && make install && echo "Installed ext/apcu-4.0.2"
     - echo "extension=apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - echo "apc.enable = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - echo "apc.enable_cli = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - cd ..
     - composer install
 
 script:
