@@ -2,16 +2,24 @@ language: php
 php:
   - '5.6'
 
+sudo: required
+
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
 
 before_script:
-    - echo "extension = apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - curl -o APC-3.1.10.tgz http://pecl.php.net/get/APC-3.1.10.tgz
+    - tar -xzf APC-3.1.10.tgz
+    - sh -c "cd APC-3.1.10 && phpize && ./configure && make && sudo make install && cd .."
+    - rm -Rf APC-3.1.10
+    - rm APC-3.1.10.tgz
+    - echo "extension=apc.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
     - echo "apc.enable = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - echo "apc.enable_cli = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-    - composer install
+    - phpenv rehash
 
 script:
+  - composer install
   - cd application/tests/ && phpunit --coverage-text
   - php coverage-checker.php build/logs/clover.xml 100
