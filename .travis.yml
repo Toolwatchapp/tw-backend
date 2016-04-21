@@ -7,5 +7,6 @@ notifications:
   email: false
 
 script:
+  - composer install
   - cd application/tests/ && phpunit --coverage-text
   - php coverage-checker.php build/logs/clover.xml 100
