@@ -31,6 +31,9 @@ class Measures extends MY_Controller {
 	public function index() {
 
 		$this->event->add(BOARD_LOAD);
+
+
+
 		$this->constructMeasurePage();
 	}
 
@@ -46,9 +49,17 @@ class Measures extends MY_Controller {
 			array_push($this->_headerData['javaScripts'], "watch.animation", "time");
 		}
 
+		array_push($this->_headerData['javaScripts'],
+			"c3.min", "d3.min"
+		);
+
+		array_push($this->_headerData['styleSheets'],
+			"c3.min"
+		);
+
 		$this->load->view('header', $this->_headerData);
 
-		$this->_bodyData['allMeasure'] = $this->measure->getMeasuresByUser(
+		$this->_bodyData['allMeasure'] = $this->measure->getNLastMeasuresByUserByWatch(
 			$this->session->userdata('userId'));
 
 		$this->load->view('measure/dashboard', $this->_bodyData);

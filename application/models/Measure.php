@@ -215,6 +215,7 @@ class Measure extends ObservableModel {
 				$accuracy  = ($refDelta*86400/$userDelta)-86400;
 			}
 
+			$watchMeasure->unroundedAccuracy = $accuracy;
 			$accuracy  = sprintf("%.1f", $accuracy);
 			$watchMeasure->accuracy = $accuracy;
 
@@ -329,6 +330,7 @@ class Measure extends ObservableModel {
 			->join("user", "user.userId = watch.userId")
 			->find($measureId);
 
+			$this->stats->update($watchMeasure->brand, $watchMeasure->accuracy);
 
 			$this->notify(NEW_ACCURACY,
 								array('measure'   => $watchMeasure));
