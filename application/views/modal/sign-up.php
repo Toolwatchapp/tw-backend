@@ -1,6 +1,12 @@
 <div class="form-group">
-   <center><button onclick="fb_login();" class="btn btn-primary btn-lg btn-spinner btn-full">Sign up with Facebook<i class="fa fa-spinner fa-pulse"></i></button></center>
+   <center><a style="padding:15px; color:white; background-color: #36528c; width:100%;"
+   href="#" onclick="fb_login();" class="col-md-12">
+     <i class="fa fa-facebook" aria-hidden="true"></i>&nbsp;&nbsp;Log in with Facebook
+   </a></center>
    <span id="fb_error" class="signup-error login-error"></span>
+   <br>
+   <br>
+   <br>
 </div>
 <?php echo form_open('', array('name'=>'signup'));?>
     <div class="form-group">
