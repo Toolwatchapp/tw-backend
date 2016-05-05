@@ -94,15 +94,17 @@ class Stats_test extends TestCase {
 
       foreach ($watchesIds as $id) {
 
-        $accuracy = self::{$insertFunction}($id);
+        for ($i=0; $i < rand(3, 10); $i++) {
+          $accuracy = self::{$insertFunction}($id);
 
-        if(abs($accuracy) < 300){
-          $pre = ($accuracy < 0) ? '_neg_' : '_pos_';
+          if(abs($accuracy) < 300){
+            $pre = ($accuracy < 0) ? '_neg_' : '_pos_';
 
-          self::$dumnyCache[$brand.$pre.'count']++;
-          self::$dumnyCache[$brand.$pre.'sum'] += $accuracy;
-          self::$dumnyCache["@tw".$pre.'count']++;
-          self::$dumnyCache["@tw".$pre.'sum'] += $accuracy;
+            self::$dumnyCache[$brand.$pre.'count']++;
+            self::$dumnyCache[$brand.$pre.'sum'] += $accuracy;
+            self::$dumnyCache["@tw".$pre.'count']++;
+            self::$dumnyCache["@tw".$pre.'sum'] += $accuracy;
+          }
         }
       }
     }

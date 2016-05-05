@@ -55,6 +55,7 @@ class User extends ObservableModel {
 			$this->session->set_userdata('timezone', $user->timezone);
 			$this->session->set_userdata('country', $user->country);
 			$this->session->set_userdata('registerDate', $user->registerDate);
+			$this->session->set_userdata('plan', $this->getPlan($user->userId));
 
 			$this->update_where('userId', $user->userId, array('lastLogin' => time()));
 
@@ -238,5 +239,34 @@ class User extends ObservableModel {
 			->join('watch', '`user`.`userId`=`watch`.`userId`')
 			->find_by('watchId', $watchId);
 
+	}
+
+	function getPlan($userId){
+		$plan = new MY_Model("plan_users");
+		$planUser = $plan
+		->select('name')
+		->join('plan', 'plan_users.plan_id = plan.id')
+		->where('user_id', $userId)
+		->order_by('valide_until', 'desc')
+		->find_by('valide_until >=', time());
+
+		if($planUser){
+
+			return $planUser->name;
+		}
+		return false;
+	}
+
+	function addPlan($userId, $planId, $expiration){
+		$plan = new MY_Model("plan_users");
+
+		$data = array(
+			'user_id' => $userId,
+			'plan_id' => $planId,
+			'purchase_on' => time(),
+			'valide_until' => $expiration
+		);
+
+		return is_numeric($plan->insert($data));
 	}
 }

@@ -5,7 +5,8 @@
         "ext-apcu": "*",
         "monolog/monolog": "~1.7",
         "codeception/codeception": "*",
-        "ejsmont-artur/php-circuit-breaker": "*"
+        "ejsmont-artur/php-circuit-breaker": "*",
+        "stripe/stripe-php": "3.*"
   },
   "require-dev": {
       "heroku/heroku-buildpack-php": "*",
