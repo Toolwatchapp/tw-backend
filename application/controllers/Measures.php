@@ -31,6 +31,9 @@ class Measures extends MY_Controller {
 	public function index() {
 
 		$this->event->add(BOARD_LOAD);
+
+
+
 		$this->constructMeasurePage();
 	}
 
@@ -46,10 +49,18 @@ class Measures extends MY_Controller {
 			array_push($this->_headerData['javaScripts'], "watch.animation", "time");
 		}
 
+		array_push($this->_headerData['javaScripts'],
+			"c3.min", "d3.min", "rubytabs"
+		);
+
+		array_push($this->_headerData['styleSheets'],
+			"c3.min", "ruby.animate", "rubytabs"
+		);
+
 		$this->load->view('header', $this->_headerData);
 
-		$this->_bodyData['allMeasure'] = $this->measure->getMeasuresByUser(
-			$this->session->userdata('userId'));
+		$this->_bodyData['allMeasure'] = $this->measure->getNLastMeasuresByUserByWatch(
+			$this->session->userdata('userId'), 10);
 
 		$this->load->view('measure/dashboard', $this->_bodyData);
 
@@ -341,6 +352,38 @@ class Measures extends MY_Controller {
 
 			echo json_encode($result);
 
+		}
+	}
+
+	public function subscribe(){
+
+		if($this->expectsPost(array('stripeToken'))){
+			\Stripe\Stripe::setApiKey("sk_8iNWEd0lv7jvUsqng6K2G0i94phGk");
+
+			try {
+				$token = $this->stripeToken;
+
+				$customer = \Stripe\Customer::create(array(
+					"source" => $token,
+					"plan" => "tw-premium",
+					"email" => $this->session->userdata("email"))
+				);
+
+				var_dump($customer);
+
+				$this->load->model('user');
+				if($this->user->addPlan($this->session->userdata('userId'), 1, time()+31557600)){
+					$this->_bodyData['success'] = "Your subscription have been registered.";
+					$this->session->set_userdata('plan', 'premium');
+					$this->constructMeasurePage();
+
+				}
+
+			} catch (Exception $e) {
+				var_dump($e);
+				$this->_bodyData['error'] = "Something happened. Your credit card have NOT been charged. Please try another card.";
+				$this->constructMeasurePage();
+			}
 		}
 	}
 }

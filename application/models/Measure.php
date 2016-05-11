@@ -106,17 +106,21 @@ class Measure extends ObservableModel {
 					//Mapping function starts here
 					function ($watch, $row){
 
+						$this->completeMeasure = 0;
+
 						//Eleminates null measures resulting from the
 						//right join and incomplete measures that
 						//were archived
 						$measures = $this->__->reject($watch, function($watch){
 
+							if($watch['statusId'] != 1.5 &&
+							$watch['statusId'] != null){
+								$this->completeMeasure++;
+							}
 							return $watch['statusId'] == null ||
 							($watch['accuracyAge'] == 0 &&
 								$watch['statusId'] == 3);
 						});
-
-						$totalCompleteMeasures = sizeof($measures);
 
 						//Mapping non-null measure to remove the data
 						//duplicated by the group by (about the watch)
@@ -146,6 +150,7 @@ class Measure extends ObservableModel {
 								return $measure == null;
 							});
 
+						$this->load->library("stats");
 						//Construct and return the final array
 						return array(
 							// Same here
@@ -155,8 +160,14 @@ class Measure extends ObservableModel {
 							"yearOfBuy"=>(int)$watch[0]["yearOfBuy"],
 							"serial"=>$watch[0]["serial"],
 							"caliber"=>$watch[0]["caliber"],
-							"historySize"=>$totalCompleteMeasures,
-							"measures" => $measures
+							"historySize"=>$this->completeMeasure,
+							"measures" => $measures,
+							"averages" => [
+								"toolwatch_low" => $this->stats->getNegAverage("@tw"),
+								"toolwatch_high" => $this->stats->getPosAverage("@tw"),
+								"brand_low" => $this->stats->getNegAverage($watch[0]["brand"]),
+								"brand_high" => $this->stats->getPosAverage($watch[0]["brand"])
+								]
 							);
 					// The groupBy produce one empty row if the User
 					// doesn't have any watch. We remove it here.
@@ -215,6 +226,7 @@ class Measure extends ObservableModel {
 				$accuracy  = ($refDelta*86400/$userDelta)-86400;
 			}
 
+			$watchMeasure->unroundedAccuracy = $accuracy;
 			$accuracy  = sprintf("%.1f", $accuracy);
 			$watchMeasure->accuracy = $accuracy;
 
@@ -329,6 +341,9 @@ class Measure extends ObservableModel {
 			->join("user", "user.userId = watch.userId")
 			->find($measureId);
 
+			$this->load->library("stats");
+
+			$this->stats->update($watchMeasure->brand, $watchMeasure->accuracy);
 
 			$this->notify(NEW_ACCURACY,
 								array('measure'   => $watchMeasure));

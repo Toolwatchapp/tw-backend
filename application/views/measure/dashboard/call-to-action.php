@@ -1,38 +1,37 @@
-<?php if(is_null($statusId) || $statusId == '0')
-{
 
-  echo '<td><a class="submitNewMeasure" data-watch="'.$watchId.'">Measure me!</a>' .
-  form_open('/measures/new-measure-for-watch/', array('name'=>'start-new-measure-'.$watchId)).'
-      <input type="hidden" name="watchId" value="'.$watchId.'">
-    </form></td>';
 
-}else if($statusId == '1'){
+<?php
+$statusId = end($measures)['statusId'];
 
-  echo '<td><a href="#" class="submitGetAccuracy" data-watch="'.$id.'">Check the accuracy</a></td>';
+if(is_null($statusId) || $statusId == '0' || $statusId == '2') { ?>
 
-}else if($statusId == '1.5'){
+    <a data-watch="<?php echo $watchId; ?>" class="submitNewMeasure btn btn-primary btn-lg  col-md-offset-1 col-md-3" href="#"><br>Start a <br>new measure <br>&nbsp;</a>
 
-  echo '<td><a href="#" title="Warning" data-toggle="modal" data-target="#pageModal"
-  data-modal-update="true" data-href="/modal/accuracyWarning/">Check the accuracy in
-  '.$accuracy.' hour(s) <i class="warning fa fa-info-circle"></i></a></td>';
+    <?php echo form_open('/measures/new-measure-for-watch/', array('name'=>'start-new-measure-'.$watchId, 'class'=>"no-display"));?>
+    <input type="hidden" name="watchId" value="<?php echo $watchId;?>"></form>
 
-}else if($statusId == '2'){
+<?php }else if($statusId == '1'){ ?>
 
-  if($accuracy > 0){
-    $accuracy = "+".$accuracy;
-  }else{
-    $accuracy = $accuracy;
-  }
+  <a data-watch="<?php echo $watchId; ?>" class="submitGetAccuracy btn btn-primary btn-lg  col-md-offset-1 col-md-3" href="#"><br>Check your <br>accuracy <br>&nbsp;</a>
 
-  if(($accuracy > 99.9) || (($accuracy < -99.9)))
-  {
+  <?php echo form_open('/measures/get-accuracy/', array('name'=>'get-accuracy-'.$watchId));?>
+    <input type="hidden" name="measureId" value="<?php echo end($measures)['id']; ?>">
+    <input type="hidden" name="watchId" value="<?php echo $watchId; ?>">
+  </form>
 
-      echo '<td>'.$accuracy.' seconds a day <br><small><i>Looks like there was
-      an error measuring your watch, why not try another measure?</i></small></td>';
-  }
-  else
-  {
-      echo '<td>'.$accuracy.' seconds a day</td>';
-  }
-}
-?>
+<?php }else if($statusId == '1.5'){ ?>
+
+  <a href="#" title="Warning" data-toggle="modal" data-target="#pageModal"
+  data-modal-update="true" data-href="/modal/accuracyWarning/" class="btn btn-primary btn-lg col-md-offset-1 col-md-3" href="/measures/new-measure/"><br>Check  in<br>
+  <?php echo end($measures)['accuracy'];?> hour(s).<br>&nbsp;</a>
+
+<?php } ?>
+
+<a data-watch="<?php echo $watchId; ?>" class="submitEditWatch btn btn-primary btn-lg  col-md-offset-1 col-md-3" href="#"><br>Edit your <br>watch <br>&nbsp;</a>
+<?php echo form_open('/measures/edit_watch_p/', array('name'=>'edit-watch-'.$watchId, 'class'=>"no-display"));?>
+<input type="hidden" name="watchId" value="<?php echo $watchId; ?>"></form>
+
+<a data-watch="<?php echo $watchId; ?>" style="background-color:#ff3b30" class="submitDeleteWatch btn btn-primary btn-lg col-md-3 col-md-offset-1" href="#"><br>Delete <br>your watch <br>&nbsp;</a>
+
+<?php echo form_open('/measures/delete_watch/', array('name'=>'delete-watch-'.$watchId, 'class'=>"no-display"));?>
+<input type="hidden" name="watchId" value="<?php echo $watchId; ?>"></form>
