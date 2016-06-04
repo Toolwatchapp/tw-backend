@@ -19,8 +19,6 @@ $( document ).ready(function() {
       createCTA();
     }
 
-    getAccurateTime();
-
     console.log(isAccuracy);
 
     $('body').on('click', 'button[name="startSync"]', function(e)
@@ -34,6 +32,9 @@ $( document ).ready(function() {
  * Check if a watch is selected and displays the CTA
  */
 function createCTA(){
+
+  while(window.syncedDate === null){}
+  
   var watchId = $('select[name="watchId"]').val();
   $('.watch-error').hide();
 
