@@ -43,7 +43,7 @@ class Measures extends MY_Controller {
 
 		$this->_headerData['headerClass'] = 'blue';
 		if (!$this->agent->is_mobile()) {
-			array_push($this->_headerData['javaScripts'], "watch.animation", "time");
+			array_push($this->_headerData['javaScripts'], "watch.animation", "time", "time.api");
 		}
 
 		$this->load->view('header', $this->_headerData);
@@ -222,7 +222,7 @@ class Measures extends MY_Controller {
 
 		$this->event->add(MEASURE_LOAD);
 
-		array_push($this->_headerData['javaScripts'], "input.time.logic");
+		array_push($this->_headerData['javaScripts'], "input.time.logic", "time.api");
 
 		$this->_headerData['headerClass'] = 'blue';
 		$this->load->view('header', $this->_headerData);
@@ -258,7 +258,7 @@ class Measures extends MY_Controller {
 
 
 			$this->_headerData['headerClass'] = 'blue';
-			array_push($this->_headerData['javaScripts'], "input.time.logic",
+			array_push($this->_headerData['javaScripts'], "input.time.logic", "time.api",
 			"watch.animation");
 
 			$this->load->view('header', $this->_headerData);
