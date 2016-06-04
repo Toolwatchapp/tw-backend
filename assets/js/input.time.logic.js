@@ -57,7 +57,7 @@ function createCTA(){
  */
 function getNextMinute(){
 
-  var d = new Date();
+  var d = getAccurateTime();
   var seconds = d.getSeconds();
   var offsetSeconds = 0;
 
@@ -163,7 +163,7 @@ function reset(){
 function clicked(){
 
   clearInterval(timeoutPopup);
-  clickedDate = new Date();
+  clickedDate = getAccurateTime();
 
   var clickedText =
     '<center>'
