@@ -19,6 +19,8 @@ $( document ).ready(function() {
       createCTA();
     }
 
+    getAccurateTime();
+
     console.log(isAccuracy);
 
     $('body').on('click', 'button[name="startSync"]', function(e)
