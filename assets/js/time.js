@@ -220,6 +220,16 @@ function calcMoonPhase()
 }
 
 $( document ).ready(function() {
+  getAccurateTime();
+  if(window.syncedDate === null){
+      setTimeout(initClock, 3000);
+  }else{
+    initClock();
+  }
+
+});
+
+function initClock(){
   initializeClock('clockdiv', new Date(Date.parse(new Date())));
   calcMoonPhase();
-});
+}
