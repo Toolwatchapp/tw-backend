@@ -1,5 +1,7 @@
 function getTime() {
 
+  getAccurateTime();
+
   return {
     'total': window.syncedDate,
     'years':window.syncedDate.getFullYear(),
