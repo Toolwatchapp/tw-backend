@@ -33,8 +33,6 @@ $( document ).ready(function() {
  */
 function createCTA(){
 
-  while(window.syncedDate === null){}
-  
   var watchId = $('select[name="watchId"]').val();
   $('.watch-error').hide();
 
@@ -59,6 +57,16 @@ function createCTA(){
  * Compute the next minute
  */
 function getNextMinute(){
+
+  if(window.syncedDate === null){
+    setTimeout(getNextMinute, 1000);
+    return;
+  }
+
+  $('#sync-text').html(
+  '<center><i class="fa fa-check" aria-hidden="true" style="color:#1fa67a"></i>'
+  + 'Synchronized with our atomic clock.</center>'
+  );
 
   var d = getAccurateTime();
   var seconds = d.getSeconds();

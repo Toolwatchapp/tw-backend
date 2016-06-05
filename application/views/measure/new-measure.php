@@ -3,6 +3,12 @@
         <div class="col-md-12">
             <center><h1>New measure <span id="selectedWatch"></span></h1></center>
         </div>
+        <div class="col-md-12">
+          <p id="sync-text">
+          <center><i class="fa fa-spinner" aria-hidden="true"></i>
+          Synchronizing with our atomic clock...</center>
+          </p>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
