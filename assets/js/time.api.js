@@ -92,6 +92,4 @@ function getAccurateTime(){
   return window.syncedDate;
 }
 
-$( document ).ready(function() {
-  getAccurateTime();
-});
+getAccurateTime();
