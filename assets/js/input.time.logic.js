@@ -66,17 +66,9 @@ function createCTA(){
  */
 function getNextMinute(){
 
-  var text = "";
-  if(window.offset < 0){
-    text = (-window.offset) + ' seconds ahead.';
-  }else{
-    text = window.offset + ' seconds behind.';
-  }
-
   $('#sync-text').html(
   '<center>'
   + 'Synchronized with with the U. S. Naval Observatory\'s atomic clock.'
-  + '<br /> <small><i> Your computer clock is '+text+'</i></small>'
   + '</center>'
   );
 
