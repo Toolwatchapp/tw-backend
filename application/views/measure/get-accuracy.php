@@ -3,6 +3,14 @@
         <div class="col-md-12">
             <center><h1 id="mainTitle">Check the accuracy <span id="selectedWatch"> of your <?php echo $selectedWatch->brand.' - '.$selectedWatch->name;?></span></h1></center>
         </div>
+        <div class="col-md-12">
+          <div style="display:none" id="sync-text">
+            <center>
+              <h1 id="perc-sync">0%</h1>
+              <p>Synchroniz<span id="tense-sync">ing</span> with the U. S. Naval Observatory's atomic clock.</p>
+            </center>
+          </div>
+        </div>
     </div>
     <span id="accuracyHolder"></span>
     <div class="row">

@@ -40,12 +40,20 @@ function createCTA(){
   {
       $('button[name="startSync"]').hide();
       $('.watch-select').hide();
+      $('#sync-text').show();
       $('span#selectedWatch').text(
         "for your " +
         $('select[name="watchId"]').find(":selected").text()
       );
-      getNextMinute();
 
+      window.callback = function(counter, max){
+        $("#perc-sync").text((counter/max*100) + "%");
+        if(counter === max){
+          getNextMinute();
+        }
+      }
+
+      getTimeDiff();
   }
   else
   {
@@ -58,15 +66,21 @@ function createCTA(){
  */
 function getNextMinute(){
 
-  if(window.syncedDate === null){
-    setTimeout(getNextMinute, 1000);
-    return;
+  var text = "";
+  if(window.offset < 0){
+    text = (-window.offset) + ' seconds ahead.';
+  }else{
+    text = window.offset + ' seconds behind.';
   }
 
   $('#sync-text').html(
-  '<center><i class="fa fa-check" aria-hidden="true" style="color:#1fa67a"></i>'
-  + 'Synchronized with our atomic clock.</center>'
+  '<center>'
+  + 'Synchronized with with the U. S. Naval Observatory\'s atomic clock.'
+  + '<br /> <small><i> Your computer clock is '+text+'</i></small>'
+  + '</center>'
   );
+
+  console.log("getNextMinute");
 
   var d = getAccurateTime();
   var seconds = d.getSeconds();

@@ -4,10 +4,12 @@
             <center><h1>New measure <span id="selectedWatch"></span></h1></center>
         </div>
         <div class="col-md-12">
-          <p id="sync-text">
-          <center><i class="fa fa-spinner" aria-hidden="true"></i>
-          Synchronizing with our atomic clock...</center>
-          </p>
+          <div style="display:none" id="sync-text">
+            <center>
+              <h1 id="perc-sync">0%</h1>
+              <p>Synchroniz<span id="tense-sync">ing</span> with the U. S. Naval Observatory's atomic clock.</p>
+            </center>
+          </div>
         </div>
     </div>
     <div class="row">

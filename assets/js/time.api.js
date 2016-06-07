@@ -1,6 +1,8 @@
 window.syncedDate = null;
 window.syncedDataAnchor = null;
 window.offset = null;
+window.callback = null;
+window.diff = null;
 
 (function(w){
 	var perfNow;
@@ -55,20 +57,22 @@ function getTimeDiff(){
           timeDiff = (now-beforeTime)/2;
 
           serverTime = response.time-timeDiff;
-          offset = Date.now()-serverTime;
 
-          // Push to array
-          offsets.push(offset)
+          offsets.push(Date.now()-serverTime)
           if (counter < maxTimes) {
             // Repeat
             getTimeDiff();
           } else {
-            var averageOffset = median(offsets);
-            window.syncedDate = new Date(Date.now()-averageOffset);
+            var medianOffset = median(offsets);
+            window.syncedDate = new Date(Date.now()-medianOffset);
             window.syncedDataAnchor = window.perfNow();
             console.log(window.syncedDate);
-            console.log("average offset:" + averageOffset);
-            window.offset  = averageOffset;
+            console.log("median offset:" + medianOffset);
+            window.offset = (medianOffset/1000).toFixed(2);
+          }
+
+          if(window.callback !== null){
+              window.callback(counter, maxTimes);
           }
       }
   });
@@ -91,5 +95,3 @@ function getAccurateTime(){
 
   return window.syncedDate;
 }
-
-getAccurateTime();
