@@ -60,7 +60,7 @@ $( document ).ready(function() {
     }
 
     function drawTime(ctx, radius){
-        var now = new Date();
+        var now = (window.syncedDate === null) ? new Date() : getAccurateTime();
         var hour = now.getHours();
         var minute = now.getMinutes();
         var second = now.getSeconds()-1;

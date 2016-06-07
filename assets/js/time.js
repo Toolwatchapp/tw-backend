@@ -124,15 +124,12 @@ function calcMoonPhase()
 }
 
 $( document ).ready(function() {
-  if(window.syncedDate === null){
-      setTimeout(initClock, 3000);
-  }else{
-    initClock();
+  
+  maxTimes = 1;
+  window.callback = function(count, max){
+    initializeClock('clockdiv', new Date(Date.parse(new Date())));
+    calcMoonPhase();
   }
+  window.getTimeDiff();
 
 });
-
-function initClock(){
-  initializeClock('clockdiv', new Date(Date.parse(new Date())));
-  calcMoonPhase();
-}
