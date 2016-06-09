@@ -21,24 +21,29 @@
 
       <div  class="col-md-12">
         <center>
-
+        <div class="row">
           <h1>THANK YOU FOR MEASURING YOUR WATCH!</h1>
+        </div>
 
-          <div class="wrapper col-md-4">
-              <div class="ribbon-wrapper-green"><div class="ribbon-green">More accurate than <span class="watch-percentile"></span>% <br> of all tested watches.</div></div>
-              <center>
-                <br>
-                <br>
-                <br>
-                <br>
-                <h2>Congratulations</h2>
-                <h3>
-                  The accuracy of your <strong><span class="watch-brand"><?php echo $selectedWatch->brand;?></span></strong> is <span class="watch-accuracy"></span> spd.
-                </h3>
-              </center>
+        <div class="row">
+            <div class="wrapper col-md-push-4 col-md-4">
+                <div class="ribbon-wrapper-green"><div class="ribbon-green">More accurate than <span class="watch-percentile"></span>% <br> of all tested watches.</div></div>
+                <center>
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <h2>Congratulations</h2>
+                  <h3>
+                    The accuracy of your <strong><span class="watch-brand"><?php echo $selectedWatch->brand;?></span></strong> is <span class="watch-accuracy"></span> spd.
+                  </h3>
+                </center>
 
-              <canvas class="col-md-offset-1 col-md-10" id="canvas_animated_watch" width="250" height="250"></canvas>
+                <canvas class="col-md-offset-1 col-md-10" id="canvas_animated_watch" width="250" height="250"></canvas>
+            </div>
           </div>
+
+          <div class="row">
 
           <p><br><br>You can continue enjoying this mechanical beauty on your wrist.<br><br></p>
           <h4>DON'T KEEP THIS GOLDMINE JUST FOR YOU, SHARE IT ;)</h4>
@@ -62,6 +67,7 @@
                     <br>
                     <br>
           <a class="btn btn-success btn-lg no-display backToMeasure" href="/measures/">Back to measures</a>
+          </div>
         </center>
       </div>
 
