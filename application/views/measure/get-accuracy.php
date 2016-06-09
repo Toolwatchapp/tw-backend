@@ -19,10 +19,27 @@
 
     <div style="display:none;" class="form-group sync-success row">
 
-      <div  class="col-md-8">
+      <div  class="col-md-12">
         <center>
 
           <h1>THANK YOU FOR MEASURING YOUR WATCH!</h1>
+
+          <div class="wrapper col-md-4">
+              <div class="ribbon-wrapper-green"><div class="ribbon-green">More accurate than <span class="watch-percentile"></span>% <br> of all tested watches.</div></div>
+              <center>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h2>Congratulations</h2>
+                <h3>
+                  The accuracy of your <strong><span class="watch-brand"><?php echo $selectedWatch->brand;?></span></strong> is <span class="watch-accuracy"></span> spd.
+                </h3>
+              </center>
+
+              <canvas class="col-md-offset-1 col-md-10" id="canvas_animated_watch" width="250" height="250"></canvas>
+          </div>
+
           <p><br><br>You can continue enjoying this mechanical beauty on your wrist.<br><br></p>
           <h4>DON'T KEEP THIS GOLDMINE JUST FOR YOU, SHARE IT ;)</h4>
 
@@ -46,23 +63,6 @@
                     <br>
           <a class="btn btn-success btn-lg no-display backToMeasure" href="/measures/">Back to measures</a>
         </center>
-      </div>
-
-      <div class="wrapper col-md-4">
-          <div class="ribbon-wrapper-green"><div class="ribbon-green">More accurate than <span class="watch-percentile"></span>% <br> of all tested watches.</div></div>
-          <center>
-            <br>
-            <br>
-            <br>
-            <br>
-            <h2>Congratulations</h2>
-            <h3>
-              The accuracy of your <strong><span class="watch-brand"><?php echo $selectedWatch->brand;?></span></strong> is <span class="watch-accuracy"></span> spd.
-            </h3>
-          </center>
-
-          <canvas class="col-md-offset-1 col-md-10" id="canvas_animated_watch" width="250" height="250"></canvas>
-
       </div>
 
       <style media="screen">
