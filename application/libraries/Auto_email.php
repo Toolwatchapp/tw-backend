@@ -917,12 +917,15 @@ class Auto_email {
 
 		$attachments = array();
 
-
-		array_push($attachments, array(
+		try{
+			array_push($attachments, array(
 				'type'    => 'text/calendar',
 				'name'    => 'Check my watch accuracy.ics',
 				'content' =>  $this->createGoogleEvent($measure)
-		));
+			));
+		}catch(Exception $e){
+			log_message('error', $e);
+		}
 
 
 		$emailcontent = $this->CI->load->view(
