@@ -843,8 +843,15 @@ class Auto_email {
 			if(ENVIRONMENT !== "testing"){
 				// Create the date and description
 				$description = "Check the accuracy of my ".$measure->brand.' '.$measure->model;
-				$in30days = time() + 30*24*60*60;
-				$in30daysAndOneHour = time() + 30*24*60*60+(60*60);
+				
+				//rounding to next half hour
+				//http://stackoverflow.com/a/9639719/1871890
+				$currentTime = time();
+				$prev = $currentTime - ($currentTime % 1800);
+				$next = $currentTime + 1800;
+
+				$in30days = $next + 30*24*60*60;
+				$in30daysAndOneHour = $next + 30*24*60*60+(60*60);
 				$date = new DateTime("@".$in30days);
 				$dateEnd = new DateTime("@".$in30daysAndOneHour);
 
@@ -917,12 +924,16 @@ class Auto_email {
 
 		$attachments = array();
 
-
-		array_push($attachments, array(
+		try{
+			array_push($attachments, array(
 				'type'    => 'text/calendar',
 				'name'    => 'Check my watch accuracy.ics',
 				'content' =>  $this->createGoogleEvent($measure)
-		));
+			));
+		}catch(Exception $e){
+			log_message('error', $e);
+		}
+
 
 
 		$emailcontent = $this->CI->load->view(
