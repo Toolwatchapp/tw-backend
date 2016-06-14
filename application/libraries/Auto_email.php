@@ -930,10 +930,11 @@ class Auto_email {
 				'name'    => 'Check my watch accuracy.ics',
 				'content' =>  $this->createGoogleEvent($measure)
 			));
+		// @codeCoverageIgnoreStart
 		}catch(Exception $e){
 			log_message('error', $e);
 		}
-
+		// @codeCoverageIgnoreEnd
 
 
 		$emailcontent = $this->CI->load->view(
