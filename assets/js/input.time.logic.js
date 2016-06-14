@@ -68,7 +68,7 @@ function getNextMinute(){
 
   $('#sync-text').html(
   '<center>'
-  + 'Synchronized with with the U. S. Naval Observatory\'s atomic clock.'
+  + 'Synchronized with the U. S. Naval Observatory\'s atomic clock.'
   + '</center>'
   );
 
