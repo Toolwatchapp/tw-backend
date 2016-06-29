@@ -43,9 +43,6 @@ class Users_api_test extends TestCase {
     $this->assertResponseCode(200);
   }
 
-
-
-
   public function test_createReject(){
     $output = $this->request(
 			'POST',
