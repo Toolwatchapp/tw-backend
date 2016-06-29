@@ -102,7 +102,7 @@ class Users_api extends REST_Controller {
 			//The email is already in use
 			} else {
         $this->response(["message" => "email taken"],
-          REST_Controller::HTTP_BAD_REQUEST);
+          REST_Controller::HTTP_UNAUTHORIZED);
 			}
     }
 
