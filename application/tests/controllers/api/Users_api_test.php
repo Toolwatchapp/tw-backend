@@ -34,6 +34,18 @@ class Users_api_test extends TestCase {
 		$this->assertContains('"key"', $output);
 	}
 
+  public function test_options() {
+    $output = $this->request(
+      'OPTIONS',
+      'api/users'
+    );
+
+    $this->assertResponseCode(200);
+  }
+
+
+
+
   public function test_createReject(){
     $output = $this->request(
 			'POST',
@@ -47,7 +59,7 @@ class Users_api_test extends TestCase {
 			]
     );
     $this->assertContains('email taken', $output);
-    $this->assertResponseCode(400);
+    $this->assertResponseCode(401);
   }
 
   public function test_login(){
