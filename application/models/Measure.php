@@ -209,10 +209,10 @@ class Measure extends ObservableModel {
 			The following testes if the measure was taken before 1.3 - 15 fev 2016 (epoch 1455537600) (commit d861c8e436b5ea8909cd1949f86fd20a14b272b4) and adapts the formulae.
 			*/
 			if($watchMeasure->accuracyReferenceTime < 1455537600){
-
-				$accuracy  = ($userDelta*86400/$refDelta)-86400;
+	
+				$accuracy = ($refDelta!=0) ? ($userDelta*86400/$refDelta)-86400 : 0;
 			}else{
-				$accuracy  = ($refDelta*86400/$userDelta)-86400;
+				$accuracy = ($userDelta!=0) ? ($refDelta*86400/$userDelta)-86400 : 0;
 			}
 
 			$accuracy  = sprintf("%.1f", $accuracy);
@@ -267,7 +267,7 @@ class Measure extends ObservableModel {
 
 		$valideMeasuresCount = $this->count_by($precisionFormulae . ' <', 300);
 
-		return round(100 - (($moreAccurateCount / $valideMeasuresCount) * 100));
+		return ($valideMeasuresCount == 0) ? 100 : round(100 - (($moreAccurateCount / $valideMeasuresCount) * 100));
 	}
 
 	/**
