@@ -169,6 +169,7 @@ class Hooks extends CI_Controller {
 	 * @param  String $key  authorization key
 	 * @param  int $time 	hours from now to compute the emails. Only used
 	 * for testing. Compute the email in the future.
+	 * @codeCoverageIgnore
 	 */
 	public function email($key, $time = 0){
 
