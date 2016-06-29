@@ -36,5 +36,6 @@
 	</logging>
 	<php>
 		<server name='HTTP_HOST' value='http://phpunit'/>
+		<const name="PHPUNIT_TESTSUITE" value="true"/>
 	</php>
 </phpunit>
