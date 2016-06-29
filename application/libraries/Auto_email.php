@@ -168,11 +168,14 @@ class Auto_email {
 		$this->checkAccuracyOneWeek($emailsMeasureSent);
 		$this->startANewMeasure($emailsWatchSent);
 
-
-		if(ENVIRONMENT === "development" ||
-			 ENVIRONMENT === "testing"){
+		if((ENVIRONMENT === "development" || ENVIRONMENT === "testing"))
+		{
 			$date = new DateTime("@".$this->time);
-			echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
+			// @codeCoverageIgnoreStart
+			if(defined('PHPUNIT_TESTSUITE') == false){
+				echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
+			}
+			// @codeCoverageIgnoreEnd
 
 			$this->showSentEmails($emailsUserSent, "User emails");
 			$this->showSentEmails($emailsWatchSent, "Watch emails");
@@ -219,18 +222,21 @@ class Auto_email {
 	 * @param  Array $emails
 	 * @param  String $title  A nice title to distinguish between
 	 * email types
+	 * @codeCoverageIgnore
 	 */
 	private function showSentEmails($emails, $title){
 
-		echo "<h2> ".$title." </h2>";
-		foreach ($emails as $email) {
+		if(defined('PHPUNIT_TESTSUITE') == false){
+			echo "<h2> ".$title." </h2>";
+			foreach ($emails as $email) {
 
-			if(isset($email['userId'])){
-				echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
+				if(isset($email['userId'])){
+					echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
+				}
+
+				echo '\n'; var_dump($email['mandrill']); echo '\n';
+				echo $email['content'];
 			}
-
-			echo '\n'; var_dump($email['mandrill']); echo '\n';
-			echo $email['content'];
 		}
 	}
 
@@ -916,7 +922,7 @@ class Auto_email {
 	private function newResult($measure) {
 
 		$attachments = array();
-
+		// @codeCoverageIgnoreStart
 		try{
 			array_push($attachments, array(
 				'type'    => 'text/calendar',
@@ -926,7 +932,7 @@ class Auto_email {
 		}catch(Exception $e){
 			log_message('error', $e);
 		}
-
+		// @codeCoverageIgnoreEnd
 
 		$emailcontent = $this->CI->load->view(
 					'email/generic',
