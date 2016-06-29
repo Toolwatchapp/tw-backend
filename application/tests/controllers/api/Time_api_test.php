@@ -13,4 +13,13 @@ class Time_api_test extends TestCase {
     $this->assertResponseCode(200);
   }
 
+  public function test_options() {
+    $output = $this->request(
+      'OPTIONS',
+      'api/time'
+    );
+
+    $this->assertResponseCode(200);
+  }
+
 }
