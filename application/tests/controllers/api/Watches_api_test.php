@@ -88,7 +88,6 @@ class Watches_api_test extends TestCase {
 		);
 
     $this->assertContains('id', $output);
-    var_dump($output);
     self::$watchId = json_decode($output)->id;
   }
 
