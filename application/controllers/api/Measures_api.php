@@ -108,10 +108,6 @@ class Measures_api extends REST_Controller {
    }
  }
 
- public function index_option($id){
-  return true;
- }
-
  /**
   * Soft delete a measure
   *
