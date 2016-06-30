@@ -54,13 +54,13 @@
             type="checkbox"
             id="dayAccuracy-chkbox">
             <input id="dayAccuracy" type="hidden" name="dayAccuracy" value="<?php echo $dayAccuracy;?>">
-            Remind me to take my second measure 24 hours the first one.<br>
+            Remind me to take my second measure 24 hours after the first one.<br>
           <input
             <?php if($weekAccuracy == 1){echo "checked ";}?>
             type="checkbox"
             id="weekAccuracy-chkbox">
             <input id="weekAccuracy" type="hidden" name="weekAccuracy" value="<?php echo $weekAccuracy;?>">
-            Remind me to take my second measure 1 week the first one.<br>
+            Remind me to take my second measure 1 week after the first one.<br>
           <input
             <?php if($result == 1){echo "checked ";}?>
             type="checkbox"
@@ -76,31 +76,14 @@
 
           <h3>Tips to make better use of Toolwatch</h3>
 
-          <input
-            <?php if($firstWatch == 1){echo "checked ";}?>
-            type="checkbox"
-            id="firstWatch-chkbox">
-            <input id="firstWatch" type="hidden" name="firstWatch" value="<?php echo $firstWatch;?>">
-            Remind me to add a first watch.<br>
-          <input
-            <?php if($secondWatch == 1){echo "checked ";}?>
-            type="checkbox"
-            id="secondWatch-chkbox">
-            <input id="secondWatch" type="hidden" name="secondWatch" value="<?php echo $secondWatch;?>">
-            Remind me to add a second watch.<br>
-          <input
-              <?php if($firstWatch == 1){echo "checked ";}?>
-              type="checkbox"
-              id="firstMeasure-chkbox">
-              <input id="firstMeasure" type="hidden" name="firstMeasure" value="<?php echo $firstMeasure;?>">
-              Remind me to add at least a measure per watch.<br>
-          <input
-            <?php if($comeback == 1){echo "checked ";}?>
-            type="checkbox"
-            id="comeback-chkbox">
-            <input id="comeback" type="hidden" name="comeback" value="<?php echo $comeback;?>">
-            Say hi if I haven't come for 100 days.<br>
 
+
+          <input
+            <?php if($tips == 1){echo "checked ";}?>
+            type="checkbox"
+            id="tips-chkbox">
+            <input id="tips" type="hidden" name="tips" value="<?php echo $tips;?>">
+            Once in a while, a tip for better using Toolwatch.<br>
 
           <input type="hidden" name="userId" value="<?php echo $userId;?>">
 

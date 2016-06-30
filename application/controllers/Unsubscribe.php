@@ -21,6 +21,17 @@ class Unsubscribe extends MY_Controller
 
           $userPreferences->userId = alphaid($userPreferences->userId);
           $userPreferences->success = false;
+          /**
+           * We have several markers for watch tips:
+           * firstWatch
+           * secondWatch
+           * firstMeasure
+           * comeback
+           *
+           * For now, they are all gathered in one big options.
+           * @see https://github.com/MathieuNls/tw/pull/151#issuecomment-229168197
+           */
+          $userPreferences->tips = $userPreferences->firstWatch;
 
           $this->_headerData['headerClass'] = 'blue';
 
@@ -35,16 +46,29 @@ class Unsubscribe extends MY_Controller
 
   public function update(){
 
-    if($this->expectsPost(array('dayAccuracy', 'weekAccuracy', 'result', 'newMeasure', 'firstWatch', 'secondWatch', 'comeback', 'firstMeasure', 'userId'))
+    if($this->expectsPost(array('dayAccuracy', 'weekAccuracy', 'result', 'newMeasure', 'tips', 'userId'))
     && is_bool((bool)$this->dayAccuracy) &&
     is_bool((bool)$this->weekAccuracy) &&
     is_bool((bool)$this->result) &&
     is_bool((bool)$this->newMeasure) &&
-    is_bool((bool)$this->firstWatch) &&
-    is_bool((bool)$this->secondWatch) &&
-    is_bool((bool)$this->comeback) &&
+    is_bool((bool)$this->tips) &&
     is_string($this->userId) &&
     is_int(($this->userId = alphaid($this->userId, true)))){
+
+       /**
+        * We have several markers for watch tips:
+        * firstWatch
+        * secondWatch
+        * firstMeasure
+        * comeback
+        *
+        * For now, they are all gathered in one big options.
+        * @see https://github.com/MathieuNls/pull/151#issuecomment-229168197
+        */
+      $this->firstMeasure = $this->tips;
+      $this->firstWatch = $this->tips;
+      $this->secondWatch = $this->tips;
+      $this->comeback = $this->tips;
 
       if($this->Emailpreferences->updateEmailPreferences($this->dayAccuracy, $this->weekAccuracy, $this->result, $this->newMeasure, $this->firstMeasure, $this->firstWatch, $this->secondWatch, $this->comeback, $this->userId)){
 
