@@ -66,7 +66,6 @@ class Users_api extends REST_Controller {
           if($key !== false){
 
             $user->key = $key;
-            log_message('error', $user->userId);
             $user->watches = $this->measure->getNLastMeasuresByUserByWatch($user->userId);
             $this->response($user, REST_Controller::HTTP_OK);
           }
