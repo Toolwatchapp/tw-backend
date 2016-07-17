@@ -326,7 +326,7 @@ Have you tested your watch recently? Measure it <a href="https://toolwatch.io?ut
                             <span style="background-color:#fafafa;color:#656565;font-family:helvetica;font-size:12px;line-height:18px">P.S. The whole team is always around, almost 24/7, to reply to your emails. In fact, you can just hit reply to this email or any others you receive from us. Whether you need help, have ideas or just want to say "hello," we'll get back to you within a few hours.
                             <?php if(isset($alphaId)) { ?>
                               <br/>
-                              You can manage your email preferences <a href="<?php echo base_url() . 'Unsubscribe/' . $alphaId;?>">here.</a>
+                              You can manage your email preferences <a href="<?php echo base_url() . 'Unsubscribe/index/' . $alphaId;?>">here.</a>
                             <?php } ?>
                             </span>
                         </td>
