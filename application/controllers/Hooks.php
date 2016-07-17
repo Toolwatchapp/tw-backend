@@ -70,12 +70,17 @@ class Hooks extends CI_Controller {
 			$text           = $this->input->post('text');
 			$quote          = $this->quotes[rand(0, 18)];
 			$result["text"] = $quote;
+			$activeUser 		= new MY_MODEL("active_user");
+
 
 			log_message("info", print_r($text, true));
 
 			if (startsWith($text, "Jack nbusers")) {
 
-				$result["text"] = $this->user->count_all().". ".$quote;
+				$activeUserCount = $activeUser->count_all();
+				$deletedUser = $this->user->count_all() - $activeUserCount;
+
+				$result["text"] = $activeUserCount ." (".$deletedUser." deleted users). ".$quote;
 
 			} else if (startsWith($text, "Jack nbmeasures")) {
 
@@ -86,6 +91,7 @@ class Hooks extends CI_Controller {
 				$result["text"] = $this->watch->count_all().". ".$quote;
 
 			} else if (startsWith($text, "Jack whois")) {
+
 
 				if(strpos($text, "<mailto:") !== false){
 

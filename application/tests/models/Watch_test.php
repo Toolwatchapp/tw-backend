@@ -149,6 +149,10 @@ class Watch_test extends TestCase {
 		$this->assertEquals(false, $this->obj->getWatch('42'));
 	}
 
+	public function test_deleteWatchWrongId(){
+		$this->assertEquals(false, $this->obj->deleteWatch(self::$watchId, 0));
+	}
+
 	public function test_deleteWatch() {
 
 		$this->assertEquals(

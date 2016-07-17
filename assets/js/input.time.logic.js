@@ -32,6 +32,7 @@ $( document ).ready(function() {
  * Check if a watch is selected and displays the CTA
  */
 function createCTA(){
+
   var watchId = $('select[name="watchId"]').val();
   $('.watch-error').hide();
 
@@ -39,12 +40,20 @@ function createCTA(){
   {
       $('button[name="startSync"]').hide();
       $('.watch-select').hide();
+      $('#sync-text').show();
       $('span#selectedWatch').text(
         "for your " +
         $('select[name="watchId"]').find(":selected").text()
       );
-      getNextMinute();
 
+      window.callback = function(counter, max){
+        $("#perc-sync").text((counter/max*100) + "%");
+        if(counter === max){
+          getNextMinute();
+        }
+      }
+
+      getTimeDiff();
   }
   else
   {
@@ -57,7 +66,15 @@ function createCTA(){
  */
 function getNextMinute(){
 
-  var d = new Date();
+  $('#sync-text').html(
+  '<center>'
+  + 'Synchronized with the U. S. Naval Observatory\'s atomic clock.'
+  + '</center>'
+  );
+
+  console.log("getNextMinute");
+
+  var d = getAccurateTime();
   var seconds = d.getSeconds();
   var offsetSeconds = 0;
 
@@ -163,7 +180,7 @@ function reset(){
 function clicked(){
 
   clearInterval(timeoutPopup);
-  clickedDate = new Date();
+  clickedDate = getAccurateTime();
 
   var clickedText =
     '<center>'

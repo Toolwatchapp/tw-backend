@@ -1,25 +1,23 @@
-/**
- * The following code is adapted from http://www.sitepoint.com/build-javascript-countdown-timer-no-dependencies/
- */
-
 function getTime() {
-  var t = new Date();
-  var seconds = t.getSeconds();
-  var minutes = t.getMinutes();
-  var hours = t.getHours();
-  var days = t.getDate();
-  var months = t.getMonth();
-  var years = t.getFullYear();
+
+  getAccurateTime();
+
   return {
-    'total': t,
-    'years':years,
-    'months':months,
-    'days': days + "<sup>" + nth(days) + "</sup>",
-    'hours': hours,
-    'minutes': minutes,
-    'seconds': seconds
+    'total': window.syncedDate,
+    'years':window.syncedDate.getFullYear(),
+    'months':window.syncedDate.getMonth(),
+    'days': window.syncedDate.getDate() + "<sup>" + nth(window.syncedDate.getDate()) + "</sup>",
+    'hours': window.syncedDate.getHours(),
+    'minutes': window.syncedDate.getMinutes(),
+    'seconds': window.syncedDate.getSeconds(),
+    'milliseconds': window.syncedDate.getMilliseconds(),
+    'offset':window.offset
   };
 }
+
+/**
+ * The following code is adapted and improved upon http://www.sitepoint.com/build-javascript-countdown-timer-no-dependencies/
+ */
 
 function nth(d) {
   if(d>3 && d<21) return 'th';
@@ -126,6 +124,12 @@ function calcMoonPhase()
 }
 
 $( document ).ready(function() {
-  initializeClock('clockdiv', new Date(Date.parse(new Date())));
-  calcMoonPhase();
+  
+  maxTimes = 1;
+  window.callback = function(count, max){
+    initializeClock('clockdiv', new Date(Date.parse(new Date())));
+    calcMoonPhase();
+  }
+  window.getTimeDiff();
+
 });

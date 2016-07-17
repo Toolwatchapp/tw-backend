@@ -14,7 +14,7 @@ class CIPHPUnitTestRequest
 	 * @var callable callable post controller constructor
 	 */
 	protected $callable;
-	
+
 	/**
 	 * @var callable callable pre controller constructor
 	 */
@@ -22,19 +22,19 @@ class CIPHPUnitTestRequest
 
 	protected $enableHooks = false;
 	protected $CI;
-	
+
 	/**
 	 * @var bool whether throwing PHPUnit_Framework_Exception or not
-	 * 
+	 *
 	 * If true, throws PHPUnit_Framework_Exception when show_404() and show_error() are called. This behavior is compatible to v0.3.0 and before.
-	 * 
+	 *
 	 * @deprecated
 	 */
 	protected $bc_mode_throw_PHPUnit_Framework_Exception = false;
 
 	/**
 	 * Set callable
-	 * 
+	 *
 	 * @param callable $callable function to run after controller instantiation
 	 */
 	public function setCallable(callable $callable)
@@ -44,7 +44,7 @@ class CIPHPUnitTestRequest
 
 	/**
 	 * Set callable pre constructor
-	 * 
+	 *
 	 * @param callable $callable function to run before controller instantiation
 	 */
 	public function setCallablePreConstructor(callable $callable)
@@ -69,13 +69,19 @@ class CIPHPUnitTestRequest
 	 * @param array        $params      POST parameters/Query string
 	 * @param callable     $callable    [deprecated] function to run after controller instantiation. Use setCallable() method instead
 	 */
-	public function request($http_method, $argv, $params = [], $callable = null)
+	public function request($http_method, $argv, $params = [],
+	$callable = null, $header = [])
 	{
 		// We need this because if 404 route, no controller is created.
 		// But we need $this->CI->output->_status
 		$this->CI =& get_instance();
 
 		try {
+
+			foreach ($header as $key => $value) {
+				$_SERVER['HTTP_'.$key] = $value;
+			}
+
 			if (is_array($argv))
 			{
 				return $this->callControllerMethod(
@@ -141,7 +147,9 @@ class CIPHPUnitTestRequest
 		$_SERVER['REQUEST_METHOD'] = $http_method;
 		$_SERVER['argv'] = array_merge(['index.php'], $argv);
 
-		if ($http_method === 'POST')
+		if ($http_method === 'POST'
+				|| $http_method === 'PUT'
+				|| $http_method === 'DELETE')
 		{
 			$_POST = $request_params;
 		}
@@ -195,12 +203,15 @@ class CIPHPUnitTestRequest
 	 * @param array    $request_params POST parameters/Query string
 	 * @param callable $callable       [deprecated] function to run after controller instantiation. Use setCallable() method instead
 	 */
-	protected function requestUri($http_method, $uri, $request_params, $callable = null)
+	protected function requestUri($http_method, $uri, $request_params,
+	$callable = null)
 	{
 		$_SERVER['REQUEST_METHOD'] = $http_method;
 		$_SERVER['argv'] = ['index.php', $uri];
 
-		if ($http_method === 'POST')
+		if ($http_method === 'POST'
+				|| $http_method === 'PUT'
+				|| $http_method === 'DELETE')
 		{
 			$_POST = $request_params;
 		}
@@ -351,7 +362,7 @@ class CIPHPUnitTestRequest
 
 	/**
 	 * Get HTTP Status Code Info
-	 * 
+	 *
 	 * @return array ['code' => code, 'text' => text]
 	 * @throws LogicException
 	 */

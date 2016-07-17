@@ -51,7 +51,7 @@ class MY_Controller extends CI_Controller {
 			}
 
 			//Add the variable in $this
-			$this->{$postName} = $this->security->xss_clean($this->input->post($postName));
+			$this->{$postName} = $this->security->xss_clean(strip_tags($this->input->post($postName, true)));
 		}
 
 		return true;

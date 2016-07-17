@@ -53,10 +53,7 @@ class Unsubscribe_test extends TestCase {
         'weekAccuracy' => 0,
         'result' => 1,
         'newMeasure' => 1,
-        'firstWatch' => 0,
-        'secondWatch' => 0,
-        'comeback' => 1,
-        'firstMeasure' => 1,
+        'tips' => 0,
         'userId' => alphaID(self::$userId)
       ]
     );
@@ -70,10 +67,7 @@ class Unsubscribe_test extends TestCase {
     $this->assertEquals(0, $result->weekAccuracy);
     $this->assertEquals(1, $result->result);
     $this->assertEquals(1, $result->newMeasure);
-    $this->assertEquals(0, $result->firstWatch);
-    $this->assertEquals(1, $result->firstMeasure);
-    $this->assertEquals(0, $result->secondWatch);
-    $this->assertEquals(1, $result->comeback);
+    $this->assertEquals(0, $result->tips);
     $this->assertEquals(self::$userId, $result->userId);
 
     $this->assertContains('Your preferences have been updated', $output);
