@@ -88,7 +88,6 @@ class Hooks_test extends TestCase {
 			time()-12*61*61
 		);
 
-
 	}
 
 	public function test_index() {
@@ -101,7 +100,8 @@ class Hooks_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('1. ', $output);
+		$this->assertContains('1', $output);
+		$this->assertContains('deleted', $output);
 	}
 
 	public function test_indexMeasures() {

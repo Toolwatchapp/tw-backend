@@ -43,7 +43,7 @@ class Measures extends MY_Controller {
 
 		$this->_headerData['headerClass'] = 'blue';
 		if (!$this->agent->is_mobile()) {
-			array_push($this->_headerData['javaScripts'], "watch.animation", "time");
+			array_push($this->_headerData['javaScripts'], "watch.animation", "time", "time.api");
 		}
 
 		$this->load->view('header', $this->_headerData);
@@ -98,11 +98,8 @@ class Measures extends MY_Controller {
 
 		if($this->expectsPost(array('watchId'))){
 
-			if (
-					$this->watch->deleteWatch($this->watchId,
-						$this->session->userdata('userId'))
-			)
-			{
+			if ($this->watch->deleteWatch($this->watchId, $this->session->userdata('userId'))) {
+
 				$this->_bodyData['success'] = 'Watch successfully deleted!';
 			}
 
@@ -225,7 +222,7 @@ class Measures extends MY_Controller {
 
 		$this->event->add(MEASURE_LOAD);
 
-		array_push($this->_headerData['javaScripts'], "input.time.logic");
+		array_push($this->_headerData['javaScripts'], "input.time.logic", "time.api");
 
 		$this->_headerData['headerClass'] = 'blue';
 		$this->load->view('header', $this->_headerData);
@@ -261,7 +258,7 @@ class Measures extends MY_Controller {
 
 
 			$this->_headerData['headerClass'] = 'blue';
-			array_push($this->_headerData['javaScripts'], "input.time.logic",
+			array_push($this->_headerData['javaScripts'], "input.time.logic", "time.api",
 			"watch.animation");
 
 			$this->load->view('header', $this->_headerData);
@@ -326,6 +323,8 @@ class Measures extends MY_Controller {
 
 		if ($this->expectsPost(array('measureId', 'referenceTimestamp', 'userTimestamp'))) {
 
+			$result['success'] = false;
+
 			//Add the watch measure
 			$watchMeasure = $this->measure->addAccuracyMesure(
 				$this->measureId,
@@ -338,9 +337,11 @@ class Measures extends MY_Controller {
 				$result['success'] = true;
 				//We store the computed accuracy & percentile
 				$result['accuracy'] = $watchMeasure->accuracy;
-				$result['percentile'] = $watchMeasure->percentile;
+				$result['percentile'] = is_numeric($watchMeasure->percentile) ? $watchMeasure->percentile : 0;
 
 			}
+
+			log_message('error', print_r($result, true));
 
 			echo json_encode($result);
 

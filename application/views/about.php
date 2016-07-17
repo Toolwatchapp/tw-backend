@@ -24,6 +24,18 @@
     </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
+                <strong>How it works?</strong>
+                <br>
+                Toolwatch synchronizes your browser with the <a href="http://www.nist.gov/pml/div688/grp50/TimeScales.cfm">U. S. Naval Observatory's atomic clocks cluster</a> which produces a weighted average of several commercial atomic frequency standards. It is dominated by six active hydrogen masers, there are also a number of commercial cesium beam-tube standards in the cluster.
+                We also account for the networking time between you and Toolwatch' servers.
+                <br>
+                To put it simply, we do not use your computer clock but the most accurate atomic clock on earth to synchronize your timepieces.
+                <br>
+                <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
                 <strong>The Toolwatch Team </strong><br>
                 Toolwatch is Swiss made with love!<br>
                 We are three watch aficionados, passionate about mechanical watches, and willing to share our watchmaking enthusiasm.<br>

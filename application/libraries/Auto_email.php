@@ -149,6 +149,7 @@ class Auto_email {
 		$emailsMeasureSent = array();
 
 		$this->emailBatchModel = new MY_MODEL("email_batch");
+		$this->activeUser = new MY_MODEL('active_user');
 
 		$this->lastBatchDate = $this->findLastBatchDate();
 
@@ -226,7 +227,11 @@ class Auto_email {
 
 		echo "<h2> ".$title." </h2>";
 		foreach ($emails as $email) {
-			echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
+
+			if(isset($email['userId'])){
+				echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
+			}
+
 			echo '\n'; var_dump($email['mandrill']); echo '\n';
 			echo $email['content'];
 		}
@@ -399,10 +404,9 @@ class Auto_email {
 
 		log_message('info', 'inactiveUser');
 
-		$inactiveUsers = $this->CI
-			->user
+		$inactiveUsers = $this->activeUser
 			->select()
-			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.comeback = 1')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.comeback = 1')
 			->where('lastLogin <', $this->getBatchUpperBound($this->day*100))
 			->where('lastLogin >', $this->getBatchLowerBound($this->day*100))
 			->find_all();
@@ -449,11 +453,11 @@ class Auto_email {
 
 		log_message('info', 'userWithoutWatch');
 
-		$userWithoutWatch = $this->CI
-			->user
-			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.comeback = 1')
-			->select('user.userId, user.name, firstname, email, lastLogin')
-			->where('(select count(1) from watch where user.userId = watch.userId) =', 0)
+
+		$userWithoutWatch = $this->activeUser
+			->select('active_user.userId, name, firstname, email, lastLogin')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.firstWatch = 1')
+			->where('watches', 0)
 			->where('lastLogin <', $this->getBatchUpperBound($this->day))
 			->where('lastLogin >', $this->getBatchLowerBound($this->day))
 			->find_all();
@@ -498,10 +502,10 @@ class Auto_email {
 
 		$userWithWatchWithoutMeasure = $this->CI
 			->watch
-			->select('user.userId, watch.watchId, watch.brand, watch.name as watchName,
-			user.name as lastname, user.firstname, email')
-			->join('user', 'watch.userId = user.userId')
-			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.firstMeasure = 1')
+			->select('active_user.userId, watch.watchId, watch.brand, watch.name as watchName,
+			active_user.name as lastname, firstname, email')
+			->join('active_user', 'watch.userId = active_user.userId')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.firstMeasure = 1')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
 			->where('watch.status', 1)
 			->where('creationDate < ', $this->getBatchUpperBound($this->day))
@@ -518,7 +522,7 @@ class Auto_email {
 				$emailcontent = $this->CI->load->view(
 					'email/generic',
 					makeFirstMeasureContent(
-						$user->firstname,
+						$user[0]['firstname'],
 						$user,
 						$this->CI->measure->getMeasuresByUser($user[0]['userId']),
 						alphaID($user[0]['userId'])
@@ -556,14 +560,13 @@ class Auto_email {
 
 		log_message('info', 'userWithOneCompleteMeasureAndOneWatch');
 
-		$userWithOneCompleteMeasureAndOneWatch = $this->CI
-			->user
-			->select('user.userId, user.name, firstname, email')
-			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.secondWatch = 1')
-			->where('(select count(1) from watch where user.userId = watch.userId) = ', 1)
+		$userWithOneCompleteMeasureAndOneWatch = $this->activeUser
+			->select('active_user.userId, active_user.name, firstname, email')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.secondWatch = 1')
+			->where('watches', 1)
 			->where('(select count(1) from measure
 					join watch on measure.watchId = watch.watchId
-					where user.userId = watch.userId
+					where active_user.userId = watch.userId
 					and measure.statusId = 2
 					and measure.accuracyReferenceTime < '.$this->getBatchUpperBound($this->day*2).'
 					and measure.accuracyReferenceTime > '.$this->getBatchLowerBound($this->day*2). ') = ', 1)
@@ -623,11 +626,11 @@ class Auto_email {
 		$measureWithoutAccuracy = $this->CI
 			->measure
 			->select('measure.id as measureId, measure.*, watch.*,
-								watch.name as watchName, user.userId, user.name as lastname,
-								user.firstname, email')
+								watch.name as watchName, active_user.userId, active_user.name as lastname,
+								active_user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
-			->join('user', 'watch.userId = user.userId')
-			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.dayAccuracy = 1')
+			->join('active_user', 'watch.userId = active_user.userId')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.dayAccuracy = 1')
 			->where('statusId', 1)
 			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day))
 			->where('measureReferenceTime >', $this->getBatchLowerBound($this->day))
@@ -682,11 +685,11 @@ class Auto_email {
 
 		$measureWithoutAccuracy = $this->CI
 			->measure
-			->select('measure.id as measureId, watch.*, user.userId,
-			measure.*, watch.name as watchName, user.name as lastname, user.firstname, email')
+			->select('measure.id as measureId, watch.*, active_user.userId,
+			measure.*, watch.name as watchName, active_user.name as lastname, active_user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
-			->join('user', 'watch.userId = user.userId')
-			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.weekAccuracy = 1')
+			->join('active_user', 'watch.userId = active_user.userId')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.weekAccuracy = 1')
 			->where('statusId', 1)
 			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day*7))
 			->where('measureReferenceTime >', $this->getBatchLowerBound($this->day*7))
@@ -742,10 +745,10 @@ class Auto_email {
 		$watchesInNeedOfNewMeasure = $this->CI
 			->measure
 			->select('watch.watchId, watch.name as watchName, watch.brand,
-			user.userId, user.name as lastname, user.firstname, email, measure.*')
+			active_user.userId, active_user.name as lastname, active_user.firstname, email, measure.*')
 			->join('watch', 'watch.watchId = measure.watchId')
-			->join('user', 'watch.userId = user.userId')
-			->join('email_preference', 'user.userId = email_preference.userId AND email_preference.newMeasure = 1')
+			->join('active_user', 'watch.userId = active_user.userId')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.newMeasure = 1')
 			->where('statusId', 2)
 			->where('accuracyReferenceTime <', $this->getBatchUpperBound($this->day*30))
 			->where('accuracyReferenceTime >', $this->getBatchLowerBound($this->day*30))
@@ -860,8 +863,15 @@ class Auto_email {
 			if(ENVIRONMENT !== "testing"){
 				// Create the date and description
 				$description = "Check the accuracy of my ".$measure->brand.' '.$measure->model;
-				$in30days = time() + 30*24*60*60;
-				$in30daysAndOneHour = time() + 30*24*60*60+(60*60);
+				
+				//rounding to next half hour
+				//http://stackoverflow.com/a/9639719/1871890
+				$currentTime = time();
+				$prev = $currentTime - ($currentTime % 1800);
+				$next = $currentTime + 1800;
+
+				$in30days = $next + 30*24*60*60;
+				$in30daysAndOneHour = $next + 30*24*60*60+(60*60);
 				$date = new DateTime("@".$in30days);
 				$dateEnd = new DateTime("@".$in30daysAndOneHour);
 
@@ -936,13 +946,17 @@ class Auto_email {
 
 			$attachments = array();
 
-
-			array_push($attachments, array(
+			try{
+				array_push($attachments, array(
 					'type'    => 'text/calendar',
 					'name'    => 'Check my watch accuracy.ics',
 					'content' =>  $this->createGoogleEvent($measure)
-			));
-
+				));
+			// @codeCoverageIgnoreStart
+			}catch(Exception $e){
+				log_message('error', $e);
+			}
+			// @codeCoverageIgnoreEnd
 
 			$emailcontent = $this->CI->load->view(
 						'email/generic',
