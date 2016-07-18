@@ -49,43 +49,65 @@
           <h3>Notification of your measures</h3>
           <p>We highly recommend not unsubscribing from those.</p>
 
-          <input
+          <div class="row">
+
+            <input class="col-md-1"
             <?php if($dayAccuracy == 1){echo "checked ";}?>
             type="checkbox"
             id="dayAccuracy-chkbox">
             <input id="dayAccuracy" type="hidden" name="dayAccuracy" value="<?php echo $dayAccuracy;?>">
-            Remind me to take my second measure 24 hours after the first one.<br>
-          <input
+            <p class="col-md-11">Remind me to take my second measure 24 hours after the first one.</p>
+          </div>
+
+
+            
+          <div class="row">
+
+            <input class="col-md-1"
             <?php if($weekAccuracy == 1){echo "checked ";}?>
             type="checkbox"
             id="weekAccuracy-chkbox">
             <input id="weekAccuracy" type="hidden" name="weekAccuracy" value="<?php echo $weekAccuracy;?>">
-            Remind me to take my second measure 1 week after the first one.<br>
-          <input
+            <p class="col-md-11">Remind me to take my second measure 1 week after the first one.</p>
+           </div>
+
+
+          <div class="row">
+
+            <input class="col-md-1"
             <?php if($result == 1){echo "checked ";}?>
             type="checkbox"
             id="result-chkbox">
             <input id="result" type="hidden" name="result" value="<?php echo $result;?>">
-            Send me my watch accuracy by email.<br>
-          <input
+            <p class="col-md-11">Send me my watch accuracy by email.</p>
+           </div>
+
+          <div class="row">
+
+            <input class="col-md-1"
             <?php if($newMeasure == 1){echo "checked ";}?>
             type="checkbox"
             id="newMeasure-chkbox">
             <input id="newMeasure" type="hidden" name="newMeasure" value="<?php echo $newMeasure;?>">
-            Remind me to check my watch accuracy once a month.<br>
+            <p class="col-md-11">Remind me to check my watch accuracy once a month.</p>
+          </div>
 
           <h3>Tips to make better use of Toolwatch</h3>
 
 
 
-          <input
+          <div class="row">
+
+            <input class="col-md-1"
             <?php if($tips == 1){echo "checked ";}?>
             type="checkbox"
             id="tips-chkbox">
+            <input type="hidden" name="userId" value="<?php echo $userId;?>">
             <input id="tips" type="hidden" name="tips" value="<?php echo $tips;?>">
-            Once in a while, a tip for better using Toolwatch.<br>
+            <p class="col-md-11">Once in a while, a tip for better using Toolwatch.</p>
+          </div>
 
-          <input type="hidden" name="userId" value="<?php echo $userId;?>">
+         
 
           <br>
           <br>
