@@ -18,6 +18,10 @@
       </div>
     </div>
 
+    <style>
+        input.col-md-1 {display: block;}
+    </style>
+
     <script type="text/javascript">
     $( document ).ready(function() {
       $.each($( "form input:checkbox" ), function(key, value){
