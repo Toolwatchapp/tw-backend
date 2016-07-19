@@ -330,6 +330,8 @@ class Measures extends MY_Controller {
 				$this->userTimestamp/1000
 			);
 
+			$result['success'] = false;
+
 			// If the computed accuracy makes sense, we return success
 			if (is_numeric($watchMeasure->accuracy)) {
 				$result['success'] = true;
