@@ -8,6 +8,7 @@ require_once APPPATH . '/libraries/REST_Controller.php';
 class Time_api extends REST_Controller {
 
   protected $methods = [
+    'index_options' => ['key' => false],
     'index_get' => ['key' => false]
    ];
 
@@ -23,4 +24,8 @@ class Time_api extends REST_Controller {
        REST_Controller::HTTP_OK
      );
    }
+
+  public function index_options(){
+    $this->response(null, REST_Controller::HTTP_OK);
+  }
 }

@@ -70,6 +70,15 @@ class Watches_api_test extends TestCase {
 
     $this->assertResponseCode(400);
   }
+  
+  public function test_options() {
+    $output = $this->request(
+      'OPTIONS',
+      'api/watches'
+    );
+
+    $this->assertResponseCode(200);
+  }
 
   public function test_createWatch(){
 
@@ -88,7 +97,6 @@ class Watches_api_test extends TestCase {
 		);
 
     $this->assertContains('id', $output);
-    var_dump($output);
     self::$watchId = json_decode($output)->id;
   }
 
