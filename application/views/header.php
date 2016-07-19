@@ -83,7 +83,7 @@ m.parentNode.insertBefore(a,m)
     </script>
 
 <?php
-foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">';}
+foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'">';}
 foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
 ?>
     <!--[if lt IE 8]>
