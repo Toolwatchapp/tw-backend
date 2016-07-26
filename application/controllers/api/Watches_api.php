@@ -183,9 +183,6 @@ class Watches_api extends REST_Controller {
 
     $watchId = $this->delete('watchId');
 
-    log_message("ERROR", $watchId);
-
-
     if($watchId !== NULL
       && $this->watch->deleteWatch($watchId, $this->rest->user_id)){
 
