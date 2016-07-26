@@ -85,4 +85,8 @@ class MY_Controller extends CI_Controller {
 		);
 	}
 
+	public function __destruct() {  
+	    $this->db->close();  
+	}  
+
 }
