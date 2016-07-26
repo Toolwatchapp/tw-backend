@@ -6,7 +6,7 @@ services:
   - mysql
 
 before_script:
-  - mysql < curl -u $DATABASE
+  - mysql -e < curl -u $DATABASE
 
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
