@@ -50,8 +50,20 @@ class MY_Controller extends CI_Controller {
 				return false;
 			}
 
-			//Add the variable in $this
-			$this->{$postName} = $this->security->xss_clean(strip_tags($this->input->post($postName, true)));
+			$cleanedValue = htmlspecialchars(
+							htmlentities(
+							$this->security->xss_clean(
+							strip_tags(
+								$this->input->post($postName, true)
+							))));
+
+			if((is_numeric($cleanedValue) && is_finite($cleanedValue))
+				|| !is_numeric($cleanedValue)){
+
+				$this->{$postName} = $cleanedValue;
+			}else{
+				return false;
+			}
 		}
 
 		return true;
