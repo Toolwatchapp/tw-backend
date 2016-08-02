@@ -83,6 +83,8 @@ class User extends ObservableModel {
 
 		//Workaround for automated tests
 		session_unset();
+		session_destroy();
+		$this->session->sess_destroy();
 
 		$this->notify(LOGOUT, array());
 
