@@ -15,7 +15,7 @@ class Home extends MY_Controller {
 
 	function index() {
 
-		$this->agent->is_mobile()? array_push($this->_headerData['javaScripts'], 'facebook', "home.logic.mobile"): array_push($this->_headerData['javaScripts'], 'facebook', "home.logic", "watch.animation", "time.api");
+		$this->agent->is_mobile()? array_push($this->_headerData['javaScripts'], "home.logic.mobile"): array_push($this->_headerData['javaScripts'], "home.logic", "watch.animation", "time.api");
 
 		$this->load->view('header', $this->_headerData);
 		$this->load->view($this->viewName, $this->homeMessage());
