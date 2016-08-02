@@ -1,3 +1,5 @@
+var userInitiatedFbLogin = false;
+
 // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
     console.log('statusChangeCallback');
@@ -5,13 +7,16 @@
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
-    if (response.status === 'connected') {
+    if (response.status === 'connected' && userInitiatedFbLogin === true) {
       // Logged into your app and Facebook.
       sendLoginFb();
     } 
   }
 
   function fb_login(){
+
+    userInitiatedFbLogin = true;
+
     FB.login(function(response) {
       if (response.status === 'connected') {
         sendLoginFb();
