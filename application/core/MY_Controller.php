@@ -22,7 +22,7 @@ class MY_Controller extends CI_Controller {
 
 		$this->_headerData['userIsLoggedIn'] = $this->user->isLoggedIn();
 		$this->_headerData['styleSheets']    = array('main');
-		$this->_headerData['javaScripts']    = array('jquery.min', 'bootstrap.min', 'application', 'MediaElement/mediaelement-and-player.min',"js.cookie");
+		$this->_headerData['javaScripts']    = array('jquery.min', 'facebook', 'bootstrap.min', 'application', 'MediaElement/mediaelement-and-player.min',"js.cookie");
 		$this->_headerData['headerClass'] = '';
 
 		if ($this->_needLoggedIn && !$this->user->isLoggedIn()) {
