@@ -241,7 +241,7 @@ function resetPasswordConfirmationContent(){
       'content' =>
         'We have changed your password.<br>
         <br>
-        If you didn\'t requested a password reset, <a href="mailto:hello@toolwatch.io">let us know</a>. <br>
+        If you didn\'t requested a password reset, <a href="mailto:hello@toolwatch.io">let us know</a>. <br><br>
         The Toolwatch Team<br>'
     );
 }
