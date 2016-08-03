@@ -264,6 +264,11 @@ if(isset($_SERVER["HTTP_CF_CONNECTING_IP"])){
 	$_SERVER['REMOTE_ADDR'] = trim(end(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
 }
 
+/**
+ * https://hackerone.com/reports/156328
+ */
+header("X-FRAME-OPTIONS: DENY");
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
