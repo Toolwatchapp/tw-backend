@@ -209,30 +209,27 @@ class User extends ObservableModel {
 	 * @param String $password   The new password
 	 */
 	function resetPassword($resetToken, $password) {
+	
+		/**
+		 * TODO:The update is based on the reset token generated in the askResetPassword
+		 * method. While being highly unlikely, it is possible for two accounts
+		 * to have the same token. In such a case, the wrong account can be
+		 * updated...
+		 *
+		 * Note that reset token are blanked after reset, so the generator would
+		 * have to generate the same reset token for two different peoples and
+		 * one of them have to leave it this way (not using the token) for
+		 * problems to happen.
+		 */
+		if(($user = $this->find_by('resetToken', $resetToken)) && 
+			$this->update_where('resetToken', $resetToken,
+			array('resetToken' => '', 'password' => hash('sha256', $password)))
+			&& $this->affected_rows() === 1){
 
-		$user = $this->find_by('resetToken', $resetToken);
-		
-		if($user){
-			/**
-			 * TODO:The update is based on the reset token generated in the askResetPassword
-			 * method. While being highly unlikely, it is possible for two accounts
-			 * to have the same token. In such a case, the wrong account can be
-			 * updated...
-			 *
-			 * Note that reset token are blanked after reset, so the generator would
-			 * have to generate the same reset token for two different peoples and
-			 * one of them have to leave it this way (not using the token) for
-			 * problems to happen.
-			 */
-			if($this->update_where('resetToken', $resetToken,
-				array('resetToken' => '', 'password' => hash('sha256', $password)))
-				&& $this->affected_rows() === 1){
-
-				$this->notify(RESET_PASSWORD_USE, array('email' => $user->email));
-				return true;
-			}
+			$this->notify(RESET_PASSWORD_USE, array('email' => $user->email));
+			return true;
 		}
-
+			
 		return false;
 	}
 
