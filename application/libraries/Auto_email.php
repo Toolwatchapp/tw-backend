@@ -108,6 +108,9 @@ class Auto_email {
 			case "RESET_PASSWORD":
 				return $this->resetPassword($data['email'], $data['token']);
 				break;
+			case "RESET_PASSWORD_USE":
+				return $this->resetPasswordUse($data['email']);
+				break;
 		}
 	}
 
@@ -816,6 +819,26 @@ class Auto_email {
 			'',
 			$email,
 			'reset_password',
+			$this->sendAtString(time())
+		);
+	}
+
+	/**
+	 * Send a password changed confirmation
+	 *
+	 * @param $email $email
+	 * @param String $token
+	 */
+	private function resetPasswordUse($email) {
+		return $this->sendMandrillEmail(
+			'Your Toolwatch password has been changed ⌚',
+			$this->CI->load->view(
+				'email/generic',
+				resetPasswordConfirmationContent(),
+				true),
+			'',
+			$email,
+			'reset_password_confirmation',
 			$this->sendAtString(time())
 		);
 	}

@@ -235,6 +235,17 @@ function signupContent($firstname){
   );
 }
 
+function resetPasswordConfirmationContent(){
+    return array(
+      'title' => 'Hey !',
+      'content' =>
+        'We have changed your password.<br>
+        <br>
+        If you didn\'t requested a password reset, <a href="mailto:hello@toolwatch.io">let us know</a>. <br>
+        The Toolwatch Team<br>'
+    );
+}
+
 function resetPasswordContent($resetToken){
 
     return array(
