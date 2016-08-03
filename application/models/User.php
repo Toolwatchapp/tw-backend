@@ -228,7 +228,7 @@ class User extends ObservableModel {
 				array('resetToken' => '', 'password' => hash('sha256', $password)))
 				&& $this->affected_rows() === 1){
 
-				$this->notify(RESET_PASSWORD_USE, $user);
+				$this->notify(RESET_PASSWORD_USE, array('email' => $user->email));
 				return true;
 			}
 		}
