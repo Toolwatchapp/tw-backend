@@ -195,7 +195,7 @@ class Auto_email_test extends TestCase {
   * Nestor password reset. Mocked id should be resturned
   * @return pass|fail
   */
- public function test_lostPassword(){
+ public function test_lostPasswordConfirm(){
 
     $this->assertEquals(
         'abc123abc123abc123abc123abc123',
