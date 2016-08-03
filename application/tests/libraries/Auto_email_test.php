@@ -191,6 +191,21 @@ class Auto_email_test extends TestCase {
  	);
  }
 
+  /**
+  * Nestor password reset. Mocked id should be resturned
+  * @return pass|fail
+  */
+ public function test_lostPassword(){
+
+    $this->assertEquals(
+        'abc123abc123abc123abc123abc123',
+        $this->email->updateObserver(
+            'TEST',
+            RESET_PASSWORD_USE,
+            array('email' => self::$users['nestor']->email))[0]['_id']
+    );
+ }
+
  /**
   *  @expectedException Exception
   */
