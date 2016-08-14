@@ -47,6 +47,7 @@
   {"name": "Junghans", "icon": "logo_junghans.jpg", "models": "junghans"},
   {"name": "Junkers", "icon": "logo_junkers.jpg", "models": "junkers"},
   {"name": "Kari Voutilainen", "icon": "logo_default.png", "models": "kari"},
+  {"name": "Lew & Huey", "icon": "logo_lewhuey.jpg", "models": "lewhuey"},
   {"name": "Lip", "icon": "logo_lip.jpg", "models": "lip"},
   {"name": "Longines", "icon": "logo_longines.jpg", "models": "longines"},
   {"name": "Louis Vuitton", "icon": "logo_louisvuitton.jpg", "models": "louisvuitton"},
