@@ -59,6 +59,8 @@ class Home extends MY_Controller {
 
 	function resetPassword($resetToken = '') {
 		$this->_headerData['headerClass'] = 'blue';
+
+		$this->_headerData['metas'] = array('<meta name="robots" content="noindex,nofollow">');
 		$this->load->view('header', $this->_headerData);
 
 		$this->_bodyData['resetToken'] = $resetToken;
