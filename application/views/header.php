@@ -25,7 +25,8 @@
 	echo img_url('share.png');
 }
 ?>" />
-
+    
+    <meta content="text/html; charset=UTF-8; X-Content-Type-Options=nosniff" http-equiv="Content-Type" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='//fonts.googleapis.com/css?family=Raleway:500,700' rel='stylesheet' type='text/css'>
     <link href='//fonts.googleapis.com/css?family=Raleway:700,400' rel='stylesheet' type='text/css'>
