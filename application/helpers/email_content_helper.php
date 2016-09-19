@@ -253,7 +253,8 @@ function resetPasswordContent($resetToken){
       'content' =>
         'We saw that you\'ve forgotten your password. No worries, we got you covered !<br>
         <br>
-        Simply click on the following link and you’ll be asked to chose a new one : <a href="http://www.toolwatch.io/reset-password/'. $resetToken . '">http://www.toolwatch.io/reset-password/'.$resetToken.'</a><br>
+        Simply browse to the following link and you’ll be asked to chose a new one: https://toolwatch.io/reset-password/'.$resetToken.'
+        <br>
         <br>
         Happy toolwatching !<br>
         <br>
