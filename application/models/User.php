@@ -17,6 +17,8 @@ class User extends ObservableModel {
 		parent::__construct();
 		$this->table_name = "user";
 		$this->key = "userId";
+		$this->users_session = new MY_Model("users_sessions");
+		$this->session_model = new MY_Model('ci_sessions');
 	}
 
 	/**
@@ -60,6 +62,13 @@ class User extends ObservableModel {
 
 			$this->notify($event, $user);
 
+			$this->users_session->insert(
+				array(
+					'user_id' => $user->userId, 
+					'session_id'=> $this->session->session_id
+				)
+			);
+
 		} else {
 			$this->notify($event.'_FAIL', $user);
 		}
@@ -81,10 +90,24 @@ class User extends ObservableModel {
 	 */
 	function logout() {
 
-		//Workaround for automated tests
+		$sessionId = $this->session->session_id;
+
+		$this->users_session->delete_where(
+			array(
+				'user_id' => $this->session->userdata('userId'),
+				'session_id' => $sessionId
+			)
+		);
+
+		$this->session_model->delete($sessionId);
+		
+		// Workaround for automated tests
 		session_unset();
+
 		session_destroy();
 		$this->session->sess_destroy();
+
+
 
 		$this->notify(LOGOUT, array());
 
@@ -197,10 +220,40 @@ class User extends ObservableModel {
 			$this->update_where('email', $email, array('resetToken' => $resetToken))
 			&& $this->affected_rows() === 1){
 			$this->notify(RESET_PASSWORD,  array('email' => $email, 'token'=>$resetToken));
+			$this->deleteActiveSessions($email);
 			return $resetToken;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Deletes all sessions associated with $email
+	 * @param String $email
+	 */
+	private function deleteActiveSessions($email){
+
+		$sessionsIdsForUser = $this->users_session->select('session_id, userId')
+							->join('user', 'user.userId = users_sessions.user_id')
+							->find_all_by('email', $email);
+
+		if(is_array($sessionsIdsForUser) && sizeof($sessionsIdsForUser) !== 0){
+
+			$userId = $sessionsIdsForUser[0]->userId;
+
+			$this->users_session->delete_where(
+				array(
+					'user_id' => $userId
+				)
+			);
+			
+
+			foreach ($sessionsIdsForUser as $session) {
+
+				$this->session_model->delete($session->session_id);
+			}
+		}
+
 	}
 
 	/**
@@ -227,6 +280,7 @@ class User extends ObservableModel {
 			&& $this->affected_rows() === 1){
 
 			$this->notify(RESET_PASSWORD_USE, array('email' => $user->email));
+			$this->deleteActiveSessions($user->email);
 			return true;
 		}
 			
