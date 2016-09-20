@@ -262,7 +262,7 @@ class Ajax extends MY_Controller {
 	 */
 	function resetPassword() {
 
-		if ($this->expectsPost(array('resetToken', 'password'))) {
+		if ($this->expectsPost(array('resetToken', 'password')) && strlen($this->password) < 512) {
 
 			$result = array();
 
