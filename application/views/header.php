@@ -87,6 +87,8 @@ m.parentNode.insertBefore(a,m)
 foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'">';}
 foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
 foreach ($metas as $meta) {echo $meta;}
+
+var_dump($this->session);
 ?>
     <!--[if lt IE 8]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -101,18 +103,9 @@ foreach ($metas as $meta) {echo $meta;}
           console.log("logged");
         });
       }
-
-      $(function($) {
-        // this bit needs to be loaded on every page where an ajax POST may happen
-
-            console.log(Cookies.get('csrf_cookie_name'));
-        $.ajaxSetup({
-            data: {
-                csrf_test_name: Cookies.get('csrf_cookie_name')
-            }
-        });
-      });
     </script>
+
+<?php $this->load->view('ajax_csrf'); ?>
 
 <?php if(!$this->agent->is_mobile()){?>
 
