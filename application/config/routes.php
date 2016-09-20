@@ -55,7 +55,6 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['login'] = "modal/login";
 $route['sign-up'] = "modal/signUp";
-$route['sign-up-success'] = "modal/signUpSuccess";
 $route['new-measure'] = "modal/newMeasure";
 $route['new-watch'] = "modal/newWatch";
 $route['reset-password'] = "modal/resetPassword";

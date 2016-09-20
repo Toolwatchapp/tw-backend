@@ -41,18 +41,6 @@ class Modal extends MY_Controller
         }
 	}
 
-    public function signUpSuccess()
-    {
-        if($this->input->post('ajax'))
-		{
-			$this->load->view('modal/sign-up-success');
-		}
-        else
-        {
-            redirect(base_url());
-        }
-    }
-
     public function resetPassword()
     {
         if($this->input->post('ajax'))

@@ -157,6 +157,7 @@ class Ajax extends MY_Controller {
 				if ($this->user->signup($this->email, $password, $this->firstname, $this->last_name, "")) {
 
 					$result['success'] = "signup";
+					$result['thanks'] = $this->load->view('modal/sign-up-success', null, true);
 					$this->user->login($this->email, $password);
 
 				}
@@ -207,6 +208,7 @@ class Ajax extends MY_Controller {
 						$this->country)) {
 
 					$result['success'] = true;
+					$result['thanks'] = $this->load->view('modal/sign-up-success', null, true);
 
 					//Log the user will create his session and so on
 					$this->user->login($this->email, $this->password);
