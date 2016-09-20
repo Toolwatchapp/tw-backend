@@ -87,8 +87,6 @@ m.parentNode.insertBefore(a,m)
 foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'">';}
 foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
 foreach ($metas as $meta) {echo $meta;}
-
-var_dump($this->session);
 ?>
     <!--[if lt IE 8]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
