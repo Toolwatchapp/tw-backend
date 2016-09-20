@@ -54,7 +54,7 @@ class Ajax_test extends TestCase {
 			]
 		);
 
-		$this->assertContains('{"success":true}', $output);
+		$this->assertContains('"success":true', $output);
 	}
 
 	public function test_checkEmailFail() {
