@@ -172,7 +172,7 @@ class Measures extends MY_Controller {
 
 			$watch = $this->watch->getWatch($this->watchId);
 
-			if($watch){
+			if($watch && $watch->userId == $this->session->userdata('userId')){
 
 				array_push($this->_headerData['javaScripts'],
 					"jquery.easy-autocomplete.min", "watch.autocomplete");
