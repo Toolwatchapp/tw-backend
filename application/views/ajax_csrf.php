@@ -9,6 +9,7 @@
 		});
 
 		$(document).ajaxSuccess(function() {
+			console.log('updated');
 		  	$.ajaxSetup({
 		        data: {
 		            csrf_test_name: Cookies.get('csrf_cookie_name')
