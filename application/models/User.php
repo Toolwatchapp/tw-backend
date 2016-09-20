@@ -229,6 +229,7 @@ class User extends ObservableModel {
 
 	/**
 	 * Deletes all sessions associated with $email
+	 * https://hackerone.com/reports/162128
 	 * @param String $email
 	 */
 	private function deleteActiveSessions($email){
