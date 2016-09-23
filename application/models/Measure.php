@@ -112,18 +112,12 @@ class Measure extends ObservableModel {
 					//Mapping function starts here
 					function ($watch, $row){
 
-						log_message('error', var_dump($this->db->last_query()));
-						log_message('error', var_dump($watch, true));
-
 						//Eleminates null measures resulting from the
 						//right join 
 						$measures = $this->__->reject($watch, function($watch){
 
 							return $watch['statusId'] == null;
 						});
-
-						log_message('error', var_dump($measures, true));
-
 
 						$totalCompleteMeasures = sizeof($measures);
 
@@ -147,8 +141,6 @@ class Measure extends ObservableModel {
 										"statusId"=> (float)$measure['statusId'],
 										'id'=>(int)$measure["id"]
 									);
-								}else{
-									return null;
 								}
 							}),
 							//Measures above $this->limit are equal to null
@@ -156,9 +148,6 @@ class Measure extends ObservableModel {
 							function($measure){
 								return $measure == null;
 						});
-
-						log_message('error', var_dump($measures, true));
-
 
 						//Construct and return the final array
 						return array(

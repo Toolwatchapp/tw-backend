@@ -63,12 +63,15 @@ class User extends ObservableModel {
 
 			$this->notify($event, $user);
 
-			$this->users_session->insert(
-				array(
-					'user_id' => $user->userId, 
-					'session_id'=> $this->session->session_id
-				)
-			);
+			//Users using the json API doesn't have sessions
+			if($this->session->session_id){
+				$this->users_session->insert(
+					array(
+						'user_id' => $user->userId, 
+						'session_id'=> $this->session->session_id
+					)
+				);
+			}
 
 		} else {
 			$this->notify($event.'_FAIL', $user);
