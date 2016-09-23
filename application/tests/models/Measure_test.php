@@ -323,7 +323,7 @@ class Measure_test extends TestCase {
 			self::$userId);
 
 		$this->assertEquals(3, sizeof($measures));
-		$this->assertEquals(2, sizeof($measures[0]['measures']));
+		$this->assertEquals(3, sizeof($measures[0]['measures']));
 		$this->assertEquals(null, $measures[0]['measures'][2]);
 		$this->assertEquals(1, sizeof($measures[1]['measures']));
 
