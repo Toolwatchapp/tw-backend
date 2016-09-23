@@ -355,11 +355,6 @@ class Measure_test extends TestCase {
 		$measures = $this->obj->getNLastMeasuresByUserByWatch(
 			self::$userId);
 
-		var_dump($measures[0]);
-
-		// log_message($measures);
-
-
 		$this->assertEquals(3, sizeof($measures), "User have 3 watches");
 		$this->assertEquals(3, sizeof($measures[0]['measures']), "First watches have 3 measures");
 		$this->assertEquals(5, $measures[0]['historySize'], "First watches have 2 hidden measures");
