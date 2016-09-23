@@ -56,7 +56,7 @@ class Measure extends ObservableModel {
 	 * @param  int $limit
 	 * @return array
 	 */
-	function getNLastMeasuresByUserByWatch($userId, $limit = 2){
+	function getNLastMeasuresByUserByWatch($userId, $limit = 3){
 
 		/**
 		 * The following is counter-intuitive yet intended and
