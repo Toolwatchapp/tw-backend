@@ -98,7 +98,13 @@ class Measure extends ObservableModel {
 							->join('watch', 'measure.watchId = watch.watchId
 							and measure.statusId < 4', 'right')
 							->where("watch.userId", $userId)
+							//exclude deleted watches
 							->where("watch.status <", 4)
+							//exclude uncomplete archived measures
+							->where("
+								(accuracyUserTime is null and 
+								accuracyReferenceTime is null 
+								and statusId = 3) is not ", "true", false)
 							->as_array()
 							->find_all(),
 							'watchId'
@@ -106,15 +112,18 @@ class Measure extends ObservableModel {
 					//Mapping function starts here
 					function ($watch, $row){
 
+						log_message('error', var_dump($this->db->last_query()));
+						log_message('error', var_dump($watch, true));
+
 						//Eleminates null measures resulting from the
-						//right join and incomplete measures that
-						//were archived
+						//right join 
 						$measures = $this->__->reject($watch, function($watch){
 
-							return $watch['statusId'] == null ||
-							($watch['accuracyAge'] == 0 &&
-								$watch['statusId'] == 3);
+							return $watch['statusId'] == null;
 						});
+
+						log_message('error', var_dump($measures, true));
+
 
 						$totalCompleteMeasures = sizeof($measures);
 
@@ -138,13 +147,18 @@ class Measure extends ObservableModel {
 										"statusId"=> (float)$measure['statusId'],
 										'id'=>(int)$measure["id"]
 									);
+								}else{
+									return null;
 								}
 							}),
 							//Measures above $this->limit are equal to null
 							//we reject them
 							function($measure){
 								return $measure == null;
-							});
+						});
+
+						log_message('error', var_dump($measures, true));
+
 
 						//Construct and return the final array
 						return array(
