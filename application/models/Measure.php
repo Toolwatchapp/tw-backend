@@ -141,7 +141,7 @@ class Measure extends ObservableModel {
 										"statusId"=> (float)$measure['statusId'],
 										'id'=>(int)$measure["id"],
 										//not supported yet
-										'percentile'=>(double)0.0)
+										'percentile'=>(double)0.0
 									);
 								}
 							}),
