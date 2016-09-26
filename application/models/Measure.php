@@ -95,6 +95,18 @@ class Measure extends ObservableModel {
 							watch.caliber, measure.measureUserTime, measure.id,
 							measure.measureReferenceTime, measure.accuracyUserTime,
 							measure.accuracyReferenceTime, measure.statusId')
+
+							/**
+							 * Computes the percentile of each measures.
+							 * 
+							 * Ideally, I'd like to have this cached. Problem is, heroku doesn't share
+							 * memory of file system between dynos. So, we need to have a privately operated
+							 * cache server sync'd between our instances.
+							 * */
+							->select('(Select count(1) from measure_precision where ABS(accuracy) < 300) as total')
+							->select('(Select count(1) from measure_precision where ABS(accuracy) < mp.accuracy) as more_accurate')
+							->join('measure_precision as mp', 'mp.measureId = measure.id', 'left')
+
 							->join('watch', 'measure.watchId = watch.watchId
 							and measure.statusId < 4', 'right')
 							->where("watch.userId", $userId)
@@ -139,7 +151,8 @@ class Measure extends ObservableModel {
 										"accuracy"=> (float)$measure['accuracy'],
 										"accuracyAge"=> $measure['accuracyAge'],
 										"statusId"=> (float)$measure['statusId'],
-										'id'=>(int)$measure["id"]
+										'id'=>(int)$measure["id"],
+										'percentile'=>(double)round(100 - (($measure['more_accurate'] / $measure['total']) * 100))
 									);
 								}
 							}),
@@ -217,7 +230,8 @@ class Measure extends ObservableModel {
 			}else{
 				$accuracy = ($userDelta!=0) ? ($refDelta*86400/$userDelta)-86400 : 0;
 			}
-
+			
+			$watchMeasure->unroundedAccuracy = sprintf("%.4f", $accuracy);
 			$accuracy  = sprintf("%.1f", $accuracy);
 			$watchMeasure->accuracy = $accuracy;
 
@@ -331,7 +345,6 @@ class Measure extends ObservableModel {
 			->join("watch", "watch.watchId = measure.watchId")
 			->join("user", "user.userId = watch.userId")
 			->find($measureId);
-
 
 			$this->notify(NEW_ACCURACY,
 								array('measure'   => $watchMeasure));
