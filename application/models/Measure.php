@@ -105,6 +105,8 @@ class Measure extends ObservableModel {
 								(accuracyUserTime is null and 
 								accuracyReferenceTime is null 
 								and statusId = 3) is not ", "true", false)
+							//conserving the order on which watches has been created 
+							->order_by("watch.watchId")
 							//reverse order as we will exclude anything which is above $limit 
 							//and we want the most recent ones
 							->order_by("measure.id", "desc")
