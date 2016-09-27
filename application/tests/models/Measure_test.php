@@ -358,7 +358,7 @@ class Measure_test extends TestCase {
 		$this->assertEquals(3, sizeof($measures), "User have 3 watches");
 		$this->assertEquals(3, sizeof($measures[0]['measures']), "First watches have 3 measures");
 		$this->assertEquals(5, $measures[0]['historySize'], "First watches have 2 hidden measures");
-		$this->assertEquals(100, $measures[0]['measures'][0]['percentile'], "First watches have a 100% percentile for the first measure");
+		$this->assertEquals(40, $measures[0]['measures'][1]['percentile'], "First watches have a 100% percentile for the second measure");
 		$this->assertEquals(1, sizeof($measures[1]['measures']), "Second Watch have 1 measure");
 		$this->assertEquals(1, $measures[1]['historySize'], "Second watches have 0 hidden measures");
 

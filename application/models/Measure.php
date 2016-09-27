@@ -105,6 +105,9 @@ class Measure extends ObservableModel {
 								(accuracyUserTime is null and 
 								accuracyReferenceTime is null 
 								and statusId = 3) is not ", "true", false)
+							//reverse order as we will exclude anything which is above $limit 
+							//and we want the most recent ones
+							->order_by("measure.id", "desc")
 							->as_array()
 							->find_all(),
 							'watchId'
@@ -112,14 +115,15 @@ class Measure extends ObservableModel {
 					//Mapping function starts here
 					function ($watch, $row){
 
-						//Eleminates null measures resulting from the
-						//right join 
+						// //Eleminates null measures resulting from the
+						// //right join 
 						$measures = $this->__->reject($watch, function($watch){
 
 							return $watch['statusId'] == null;
 						});
 
 						$totalCompleteMeasures = sizeof($measures);
+
 
 						//Mapping non-null measure to remove the data
 						//duplicated by the group by (about the watch)
