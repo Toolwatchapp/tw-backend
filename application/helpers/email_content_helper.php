@@ -1,22 +1,190 @@
 <?php
 
 /**
+ * This helper constructs arrays for mailchimp "token" system
+ * @see https://mandrillapp.com/api/docs/messages.php.html#method=send-template
+ * 
+ * List of templates
+ * 
+ * - reset_password_confirmation 
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392837
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - reset_password
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392833
+ * - - <span mc:edit="reset">{{token}}</span>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - signup
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392829
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - watch_result
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392825
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <span mc:edit="watch">{{brand}} {{model}} </span>
+ * - - <span mc:edit="accuracy">{{accuracy}}</span>
+ * - - <div mc:edit="dashboard">
+ *        <ul style="list-style: none;">
+ *           <li><span><span style="color:rgb(0, 0, 0); font-family:monospace; font-size:medium; line-height:normal; white-space:pre-wrap">⌚ {{Brand}} {{Name}} : {{Accuracy}}</span></span></li>
+ *         </ul>
+ *       </div>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - one_month_accuracy
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392821
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <div mc:edit="new-watches">
+ *      <ul>
+ *        <li><span>{{brand}} {{name}}</span></li>
+ *      </ul>
+ *      </div>
+ * - - <div mc:edit="dashboard">
+ *         <ul style="list-style: none;">
+ *           <li><span><span style="color:rgb(0, 0, 0); font-family:monospace; font-size:medium; line-height:normal; white-space:pre-wrap">⌚ {{Brand}} {{Name}} : {{Accuracy}}</span></span></li>
+ *        </ul>
+ *       </div>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - one_week_accuracy
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392817
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <div mc:edit="new-watches">
+ *      <ul>
+ *        <li><span>{{brand}} {{name}}</span></li>
+ *      </ul>
+ *      </div>
+ * - - <div mc:edit="dashboard">
+ *         <ul style="list-style: none;">
+ *           <li><span><span style="color:rgb(0, 0, 0); font-family:monospace; font-size:medium; line-height:normal; white-space:pre-wrap">⌚ {{Brand}} {{Name}} : {{Accuracy}}</span></span></li>
+ *        </ul>
+ *       </div>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - check_accuracy
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392813
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <div mc:edit="new-watches">
+ *      <ul>
+ *        <li><span>{{brand}} {{name}}</span></li>
+ *      </ul>
+ *      </div>
+ * - - <div mc:edit="dashboard">
+ *         <ul style="list-style: none;">
+ *           <li><span><span style="color:rgb(0, 0, 0); font-family:monospace; font-size:medium; line-height:normal; white-space:pre-wrap">⌚ {{Brand}} {{Name}} : {{Accuracy}}</span></span></li>
+ *        </ul>
+ *       </div>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - add_first_watch
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392769
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - make_first_measure
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392793
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <div mc:edit="new-watches">
+ *      <ul>
+ *        <li><span>{{brand}} {{name}}</span></li>
+ *      </ul>
+ *      </div>
+ * - - <div mc:edit="dashboard">
+ *         <ul style="list-style: none;">
+ *           <li><span><span style="color:rgb(0, 0, 0); font-family:monospace; font-size:medium; line-height:normal; white-space:pre-wrap">⌚ {{Brand}} {{Name}} : {{Accuracy}}</span></span></li>
+ *        </ul>
+ *       </div>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - add_second_watch
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392797
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <span mc:edit="first-watch">{{firstwatch}}</span>
+ * - - <div mc:edit="dashboard">
+ *         <ul style="list-style: none;">
+ *           <li><span><span style="color:rgb(0, 0, 0); font-family:monospace; font-size:medium; line-height:normal; white-space:pre-wrap">⌚ {{Brand}} {{Name}} : {{Accuracy}}</span></span></li>
+ *        </ul>
+ *       </div>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+ * - comeback
+ * @see https://us9.admin.mailchimp.com/templates/edit?id=392805
+ * - - <span mc:edit="name">{{name}}</span>
+ * - - <span mc:edit="unsub"><a href="#">here</a></span>
+ * 
+*/
+
+function constructReturnArray($templateName, $templateValues){
+
+  $values = array();
+
+  foreach ($templateValues as $key => $value) {
+    
+    array_push($values, (object) ['name'=>$key, 'content'=>$value]);
+  }
+
+  return 
+    array(
+      "templateName" => $templateName,
+      "templateValue" => $values
+  );
+}
+
+function constructDashboardWatches($watches){
+
+  $dasboardWatches = "";
+
+  if($watches && is_array($watches)){
+    $dasboardWatches .= '<ul style="list-style-type: none;">';
+
+    foreach ($watches as $watch) {
+      $watch = (object) $watch;
+      $dasboardWatches .= '<li><span style="color:#000000;font-family:monospace;font-size:medium;line-height:normal;white-space:pre-wrap"><img goomoji="231a" data-goomoji="231a" style="margin:0 0.2ex;vertical-align:middle;max-height:24px" alt="⌚" src="https://mail.google.com/mail/e/231a" class="CToWUd">';
+
+      if($watch->statusId === 1.5){
+        $dasboardWatches .= ' ' . $watch->brand.' '.$watch->name.': Check accuracy in '.$watch->accuracy.' hours.';
+      }else if($watch->statusId == 1){
+        $dasboardWatches .= ' ' . $watch->brand .' '.$watch->name .': <a href="'.base_url().'/measures">Check accuracy now</a>.';
+      }else if($watch->statusId == null){
+        $dasboardWatches .= ' ' . $watch->brand .' '.$watch->name .': <a href="'.base_url().'/measures">Measure now</a>.';
+      }else{
+        $dasboardWatches .= ' ' . $watch->brand .' '.$watch->name .': Runs at ' . $watch->accuracy . ' spd (' . (($watch->accuracyAge == 0) ? 'today).' : $watch->accuracyAge  . ' day(s) ago).');
+      }
+
+      $dasboardWatches .= '</span></li>';
+    }
+
+    $dasboardWatches .= '</ul>';
+  }
+
+  return $dasboardWatches;
+}
+
+function constructContentWatches($watches){
+
+  $contentWatches = "<ul>";
+
+  foreach ($watches as $watch) {
+    $contentWatches .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
+  }
+  
+  return $contentWatches . "</ul>";
+}
+
+/**
  * util function to create the content emails
  * @param String $firstName of the recipient
  */
 function addFirstWatchContent($firstName, $alphaId){
-  return array(
-        'title' => 'Hey '.$firstName.'!',
-        'content' =>
-          'You signed in on <a href="https://toolwatch.io">Toolwatch.io</a> and
-          we\'re thrilled to have you onboard! <br>
-          <br>
-          You can now start to measure the accuracy of your mechanical watches.
-          Is your watch really accurate or should it be serviced?
-          Let\'s start by adding your first watch and find out
-          <a href="https://toolwatch.io/measures">now</a>!',
-          'alphaId' => $alphaId
-    );
+
+  return constructReturnArray(
+    "add_first_watch", 
+    array(
+      'name' => $firstName,
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
+  );
 }
 
 /**
@@ -25,28 +193,15 @@ function addFirstWatchContent($firstName, $alphaId){
  */
 function makeFirstMeasureContent($firstName, $watchesToCheck, $watches, $alphaId){
 
-  $content = 'You\'ve added the following watch(es) on
-  <a href="https://toolwatch.io">Toolwatch.io</a> : <ul>';
-
-  foreach ($watchesToCheck as $watch) {
-    $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
-  }
-
-  return array(
-        'title' => 'Hey '.$firstName.'!',
-        'content' =>
-          $content . '</ul>
-          We\'re thrilled to
-          have you onboard!<br /><br />
-
-          You can now start <a href="https://toolwatch.io/measures/">
-          to measure the accuracy of your watch(es)</a>.<br/><br />
-
-          Are your watches really accurate or should they be serviced?
-          Find out now!',
-          'summary' => $watches,
-          'alphaId' => $alphaId
-    );
+  return constructReturnArray(
+    "make_first_measure", 
+    array(
+      'name' => $firstName,
+      'new-watches'=> constructContentWatches($watchesToCheck),
+      'dashboard'=> constructDashboardWatches($watches),
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
+  );
 }
 
 /**
@@ -55,21 +210,15 @@ function makeFirstMeasureContent($firstName, $watchesToCheck, $watches, $alphaId
  * @param String $firstWatchName
  */
 function addSecondWatchContent($firstName, $firstWatchName, $watches, $alphaId){
-  return array(
-    'title' => 'Hey '.$firstName.'!',
-    'content' =>
-      '2 days ago, you did your first measure on Toolwatch and we\'re so proud
-      of that! Thank you for your trust, it means a lot to us.<br/><br/>
-      If, like 37% of Toolwatch\'s users you have another mechanical watch,
-      <a href="https://toolwatch.io/measures">let\'s start a new measure</a>
-       and see how it compares to your '.$firstWatchName.'.
-      <br/><br/>
-      If you don\'t have another watch, you can still make our day by
-      <a href="https://www.facebook.com/sharer/sharer.php?u=www.toolwatch.io">
-      spreading the word about Toolwatch on social medias</a>
-      (it works no matter how many watch you own!).',
-      'summary' => $watches,
-      'alphaId' => $alphaId
+  
+  return constructReturnArray(
+    "add_second_watch", 
+    array(
+      'name' => $firstName,
+      'first-watch' => $firstWatchName,
+      'dashboard'=> constructDashboardWatches($watches),
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
   );
 }
 
@@ -78,20 +227,14 @@ function addSecondWatchContent($firstName, $firstWatchName, $watches, $alphaId){
  * @param String $firstName of the recipient
  */
 function comebackContent($firstName, $watches, $alphaId){
-  return array(
-    'title' => 'Hey '.$firstName.'!',
-    'content' =>
-      'It\'s been a while since we last saw you on
-      <a href="https://toolwatch.io/">Toolwatch.io</a> !
-      The accuracy of a watch should be regularly checked to make sure
-      everything is fine and that you can continue enjoying this work of
-      art and mechanics on your wrist AND we will be very happy to have you around!
-      <br>
-      <a href="https://toolwatch.io/measures">Let\'s start a new measure</a>
-      and do not hesitate to also say hi on
-      <a href="https://twitter.com/toolwatchapp">Twitter</a>!',
-      'summary' => $watches,
-      'alphaId' => $alphaId
+
+  return constructReturnArray(
+    "comeback", 
+    array(
+      'name' => $firstName,
+      'dashboard'=> constructDashboardWatches($watches),
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
   );
 }
 
@@ -102,27 +245,14 @@ function comebackContent($firstName, $watches, $alphaId){
  */
 function checkAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId){
 
-  $content = 'One day ago, you\'ve synchronized the following watch(es): <ul>';
-
-  foreach ($watchesToCheck as $watch) {
-    $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
-  }
-
-  $content .= "</ul> Now is the time to see the results
-    of your watch's accuracy !<br>";
-
-
-  return array(
-    'title' => 'Hey '.$firstName.'!',
-    'content' => $content . '
-      Just make sure your have your watch(es) near you (it should already
-      be on your wrist ;) ) and go to the
-      <a href="https://toolwatch.io/measures/">measure page</a>.<br>
-      <br>
-      See you there !
-      <br>',
-    'summary' => $watches,
-    'alphaId' => $alphaId
+  return constructReturnArray(
+    "check_accuracy", 
+    array(
+      'name' => $firstName,
+      'new-watches'=> constructContentWatches($watchesToCheck),
+      'dashboard'=> constructDashboardWatches($watches),
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
   );
 }
 
@@ -133,139 +263,68 @@ function checkAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId){
  */
 function oneWeekAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId){
 
-
-  $content = 'One week ago, you\'ve synchronized the following watch(es): <ul>';
-
-  foreach ($watchesToCheck as $watch) {
-      $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
-  }
-
-  $content .= "</ul> Now is the time to see the results
-    of your watch's accuracy !<br>";
-
-  return array(
-    'title' => 'Hey '.$firstName.'!',
-    'content' => $content . '
-      Just make sure your have your watch(es) near you (it should already
-      be on your wrist ;) ) and go to the
-      <a href="https://toolwatch.io/measures/">measure page</a>.<br>
-      <br>
-      See you there !
-      <br>',
-    'summary' => $watches,
-    'alphaId' => $alphaId
+  return constructReturnArray(
+    "one_week_accuracy", 
+    array(
+      'name' => $firstName,
+      'new-watches'=> constructContentWatches($watchesToCheck),
+      'dashboard'=> constructDashboardWatches($watches),
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
   );
 }
 
 function oneMonthAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId){
 
-  $content = 'Last month you measured the following watch(es): <ul>';
-
-  foreach ($watchesToCheck as $watch) {
-      $content .= '<li>'.$watch["brand"].' '.$watch["watchName"].'</li>';
-  }
-
-  $content .= "</ul>";
-
-  return array(
-    'title' => 'Hey '.$firstName.'!',
-    'content' =>
-      $content . ' We\'re happy to count you as a cool member of the Toolwatch community!
-      <br>
-      The accuracy of a watch should be regularly checked to make sure everything
-      is fine and that you can continue enjoying this work of art and mechanics on
-      your wrist.
-      <br>
-      <a href="https://toolwatch.io/measures">Let\'s start a new measure</a>
-      and see how it compares to last time!
-      <br>
-      And don\'t forget to share a wristshot on
-      <a href="https://twitter.com/toolwatchapp">Twitter</a> or
-      <a href="https://www.instagram.com/Toolwatchapp/">Instagram</a>
-      using our <a href="https://twitter.com/hashtag/toolwatchapp?f=tweets&src=hash">#ToolwatchApp</a> hashtag and join us
-      spreading the love for mechanical timepieces!',
-      'summary' => $watches,
-      'alphaId' => $alphaId
-    );
+  return constructReturnArray(
+    "one_month_accuracy", 
+    array(
+      'name' => $firstName,
+      'new-watches'=> constructContentWatches($watchesToCheck),
+      'dashboard'=> constructDashboardWatches($watches),
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
+  );
 }
 
-function watchResultContent($firstname, $brand, $model,
+function watchResultContent($firstName, $brand, $model,
   $accuracy, $watches, $alphaId){
-  return array(
-    'title' => 'Hurray '.$firstname.'!',
-    'content' =>
-      'We are happy to share with you the results for the accuracy of
-      your mechanical watch !
-      <br /><br />
-      Your '. $brand .' ' . $model . ' is running at <b>' . $accuracy . '</b> seconds per day.
-      <br /><br />
-      You should come back and check regularly that there aren\'t big
-      variations in your watch\'s accuracy. Why not add in your calendar
-      a reminder to come back and check that everything\'s fine in one
-      month ?
-      <br /><br />
-      You might also want to <a href="https://blog.toolwatch.io/watch-tips/">
-      read our tips and advices</a> for keeping your watch running
-      safe and smooth !
-      <br /><br />
-      Take care of yourself and your watch !
-      <br /><br />
-      Happy toolwatching !
-      <br />
-      The Toolwatch Team',
-      'summary' => $watches,
-      'alphaId' => $alphaId
-    );
+
+  return constructReturnArray(
+    "watch_result", 
+    array(
+      'name' => $firstName,
+      'watch' => $brand . ' ' . $model,
+      'accuracy' => $accuracy,
+      'dashboard'=> constructDashboardWatches($watches),
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
+  );
 }
 
-function signupContent($firstname){
+function signupContent($firstName, $alphaId){
 
-  return array(
-    'title' => 'Hey '.$firstname.'!',
-    'content' =>
-      'We are very happy to welcome you to Toolwatch ! <br>
-      <br>
-      Every single one of us is here for you to help you getting the most from your mechanical watch. Drop us a line anytime at <a href="mailto:hello@toolwatch.io">hello@toolwatch.io</a> or tweet us <a href="https://twitter.com/toolwatchapp/">@toolwatchapp</a>.<br>
-      <br>
-      We also have a little bonus for you. We\'ve pulled a resource with stats from the whole watchmaking industry after having measured 10k+ watches.
-      <br>
-      If you <a href="mailto:?bcc=bonus@toolwatch.io&subject=I%20think%20you%20will%20like%20this&body=I%20found%20this%20free%20tool%20for%20measuring%20and%20tracking%20the%20accuracy%20of%20your%20mechanical%20watches%20%20https%3A%2F%2Ftoolwatch.io%2F%20%0D%0A%0D%0AIt%20helps%20you%20taking%20care%20of%20your%20mechanical%20watches%20and%20see%20how%20they%20compete%20versus%20other%20watches%20from%20the%20same%20brand.%20I%27m%20taking%20it%20and%20think%20it%20could%20be%20really%20cool.">
-      click here to email a friend about Toolwatch</a>, we’ll send this bonus to you right away. Just leave "bonus@toolwatch.io" BCC\'d so we know you sent it :)
-      <br>
-      <br>
-      If there is just one single tip we’d share for taking care of your watch, we’d say try to keep your watch away from magnetic fields such as the speakers of your laptop or your radio alarm clock for example. That’s it !<br>
-      <br>
-      That being said, we can’t wait for helping you starting <a href="http://www.toolwatch.io/">measuring</a> the accuracy of your watch now !<br>
-      <br>
-      Happy toolwatching !<br>
-      <br>
-      The Toolwatch Team<br>'
+  return constructReturnArray(
+    "signup", 
+    array(
+      'name' => $firstName,
+      'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
+    )
   );
 }
 
 function resetPasswordConfirmationContent(){
-    return array(
-      'title' => 'Hey !',
-      'content' =>
-        'We have changed your password.<br>
-        <br>
-        If you didn\'t requested a password reset, <a href="mailto:hello@toolwatch.io">let us know</a>. <br><br>
-        The Toolwatch Team<br>'
-    );
+
+  return constructReturnArray(
+    "reset_password_confirmation", 
+    array()
+  );
 }
 
 function resetPasswordContent($resetToken){
 
-    return array(
-      'title' => 'Hey !',
-      'content' =>
-        'We saw that you\'ve forgotten your password. No worries, we got you covered !<br>
-        <br>
-        Simply browse to the following link and you’ll be asked to chose a new one: https://toolwatch.io/reset-password/'.$resetToken.'
-        <br>
-        <br>
-        Happy toolwatching !<br>
-        <br>
-        The Toolwatch Team<br>'
-    );
-  }
+  return constructReturnArray(
+    "reset_password", 
+    array("reset"=>$resetToken)
+  );
+}

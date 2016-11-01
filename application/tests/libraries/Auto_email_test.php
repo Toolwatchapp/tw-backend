@@ -107,7 +107,7 @@ class Auto_email_test extends TestCase {
 
 		);
 
-		$mandrillMessage->method('send')->willReturn($returnSend);
+		$mandrillMessage->method('sendTemplate')->willReturn($returnSend);
 
 		$returnReschedule = Array
 		(
@@ -136,7 +136,7 @@ class Auto_email_test extends TestCase {
 
 	public function test_mock() {
 
-		$result = $this->email->CI->mandrill->messages->send(null);
+		$result = $this->email->CI->mandrill->messages->sendTemplate(null);
 
 		$this->assertEquals(
 			'abc123abc123abc123abc123abc123',
