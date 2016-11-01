@@ -66,8 +66,8 @@ class Auto_email {
 	private $hour           = 3600;
 	private $day            = 86400;
 	private $cancelledEmail = 1;
-	private $timeOffset 		= 0;
-	private $time						= 0;
+	private $timeOffset 	= 0;
+	private $time			= 0;
 	private $lastBatchDate  = 0;
 	private $emailBatchModel;
 
@@ -261,11 +261,10 @@ class Auto_email {
 	 * an attachment
 	 * @return Array  Mandrill API Response
 	 */
-	private function sendMandrillEmail($subject, $content, $recipientName,
+	private function sendMandrillEmail($subject, $template, $recipientName,
 		$recipientEmail, $tags, $sendAt, $attachments = null) {
 
 		$message = array(
-			'html'       => $content,
 			'subject'    => $subject,
 			'from_email' => 'hello@toolwatch.io',
 			'from_name'  => 'Toolwatch',
@@ -297,7 +296,7 @@ class Auto_email {
 		$async   = false;
 		$ip_pool = 'Main Pool';
 		$send_at = $sendAt;
-		$mandrillResponse =  $this->CI->mandrill->messages->send($message, $async, $ip_pool, $send_at);
+		$mandrillResponse =  $this->CI->mandrill->messages->sendTemplate($template['templateName'], $template['templateValue'], $message, $async, $ip_pool, $send_at);
 		log_message('info', 'Mandrill email: '
 			. print_r($mandrillResponse, true) .
 			' at ' . $sendAt);
@@ -323,7 +322,7 @@ class Auto_email {
 		//they'll answer that the email is scheduled
 		//and it'll take 30/90 min for it to be effectively
 		//sent according to my observations.
-		//Agressively scheduling emails in the past seams
+		//Agressively scheduling emails in the past seems
 		//to provide better results, i.e, the emails are
 		//sent right away.
 		$scheduleTime = $scheduleTime-48*60*60;
@@ -423,15 +422,6 @@ class Auto_email {
 		if ($inactiveUsers !== FALSE) {
 			foreach ($inactiveUsers as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-					comebackContent(
-						$user->firstname,
-						$this->CI->measure->getMeasuresByUser($user->userId),
-						alphaID($user->userId)
-					), true
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->userId,
@@ -441,7 +431,11 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'We haven\'t seen you for a while ? ⌚',
-						$emailcontent,
+						comebackContent(
+							$user->firstname,
+							$this->CI->measure->getMeasuresByUser($user->userId),
+							alphaID($user->userId)
+						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'comeback_100d',
@@ -474,12 +468,6 @@ class Auto_email {
 		if ($userWithoutWatch !== FALSE) {
 			foreach ($userWithoutWatch as $user) {
 
-				$emailcontent = $this->CI->load->view('email/generic',
-					addFirstWatchContent(
-						$user->firstname,
-						alphaID($user->userId)
-					), true);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->userId,
@@ -489,7 +477,10 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s add a watch and start measuring! ⌚',
-						$emailcontent,
+						addFirstWatchContent(
+							$user->firstname,
+							alphaID($user->userId)
+						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'add_first_watch_email',
@@ -528,17 +519,6 @@ class Auto_email {
 
 			foreach ($userWithWatchWithoutMeasure as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-					makeFirstMeasureContent(
-						$user[0]['firstname'],
-						$user,
-						$this->CI->measure->getMeasuresByUser($user[0]['userId']),
-						alphaID($user[0]['userId'])
-					),
-					true
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['watchId'],
@@ -548,7 +528,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s start measuring! ⌚',
-						$emailcontent,
+						makeFirstMeasureContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]['userId']),
+							alphaID($user[0]['userId'])
+						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'make_first_measure_email',
@@ -591,17 +576,6 @@ class Auto_email {
 					->select('brand, name')
 					->find_by('userid', $user->userId);
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-					addSecondWatchContent(
-						$user->firstname,
-						$watch->brand . " " . $watch->name,
-						$this->CI->measure->getMeasuresByUser($user->userId),
-						alphaID($user->userId)
-					),
-					true
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->userId,
@@ -611,7 +585,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Add another watch ? ⌚',
-						$emailcontent,
+							addSecondWatchContent(
+							$user->firstname,
+							$watch->brand . " " . $watch->name,
+							$this->CI->measure->getMeasuresByUser($user->userId),
+							alphaID($user->userId)
+						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'add_another_watch_email',
@@ -653,16 +632,6 @@ class Auto_email {
 
 			foreach ($measureWithoutAccuracy as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-						checkAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
-							alphaID($user[0]["userId"])
-						),
-				true);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['measureId'],
@@ -672,7 +641,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
-						$emailcontent,
+						checkAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
+						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'check_accuracy_email',
@@ -713,16 +687,6 @@ class Auto_email {
 
 			foreach ($measureWithoutAccuracy as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-						oneWeekAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
-							alphaID($user[0]["userId"])
-						),
-				true);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['measureId'],
@@ -732,7 +696,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
-						$emailcontent,
+						oneWeekAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
+						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'check_accuracy_email',
@@ -774,16 +743,6 @@ class Auto_email {
 
 			foreach ($watchesInNeedOfNewMeasure as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-						oneMonthAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
-							alphaID($user[0]["userId"])
-						),
-				true);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['watchId'],
@@ -793,7 +752,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s start a new measure! ⌚',
-						$emailcontent,
+						oneMonthAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
+						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'start_new_measure_email',
@@ -813,12 +777,13 @@ class Auto_email {
 
 		$this->CI->mcapi->listSubscribe('7f94c4aa71', $user->email, '');
 
+		log_message('error', print_r(signupContent($user->firstname, alphaID($user->userId)), true));
+
+		
+
 		return $this->sendMandrillEmail(
 			'Welcome to Toolwatch! ⌚',
-			$this->CI->load->view(
-				'email/generic',
-				signupContent($user->firstname),
-				true),
+			signupContent($user->firstname, alphaID($user->userId)),
 			$user->name.' '.$user->firstname,
 			$user->email,
 			'signup',
@@ -835,11 +800,7 @@ class Auto_email {
 	private function resetPassword($email, $token) {
 		return $this->sendMandrillEmail(
 			'Your Toolwatch password ⌚',
-			$this->CI->load->view(
-				'email/generic',
-				resetPasswordContent($token),
-				true),
-			'',
+			resetPasswordContent($token),
 			$email,
 			'reset_password',
 			$this->sendAtString(time())
@@ -855,11 +816,7 @@ class Auto_email {
 	private function resetPasswordUse($email) {
 		return $this->sendMandrillEmail(
 			'Your Toolwatch password has been changed ⌚',
-			$this->CI->load->view(
-				'email/generic',
-				resetPasswordConfirmationContent(),
-				true),
-			'',
+			resetPasswordConfirmationContent(),
 			$email,
 			'reset_password_confirmation',
 			$this->sendAtString(time())
@@ -991,21 +948,15 @@ class Auto_email {
 			}
 			// @codeCoverageIgnoreEnd
 
-			$emailcontent = $this->CI->load->view(
-						'email/generic',
-						watchResultContent(
-							$measure->firstname,
-							$measure->brand,
-							$measure->model,
-							$measure->accuracy,
-							$this->CI->measure->getMeasuresByUser($measure->userId)
-						),
-						true
-			);
-
 			$this->sendMandrillEmail(
 				'The result of your watch\'s accuracy ! ⌚',
-				$this->CI->load->view('email/generic', $emailcontent, true),
+				watchResultContent(
+					$measure->firstname,
+					$measure->brand,
+					$measure->model,
+					$measure->accuracy,
+					$this->CI->measure->getMeasuresByUser($measure->userId)
+				),
 				$measure->name.' '.$measure->firstname,
 				$measure->email,
 				'result_email',
