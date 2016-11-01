@@ -144,12 +144,43 @@ class User_test extends TestCase {
 
 	public function test_askResetPassword() {
 
+		log_message('info', '============================');
+
 		$this->obj->login(
 			'mathieu@gmail.com',
 			'azerty'
 		);
-
 		$userId = $this->session->userdata('userId');
+
+		//Simulate Another Session for the user that 
+		//has to be deleted on password reset
+		$users_session = new MY_Model("users_sessions");
+		$session_model = new MY_Model('ci_sessions');
+
+		$session_model->insert(
+			array(
+					'id' => '999999', 
+					'ip_address'=> '192.168.1.1',
+					'timestamp'=>1,
+					'data'=>"adhkawjhdkd"
+				)
+		); 
+
+		// $this->assertEquals("bla", var_dump($users_session, true));
+		// $this->assertEquals("bla", $users_session->db->last_query());
+
+		echo $this->session->session_id;
+
+		log_message('error', $sessionId);
+
+		$users_session->insert(
+				array(
+					'user_id' => $userId, 
+					'session_id'=> '999999'
+				)
+		);
+
+		$this->assertEquals(1, $users_session->count_by('user_id', $userId));
 
 		$user = $this->obj->getUser($userId);
 
@@ -158,7 +189,7 @@ class User_test extends TestCase {
 		$user = $this->obj->getUser($userId);
 
 		$this->assertEquals($token, $user->resetToken);
-
+		$this->assertEquals(0, $users_session->count_by('user_id', $userId));
 	}
 
 	public function test_resetPassword() {
