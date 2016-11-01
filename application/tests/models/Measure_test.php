@@ -276,6 +276,37 @@ class Measure_test extends TestCase {
 		$this->assertEquals(2, $watchMeasure->statusId);
 	}
 
+		/*
+	start countdown : 09:08:01
+	mesure : 09:08:01
+	start countdown : 09:08:00 (+1 day)
+	mesure : 09:07:55
+	spd : +5 sec per day
+	@after 1.3
+	 */
+	public function test_addBaseMesure4() {
+
+		self::$measureId = $this->obj->addBaseMesure(
+			self::$watchId,
+			1458634081,
+			1458634081
+		);
+
+		$this->assertEquals(true, is_numeric(self::$measureId));
+	}
+
+	public function test_addAccuracyMesure4() {
+		$watchMeasure = $this->obj->addAccuracyMesure(
+			self::$measureId,
+			1458720480,
+			1458720475
+		);
+
+		$this->assertEquals(self::$watchId, $watchMeasure->watchId);
+		$this->assertEquals(5.0, $watchMeasure->accuracy, 'it should be 5.0');
+		$this->assertEquals(2, $watchMeasure->statusId);
+	}
+
 	public function test_getMeasuresByUser6() {
 
 		$measures = $this->obj->getMeasuresByUser(
@@ -292,9 +323,9 @@ class Measure_test extends TestCase {
 		);
 
 		$this->assertEquals(
-			4.0,
+			5.0,
 			$measures[0]->accuracy,
-			'it should be 4.0'
+			'it should be 5.0'
 		);
 
 	}
@@ -319,13 +350,17 @@ class Measure_test extends TestCase {
 	}
 
 	public function test_getNLastMeasuresByUserByWatch(){
+
+
 		$measures = $this->obj->getNLastMeasuresByUserByWatch(
 			self::$userId);
 
-		$this->assertEquals(3, sizeof($measures));
-		$this->assertEquals(2, sizeof($measures[0]['measures']));
-		$this->assertEquals(null, $measures[0]['measures'][2]);
-		$this->assertEquals(1, sizeof($measures[1]['measures']));
+		$this->assertEquals(3, sizeof($measures), "User have 3 watches");
+		$this->assertEquals(3, sizeof($measures[0]['measures']), "First watches have 3 measures");
+		$this->assertEquals(5, $measures[0]['historySize'], "First watches have 2 hidden measures");
+		$this->assertEquals(40, $measures[0]['measures'][1]['percentile'], "First watches have a 100% percentile for the second measure");
+		$this->assertEquals(1, sizeof($measures[1]['measures']), "Second Watch have 1 measure");
+		$this->assertEquals(1, $measures[1]['historySize'], "Second watches have 0 hidden measures");
 
 	}
 
@@ -346,14 +381,7 @@ class Measure_test extends TestCase {
 
 	public function test_getMeasuresCountByWatchBrand() {
 		$count = $this->obj->getMeasuresCountByWatchBrand('brand');
-		$this->assertEquals(8, $count);
-	}
-
-	public function test_computePercentileAccuracy(){
-
-		$this->assertEquals(75, $this->obj->computePercentileAccuracy(1.5));
-		$this->assertEquals(0, $this->obj->computePercentileAccuracy(7));
-
+		$this->assertEquals(9, $count);
 	}
 
 	public static function tearDownAfterClass() {

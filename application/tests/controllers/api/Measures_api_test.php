@@ -37,6 +37,7 @@ class Measures_api_test extends TestCase {
     $this->assertContains('"email":"mathieu@gmail.com"', $output);
     $this->assertContains('"key"', $output);
     self::$userKey = json_decode($output)->key;
+    $this->assertEquals(false, is_null(self::$userKey));
   }
 
   public function test_options() {
@@ -80,6 +81,7 @@ class Measures_api_test extends TestCase {
   }
 
   public function test_addMeasureNotAllArgs(){
+
     $output = $this->request(
       'POST',
       'api/measures',
