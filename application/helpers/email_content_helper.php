@@ -243,6 +243,17 @@ function signupContent($firstname){
   );
 }
 
+function resetPasswordConfirmationContent(){
+    return array(
+      'title' => 'Hey !',
+      'content' =>
+        'We have changed your password.<br>
+        <br>
+        If you didn\'t requested a password reset, <a href="mailto:hello@toolwatch.io">let us know</a>. <br><br>
+        The Toolwatch Team<br>'
+    );
+}
+
 function resetPasswordContent($resetToken){
 
     return array(
@@ -250,7 +261,8 @@ function resetPasswordContent($resetToken){
       'content' =>
         'We saw that you\'ve forgotten your password. No worries, we got you covered !<br>
         <br>
-        Simply click on the following link and you’ll be asked to chose a new one : <a href="http://www.toolwatch.io/reset-password/'. $resetToken . '">http://www.toolwatch.io/reset-password/'.$resetToken.'</a><br>
+        Simply browse to the following link and you’ll be asked to chose a new one: https://toolwatch.io/reset-password/'.$resetToken.'
+        <br>
         <br>
         Happy toolwatching !<br>
         <br>

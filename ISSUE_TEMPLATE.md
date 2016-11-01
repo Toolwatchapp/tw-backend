@@ -10,12 +10,6 @@
 * Go there
 * Do that
 
-###### Material used
-
-- os:
-- browser:
-- js exception:
-
 ### Acceptance scenario
 *Please, describe an acceptance scenario*
 

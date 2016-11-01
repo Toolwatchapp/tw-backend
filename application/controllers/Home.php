@@ -10,12 +10,13 @@ class Home extends MY_Controller {
 
 		$this->load->model('measure');
 
-		$this->viewName = $this->agent->is_mobile() ? "home/home-mobile" : "home/home";
+
+		$this->viewName = $this->agent->is_mobile()? "home/home-mobile": "home/home";
 	}
 
 	function index() {
 
-		$this->agent->is_mobile() ? array_push($this->_headerData['javaScripts'], "home.logic.mobile") : array_push($this->_headerData['javaScripts'], "home.logic", "watch.animation", "time.api");
+		$this->agent->is_mobile()? array_push($this->_headerData['javaScripts'], "home.logic.mobile"): array_push($this->_headerData['javaScripts'], "home.logic", "watch.animation", "time.api");
 
 		$this->load->view('header', $this->_headerData);
 		$this->load->view($this->viewName, $this->homeMessage());
@@ -46,7 +47,8 @@ class Home extends MY_Controller {
 			->getMeasuresCountByWatchBrand($watchBrands[$randBrands]).
 			' '.$watchBrands[$randBrands].' measured on Toolwatch.io';
 
-		$url = $this->agent->is_mobile() ? img_url($videos[$randWatches]).'.png' : vid_url($videos[$randWatches]).'.mp4';
+
+		$url = $this->agent->is_mobile()? img_url($videos[$randWatches]).'.png': vid_url($videos[$randWatches]).'.mp4';
 
 		return array('title'=>$title, 'video_url'=>$url);
 	}
@@ -59,6 +61,11 @@ class Home extends MY_Controller {
 
 	function resetPassword($resetToken = '') {
 		$this->_headerData['headerClass'] = 'blue';
+
+		$this->_headerData['metas'] = array(
+			'<meta name="robots" content="noindex,nofollow">',
+			'<meta name="referrer" content="never">'
+		);
 		$this->load->view('header', $this->_headerData);
 
 		$this->_bodyData['resetToken'] = $resetToken;

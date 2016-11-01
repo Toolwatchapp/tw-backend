@@ -15,7 +15,8 @@ class Measures_api extends REST_Controller {
    protected $methods = [
      'index_put' => ['key' => true, 'limit' => 60],
      'index_post' => ['key' => true, 'limit' => 60],
-     'index_delete' => ['key' => true, 'limit' => 60]
+     'index_delete' => ['key' => true, 'limit' => 60],
+     'index_options' => ['key' => false]
   ];
 
   /**
@@ -27,6 +28,10 @@ class Measures_api extends REST_Controller {
    $this->load->model("watch");
    $this->load->model("measure");
  }
+
+  public function index_options(){
+     $this->response(null, REST_Controller::HTTP_OK);
+  }
 
  /**
   * Creates a new measure for a given watch
@@ -94,8 +99,6 @@ class Measures_api extends REST_Controller {
          (int)$referenceTime,
          (int)$userTime);
 
-    log_message("info", "qd".$measure);
-
      $this->response(["result"=>(array)$measure], REST_Controller::HTTP_OK);
 
    }else{
@@ -112,7 +115,11 @@ class Measures_api extends REST_Controller {
   * @return HTTP_BAD_REQUEST | HTTP_OK
   */
  public function index_delete(){
-   $measureId = $this->post('measureId');
+   $measureId = $this->delete('measureId');
+
+   log_message('error',  $this->post('measureId'));
+   log_message('error',  $this->delete('measureId'));
+   log_message('error',  $id);
 
    if($measureId != null && is_numeric($measureId)
    && $this->measure->isOwnedBy($measureId, $this->rest->user_id)){

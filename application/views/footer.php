@@ -15,45 +15,41 @@
             <div class="row">
 
                 <div class="col-sm-12">
-                    <div class="col-md-2">
-                        <div class="logo"></div>
-                    </div>
-                    <div class="links col-sm-1">
+                    <div class="links col-sm-2">
                         <a href="<?php echo base_url(); ?>#demo-screen">Features</a>
                     </div>
-                    <div class="links col-sm-1">
+                    <div class="links col-sm-2">
                         <a href="https://blog.toolwatch.io/watch-tips/">Blog</a>
                     </div>
 
                     <?php
                         if($userIsLoggedIn)
                         {
-                            echo '<div class="links col-sm-1">
-                                <a href="/logout">Logout</a>
-                            </div>
+                            echo '
                             <div class="links col-sm-2">
                                 <a href="/measures/">My Measures</a>
                             </div>';
                         }
                         else
                         {
-                            echo '<div class="links col-sm-1">
-                                <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a>
-                            </div>
+                            echo '
                             <div class="links col-sm-2">
                                 <a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">My Measures</a>
                             </div>';
                         }
                     ?>
 
+                    <div class="links col-sm-2">
+                        <a href="https://trello.com/b/ExI1gUJz/toolwatch-public-roadmap">Roadmap</a>
+                    </div>
 
-                    <div class="links col-sm-1">
+                    <div class="links col-sm-2">
                         <a href="/about/">About</a>
                     </div>
-                    <div class="links col-sm-1">
+                    <div class="links col-sm-2">
                         <a href="/contact/">Contact</a>
                     </div>
-                    <div class="social col-sm-3">
+                    <div style="margin-top: 20px;" class="social col-sm-12">
                         <a href="https://instagram.com/toolwatchapp/" target="_blank" title="Instagram"><span class="fa fa-instagram"></span></a>
                         <a href="https://www.pinterest.com/toolwatch/" target="_blank" title="Pinterest"><span class="fa fa-pinterest-p"></span></a>
                         <a href="https://www.facebook.com/Toolwatch" target="_blank" title="Facebook"><span class="fa fa-facebook-square"></span></a>

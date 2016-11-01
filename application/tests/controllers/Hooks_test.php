@@ -182,15 +182,6 @@ class Hooks_test extends TestCase {
 		$this->assertContains('`Jack nbusers` ; `Jack nbmeasures` ; `Jack nbwatches`; `Jack whois email`.', $output);
 	}
 
-	public function test_Email(){
-		$output = $this->request(
-			'GET',
-			['Hooks', 'email', 'bPiAi9XNEa3p9FF1lQnZfuUY']
-		);
-
-		$this->assertContains("Emails sent", $output);
-	}
-
 	public function test_resetEmail(){
 		$output = $this->request(
 			'GET',

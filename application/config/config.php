@@ -216,7 +216,7 @@ $config['directory_trigger']    = 'd';
 | your log files will fill up very fast.
 |
  */
-$config['log_threshold'] = 4;
+$config['log_threshold'] = defined('PHPUNIT_TESTSUITE') == false ? 4 : 0;
 
 /*
 |--------------------------------------------------------------------------
@@ -366,7 +366,7 @@ $config['encryption_key'] = 'BXdE8HoAUMSdj5ukKwww24n5BwIW1NZ5';
  $config['sess_save_path']          = 'ci_sessions';
  $config['sess_match_ip']           = FALSE;
  $config['sess_time_to_update']     = 32140800;
- $config['sess_regenerate_destroy'] = FALSE;
+ $config['sess_regenerate_destroy'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -435,7 +435,7 @@ $config['csrf_protection']   = TRUE;
 $config['csrf_token_name']   = 'csrf_test_name';
 $config['csrf_cookie_name']  = 'csrf_cookie_name';
 $config['csrf_expire']       = 7200;
-$config['csrf_regenerate']   = FALSE;
+$config['csrf_regenerate']   = TRUE;
 $config['csrf_exclude_uris'] = array('hooks', 'api/[a-z\/]+');
 
 /*

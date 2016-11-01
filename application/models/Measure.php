@@ -210,9 +210,9 @@ class Measure extends ObservableModel {
 			*/
 			if($watchMeasure->accuracyReferenceTime < 1455537600){
 
-				$accuracy  = ($refDelta == 0) ? 0 : ($userDelta*86400/$refDelta)-86400;
+				$accuracy = ($refDelta!=0) ? ($userDelta*86400/$refDelta)-86400 : 0;
 			}else{
-				$accuracy  = ($userDelta == 0) ? 0 : ($refDelta*86400/$userDelta)-86400;
+				$accuracy = ($userDelta!=0) ? ($refDelta*86400/$userDelta)-86400 : 0;
 			}
 
 			$accuracy  = sprintf("%.1f", $accuracy);

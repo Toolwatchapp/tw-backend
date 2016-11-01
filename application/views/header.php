@@ -25,7 +25,8 @@
 	echo img_url('share.png');
 }
 ?>" />
-
+    
+    <meta content="text/html; charset=UTF-8; X-Content-Type-Options=nosniff" http-equiv="Content-Type" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='//fonts.googleapis.com/css?family=Raleway:500,700' rel='stylesheet' type='text/css'>
     <link href='//fonts.googleapis.com/css?family=Raleway:700,400' rel='stylesheet' type='text/css'>
@@ -83,8 +84,9 @@ m.parentNode.insertBefore(a,m)
     </script>
 
 <?php
-foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'?'.time().'">';}
+foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'">';}
 foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
+foreach ($metas as $meta) {echo $meta;}
 ?>
     <!--[if lt IE 8]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -99,18 +101,9 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
           console.log("logged");
         });
       }
-
-      $(function($) {
-        // this bit needs to be loaded on every page where an ajax POST may happen
-
-            console.log(Cookies.get('csrf_cookie_name'));
-        $.ajaxSetup({
-            data: {
-                csrf_test_name: Cookies.get('csrf_cookie_name')
-            }
-        });
-      });
     </script>
+
+<?php $this->load->view('ajax_csrf'); ?>
 
 <?php if(!$this->agent->is_mobile()){?>
 
@@ -161,8 +154,12 @@ foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
                         </div>
 <?php
 if ($userIsLoggedIn) {
-	echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="/logout/" title="Logout">Logout</a></div>';
-	echo '<div class="col-md-1 "><a class="btn btn-lg btn-white" href="/measures/" title="Measures">My Measures</a></div>';
+	echo '<div style="margin-top: 10px" class="col-md-1  text-center">
+    <a onclick="FB.logout(function(response) {\'FB LOGOUT\'}); window.location.replace(\'/logout/\');" href="#" title="Logout">Logout</a>
+  </div>';
+	echo '<div class="col-md-1 ">
+    <a class="btn btn-lg btn-white" href="/measures/" title="Measures">My Measures</a>
+  </div>';
 } else {
 
 	echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></div>';

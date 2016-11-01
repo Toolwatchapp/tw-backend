@@ -372,6 +372,7 @@ abstract class REST_Controller extends CI_Controller {
      */
     public function __construct($config = 'rest')
     {
+
         parent::__construct();
 
         // Disable XML Entity (security vulnerability)
@@ -1511,7 +1512,9 @@ abstract class REST_Controller extends CI_Controller {
         // These should exist if a DELETE request
         if ($this->input->method() === 'delete')
         {
-            $this->_delete_args = $this->input->input_stream();
+            $this->request->format and $this->request->body = file_get_contents('php://input');
+            // Set up out DELETE variables (which shouldn't really exist, but sssh!)
+            parse_str(file_get_contents('php://input'), $this->_delete_args);
         }
 
         if(sizeof($this->_delete_args) === 0){

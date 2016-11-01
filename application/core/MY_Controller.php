@@ -22,8 +22,7 @@ class MY_Controller extends CI_Controller {
 
 		$this->_headerData['userIsLoggedIn'] = $this->user->isLoggedIn();
 		$this->_headerData['styleSheets']    = array('main');
-		$this->_headerData['javaScripts']    = array('jquery.min', 'bootstrap.min', 'application', 'MediaElement/mediaelement-and-player.min',
-			'facebook', "js.cookie");
+		$this->_headerData['javaScripts']    = array('jquery.min', 'facebook', 'bootstrap.min', 'application', 'MediaElement/mediaelement-and-player.min',"js.cookie");
 		$this->_headerData['headerClass'] = '';
 
 		if ($this->_needLoggedIn && !$this->user->isLoggedIn()) {
@@ -50,8 +49,20 @@ class MY_Controller extends CI_Controller {
 				return false;
 			}
 
-			//Add the variable in $this
-			$this->{$postName} = $this->security->xss_clean(strip_tags($this->input->post($postName, true)));
+			$cleanedValue = htmlspecialchars(
+							htmlentities(
+							$this->security->xss_clean(
+							strip_tags(
+								$this->input->post($postName, true)
+							))));
+
+			if((is_numeric($cleanedValue) && is_finite($cleanedValue))
+				|| !is_numeric($cleanedValue)){
+
+				$this->{$postName} = $cleanedValue;
+			}else{
+				return false;
+			}
 		}
 
 		return true;
@@ -84,5 +95,9 @@ class MY_Controller extends CI_Controller {
 			.print_r($result, true)
 		);
 	}
+
+	public function __destruct() {  
+	    $this->db->close();  
+	}  
 
 }

@@ -111,6 +111,9 @@ class Auto_email {
 			case "RESET_PASSWORD":
 				return $this->resetPassword($data['email'], $data['token']);
 				break;
+			case "RESET_PASSWORD_USE":
+				return $this->resetPasswordUse($data['email']);
+				break;
 		}
 	}
 
@@ -171,11 +174,14 @@ class Auto_email {
 		$this->checkAccuracyOneWeek($emailsMeasureSent);
 		$this->startANewMeasure($emailsWatchSent);
 
-
-		if(ENVIRONMENT === "development" ||
-			 ENVIRONMENT === "testing"){
+		if((ENVIRONMENT === "development" || ENVIRONMENT === "testing"))
+		{
 			$date = new DateTime("@".$this->time);
-			echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
+			// @codeCoverageIgnoreStart
+			if(defined('PHPUNIT_TESTSUITE') == false){
+				echo "<h1> Emails sent at " . $date->format('Y-m-d H:i:s') . "</h1>";
+			}
+			// @codeCoverageIgnoreEnd
 
 			$this->showSentEmails($emailsUserSent, "User emails");
 			$this->showSentEmails($emailsWatchSent, "Watch emails");
@@ -222,18 +228,21 @@ class Auto_email {
 	 * @param  Array $emails
 	 * @param  String $title  A nice title to distinguish between
 	 * email types
+	 * @codeCoverageIgnore
 	 */
 	private function showSentEmails($emails, $title){
 
-		echo "<h2> ".$title." </h2>";
-		foreach ($emails as $email) {
+		if(defined('PHPUNIT_TESTSUITE') == false){
+			echo "<h2> ".$title." </h2>";
+			foreach ($emails as $email) {
 
-			if(isset($email['userId'])){
-				echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
+				if(isset($email['userId'])){
+					echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
+				}
+
+				echo '\n'; var_dump($email['mandrill']); echo '\n';
+				echo $email['content'];
 			}
-
-			echo '\n'; var_dump($email['mandrill']); echo '\n';
-			echo $email['content'];
 		}
 	}
 
@@ -631,6 +640,7 @@ class Auto_email {
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('active_user', 'watch.userId = active_user.userId')
 			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.dayAccuracy = 1')
+			->where('watch.status', 1)
 			->where('statusId', 1)
 			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day))
 			->where('measureReferenceTime >', $this->getBatchLowerBound($this->day))
@@ -691,6 +701,7 @@ class Auto_email {
 			->join('active_user', 'watch.userId = active_user.userId')
 			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.weekAccuracy = 1')
 			->where('statusId', 1)
+			->where('watch.status', 1)
 			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day*7))
 			->where('measureReferenceTime >', $this->getBatchLowerBound($this->day*7))
 			->as_array()
@@ -749,6 +760,7 @@ class Auto_email {
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('active_user', 'watch.userId = active_user.userId')
 			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.newMeasure = 1')
+			->where('watch.status', 1)
 			->where('statusId', 2)
 			->where('accuracyReferenceTime <', $this->getBatchUpperBound($this->day*30))
 			->where('accuracyReferenceTime >', $this->getBatchLowerBound($this->day*30))
@@ -830,6 +842,26 @@ class Auto_email {
 			'',
 			$email,
 			'reset_password',
+			$this->sendAtString(time())
+		);
+	}
+
+	/**
+	 * Send a password changed confirmation
+	 *
+	 * @param $email $email
+	 * @param String $token
+	 */
+	private function resetPasswordUse($email) {
+		return $this->sendMandrillEmail(
+			'Your Toolwatch password has been changed ⌚',
+			$this->CI->load->view(
+				'email/generic',
+				resetPasswordConfirmationContent(),
+				true),
+			'',
+			$email,
+			'reset_password_confirmation',
 			$this->sendAtString(time())
 		);
 	}
@@ -942,17 +974,18 @@ class Auto_email {
 	 */
 	private function newResult($measure) {
 
+
 		if($this->CI->emailpreferences->select('result')->find_by("userId", $measure->userId) == 1){
 
 			$attachments = array();
 
+			// @codeCoverageIgnoreStart
 			try{
 				array_push($attachments, array(
 					'type'    => 'text/calendar',
 					'name'    => 'Check my watch accuracy.ics',
 					'content' =>  $this->createGoogleEvent($measure)
 				));
-			// @codeCoverageIgnoreStart
 			}catch(Exception $e){
 				log_message('error', $e);
 			}
@@ -965,8 +998,7 @@ class Auto_email {
 							$measure->brand,
 							$measure->model,
 							$measure->accuracy,
-							$this->CI->measure->getMeasuresByUser($measure->userId),
-							alphaID($measure->userId)
+							$this->CI->measure->getMeasuresByUser($measure->userId)
 						),
 						true
 			);

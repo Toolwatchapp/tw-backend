@@ -172,7 +172,7 @@ class Measures extends MY_Controller {
 
 			$watch = $this->watch->getWatch($this->watchId);
 
-			if($watch){
+			if($watch && $watch->userId == $this->session->userdata('userId')){
 
 				array_push($this->_headerData['javaScripts'],
 					"jquery.easy-autocomplete.min", "watch.autocomplete");
@@ -291,8 +291,14 @@ class Measures extends MY_Controller {
 
 		if ($this->expectsPost(array('watchId', 'referenceTimestamp', 'userTimestamp'))) {
 
+			$result['success'] = false;
+
+			$watch = $this->watch->getWatch($this->watchId);
+
 			//Add the base measure
-			if ($this->measure->addBaseMesure(
+			if ($watch && 
+				$watch->userId == $this->session->userdata('userId') && 
+				$this->measure->addBaseMesure(
 				$this->watchId,
 				$this->referenceTimestamp/1000,
 				$this->userTimestamp/1000)
@@ -325,26 +331,29 @@ class Measures extends MY_Controller {
 
 			$result['success'] = false;
 
-			//Add the watch measure
-			$watchMeasure = $this->measure->addAccuracyMesure(
-				$this->measureId,
-				$this->referenceTimestamp/1000,
-				$this->userTimestamp/1000
-			);
+			$watch = $this->watch->getWatchByMeasureId($this->measureId);
 
-			// If the computed accuracy makes sense, we return success
-			if (is_numeric($watchMeasure->accuracy)) {
-				$result['success'] = true;
-				//We store the computed accuracy & percentile
-				$result['accuracy'] = $watchMeasure->accuracy;
-				$result['percentile'] = is_numeric($watchMeasure->percentile) ? $watchMeasure->percentile : 0;
+			if ($watch && 
+				$watch->userId == $this->session->userdata('userId')){
 
+				//Add the watch measure
+				$watchMeasure = $this->measure->addAccuracyMesure(
+					$this->measureId,
+					$this->referenceTimestamp/1000,
+					$this->userTimestamp/1000
+				);
+
+
+				// If the computed accuracy makes sense, we return success
+				if (is_numeric($watchMeasure->accuracy)) {
+					$result['success'] = true;
+					//We store the computed accuracy & percentile
+					$result['accuracy'] = $watchMeasure->accuracy;
+					$result['percentile'] = $watchMeasure->percentile;
+
+				}
 			}
-
-			log_message('error', print_r($result, true));
-
 			echo json_encode($result);
-
 		}
 	}
 }
