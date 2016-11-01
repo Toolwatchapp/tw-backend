@@ -39,6 +39,15 @@ class Measures_api_test extends TestCase {
     self::$userKey = json_decode($output)->key;
   }
 
+  public function test_options() {
+    $output = $this->request(
+      'OPTIONS',
+      'api/measures'
+    );
+
+    $this->assertResponseCode(200);
+  }
+
   public function test_createWatch(){
 
     $output = $this->request(

@@ -140,11 +140,8 @@ $(document).ready(function()
             var result = $.parseJSON(data);
             if(result.success == true)
             {
-               $.post('/sign-up-success/', {ajax: true}, function(data)
-                {
-                    $('#pageModal .modal-body').html(data);
-                    setTimeout('window.location.replace("/measures/")', 5000);
-                });
+                $('#pageModal .modal-body').html(result.thanks);
+                setTimeout('window.location.replace("/measures/")', 5000);
             }
             else
             {

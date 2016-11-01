@@ -13,17 +13,42 @@ class Users_api extends REST_Controller {
      * @var Array
      */
     protected $methods = [
-      'index_put' => ['key' => false],
-      'index_post' => ['key' => false],
-      'index_delete' => ['key' => true, 'limit' => 20]
+      'index_get' => ['key' => false, 'limit' => 60],
+      'index_put' => ['key' => false, 'limit' => 20],
+      'index_post' => ['key' => false, 'limit' => 20],
+      'index_delete' => ['key' => true, 'limit' => 20],
+      'index_options' => ['key' => false],
      ];
-
      /**
       * Default constructor
       */
     public function __construct(){
+
       parent::__construct();
       $this->load->model("key");
+      $this->load->model("measure");
+    }
+
+    public function index_options(){
+        $this->response(null, REST_Controller::HTTP_OK);
+    }
+
+    /**
+     * Retrieve an user using his API key
+     * @return [type] [description]
+     */
+    public function index_get(){
+
+      if($this->rest->user_id !== NULL){
+        $user = $this->user->getUser($this->rest->user_id);
+
+        $user->watches = $this->measure->getNLastMeasuresByUserByWatch($user->userId);
+
+         $this->response($user, REST_Controller::HTTP_OK);
+        
+      }else{
+        $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
+      }
     }
 
     /**
@@ -60,6 +85,7 @@ class Users_api extends REST_Controller {
           if($key !== false){
 
             $user->key = $key;
+            $user->watches = $this->measure->getNLastMeasuresByUserByWatch($user->userId);
             $this->response($user, REST_Controller::HTTP_OK);
           }
         }else{
@@ -94,7 +120,7 @@ class Users_api extends REST_Controller {
 			//The email is already in use
 			} else {
         $this->response(["message" => "email taken"],
-          REST_Controller::HTTP_BAD_REQUEST);
+          REST_Controller::HTTP_UNAUTHORIZED);
 			}
     }
 

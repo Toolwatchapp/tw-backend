@@ -2,9 +2,19 @@ language: php
 php:
   - '5.6'
 
+services:
+  - mysql
+
+before_script:
+  - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
+
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
+
+addons:
+  code_climate:
+    repo_token: e92e40292472fad28f5e5dd4c3a4cbce3c71e06592e43afdcb3172124aefe539
 
 script:
   - cd application/tests/ && phpunit --coverage-text

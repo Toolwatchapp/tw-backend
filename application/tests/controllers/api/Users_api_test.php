@@ -34,6 +34,15 @@ class Users_api_test extends TestCase {
 		$this->assertContains('"key"', $output);
 	}
 
+  public function test_options() {
+    $output = $this->request(
+      'OPTIONS',
+      'api/users'
+    );
+
+    $this->assertResponseCode(200);
+  }
+
   public function test_createReject(){
     $output = $this->request(
 			'POST',
@@ -47,7 +56,7 @@ class Users_api_test extends TestCase {
 			]
     );
     $this->assertContains('email taken', $output);
-    $this->assertResponseCode(400);
+    $this->assertResponseCode(401);
   }
 
   public function test_login(){
@@ -90,6 +99,45 @@ class Users_api_test extends TestCase {
 
     $this->assertResponseCode(400);
   }
+
+  public function testGetNoKeyBadRequest(){
+    $output = $this->request(
+      'GET',
+      'api/users',
+      [
+      ]
+    );
+
+    $this->assertResponseCode(400);
+  }
+
+  public function testGetWrongKey(){
+    $output = $this->request(
+      'GET',
+      'api/users',
+      [],
+      null,
+      array('X_API_KEY' => "ajkwhdawjikhdajkdn")
+    );
+
+    $this->assertResponseCode(400);
+  }
+
+  public function testGet(){
+    $output = $this->request(
+      'GET',
+      'api/users',
+      [],
+      null,
+      array('X_API_KEY' => self::$userKey)
+    );
+
+    $this->assertResponseCode(200);
+    log_message('info', $output);
+    $this->assertContains('"email":"mathieu@gmail.com"', $output);
+    $this->assertContains('"watches"', $output);
+  }
+
 
   public function testDeleteFailNoKey(){
     $output = $this->request(

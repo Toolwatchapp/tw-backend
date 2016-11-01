@@ -53,24 +53,6 @@ class Modal_test extends TestCase {
 		$this->assertResponseCode(302);
 	}
 
-
-	public function test_signUpSuccess(){
-		$output = $this->request(
-			'POST',
-			['Modal', 'signUpSuccess'],
-			[
-				'ajax' => true
-			]
-		);
-
-		$this->assertContains('<h1>Well done & Thank you!</h1>', $output);
-	}
-
-	public function test_signUpSuccessFail(){
-		$output = $this->request('GET', ['Modal', 'signUpSuccess']);
-		$this->assertResponseCode(302);
-	}
-
 	public function test_resetPassword(){
 		$output = $this->request(
 			'POST',

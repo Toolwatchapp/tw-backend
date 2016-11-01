@@ -9,3 +9,4 @@ application/config/google-api.p12
 application/tests/phpunit.xml
 
 tests/_output/*
+application/tests/Bootstrap.php

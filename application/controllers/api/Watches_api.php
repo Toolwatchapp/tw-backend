@@ -18,7 +18,8 @@ class Watches_api extends REST_Controller {
     'index_delete' => ['key' => true, 'limit' => 60],
     'index_get' => ['key' => true, 'limit' => 600],
     'brands_get' => ['key' => true, 'limit' => 600],
-    'models_get' => ['key' => true, 'limit' => 600]
+    'models_get' => ['key' => true, 'limit' => 600],
+    'index_options' => ['key' => false]
    ];
 
    /**
@@ -29,6 +30,10 @@ class Watches_api extends REST_Controller {
     $this->load->model("key");
     $this->load->model("watch");
     $this->load->model("measure");
+  }
+
+  public function index_options(){
+    $this->response(null, REST_Controller::HTTP_OK);
   }
 
   /**
@@ -177,9 +182,6 @@ class Watches_api extends REST_Controller {
   {
 
     $watchId = $this->delete('watchId');
-
-    log_message("ERROR", $watchId);
-
 
     if($watchId !== NULL
       && $this->watch->deleteWatch($watchId, $this->rest->user_id)){
