@@ -56,7 +56,7 @@ class Measure extends ObservableModel {
 	 * @param  int $limit
 	 * @return array
 	 */
-	function getNLastMeasuresByUserByWatch($userId, $limit = 2){
+	function getNLastMeasuresByUserByWatch($userId, $limit = 3){
 
 		/**
 		 * The following is counter-intuitive yet intended and
@@ -94,11 +94,22 @@ class Measure extends ObservableModel {
 							watch.name, watch.yearOfBuy, watch.serial,
 							watch.caliber, measure.measureUserTime, measure.id,
 							measure.measureReferenceTime, measure.accuracyUserTime,
-							measure.accuracyReferenceTime, measure.statusId')
+							measure.accuracyReferenceTime, measure.statusId, measure.percentile')
 							->join('watch', 'measure.watchId = watch.watchId
 							and measure.statusId < 4', 'right')
 							->where("watch.userId", $userId)
+							//exclude deleted watches
 							->where("watch.status <", 4)
+							//exclude uncomplete archived measures
+							->where("
+								(accuracyUserTime is null and 
+								accuracyReferenceTime is null 
+								and statusId = 3) is not ", "true", false)
+							//conserving the order on which watches has been created 
+							->order_by("watch.watchId")
+							//reverse order as we will exclude anything which is above $limit 
+							//and we want the most recent ones
+							->order_by("measure.id", "desc")
 							->as_array()
 							->find_all(),
 							'watchId'
@@ -106,17 +117,15 @@ class Measure extends ObservableModel {
 					//Mapping function starts here
 					function ($watch, $row){
 
-						//Eleminates null measures resulting from the
-						//right join and incomplete measures that
-						//were archived
+						// //Eleminates null measures resulting from the
+						// //right join 
 						$measures = $this->__->reject($watch, function($watch){
 
-							return $watch['statusId'] == null ||
-							($watch['accuracyAge'] == 0 &&
-								$watch['statusId'] == 3);
+							return $watch['statusId'] == null;
 						});
 
 						$totalCompleteMeasures = sizeof($measures);
+
 
 						//Mapping non-null measure to remove the data
 						//duplicated by the group by (about the watch)
@@ -136,7 +145,8 @@ class Measure extends ObservableModel {
 										"accuracy"=> (float)$measure['accuracy'],
 										"accuracyAge"=> $measure['accuracyAge'],
 										"statusId"=> (float)$measure['statusId'],
-										'id'=>(int)$measure["id"]
+										'id'=>(int)$measure["id"],
+										'percentile'=>(double)$measure['percentile']
 									);
 								}
 							}),
@@ -144,7 +154,7 @@ class Measure extends ObservableModel {
 							//we reject them
 							function($measure){
 								return $measure == null;
-							});
+						});
 
 						//Construct and return the final array
 						return array(
@@ -214,7 +224,8 @@ class Measure extends ObservableModel {
 			}else{
 				$accuracy = ($userDelta!=0) ? ($refDelta*86400/$userDelta)-86400 : 0;
 			}
-
+			
+			$watchMeasure->unroundedAccuracy = sprintf("%.4f", $accuracy);
 			$accuracy  = sprintf("%.1f", $accuracy);
 			$watchMeasure->accuracy = $accuracy;
 
@@ -243,31 +254,6 @@ class Measure extends ObservableModel {
 		}
 
 		return $watchMeasure;
-	}
-
-	/**
-	 * Computes the percentile for an accuracy, i.e, the percentage
-	 * of watches that are less accurate than $accuracy.
-	 *
-	 * The percentile excludes bugged measure (+/- 300 spd)
-	 *
-	 * @param  float $accuracy A complete measure with computed
-	 * @return int the percentile for this accuracy.
-	 */
-	function computePercentileAccuracy($accuracy){
-
-		//This have to be kept in line with the computeAccuracy method
-		$precisionFormulae = 'ABS(((measure.accuracyUserTime
-		- measure.measureUserTime)*86400)/
-		(measure.accuracyReferenceTime - measure.measureReferenceTime)
-		-86400)';
-
-		$moreAccurateCount = $this->count_by($precisionFormulae . ' <',
-			abs($accuracy));
-
-		$valideMeasuresCount = $this->count_by($precisionFormulae . ' <', 300);
-
-		return ($valideMeasuresCount == 0) ? 100 : round(100 - (($moreAccurateCount / $valideMeasuresCount) * 100));
 	}
 
 	/**
@@ -329,12 +315,8 @@ class Measure extends ObservableModel {
 			->join("user", "user.userId = watch.userId")
 			->find($measureId);
 
-
 			$this->notify(NEW_ACCURACY,
 								array('measure'   => $watchMeasure));
-
-			$watchMeasure->percentile =
-				$this->computePercentileAccuracy($watchMeasure->accuracy);
 
 			return $watchMeasure;
 		}

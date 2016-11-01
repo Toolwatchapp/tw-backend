@@ -19,6 +19,7 @@ class User extends ObservableModel {
 		$this->key = "userId";
 		$this->users_session = new MY_Model("users_sessions");
 		$this->session_model = new MY_Model('ci_sessions');
+		$this->api_keys = new MY_Model('keys');
 	}
 
 	/**
@@ -62,12 +63,14 @@ class User extends ObservableModel {
 
 			$this->notify($event, $user);
 
+
 			$this->users_session->insert(
 				array(
 					'user_id' => $user->userId, 
 					'session_id'=> $this->session->session_id
 				)
 			);
+			
 
 		} else {
 			$this->notify($event.'_FAIL', $user);
@@ -251,6 +254,7 @@ class User extends ObservableModel {
 				)
 			);
 			
+			$this->api_keys->delete_where(array('user_id' => $userId));
 
 			foreach ($sessionsIdsForUser as $session) {
 
