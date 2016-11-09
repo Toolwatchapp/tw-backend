@@ -7,8 +7,7 @@ services:
 
 before_script:
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
-  - composer require phpunit/phpunit:4.8.* satooshi/php-coveralls:dev-master
-  - composer install --dev
+  - composer install
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false

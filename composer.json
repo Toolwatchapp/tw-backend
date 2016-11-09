@@ -3,9 +3,10 @@
         "php": "~5.6.5",
         "ext-mysql": "*",
         "monolog/monolog": "~1.7",
-        "codeception/codeception": "*"
+        "ext-apcu": "*"
   },
   "require-dev": {
+      "satooshi/php-coveralls": "dev-master",
       "heroku/heroku-buildpack-php": "*",
       "mikey179/vfsStream": "1.1.*"
   }
