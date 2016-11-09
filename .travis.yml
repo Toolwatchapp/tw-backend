@@ -7,7 +7,8 @@ services:
 
 before_script:
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
-
+  - composer require phpunit/phpunit:4.8.* satooshi/php-coveralls:dev-master
+  - composer install --dev
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
@@ -19,3 +20,6 @@ addons:
 script:
   - cd application/tests/ && phpunit --coverage-text
   - php coverage-checker.php build/logs/clover.xml 100
+
+after_script:
+- php vendor/bin/coveralls -v
