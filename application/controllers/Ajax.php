@@ -44,7 +44,7 @@ class Ajax extends MY_Controller {
 	 */
 	function login() {
 
-		if ($this->expectsPost(array('email', 'password'))) {
+		if ($this->expectsPost(array('email', 'password')) && strlen($this->password) < 512) {
 
 			$result = array();
 
@@ -195,7 +195,7 @@ class Ajax extends MY_Controller {
 		$result['success'] = false;
 
 		if ($this->expectsPost(array('email','password','name','firstname',
-			'country'))) {
+			'country')) && strlen($this->password) < 512) {
 
 			$result = array();
 
