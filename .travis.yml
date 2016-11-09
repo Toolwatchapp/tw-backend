@@ -7,7 +7,6 @@ services:
 
 before_script:
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
-  - composer install --dev
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
@@ -21,4 +20,6 @@ script:
   - php coverage-checker.php build/logs/clover.xml 100
 
 after_script:
-- php vendor/bin/coveralls -v
+- wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.0/coveralls.phar
+- chmod +x coveralls.phar
+- php coveralls.phar -v
