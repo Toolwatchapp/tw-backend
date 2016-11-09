@@ -1,0 +1,48 @@
+<phpunit
+	bootstrap="./Bootstrap.php"
+	colors="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	stopOnError="true"
+	stopOnFailure="true"
+	stopOnIncomplete="true"
+	stopOnSkipped="true">
+	<testsuites>
+		<testsuite name="CodeIgniter Application Test Suite">
+			<directory suffix="test.php">./</directory>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist>
+			<directory suffix=".php">../controllers</directory>
+			<directory suffix=".php">../models</directory>
+			<directory suffix=".php">../libraries</directory>
+			<directory suffix=".php">../helpers</directory>
+			<exclude>
+				<file>../libraries/__.php</file>
+				<file>../libraries/Mcapi.php</file>
+				<file>../libraries/Mandrill.php</file>
+				<file>../libraries/REST_Controller.php</file>
+        <file>../libraries/Format.php</file>
+				<directory suffix=".php">../libraries/Mandrill</directory>
+        <directory suffix=".php">../libraries/Google</directory>
+      </exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<log type="coverage-html" target="build/coverage"/>
+		<log type="coverage-clover" target="build/logs/clover.xml"/>
+		<log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="true"/>
+	</logging>
+	<php>
+		<server name='HTTP_HOST' value='http://phpunit'/>
+		<const name="PHPUNIT_TESTSUITE" value="true"/>
+		<env name="TW_DB_URL" value="mysql://root:@localhost/tw_ci?reconnect=true"/>
+        <env name="MANDRILL_APIKEY" value="vZMIOmGRBA1KWow4yfRcfQ"/>
+        <env name="MC_APIKEY" value="8d13b5ce53af2e80af803078bfd91e9e-us9"/>
+        <env name="GOOGLE_API_ACCOUNT" value="toolwatch@gothic-isotope-120816.iam.gserviceaccount.com"/>
+        <env name="GOOGLE_API_FILE" value="config/google-api.p12"/>
+        <env name="GOOGLE_API_KEY" value="tw_Z7FzKQUgkX6NZgSY:gg3DuFmL9EBSJt2L"/>
+        <env name="GOOGLE_API_LINK" value="https://tw-config.herokuapp.com/Toolwatch-cf3c07da63f8.p12"/>
+	</php>
+</phpunit>
