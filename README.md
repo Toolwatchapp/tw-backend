@@ -6,6 +6,8 @@
 
 Thanks for your interest in contributing to the Toolwatch website! :tada:
 
+This repository contains our PHP backend that provides a JSON API for our front-end and our mobile applications.
+
 ## Creating an Issue
 
 If you have a question about using toolwatch, please ask on us on the [Crisp](https://go.crisp.im/chat/embed/?website_id=-K4rBEcM_Qbt6JrISVzu).
@@ -21,5 +23,6 @@ Next, [create a new issue](https://github.com/Toolwatchapp/tw-backend/issues/new
 
 ## Creating a Pull Request
 
-We appreciate you taking the time to contribute! Before submitting a pull request, we ask that you please [create an issue](#creating-an-issue) that explains the bug or feature request and let us know that you plan on creating a pull request for it. If an issue already exists, please comment on that issue letting us know you would like to submit a pull request for it. This helps us to keep track of the pull request and make sure there isn't duplicated effort.
+We appreciate you taking the time to contribute! Before submitting a pull request, we ask that you please [create an issue](https://github.com/Toolwatchapp/tw-backend/issues) that explains the bug or feature request and let us know that you plan on creating a pull request for it. If an issue already exists, please comment on that issue letting us know you would like to submit a pull request for it. This helps us to keep track of the pull request and make sure there isn't duplicated effort.
 
+When you create a pull request, units tests will be run on travis-ci and your pull request will be live on heroku for everyone to see.
