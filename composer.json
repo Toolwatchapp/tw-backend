@@ -1,8 +1,6 @@
 {
     "require" : {
-        "php": ">=5.3.3",
-        "ext-mysql": "*",
-	"ext-apcu": "*"
+        "php": ">=5.3.3"
   },
   "require-dev": {
       "heroku/heroku-buildpack-php": "*"
