@@ -1,13 +1,12 @@
 language: php
 php:
-  - '5.6'
+  - '7.0'
 
 services:
   - mysql
 
 before_script:
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
-
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
@@ -19,3 +18,8 @@ addons:
 script:
   - cd application/tests/ && phpunit --coverage-text
   - php coverage-checker.php build/logs/clover.xml 100
+
+after_script:
+- wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.0/coveralls.phar
+- chmod +x coveralls.phar
+- php coveralls.phar -v -r  /home/travis/build/Toolwatchapp/tw-backend/
