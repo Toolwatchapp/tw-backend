@@ -278,6 +278,9 @@ class Auto_email {
 			'headers'   => array(
 				'Reply-To' => 'hello@toolwatch.io',
 			),
+			'merge'						=> true,
+			'merge_vars'				=> 
+				array((object) ['rcpt'=>$recipientEmail, 'vars'=>$template['templateValue']]),
 			'important'                 => false,
 			'track_opens'               => true,
 			'track_clicks'              => true,
