@@ -44,7 +44,7 @@ class Ajax extends MY_Controller {
 	 */
 	function login() {
 
-		if ($this->expectsPost(array('email', 'password'))) {
+		if ($this->expectsPost(array('email', 'password')) && strlen($this->password) < 512) {
 
 			$result = array();
 
@@ -195,12 +195,15 @@ class Ajax extends MY_Controller {
 		$result['success'] = false;
 
 		if ($this->expectsPost(array('email','password','name','firstname',
-			'country'))) {
+			'country')) && strlen($this->password) < 512) {
 
 			$result = array();
 
 			//If the email isn't already in used
 			if (!$this->user->checkUserEmail($this->email)) {
+
+				$this->name = str_replace(".", " ", $this->name);
+				$this->firstname = str_replace(".", " ", $this->firstname);
 
 				// Create the account
 				if ($this->user->signup(
