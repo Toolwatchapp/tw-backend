@@ -2,11 +2,9 @@
     "require" : {
         "php": ">=5.3.3",
         "ext-mysql": "*",
-        "monolog/monolog": "~1.7",
         "ext-apcu": "*"
   },
   "require-dev": {
-      "heroku/heroku-buildpack-php": "*",
-      "mikey179/vfsStream": "1.1.*"
+      "heroku/heroku-buildpack-php": "*"
   }
 }
