@@ -1,5 +1,3 @@
-<?php echo 'Current PHP version: ' . phpversion(); ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
