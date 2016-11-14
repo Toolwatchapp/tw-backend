@@ -328,3 +328,11 @@ function resetPasswordContent($resetToken){
     array("reset"=>$resetToken)
   );
 }
+
+function customBrandContent($templateName, $firstName){
+
+  return constructReturnArray(
+    $templateName, 
+    array("name"=>$firstName)
+  );
+}
