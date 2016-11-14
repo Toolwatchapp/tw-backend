@@ -46,11 +46,6 @@ class Measures_api extends REST_Controller {
    $referenceTime = $this->post('referenceTime');
    $userTime = $this->post('userTime');
 
-   log_message('INFO', $watchId);
-   log_message('INFO', $referenceTime);
-   log_message('INFO', $userTime);
-   log_message('INFO', $this->watch->isOwnedBy($watchId, $this->rest->user_id));
-
    if($watchId != null && is_numeric($watchId) &&
    is_numeric($referenceTime) && is_numeric($userTime)
    && $this->watch->isOwnedBy($watchId, $this->rest->user_id)){
@@ -81,18 +76,9 @@ class Measures_api extends REST_Controller {
    $referenceTime = $this->put('referenceTime');
    $userTime = $this->put('userTime');
 
-   log_message("info", "=================");
-   log_message("info", $measureId);
-   log_message("info", $referenceTime);
-   log_message("info", $userTime);
-   log_message("info", $this->measure->isOwnedBy($measureId, $this->rest->user_id));
-   log_message("info", "=================");
-
    if($measureId != null && is_numeric($measureId) &&
    is_numeric($referenceTime) && is_numeric($userTime)
    && $this->measure->isOwnedBy($measureId, $this->rest->user_id)){
-
-     log_message("info", "=========&&&========");
 
      $measure = $this->measure->addAccuracyMesure(
          $measureId,
@@ -102,7 +88,6 @@ class Measures_api extends REST_Controller {
      $this->response(["result"=>(array)$measure], REST_Controller::HTTP_OK);
 
    }else{
-     log_message("info", "========ééé=======");
 
      $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
    }
@@ -116,10 +101,6 @@ class Measures_api extends REST_Controller {
   */
  public function index_delete(){
    $measureId = $this->delete('measureId');
-
-   log_message('error',  $this->post('measureId'));
-   log_message('error',  $this->delete('measureId'));
-   log_message('error',  $id);
 
    if($measureId != null && is_numeric($measureId)
    && $this->measure->isOwnedBy($measureId, $this->rest->user_id)){
