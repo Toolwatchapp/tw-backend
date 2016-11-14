@@ -114,6 +114,9 @@ class Auto_email {
 			case "RESET_PASSWORD_USE":
 				return $this->resetPasswordUse($data['email']);
 				break;
+			case "ADD_WATCH":
+				return $this->newWatch($data);
+				break;
 		}
 	}
 
@@ -780,10 +783,6 @@ class Auto_email {
 
 		$this->CI->mcapi->listSubscribe('7f94c4aa71', $user->email, '');
 
-		log_message('error', print_r(signupContent($user->firstname, alphaID($user->userId)), true));
-
-		
-
 		return $this->sendMandrillEmail(
 			'Welcome to Toolwatch! ⌚',
 			signupContent($user->firstname, alphaID($user->userId)),
@@ -825,6 +824,63 @@ class Auto_email {
 			$this->sendAtString(time())
 		);
 	}
+
+	
+	private function newWatch($watch){
+
+		$supportedBrands = array("omega", "rolex", "jaeger-lecoultre");
+		$supportedBrandsSubject = array(
+			"omega" => array("add_watch_omega", "Omegafan too?"),
+			"rolex" => array("add_watch_rolex", "My guess is that you are a Rolexophile too!"),
+			"jaeger-lecoultre" => array("add_watch_jlc", "So you like the Grande Maison too?")
+		);
+
+		$brand = strtolower($watch->brand);
+		
+		//The added watch is one of the watch that have a custom email
+		if(in_array($brand, $supportedBrands)){
+
+			//Get all the watches that match on of the brand in supportedBrands
+			$watches = $this->CI->watch->select("watch.*, user.email, user.firstname")
+			->join("user", "user.userId = watch.userId")
+			->where("watch.userId", $watch->userId)
+			->where_in("LOWER(watch.brand)", $supportedBrands)
+			->order_by("creationDate", "desc")
+			->as_array()
+			->find_all();
+
+			//If the request went fine and the last supported watch was added more than 
+			//one hour ago and we this is the first watch of this brand for this customer
+			if(
+				is_array($watches) 
+				&& 
+				(
+					//only one watch, carry on
+					sizeof($watches) == 1 || 
+					//Many watches and the last one was created more than one hour ago
+					(sizeof($watches) >= 1 && time() - $watches[1]["creationDate"] > 3600)
+				) 
+				&&
+				$this->CI->__->find($watches, 
+					function($watch){
+						return strtolower($watch["brand"]) == $brand;
+					}
+				) == null
+			){
+
+				return $this->sendMandrillEmail(
+					$supportedBrandsSubject[$brand][1],
+					customBrandContent($supportedBrandsSubject[$brand][0]),
+					$supportedBrandsSubject[$brand][0],
+					$this->sendAtString(time())
+				);
+
+			}
+		}
+
+		return false;
+	}
+
 
 	/**
 	 * Create a google reminder

@@ -82,14 +82,13 @@ class Auto_email_test extends TestCase {
 	public function setUp() {
 		$CI = &get_instance();
 
-		$mcapi = $this->getMockBuilder('Mcapi')
-														->getMock();
+		$mcapi = $this->getMockBuilder('Mcapi')->getMock();
 
 		$mcapi->method('listSubscribe')->with(
-        $this->anything(),
-        $this->anything(),
-        $this->anything()
-    )->willReturn(true);
+			$this->anything(),
+			$this->anything(),
+			$this->anything()
+		)->willReturn(true);
 
 		$mandrillMessage = $this->getMockBuilder('Mandrill_Messages')
 		                        ->disableOriginalConstructor()
@@ -163,6 +162,59 @@ class Auto_email_test extends TestCase {
 				self::$users['nestor'])[0]['_id']
 		);
 	}
+
+	public function test_customBrandsEmail(){
+
+		//First Rolex 
+		$data = array(
+			'userId'    => self::$users['nestor']->userId,
+			'brand'     => 'rolex',
+			'name'      => 'myrolex',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time());
+
+		$res = $this->watchModel->insert($data);
+		$data["watchId"] = $res;
+
+		var_dump("test", $data);
+
+		//an email is sent
+		$this->assertEquals(
+			'abc123abc123abc123abc123abc123',
+			$this->email->updateObserver(
+				'TEST',
+				ADD_WATCH,
+				arrayToObject($data)
+			)[0]['_id']
+		);
+
+		//Non Supported Watch 
+		$data = array(
+			'userId'    => self::$users['nestor']->userId,
+			'brand'     => 'nonsupported',
+			'name'      => 'myrolex',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time());
+
+		$res = $this->watchModel->insert($data);
+		$data["watchId"] = $res;
+
+		//no  email is sent
+		$this->assertEquals(
+			false,
+			$this->email->updateObserver(
+				'TEST',
+				ADD_WATCH,
+				arrayToObject($data)
+			)
+		);
+
+		$this->watchModel->delete_where(array('userId'=>self::$users['nestor']->userId));
+  	}
 
 
  /**
@@ -428,10 +480,6 @@ class Auto_email_test extends TestCase {
 	$this->assertEquals(sizeof($emails['users']), 0);
 	$this->assertEquals(sizeof($emails['watches']), 1);
 	$this->assertEquals(sizeof($emails['measures']), 0);
-
-
-	//test en ajoutant une autre montre
-
 
 	//Check that the email is sent only once
 	$emails = $this->email->cronCheck(24*1*62*60);
