@@ -178,8 +178,6 @@ class Auto_email_test extends TestCase {
 		$res = $this->watchModel->insert($data);
 		$data["watchId"] = $res;
 
-		var_dump("test", $data);
-
 		//an email is sent
 		$this->assertEquals(
 			'abc123abc123abc123abc123abc123',
