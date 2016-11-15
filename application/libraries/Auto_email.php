@@ -870,7 +870,11 @@ class Auto_email {
 
 				return $this->sendMandrillEmail(
 					$supportedBrandsSubject[$brand][1],
-					customBrandContent($supportedBrandsSubject[$brand][0]),
+					customBrandContent(
+						$supportedBrandsSubject[$brand][0], 
+						$watches[0]["firstname"]
+					),
+					$watches[0]["email"],
 					$supportedBrandsSubject[$brand][0],
 					$this->sendAtString(time())
 				);
