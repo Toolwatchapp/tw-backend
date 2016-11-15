@@ -803,6 +803,7 @@ class Auto_email {
 		return $this->sendMandrillEmail(
 			'Your Toolwatch password ⌚',
 			resetPasswordContent($token),
+			"",
 			$email,
 			'reset_password',
 			$this->sendAtString(time())
@@ -819,6 +820,7 @@ class Auto_email {
 		return $this->sendMandrillEmail(
 			'Your Toolwatch password has been changed ⌚',
 			resetPasswordConfirmationContent(),
+			"",
 			$email,
 			'reset_password_confirmation',
 			$this->sendAtString(time())
@@ -841,7 +843,7 @@ class Auto_email {
 		if(in_array($brand, $supportedBrands)){
 
 			//Get all the watches that match on of the brand in supportedBrands
-			$watches = $this->CI->watch->select("watch.*, user.email, user.firstname")
+			$watches = $this->CI->watch->select("watch.*, user.email, user.firstname, user.name")
 			->join("user", "user.userId = watch.userId")
 			->where("watch.userId", $watch->userId)
 			->where_in("LOWER(watch.brand)", $supportedBrands)
@@ -867,13 +869,13 @@ class Auto_email {
 					}
 				) == null
 			){
-
 				return $this->sendMandrillEmail(
 					$supportedBrandsSubject[$brand][1],
 					customBrandContent(
 						$supportedBrandsSubject[$brand][0], 
 						$watches[0]["firstname"]
 					),
+					$watches[0]["firstname"] . " " . $watches[0]["name"],
 					$watches[0]["email"],
 					$supportedBrandsSubject[$brand][0],
 					$this->sendAtString(time())
