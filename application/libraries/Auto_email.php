@@ -855,15 +855,19 @@ class Auto_email {
 			log_message('error', print_r($result == null, true));
 
 			if(
-				//If the request went fine 
-				is_array($watches) 
-				&& 
-				//This is the first time we have this brand
-				$this->CI->__->find($watches, 
-					function($watch){
-						return strtolower($watch["brand"]) == $this->brand;
-					}
-				) == null
+				$watches === false
+				|| 
+				(
+					//If the request went fine 
+					is_array($watches) 
+					&& 
+					//This is the first time we have this brand
+					$this->CI->__->find($watches, 
+						function($watch){
+							return strtolower($watch["brand"]) == $this->brand;
+						}
+					) == null
+				)
 			){
 				
 				// Add hours removed on sendAtString + 30
@@ -871,7 +875,9 @@ class Auto_email {
 
 				//A supported watch was created less than one hour ago,
 				//schedule the mail to be sent later
-				if(sizeof($watches) >= 1 && time() - $watches[1]["creationDate"] < 3600){
+				if(
+					is_array($watches) && 
+					sizeof($watches) >= 1 && time() - $watches[1]["creationDate"] < 3600){
 					$time = $time + 3600;
 				}
 
