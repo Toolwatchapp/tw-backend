@@ -827,7 +827,7 @@ class Auto_email {
 			"jaeger-lecoultre" => array("add_watch_jlc", "So you like the Grande Maison too?")
 		);
 
-		$brand = strtolower($watch->brand);
+		$this->brand = strtolower($watch->brand);
 		
 		//The added watch is one of the watch that have a custom email
 		if(in_array($brand, $supportedBrands)){
@@ -843,8 +843,8 @@ class Auto_email {
 
 			$result = $this->CI->__->find($watches, 
 					function($watch){
-						log_message('error', "checking" .$watch["brand"] . "w/" . $brand);
-						return strtolower($watch["brand"]) == $brand;
+						log_message('error', "checking" .$watch["brand"] . "w/" . $this->brand);
+						return strtolower($watch["brand"]) == $this->brand;
 					}
 				);
 
