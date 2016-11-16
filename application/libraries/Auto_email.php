@@ -842,6 +842,8 @@ class Auto_email {
 			->as_array()
 			->find_all();
 
+			log_message('error', print_r($watches, true));
+
 			$result = $this->CI->__->find($watches, 
 					function($watch){
 						log_message('error', "checking" .$watch["brand"] . "w/" . $this->brand);
@@ -850,6 +852,7 @@ class Auto_email {
 				);
 
 			log_message('error', print_r($result, true));
+			log_message('error', print_r($result == null, true));
 
 			if(
 				//If the request went fine 
