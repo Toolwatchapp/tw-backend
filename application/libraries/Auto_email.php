@@ -322,6 +322,7 @@ class Auto_email {
 		//order to send emails right away when exploring
 		//computation in the future / past
 		$scheduleTime = $scheduleTime - $this->timeOffset;
+		$scheduleTime = $scheduleTime-48*60*60;
 
 		log_message('info', 'Date ' . print_r($scheduleTime, true));
 
