@@ -323,18 +323,7 @@ class Auto_email {
 		//computation in the future / past
 		$scheduleTime = $scheduleTime - $this->timeOffset;
 
-		//So, Mailchimp provides a best effort service.
-		//If we tell them, we want our email at time(),
-		//they'll answer that the email is scheduled
-		//and it'll take 30/90 min for it to be effectively
-		//sent according to my observations.
-		//Agressively scheduling emails in the past seems
-		//to provide better results, i.e, the emails are
-		//sent right away.
-		$scheduleTime = $scheduleTime-48*60*60;
-
 		log_message('info', 'Date ' . print_r($scheduleTime, true));
-
 
 		$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
 		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
@@ -851,24 +840,26 @@ class Auto_email {
 			->as_array()
 			->find_all();
 
-			//If the request went fine and the last supported watch was added more than 
-			//one hour ago and we this is the first watch of this brand for this customer
 			if(
+				//If the request went fine 
 				is_array($watches) 
 				&& 
-				(
-					//only one watch, carry on
-					sizeof($watches) == 1 || 
-					//Many watches and the last one was created more than one hour ago
-					(sizeof($watches) >= 1 && time() - $watches[1]["creationDate"] > 3600)
-				) 
-				&&
+				//This is the first time we have this brand
 				$this->CI->__->find($watches, 
 					function($watch){
 						return strtolower($watch["brand"]) == $brand;
 					}
 				) == null
 			){
+				
+				$time = time();
+
+				//A supported watch was created less than one hour ago,
+				//schedule the mail to be sent later
+				if(sizeof($watches) >= 1 && $time - $watches[1]["creationDate"] < 3600){
+					$time = $time + 3600;
+				}
+
 				return $this->sendMandrillEmail(
 					$supportedBrandsSubject[$brand][1],
 					customBrandContent(
@@ -878,7 +869,7 @@ class Auto_email {
 					$watches[0]["firstname"] . " " . $watches[0]["name"],
 					$watches[0]["email"],
 					$supportedBrandsSubject[$brand][0],
-					$this->sendAtString(time())
+					$this->sendAtString($time)
 				);
 
 			}
