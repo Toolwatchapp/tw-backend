@@ -869,6 +869,13 @@ class Auto_email {
 					) == null
 				)
 			){
+				if(watch === false){
+					$watch = array(
+						$this->CI->user->select()
+							->as_array()
+							->find($watch->userId)
+						);
+				}
 				
 				// Add hours removed on sendAtString + 30
 				$time = time() + 44*60*60 + 30*60;
