@@ -215,7 +215,7 @@ function addSecondWatchContent($firstName, $firstWatchName, $watches, $alphaId){
     "add_second_watch", 
     array(
       'name' => $firstName,
-      'first-watch' => $firstWatchName,
+      'firstwatch' => $firstWatchName,
       'dashboard'=> constructDashboardWatches($watches),
       'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
     )
