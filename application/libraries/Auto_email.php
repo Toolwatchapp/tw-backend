@@ -869,8 +869,8 @@ class Auto_email {
 					) == null
 				)
 			){
-				if(watch === false){
-					$watch = array(
+				if($watches === false){
+					$watches = array(
 						$this->CI->user->select()
 							->as_array()
 							->find($watch->userId)
