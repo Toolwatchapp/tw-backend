@@ -200,7 +200,7 @@ class Auto_email {
 		);
 
 		return array(
-			'users' 	 => $emailsUserSent,
+			'users'    => $emailsUserSent,
 			'watches'  => $emailsWatchSent,
 			'measures' => $emailsMeasureSent
 		);
@@ -353,7 +353,7 @@ class Auto_email {
 				$idTitle    => $userId,
 				'sentTime'  => $time,
 				'emailType' => $emailType,
-				'content'		=> $content,
+				'content'	=> $content,
 				'mandrill'  => $mandrillResponse
 			)
 		);
@@ -841,6 +841,15 @@ class Auto_email {
 			->as_array()
 			->find_all();
 
+			$result = $this->CI->__->find($watches, 
+					function($watch){
+						log_message('error', "checking" .$watch["brand"] . "w/" . $brand);
+						return strtolower($watch["brand"]) == $brand;
+					}
+				);
+
+			log_message('error', $result);
+
 			if(
 				//If the request went fine 
 				is_array($watches) 
@@ -853,11 +862,12 @@ class Auto_email {
 				) == null
 			){
 				
-				$time = time();
+				// Add hours removed on sendAtString + 30
+				$time = time() + 44*60*60 + 30*60;
 
 				//A supported watch was created less than one hour ago,
 				//schedule the mail to be sent later
-				if(sizeof($watches) >= 1 && $time - $watches[1]["creationDate"] < 3600){
+				if(sizeof($watches) >= 1 && time() - $watches[1]["creationDate"] < 3600){
 					$time = $time + 3600;
 				}
 
