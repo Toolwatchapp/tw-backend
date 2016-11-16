@@ -830,7 +830,7 @@ class Auto_email {
 		$this->brand = strtolower($watch->brand);
 		
 		//The added watch is one of the watch that have a custom email
-		if(in_array($brand, $supportedBrands)){
+		if(in_array($this->brand, $supportedBrands)){
 
 			//Get all the watches that match on of the brand in supportedBrands
 			$watches = $this->CI->watch->select("watch.*, user.email, user.firstname, user.name")
@@ -848,7 +848,7 @@ class Auto_email {
 					}
 				);
 
-			log_message('error', $result);
+			log_message('error', print_r($result, true));
 
 			if(
 				//If the request went fine 
