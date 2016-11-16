@@ -1020,7 +1020,8 @@ class Auto_email {
 					$measure->brand,
 					$measure->model,
 					$measure->accuracy,
-					$this->CI->measure->getMeasuresByUser($measure->userId)
+					$this->CI->measure->getMeasuresByUser($measure->userId),
+					alphaID($measure->userId)
 				),
 				$measure->name.' '.$measure->firstname,
 				$measure->email,
