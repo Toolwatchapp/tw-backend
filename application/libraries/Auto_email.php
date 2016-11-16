@@ -836,6 +836,7 @@ class Auto_email {
 			$watches = $this->CI->watch->select("watch.*, user.email, user.firstname, user.name")
 			->join("user", "user.userId = watch.userId")
 			->where("watch.userId", $watch->userId)
+			->where("watch.watchId <>", $watch->watchId)
 			->where_in("LOWER(watch.brand)", $supportedBrands)
 			->order_by("creationDate", "desc")
 			->as_array()
@@ -857,7 +858,7 @@ class Auto_email {
 				//This is the first time we have this brand
 				$this->CI->__->find($watches, 
 					function($watch){
-						return strtolower($watch["brand"]) == $brand;
+						return strtolower($watch["brand"]) == $this->brand;
 					}
 				) == null
 			){
@@ -872,14 +873,14 @@ class Auto_email {
 				}
 
 				return $this->sendMandrillEmail(
-					$supportedBrandsSubject[$brand][1],
+					$supportedBrandsSubject[$this->brand][1],
 					customBrandContent(
-						$supportedBrandsSubject[$brand][0], 
+						$supportedBrandsSubject[$this->brand][0], 
 						$watches[0]["firstname"]
 					),
 					$watches[0]["firstname"] . " " . $watches[0]["name"],
 					$watches[0]["email"],
-					$supportedBrandsSubject[$brand][0],
+					$supportedBrandsSubject[$this->brand][0],
 					$this->sendAtString($time)
 				);
 
