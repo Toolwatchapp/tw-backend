@@ -35,7 +35,7 @@
  * - one_month_accuracy
  * @see https://us9.admin.mailchimp.com/templates/edit?id=392821
  * - - <span mc:edit="name">{{name}}</span>
- * - - <div mc:edit="new-watches">
+ * - - <div mc:edit="watches">
  *      <ul>
  *        <li><span>{{brand}} {{name}}</span></li>
  *      </ul>
@@ -50,7 +50,7 @@
  * - one_week_accuracy
  * @see https://us9.admin.mailchimp.com/templates/edit?id=392817
  * - - <span mc:edit="name">{{name}}</span>
- * - - <div mc:edit="new-watches">
+ * - - <div mc:edit="watches">
  *      <ul>
  *        <li><span>{{brand}} {{name}}</span></li>
  *      </ul>
@@ -65,7 +65,7 @@
  * - check_accuracy
  * @see https://us9.admin.mailchimp.com/templates/edit?id=392813
  * - - <span mc:edit="name">{{name}}</span>
- * - - <div mc:edit="new-watches">
+ * - - <div mc:edit="watches">
  *      <ul>
  *        <li><span>{{brand}} {{name}}</span></li>
  *      </ul>
@@ -85,7 +85,7 @@
  * - make_first_measure
  * @see https://us9.admin.mailchimp.com/templates/edit?id=392793
  * - - <span mc:edit="name">{{name}}</span>
- * - - <div mc:edit="new-watches">
+ * - - <div mc:edit="watches">
  *      <ul>
  *        <li><span>{{brand}} {{name}}</span></li>
  *      </ul>
@@ -197,7 +197,7 @@ function makeFirstMeasureContent($firstName, $watchesToCheck, $watches, $alphaId
     "make_first_measure", 
     array(
       'name' => $firstName,
-      'new-watches'=> constructContentWatches($watchesToCheck),
+      'watches'=> constructContentWatches($watchesToCheck),
       'dashboard'=> constructDashboardWatches($watches),
       'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
     )
@@ -249,7 +249,7 @@ function checkAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId){
     "check_accuracy", 
     array(
       'name' => $firstName,
-      'new-watches'=> constructContentWatches($watchesToCheck),
+      'watches'=> constructContentWatches($watchesToCheck),
       'dashboard'=> constructDashboardWatches($watches),
       'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
     )
@@ -267,7 +267,7 @@ function oneWeekAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId)
     "one_week_accuracy", 
     array(
       'name' => $firstName,
-      'new-watches'=> constructContentWatches($watchesToCheck),
+      'watches'=> constructContentWatches($watchesToCheck),
       'dashboard'=> constructDashboardWatches($watches),
       'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
     )
@@ -280,7 +280,7 @@ function oneMonthAccuracyContent($firstName, $watchesToCheck, $watches, $alphaId
     "one_month_accuracy", 
     array(
       'name' => $firstName,
-      'new-watches'=> constructContentWatches($watchesToCheck),
+      'watches'=> constructContentWatches($watchesToCheck),
       'dashboard'=> constructDashboardWatches($watches),
       'unsub' => "<a href='". base_url() . 'Unsubscribe/index/'.$alphaId."'>here</a>"
     )
