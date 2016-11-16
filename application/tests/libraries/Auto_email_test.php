@@ -211,6 +211,52 @@ class Auto_email_test extends TestCase {
 			)
 		);
 
+		//Rolex Again 
+		$data = array(
+			'userId'    => self::$users['nestor']->userId,
+			'brand'     => 'rolex',
+			'name'      => 'myrolex',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time());
+
+		$res = $this->watchModel->insert($data);
+		$data["watchId"] = $res;
+
+		//no  email is sent
+		$this->assertEquals(
+			false,
+			$this->email->updateObserver(
+				'TEST',
+				ADD_WATCH,
+				arrayToObject($data)
+			)
+		);
+
+		//First Omega 
+		$data = array(
+			'userId'    => self::$users['nestor']->userId,
+			'brand'     => 'Omega',
+			'name'      => 'myrolex',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time());
+
+		$res = $this->watchModel->insert($data);
+		$data["watchId"] = $res;
+
+		//an email is sent
+		$this->assertEquals(
+			'abc123abc123abc123abc123abc123',
+			$this->email->updateObserver(
+				'TEST',
+				ADD_WATCH,
+				arrayToObject($data)
+			)[0]['_id']
+		);
+
 		$this->watchModel->delete_where(array('userId'=>self::$users['nestor']->userId));
   	}
 

@@ -842,18 +842,6 @@ class Auto_email {
 			->as_array()
 			->find_all();
 
-			log_message('error', print_r($watches, true));
-
-			$result = $this->CI->__->find($watches, 
-					function($watch){
-						log_message('error', "checking" .$watch["brand"] . "w/" . $this->brand);
-						return strtolower($watch["brand"]) == $this->brand;
-					}
-				);
-
-			log_message('error', print_r($result, true));
-			log_message('error', print_r($result == null, true));
-
 			if(
 				$watches === false
 				|| 
@@ -878,7 +866,7 @@ class Auto_email {
 				}
 				
 				// Add hours removed on sendAtString + 30
-				$time = time() + 44*60*60 + 30*60;
+				$time = time() + 48*60*60 + 30*60;
 
 				//A supported watch was created less than one hour ago,
 				//schedule the mail to be sent later
