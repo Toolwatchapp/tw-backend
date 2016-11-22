@@ -287,6 +287,7 @@ class Auto_email {
 			'important'                 => false,
 			'track_opens'               => true,
 			'track_clicks'              => true,
+			'inline_css'				=> true,
 			'tags'                      => array($tags),
 			'google_analytics_campaign' => $tags,
 			'google_analytics_domains'  => array('toolwatch.io'),
