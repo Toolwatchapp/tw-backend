@@ -86,7 +86,7 @@ m.parentNode.insertBefore(a,m)
 <?php
 foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'">';}
 foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
-foreach ($metas as $meta) {echo $meta;}
+if(is_array($metas)){foreach ($metas as $meta) {echo $meta;}}
 ?>
     <!--[if lt IE 8]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -160,6 +160,16 @@ if ($userIsLoggedIn) {
 	echo '<div class="col-md-1 ">
     <a class="btn btn-lg btn-white" href="/measures/" title="Measures">My Measures</a>
   </div>';
+
+  
+  echo '<script type="text/javascript">
+    window.CRISP_READY_TRIGGER = function() {
+        // Feed this call with your own internal email data.
+        $crisp.set("user:email", "'. $this->session->userdata('email') .'");
+        $crisp.set("user:nickname", "'.  $this->session->userdata('firstname') . ' ' . $this->session->userdata('lastname') .'");
+    };
+  </script>';
+
 } else {
 
 	echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></div>';

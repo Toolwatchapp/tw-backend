@@ -44,6 +44,7 @@ class Auto_email_test extends TestCase {
 		$CI->load->model('Watch');
 		$CI->load->model('User');
 		$CI->load->model('measure');
+		$CI->load->model('emailpreferences');
 
 		$emailBatch = new MY_Model("email_batch");
 		$emailBatch->delete_where(array("id >="      => "0"));
@@ -51,35 +52,21 @@ class Auto_email_test extends TestCase {
 		$CI->Watch->delete_where(array("watchId >="   => "0"));
 		$CI->User->delete_where(array("userId >="     => "0"));
 
-		$data = array(
-			'email'        => 'nestor@nestor.com',
-			'password'     => hash('sha256', 'azerty'),
-			'name'         => 'math',
-			'firstname'    => 'nay',
-			'timezone'     => -5,
-			'country'      => 'Canada',
-			'registerDate' => time(),
-			'lastLogin'    => time()
-		);
-		$CI->User->insert($data);
+		$CI->User->signup(	'nestor@nestor.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'ernest@ernest.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'ernest@ernest.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'anatole@anatole.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'anatole@anatole.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'phillibert@phillibert.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'phillibert@phillibert.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'hippolyte@hippolyte.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'hippolyte@hippolyte.com','azerty','math','nay','Canada');
 
-		$data['email'] = 'raymond@raymond.com';
-		$CI->User->insert($data);
+		$CI->User->signup(	'raymond@raymond.com','azerty','math','nay','Canada');
+
+		$CI->User->signup(	'unsubscribe@unsubscribe.com','azerty','math','nay','Canada');
 
 		$tmp = $CI->User->select()->find_all();
-
 
 		self::$users['nestor'] = $tmp[0];
 		self::$users['ernest'] = $tmp[1];
@@ -87,19 +74,21 @@ class Auto_email_test extends TestCase {
 		self::$users['phillibert'] = $tmp[3];
 		self::$users['hippolyte'] = $tmp[4];
 		self::$users['raymond'] = $tmp[5];
+		self::$users['unsubscribe'] = $tmp[6];
+
+		$CI->emailpreferences->updateEmailPreferences(0, 0, 0, 0, 0, 0, 0, 0, self::$users['unsubscribe']->userId);
 	}
 
 	public function setUp() {
 		$CI = &get_instance();
 
-		$mcapi = $this->getMockBuilder('Mcapi')
-														->getMock();
+		$mcapi = $this->getMockBuilder('Mcapi')->getMock();
 
 		$mcapi->method('listSubscribe')->with(
-        $this->anything(),
-        $this->anything(),
-        $this->anything()
-    )->willReturn(true);
+			$this->anything(),
+			$this->anything(),
+			$this->anything()
+		)->willReturn(true);
 
 		$mandrillMessage = $this->getMockBuilder('Mandrill_Messages')
 		                        ->disableOriginalConstructor()
@@ -117,7 +106,7 @@ class Auto_email_test extends TestCase {
 
 		);
 
-		$mandrillMessage->method('send')->willReturn($returnSend);
+		$mandrillMessage->method('sendTemplate')->willReturn($returnSend);
 
 		$returnReschedule = Array
 		(
@@ -146,7 +135,7 @@ class Auto_email_test extends TestCase {
 
 	public function test_mock() {
 
-		$result = $this->email->CI->mandrill->messages->send(null);
+		$result = $this->email->CI->mandrill->messages->sendTemplate(null);
 
 		$this->assertEquals(
 			'abc123abc123abc123abc123abc123',
@@ -173,6 +162,103 @@ class Auto_email_test extends TestCase {
 				self::$users['nestor'])[0]['_id']
 		);
 	}
+
+	public function test_customBrandsEmail(){
+
+		//First Rolex 
+		$data = array(
+			'userId'    => self::$users['nestor']->userId,
+			'brand'     => 'rolex',
+			'name'      => 'myrolex',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time());
+
+		$res = $this->watchModel->insert($data);
+		$data["watchId"] = $res;
+
+		//an email is sent
+		$this->assertEquals(
+			'abc123abc123abc123abc123abc123',
+			$this->email->updateObserver(
+				'TEST',
+				ADD_WATCH,
+				arrayToObject($data)
+			)[0]['_id']
+		);
+
+		//Non Supported Watch 
+		$data = array(
+			'userId'    => self::$users['nestor']->userId,
+			'brand'     => 'nonsupported',
+			'name'      => 'myrolex',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time());
+
+		$res = $this->watchModel->insert($data);
+		$data["watchId"] = $res;
+
+		//no  email is sent
+		$this->assertEquals(
+			false,
+			$this->email->updateObserver(
+				'TEST',
+				ADD_WATCH,
+				arrayToObject($data)
+			)
+		);
+
+		//Rolex Again 
+		$data = array(
+			'userId'    => self::$users['nestor']->userId,
+			'brand'     => 'rolex',
+			'name'      => 'myrolex',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time());
+
+		$res = $this->watchModel->insert($data);
+		$data["watchId"] = $res;
+
+		//no  email is sent
+		$this->assertEquals(
+			false,
+			$this->email->updateObserver(
+				'TEST',
+				ADD_WATCH,
+				arrayToObject($data)
+			)
+		);
+
+		//First Omega 
+		$data = array(
+			'userId'    => self::$users['nestor']->userId,
+			'brand'     => 'Omega',
+			'name'      => 'myrolex',
+			'yearOfBuy' => '2000',
+			'serial'    => '0000-0000',
+			'caliber'   => 'caliber',
+			'creationDate' => time());
+
+		$res = $this->watchModel->insert($data);
+		$data["watchId"] = $res;
+
+		//an email is sent
+		$this->assertEquals(
+			'abc123abc123abc123abc123abc123',
+			$this->email->updateObserver(
+				'TEST',
+				ADD_WATCH,
+				arrayToObject($data)
+			)[0]['_id']
+		);
+
+		$this->watchModel->delete_where(array('userId'=>self::$users['nestor']->userId));
+  	}
 
 
  /**
@@ -439,10 +525,6 @@ class Auto_email_test extends TestCase {
 	$this->assertEquals(sizeof($emails['watches']), 1);
 	$this->assertEquals(sizeof($emails['measures']), 0);
 
-
-	//test en ajoutant une autre montre
-
-
 	//Check that the email is sent only once
 	$emails = $this->email->cronCheck(24*1*62*60);
 
@@ -450,6 +532,7 @@ class Auto_email_test extends TestCase {
 	$this->assertEquals(sizeof($emails['watches']), 0);
 	$this->assertEquals(sizeof($emails['measures']), 0);
  }
+
 
  public static function tearDownAfterClass() {
   $CI = &get_instance();
