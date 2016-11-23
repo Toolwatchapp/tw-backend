@@ -160,6 +160,16 @@ if ($userIsLoggedIn) {
 	echo '<div class="col-md-1 ">
     <a class="btn btn-lg btn-white" href="/measures/" title="Measures">My Measures</a>
   </div>';
+
+  
+  echo '<script type="text/javascript">
+    window.CRISP_READY_TRIGGER = function() {
+        // Feed this call with your own internal email data.
+        $crisp.set("user:email",'. $this->session->userdata('email') .');
+        $crisp.set("user:nickname", '.  $this->session->userdata('firstname') . ' ' . $this->session->userdata('lastname') .');
+    };
+  </script>';
+
 } else {
 
 	echo '<div style="margin-top: 10px" class="col-md-1  text-center"><a href="#" title="Login" data-toggle="modal" data-target="#pageModal" data-modal-update="true" data-href="/login/">Login</a></div>';
