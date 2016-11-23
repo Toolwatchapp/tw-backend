@@ -66,8 +66,8 @@ class Auto_email {
 	private $hour           = 3600;
 	private $day            = 86400;
 	private $cancelledEmail = 1;
-	private $timeOffset 		= 0;
-	private $time						= 0;
+	private $timeOffset 	= 0;
+	private $time			= 0;
 	private $lastBatchDate  = 0;
 	private $emailBatchModel;
 
@@ -82,7 +82,10 @@ class Auto_email {
 		$this->CI->load->library("__");
 		$this->CI->load->model("watch");
 		$this->CI->load->model("measure");
+		$this->CI->load->model("user");
+		$this->CI->load->model("emailpreferences");
 		$this->CI->load->helper("email_content");
+		$this->CI->load->helper("alphaid");
 		$this->CI->load->library("mcapi");
 		$this->CI->config->load('config');
 	}
@@ -110,6 +113,9 @@ class Auto_email {
 				break;
 			case "RESET_PASSWORD_USE":
 				return $this->resetPasswordUse($data['email']);
+				break;
+			case "ADD_WATCH":
+				return $this->newWatch($data);
 				break;
 		}
 	}
@@ -194,7 +200,7 @@ class Auto_email {
 		);
 
 		return array(
-			'users' 	 => $emailsUserSent,
+			'users'    => $emailsUserSent,
 			'watches'  => $emailsWatchSent,
 			'measures' => $emailsMeasureSent
 		);
@@ -258,11 +264,10 @@ class Auto_email {
 	 * an attachment
 	 * @return Array  Mandrill API Response
 	 */
-	private function sendMandrillEmail($subject, $content, $recipientName,
+	private function sendMandrillEmail($subject, $template, $recipientName,
 		$recipientEmail, $tags, $sendAt, $attachments = null) {
 
 		$message = array(
-			'html'       => $content,
 			'subject'    => $subject,
 			'from_email' => 'hello@toolwatch.io',
 			'from_name'  => 'Toolwatch',
@@ -276,9 +281,13 @@ class Auto_email {
 			'headers'   => array(
 				'Reply-To' => 'hello@toolwatch.io',
 			),
+			'merge'						=> true,
+			'merge_vars'				=> 
+				array((object) ['rcpt'=>$recipientEmail, 'vars'=>$template['templateValue']]),
 			'important'                 => false,
 			'track_opens'               => true,
 			'track_clicks'              => true,
+			'inline_css'				=> true,
 			'tags'                      => array($tags),
 			'google_analytics_campaign' => $tags,
 			'google_analytics_domains'  => array('toolwatch.io'),
@@ -294,7 +303,7 @@ class Auto_email {
 		$async   = false;
 		$ip_pool = 'Main Pool';
 		$send_at = $sendAt;
-		$mandrillResponse =  $this->CI->mandrill->messages->send($message, $async, $ip_pool, $send_at);
+		$mandrillResponse =  $this->CI->mandrill->messages->sendTemplate($template['templateName'], $template['templateValue'], $message, $async, $ip_pool, $send_at);
 		log_message('info', 'Mandrill email: '
 			. print_r($mandrillResponse, true) .
 			' at ' . $sendAt);
@@ -314,19 +323,9 @@ class Auto_email {
 		//order to send emails right away when exploring
 		//computation in the future / past
 		$scheduleTime = $scheduleTime - $this->timeOffset;
-
-		//So, Mailchimp provides a best effort service.
-		//If we tell them, we want our email at time(),
-		//they'll answer that the email is scheduled
-		//and it'll take 30/90 min for it to be effectively
-		//sent according to my observations.
-		//Agressively scheduling emails in the past seams
-		//to provide better results, i.e, the emails are
-		//sent right away.
 		$scheduleTime = $scheduleTime-48*60*60;
 
 		log_message('info', 'Date ' . print_r($scheduleTime, true));
-
 
 		$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
 		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
@@ -355,7 +354,7 @@ class Auto_email {
 				$idTitle    => $userId,
 				'sentTime'  => $time,
 				'emailType' => $emailType,
-				'content'		=> $content,
+				'content'	=> $content,
 				'mandrill'  => $mandrillResponse
 			)
 		);
@@ -412,20 +411,13 @@ class Auto_email {
 
 		$inactiveUsers = $this->activeUser
 			->select()
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.comeback = 1')
 			->where('lastLogin <', $this->getBatchUpperBound($this->day*100))
 			->where('lastLogin >', $this->getBatchLowerBound($this->day*100))
 			->find_all();
 
 		if ($inactiveUsers !== FALSE) {
 			foreach ($inactiveUsers as $user) {
-
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-					comebackContent(
-						$user->firstname,
-						$this->CI->measure->getMeasuresByUser($user->userId)
-					), true
-				);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
@@ -436,7 +428,11 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'We haven\'t seen you for a while ? ⌚',
-						$emailcontent,
+						comebackContent(
+							$user->firstname,
+							$this->CI->measure->getMeasuresByUser($user->userId),
+							alphaID($user->userId)
+						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'comeback_100d',
@@ -457,8 +453,10 @@ class Auto_email {
 
 		log_message('info', 'userWithoutWatch');
 
+
 		$userWithoutWatch = $this->activeUser
-			->select('userId, name, firstname, email, lastLogin')
+			->select('active_user.userId, name, firstname, email, lastLogin')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.firstWatch = 1')
 			->where('watches', 0)
 			->where('lastLogin <', $this->getBatchUpperBound($this->day))
 			->where('lastLogin >', $this->getBatchLowerBound($this->day))
@@ -466,9 +464,6 @@ class Auto_email {
 
 		if ($userWithoutWatch !== FALSE) {
 			foreach ($userWithoutWatch as $user) {
-
-				$emailcontent = $this->CI->load->view('email/generic',
-					addFirstWatchContent($user->firstname), true);
 
 				$this->addEmailToQueue(
 					$queuedEmail,
@@ -479,7 +474,10 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s add a watch and start measuring! ⌚',
-						$emailcontent,
+						addFirstWatchContent(
+							$user->firstname,
+							alphaID($user->userId)
+						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'add_first_watch_email',
@@ -504,6 +502,7 @@ class Auto_email {
 			->select('active_user.userId, watch.watchId, watch.brand, watch.name as watchName,
 			active_user.name as lastname, firstname, email')
 			->join('active_user', 'watch.userId = active_user.userId')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.firstMeasure = 1')
 			->where('(select count(1) from measure where watch.watchId = measure.watchId) = ', 0)
 			->where('watch.status', 1)
 			->where('creationDate < ', $this->getBatchUpperBound($this->day))
@@ -517,16 +516,6 @@ class Auto_email {
 
 			foreach ($userWithWatchWithoutMeasure as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-					makeFirstMeasureContent(
-						$user[0]['firstname'],
-						$user,
-						$this->CI->measure->getMeasuresByUser($user[0]['userId'])
-					),
-					true
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['watchId'],
@@ -536,7 +525,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s start measuring! ⌚',
-						$emailcontent,
+						makeFirstMeasureContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]['userId']),
+							alphaID($user[0]['userId'])
+						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'make_first_measure_email',
@@ -559,6 +553,7 @@ class Auto_email {
 
 		$userWithOneCompleteMeasureAndOneWatch = $this->activeUser
 			->select('active_user.userId, active_user.name, firstname, email')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.secondWatch = 1')
 			->where('watches', 1)
 			->where('(select count(1) from measure
 					join watch on measure.watchId = watch.watchId
@@ -578,16 +573,6 @@ class Auto_email {
 					->select('brand, name')
 					->find_by('userid', $user->userId);
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-					addSecondWatchContent(
-						$user->firstname,
-						$watch->brand . " " . $watch->name,
-						$this->CI->measure->getMeasuresByUser($user->userId)
-					),
-					true
-				);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user->userId,
@@ -597,7 +582,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Add another watch ? ⌚',
-						$emailcontent,
+							addSecondWatchContent(
+							$user->firstname,
+							$watch->brand . " " . $watch->name,
+							$this->CI->measure->getMeasuresByUser($user->userId),
+							alphaID($user->userId)
+						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'add_another_watch_email',
@@ -625,6 +615,7 @@ class Auto_email {
 								active_user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('active_user', 'watch.userId = active_user.userId')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.dayAccuracy = 1')
 			->where('watch.status', 1)
 			->where('statusId', 1)
 			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day))
@@ -638,15 +629,6 @@ class Auto_email {
 
 			foreach ($measureWithoutAccuracy as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-						checkAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
-						),
-				true);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['measureId'],
@@ -656,7 +638,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
-						$emailcontent,
+						checkAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
+						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'check_accuracy_email',
@@ -683,6 +670,7 @@ class Auto_email {
 			measure.*, watch.name as watchName, active_user.name as lastname, active_user.firstname, email')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('active_user', 'watch.userId = active_user.userId')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.weekAccuracy = 1')
 			->where('statusId', 1)
 			->where('watch.status', 1)
 			->where('measureReferenceTime <', $this->getBatchUpperBound($this->day*7))
@@ -696,15 +684,6 @@ class Auto_email {
 
 			foreach ($measureWithoutAccuracy as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-						oneWeekAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
-						),
-				true);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['measureId'],
@@ -714,7 +693,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
-						$emailcontent,
+						oneWeekAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
+						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'check_accuracy_email',
@@ -741,6 +725,7 @@ class Auto_email {
 			active_user.userId, active_user.name as lastname, active_user.firstname, email, measure.*')
 			->join('watch', 'watch.watchId = measure.watchId')
 			->join('active_user', 'watch.userId = active_user.userId')
+			->join('email_preference', 'active_user.userId = email_preference.userId AND email_preference.newMeasure = 1')
 			->where('watch.status', 1)
 			->where('statusId', 2)
 			->where('accuracyReferenceTime <', $this->getBatchUpperBound($this->day*30))
@@ -755,15 +740,6 @@ class Auto_email {
 
 			foreach ($watchesInNeedOfNewMeasure as $user) {
 
-				$emailcontent = $this->CI->load->view(
-					'email/generic',
-						oneMonthAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"])
-						),
-				true);
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['watchId'],
@@ -773,7 +749,12 @@ class Auto_email {
 					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s start a new measure! ⌚',
-						$emailcontent,
+						oneMonthAccuracyContent(
+							$user[0]['firstname'],
+							$user,
+							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
+							alphaID($user[0]["userId"])
+						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'start_new_measure_email',
@@ -795,10 +776,7 @@ class Auto_email {
 
 		return $this->sendMandrillEmail(
 			'Welcome to Toolwatch! ⌚',
-			$this->CI->load->view(
-				'email/generic',
-				signupContent($user->firstname),
-				true),
+			signupContent($user->firstname, alphaID($user->userId)),
 			$user->name.' '.$user->firstname,
 			$user->email,
 			'signup',
@@ -815,11 +793,8 @@ class Auto_email {
 	private function resetPassword($email, $token) {
 		return $this->sendMandrillEmail(
 			'Your Toolwatch password ⌚',
-			$this->CI->load->view(
-				'email/generic',
-				resetPasswordContent($token),
-				true),
-			'',
+			resetPasswordContent($token),
+			"",
 			$email,
 			'reset_password',
 			$this->sendAtString(time())
@@ -835,16 +810,91 @@ class Auto_email {
 	private function resetPasswordUse($email) {
 		return $this->sendMandrillEmail(
 			'Your Toolwatch password has been changed ⌚',
-			$this->CI->load->view(
-				'email/generic',
-				resetPasswordConfirmationContent(),
-				true),
-			'',
+			resetPasswordConfirmationContent(),
+			"",
 			$email,
 			'reset_password_confirmation',
 			$this->sendAtString(time())
 		);
 	}
+
+	
+	private function newWatch($watch){
+
+		$supportedBrands = array("omega", "rolex", "jaeger-lecoultre");
+		$supportedBrandsSubject = array(
+			"omega" => array("add_watch_omega", "Omegafan too?"),
+			"rolex" => array("add_watch_rolex", "My guess is that you are a Rolexophile too!"),
+			"jaeger-lecoultre" => array("add_watch_jlc", "So you like the Grande Maison too?")
+		);
+
+		$this->brand = strtolower($watch->brand);
+		
+		//The added watch is one of the watch that have a custom email
+		if(in_array($this->brand, $supportedBrands)){
+
+			//Get all the watches that match on of the brand in supportedBrands
+			$watches = $this->CI->watch->select("watch.*, user.email, user.firstname, user.name")
+			->join("user", "user.userId = watch.userId")
+			->where("watch.userId", $watch->userId)
+			->where("watch.watchId <>", $watch->watchId)
+			->where_in("LOWER(watch.brand)", $supportedBrands)
+			->order_by("creationDate", "desc")
+			->as_array()
+			->find_all();
+
+			if(
+				$watches === false
+				|| 
+				(
+					//If the request went fine 
+					is_array($watches) 
+					&& 
+					//This is the first time we have this brand
+					$this->CI->__->find($watches, 
+						function($watch){
+							return strtolower($watch["brand"]) == $this->brand;
+						}
+					) == null
+				)
+			){
+				if($watches === false){
+					$watches = array(
+						$this->CI->user->select()
+							->as_array()
+							->find($watch->userId)
+						);
+				}
+				
+				// Add hours removed on sendAtString + 30
+				$time = time() + 48*60*60 + 30*60;
+
+				//A supported watch was created less than one hour ago,
+				//schedule the mail to be sent later
+				if(
+					is_array($watches) && 
+					sizeof($watches) >= 1 && time() - $watches[1]["creationDate"] < 3600){
+					$time = $time + 3600;
+				}
+
+				return $this->sendMandrillEmail(
+					$supportedBrandsSubject[$this->brand][1],
+					customBrandContent(
+						$supportedBrandsSubject[$this->brand][0], 
+						$watches[0]["firstname"]
+					),
+					$watches[0]["firstname"] . " " . $watches[0]["name"],
+					$watches[0]["email"],
+					$supportedBrandsSubject[$this->brand][0],
+					$this->sendAtString($time)
+				);
+
+			}
+		}
+
+		return false;
+	}
+
 
 	/**
 	 * Create a google reminder
@@ -954,45 +1004,39 @@ class Auto_email {
 	 */
 	private function newResult($measure) {
 
-		$attachments = array();
 
-		// @codeCoverageIgnoreStart
-		try{
-			array_push($attachments, array(
-				'type'    => 'text/calendar',
-				'name'    => 'Check my watch accuracy.ics',
-				'content' =>  $this->createGoogleEvent($measure)
-			));
-		}catch(Exception $e){
-			log_message('error', $e);
+		if($this->CI->emailpreferences->select('result')->find_by("userId", $measure->userId) == 1){
+
+			$attachments = array();
+
+			// @codeCoverageIgnoreStart
+			try{
+				array_push($attachments, array(
+					'type'    => 'text/calendar',
+					'name'    => 'Check my watch accuracy.ics',
+					'content' =>  $this->createGoogleEvent($measure)
+				));
+			}catch(Exception $e){
+				log_message('error', $e);
+			}
+			// @codeCoverageIgnoreEnd
+
+			$this->sendMandrillEmail(
+				'The result of your watch\'s accuracy ! ⌚',
+				watchResultContent(
+					$measure->firstname,
+					$measure->brand,
+					$measure->model,
+					$measure->accuracy,
+					$this->CI->measure->getMeasuresByUser($measure->userId),
+					alphaID($measure->userId)
+				),
+				$measure->name.' '.$measure->firstname,
+				$measure->email,
+				'result_email',
+				$this->sendAtString(time()),
+				$attachments
+			);
 		}
-		// @codeCoverageIgnoreEnd
-
-		$emailcontent = $this->CI->load->view(
-					'email/generic',
-					watchResultContent(
-						$measure->firstname,
-						$measure->brand,
-						$measure->model,
-						$measure->accuracy,
-						$this->CI->measure->getMeasuresByUser($measure->userId)
-					),
-					true
-		);
-
-		$this->sendMandrillEmail(
-			'The result of your watch\'s accuracy ! ⌚',
-			$this->CI->load->view('email/generic', $emailcontent, true),
-			$measure->name.' '.$measure->firstname,
-			$measure->email,
-			'result_email',
-			$this->sendAtString(time()),
-			$attachments
-		);
-
-		// We don't store these ones as we don't want
-		// to cancel them, ever.
-		return true;
 	}
-
 }

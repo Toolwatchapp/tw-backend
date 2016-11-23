@@ -330,6 +330,7 @@ class Measures extends MY_Controller {
 		if ($this->expectsPost(array('measureId', 'referenceTimestamp', 'userTimestamp'))) {
 
 			$result['success'] = false;
+
 			$watch = $this->watch->getWatchByMeasureId($this->measureId);
 
 			if ($watch && 

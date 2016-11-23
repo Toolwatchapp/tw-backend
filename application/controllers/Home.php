@@ -10,6 +10,7 @@ class Home extends MY_Controller {
 
 		$this->load->model('measure');
 
+
 		$this->viewName = $this->agent->is_mobile()? "home/home-mobile": "home/home";
 	}
 
@@ -45,6 +46,7 @@ class Home extends MY_Controller {
 		$title = $this->measure
 			->getMeasuresCountByWatchBrand($watchBrands[$randBrands]).
 			' '.$watchBrands[$randBrands].' measured on Toolwatch.io';
+
 
 		$url = $this->agent->is_mobile()? img_url($videos[$randWatches]).'.png': vid_url($videos[$randWatches]).'.mp4';
 

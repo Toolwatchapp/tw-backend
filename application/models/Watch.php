@@ -49,6 +49,8 @@ class Watch extends ObservableModel {
 
 		$res = $this->insert($data);
 
+		$data["watchId"] = $res;
+
 		$this->notify(ADD_WATCH, arrayToObject($data));
 
 		return $res;
