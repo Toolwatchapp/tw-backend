@@ -165,8 +165,8 @@ if ($userIsLoggedIn) {
   echo '<script type="text/javascript">
     window.CRISP_READY_TRIGGER = function() {
         // Feed this call with your own internal email data.
-        $crisp.set("user:email",'. $this->session->userdata('email') .');
-        $crisp.set("user:nickname", '.  $this->session->userdata('firstname') . ' ' . $this->session->userdata('lastname') .');
+        $crisp.set("user:email", "'. $this->session->userdata('email') .'");
+        $crisp.set("user:nickname", "'.  $this->session->userdata('firstname') . ' ' . $this->session->userdata('lastname') .'");
     };
   </script>';
 
