@@ -55,8 +55,12 @@ class Home extends MY_Controller {
 
 	function logout() {
 
-		$this->user->logout();
-		return redirect(base_url());
+		if($this->input->method(TRUE) === 'POST'){
+			$this->user->logout();
+			echo json_encode(true);
+		}else{
+			echo json_encode(false);
+		}
 	}
 
 	function resetPassword($resetToken = '') {

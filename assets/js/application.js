@@ -428,3 +428,14 @@ function changeBackground()
     var bgNumber = currentBg+1;
     //$('.home-intro').css('background-image', 'url("/assets/img/home_'+bgNumber+'.jpg")');
 }
+
+function logout(){
+
+    $.post('/logout', {}, function(data)
+    {
+        FB.logout(function(response) {
+            console.info(response, 'FB LOGOUT');
+        }); 
+        window.location.replace('/');
+    });
+}
