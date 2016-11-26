@@ -155,7 +155,7 @@ if(is_array($metas)){foreach ($metas as $meta) {echo $meta;}}
 <?php
 if ($userIsLoggedIn) {
 	echo '<div style="margin-top: 10px" class="col-md-1  text-center">
-    <a onclick="FB.logout(function(response) {\'FB LOGOUT\'}); window.location.replace(\'/logout/\');" href="#" title="Logout">Logout</a>
+    <a onclick="logout();" href="#" title="Logout">Logout</a>
   </div>';
 	echo '<div class="col-md-1 ">
     <a class="btn btn-lg btn-white" href="/measures/" title="Measures">My Measures</a>
