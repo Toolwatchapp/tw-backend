@@ -821,11 +821,12 @@ class Auto_email {
 	
 	private function newWatch($watch){
 
-		$supportedBrands = array("omega", "rolex", "jaeger-lecoultre");
+		$supportedBrands = array("omega", "rolex", "jaeger-lecoultre", "seiko");
 		$supportedBrandsSubject = array(
 			"omega" => array("add_watch_omega", "Omegafan too?"),
 			"rolex" => array("add_watch_rolex", "My guess is that you are a Rolexophile too!"),
-			"jaeger-lecoultre" => array("add_watch_jlc", "So you like the Grande Maison too?")
+			"jaeger-lecoultre" => array("add_watch_jlc", "So you like the Grande Maison too?"),
+			"seiko"=> array("add_watch_seiko", "Everyone loves Seiko!")
 		);
 
 		$this->brand = strtolower($watch->brand);
