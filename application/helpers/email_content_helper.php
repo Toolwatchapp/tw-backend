@@ -121,7 +121,7 @@ function constructReturnArray($templateName, $templateValues){
 
   foreach ($templateValues as $key => $value) {
     
-    array_push($values, (object) ['name'=>$key, 'content'=>$value]);
+    array_push($values, (object) ['name'=>$key, 'content'=> ($value) == null ? " " : $value]);
   }
 
   return 
