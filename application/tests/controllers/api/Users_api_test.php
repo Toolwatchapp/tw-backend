@@ -24,8 +24,8 @@ class Users_api_test extends TestCase {
 			[
         'email'       => 'mathieu@gmail.com',
 				'password'    => 'password',
-				'name'        => 'name',
-				'firstname'   => 'firstname',
+				'lastname'    => 'lastname',
+				'name'        => 'firstname',
 				'country'     => 'country'
 			]
 		);
@@ -50,8 +50,8 @@ class Users_api_test extends TestCase {
 			[
         'email'       => 'mathieu@gmail.com',
 				'password'    => 'password',
-				'name'        => 'name',
-				'firstname'   => 'firstname',
+				'lastname'    => 'lastname',
+				'name'        => 'firstname',
 				'country'     => 'country'
 			]
     );

@@ -105,15 +105,15 @@ class Users_api extends REST_Controller {
     {
       $email       = $this->post('email');
       $password    = $this->post('password');
-      $name        = $this->post('name');
-      $firstname   = $this->post('firstname');
+      $lastname    = $this->post('lastname');
+      $firstname   = $this->post('name');
       $country     = $this->post('country');
 
       //If the email isn't already in used
 			if (!$this->user->checkUserEmail($email)) {
 
 				// Create the account
-				if ($this->user->signup($email, $password, $name, $firstname, $country)) {
+				if ($this->user->signup($email, $password, $lastname, $firstname, $country)) {
 
 					$this->loginAndAuth($email, $password);
 				}
