@@ -6,7 +6,7 @@ services:
   - mysql
 
 before_script:
-  - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && cat database.sql && mysql -u root -e 'source database.sql'"
+  - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
