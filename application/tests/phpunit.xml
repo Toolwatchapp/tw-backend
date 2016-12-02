@@ -35,7 +35,7 @@
 		<log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="true"/>
 	</logging>
 	<php>
-		<server name='HTTP_HOST' value='http://phpunit'/>
+		<server name='REMOTE_ADDR' value='127.0.0.1'/>
 		<const name="PHPUNIT_TESTSUITE" value="true"/>
 	</php>
 </phpunit>

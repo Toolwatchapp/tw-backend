@@ -11,7 +11,9 @@ class Users_api_test extends TestCase {
 		$CI->load->model('Measure');
     $CI->load->model('Watch');
 		$CI->load->model('Key');
+    $CI->ip_throttle = new MY_Model("limits_ip", 'ip');
 		$CI->Key->delete_where(array("id >=" => "0"));
+		$CI->ip_throttle->delete_where(array("hour_started >=" => "0"));
 		$CI->User->delete_where(array("userId >="   => "0"));
 		$CI->Measure->delete_where(array("id >="    => "0"));
     $CI->Watch->delete_where(array("watchId >=" => "0"));
@@ -108,7 +110,7 @@ class Users_api_test extends TestCase {
       ]
     );
 
-    $this->assertResponseCode(400);
+    $this->assertResponseCode(403);
   }
 
   public function testGetWrongKey(){
@@ -120,7 +122,7 @@ class Users_api_test extends TestCase {
       array('X_API_KEY' => "ajkwhdawjikhdajkdn")
     );
 
-    $this->assertResponseCode(400);
+    $this->assertResponseCode(403);
   }
 
   public function testGet(){
@@ -179,15 +181,41 @@ class Users_api_test extends TestCase {
     $this->assertResponseCode(204);
   }
 
+  public function testLimit(){
+
+    $this->test_create();
+
+   
+    for ($i = 1; $i <= 14; $i++) {
+
+
+      $this->test_login();
+
+    }
+     $output = $this->request(
+			'PUT',
+			'api/users',
+			[
+        'email'       => 'mathieu@gmail.com',
+				'password'    => 'password'
+			]
+    );
+
+    $this->assertResponseCode(401);
+
+  }
+
   public static function tearDownAfterClass() {
    $CI = &get_instance();
-   $CI->load->model('User');
-   $CI->load->model('Measure');
-   $CI->load->model('Watch');
-   $CI->load->model('Key');
-   $CI->Key->delete_where(array("id >=" => "0"));
-   $CI->User->delete_where(array("userId >="   => "0"));
-   $CI->Measure->delete_where(array("id >="    => "0"));
-   $CI->Watch->delete_where(array("watchId >=" => "0"));
+		$CI->load->model('User');
+		$CI->load->model('Measure');
+    $CI->load->model('Watch');
+		$CI->load->model('Key');
+    $CI->ip_throttle = new MY_Model("limits_ip", 'ip');
+		$CI->Key->delete_where(array("id >=" => "0"));
+		$CI->ip_throttle->delete_where(array("hour_started >=" => "0"));
+		$CI->User->delete_where(array("userId >="   => "0"));
+		$CI->Measure->delete_where(array("id >="    => "0"));
+    $CI->Watch->delete_where(array("watchId >=" => "0"));
   }
 }
