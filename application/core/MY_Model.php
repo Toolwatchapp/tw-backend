@@ -355,11 +355,15 @@ class MY_Model extends CI_Model {
 	 *
 	 * @return void
 	 */
-	public function __construct($table = false) {
+	public function __construct($table = false, $key = 'id') {
 		parent::__construct();
 
 		if ($table !== false) {
 			$this->table_name = $table;
+		}
+
+		if ($key !== 'id'){
+			$this->key = $key;
 		}
 
 		// If there are specific DB connection settings used in the model, load
