@@ -304,3 +304,6 @@ class User extends ObservableModel {
 
 		return $this->select('user.*')
 			->join('watch', '`user`.`userId`=`watch`.`userId`')
+			->find_by('watchId', $watchId);
+	}
+}
