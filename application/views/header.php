@@ -25,6 +25,23 @@
 	echo img_url('share.png');
 }
 ?>" />
+
+
+    <!-- Start SmartBanner configuration -->
+    <meta name="smartbanner:title" content="Toolwatch - Watch accuracy app">
+    <meta name="smartbanner:author" content="Toolwatch">
+    <meta name="smartbanner:price" content="FREE">
+    <meta name="smartbanner:price-suffix-apple" content=" - On the App Store">
+    <meta name="smartbanner:price-suffix-google" content=" - In Google Play">
+    <meta name="smartbanner:icon-apple" content="<?php echo ico_url('apple-icon-180x180.png')?>">
+    <meta name="smartbanner:icon-google" content="<?php echo ico_url('apple-icon-180x180.png')?>">
+    <meta name="smartbanner:button" content="VIEW">
+    <meta name="smartbanner:button-url-apple" content="https://itunes.apple.com/us/app/toolwatch-watch-accuracy-app/id1105636950?ls=1&mt=8">
+    <meta name="smartbanner:button-url-google" content="https://play.google.com/store/apps/details?id=toolwatch.toolwatch">
+    <meta name="smartbanner:enabled-platforms" content="android,ios">
+    <link rel="stylesheet" href="<?php echo css_url('smartbanner.min');?>">
+    <script src="<?php echo js_url('smartbanner.min');?>"></script>
+    <!-- End SmartBanner configuration -->
     
     <meta content="text/html; charset=UTF-8; X-Content-Type-Options=nosniff" http-equiv="Content-Type" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
