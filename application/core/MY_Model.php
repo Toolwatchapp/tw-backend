@@ -405,7 +405,7 @@ class MY_Model extends CI_Model {
 
 		$query = $this->db->get_where($this->table_name, array("{$this->table_name}.{$this->key}"=> $id));
 
-		if (!$query->num_rows()) {
+		if (!$query || !$query->num_rows()) {
 			return false;
 		}
 
@@ -440,7 +440,7 @@ class MY_Model extends CI_Model {
 
 		$query = $this->db->get($this->table_name);
 
-		if (!$query->num_rows()) {
+		if (!$query || !$query->num_rows()) {
 			return false;
 		}
 

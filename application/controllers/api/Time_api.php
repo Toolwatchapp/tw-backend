@@ -20,7 +20,7 @@ class Time_api extends REST_Controller {
    public function index_get(){
 
      $this->response(
-       [time=>microtime(true)*1000],
+       ['time'=>microtime(true)*1000],
        REST_Controller::HTTP_OK
      );
    }

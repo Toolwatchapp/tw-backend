@@ -30,6 +30,6 @@ class MY_Exceptions extends CI_Exceptions {
 
       $result = curl_exec($ch);
 
-      log_message("info", "slack exception:".print_r($result, true));
+      log_message('error', $header);
     }
 }
