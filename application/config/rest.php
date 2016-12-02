@@ -45,13 +45,7 @@ $config['rest_default_format'] = 'json';
 */
 $config['rest_supported_formats'] = [
     'json',
-    'array',
-    'csv',
-    'html',
-    'jsonp',
-    'php',
-    'serialized',
-    'xml',
+    'jsonp'
 ];
 
 /*
@@ -199,7 +193,7 @@ $config['auth_library_function'] = '';
 | Array of usernames and passwords for login, if ldap is configured this is ignored
 |
 */
-$config['rest_valid_logins'] = ['admin' => '1234'];
+$config['rest_valid_logins'] = [];
 
 /*
 |--------------------------------------------------------------------------
@@ -244,7 +238,7 @@ $config['rest_ip_whitelist'] = '';
 | 1. Set to TRUE and add any IP address to 'rest_ip_blacklist'
 |
 */
-$config['rest_ip_blacklist_enabled'] = FALSE;
+$config['rest_ip_blacklist_enabled'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -327,7 +321,7 @@ $config['rest_key_column'] = 'key';
 | $config['rest_limits_method'] = 'ROUTED_URL';  // Put a limit on the routed URL
 |
 */
-$config['rest_limits_method'] = 'METHOD_NAME';
+$config['rest_limits_method'] = 'ROUTED_URL';
 
 /*
 |--------------------------------------------------------------------------
