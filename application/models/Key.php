@@ -29,12 +29,6 @@ class Key extends MY_MODEL {
           // Generate a random salt
           $salt = base_convert(bin2hex($this->security->get_random_bytes(64)), 16, 36);
 
-           // If an error occurred, then fall back to the previous method
-          if ($salt === FALSE)
-          {
-              $salt = hash('sha256', time() . mt_rand());
-          }
-
           $new_key = substr($salt, 0, config_item('rest_key_length'));
       }
       while ($this->key_exists($new_key));

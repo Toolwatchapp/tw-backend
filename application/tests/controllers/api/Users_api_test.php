@@ -192,7 +192,7 @@ class Users_api_test extends TestCase {
       $this->test_login();
 
     }
-     $output = $this->request(
+    $output = $this->request(
 			'PUT',
 			'api/users',
 			[
@@ -200,6 +200,20 @@ class Users_api_test extends TestCase {
 				'password'    => 'password'
 			]
     );
+
+    $this->assertResponseCode(401);
+
+    $output = $this->request(
+			'POST',
+			'api/users',
+			[
+        'email'       => 'mathieu2@gmail.com',
+				'password'    => 'password',
+				'lastname'    => 'lastname',
+				'name'        => 'firstname',
+				'country'     => 'country'
+			]
+		);
 
     $this->assertResponseCode(401);
 

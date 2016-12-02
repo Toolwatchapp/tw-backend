@@ -46,8 +46,6 @@ class Users_api extends REST_Controller {
         $user->watches = $this->measure->getNLastMeasuresByUserByWatch($user->userId);
         $this->response($user, REST_Controller::HTTP_OK);
         
-      }else{
-        $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
       }
     }
 
