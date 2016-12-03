@@ -355,11 +355,15 @@ class MY_Model extends CI_Model {
 	 *
 	 * @return void
 	 */
-	public function __construct($table = false) {
+	public function __construct($table = false, $key = 'id') {
 		parent::__construct();
 
 		if ($table !== false) {
 			$this->table_name = $table;
+		}
+
+		if ($key !== 'id'){
+			$this->key = $key;
 		}
 
 		// If there are specific DB connection settings used in the model, load
@@ -405,7 +409,7 @@ class MY_Model extends CI_Model {
 
 		$query = $this->db->get_where($this->table_name, array("{$this->table_name}.{$this->key}"=> $id));
 
-		if (!$query->num_rows()) {
+		if (!$query || !$query->num_rows()) {
 			return false;
 		}
 
@@ -440,7 +444,7 @@ class MY_Model extends CI_Model {
 
 		$query = $this->db->get($this->table_name);
 
-		if (!$query->num_rows()) {
+		if (!$query || !$query->num_rows()) {
 			return false;
 		}
 

@@ -44,7 +44,7 @@ class MY_Controller extends CI_Controller {
 
 			//If the variable is NULL (not posted), we log and exit
 			if($this->input->post($postName) === NULL){
-				log_message('error', "Was expecting " . print_r($postNames, true) .
+				log_message('info', "Was expecting " . print_r($postNames, true) .
 					" got " . print_r($_POST, true));
 				return false;
 			}

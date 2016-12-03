@@ -1,7 +1,9 @@
+<?php if(is_object($selectedWatch)){$selectedWatch = (array) $selectedWatch;}?>
+
 <div class="container container-fluid content first">
     <div class="row">
         <div class="col-md-12">
-            <center><h1 id="mainTitle">Check the accuracy <span id="selectedWatch"> of your <?php echo $selectedWatch->brand.' - '.$selectedWatch->name;?></span></h1></center>
+            <center><h1 id="mainTitle">Check the accuracy <span id="selectedWatch"> of your <?php if(isset($selectedWatch)){ echo $selectedWatch['brand'].' - '.$selectedWatch['name'];}?></span></h1></center>
         </div>
         <div class="col-md-12">
           <div style="display:none" id="sync-text">
@@ -35,7 +37,7 @@
                   <br>
                   <h2>Congratulations</h2>
                   <h3>
-                    The accuracy of your <strong><span class="watch-brand"><?php echo $selectedWatch->brand;?></span></strong> is <span class="watch-accuracy"></span> spd.
+                    The accuracy of your <strong><span class="watch-brand"><?php echo $selectedWatch['brand'];?></span></strong> is <span class="watch-accuracy"></span> spd.
                   </h3>
                 </center>
 
@@ -146,7 +148,7 @@ z-index: 90;
           <?php echo form_open('', array('name'=>'newAccuracy', 'class'=>'form-horizontal'));?>
 
               <select style="display:none" class="form-control" name="watchId">
-                    <?php echo '<option value="'.$selectedWatch->watchId.'" selected>'.$selectedWatch->brand.' - '.$selectedWatch->name.'</option>'; ?>
+                    <?php echo '<option value="'.$selectedWatch['watchId'].'" selected>'.$selectedWatch['brand'].' - '.$selectedWatch['name'].'</option>'; ?>
               </select>
 
                 <div class="form-group">

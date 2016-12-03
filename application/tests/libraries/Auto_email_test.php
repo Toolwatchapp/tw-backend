@@ -135,7 +135,7 @@ class Auto_email_test extends TestCase {
 
 	public function test_mock() {
 
-		$result = $this->email->CI->mandrill->messages->sendTemplate(null);
+		$result = $this->email->CI->mandrill->messages->sendTemplate(null, null, null, null, null, null);
 
 		$this->assertEquals(
 			'abc123abc123abc123abc123abc123',

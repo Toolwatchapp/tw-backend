@@ -580,6 +580,8 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->_log_access_time();
         }
+
+        $this->db->close();
     }
 
     /**

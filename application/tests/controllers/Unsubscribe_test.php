@@ -67,7 +67,6 @@ class Unsubscribe_test extends TestCase {
     $this->assertEquals(0, $result->weekAccuracy);
     $this->assertEquals(1, $result->result);
     $this->assertEquals(1, $result->newMeasure);
-    $this->assertEquals(0, $result->tips);
     $this->assertEquals(self::$userId, $result->userId);
 
     $this->assertContains('Your preferences have been updated', $output);

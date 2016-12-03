@@ -63,14 +63,14 @@ class User extends ObservableModel {
 
 			$this->notify($event, $user);
 
-
-			$this->users_session->insert(
-				array(
-					'user_id' => $user->userId, 
-					'session_id'=> $this->session->session_id
-				)
-			);
-			
+			if($this->session->session_id){
+				$this->users_session->insert(
+					array(
+						'user_id' => $user->userId, 
+						'session_id'=> $this->session->session_id
+					)
+				);
+			}
 
 		} else {
 			$this->notify($event.'_FAIL', $user);
@@ -104,12 +104,12 @@ class User extends ObservableModel {
 
 		$this->session_model->delete($sessionId);
 		
-		// Workaround for automated tests
-		session_unset();
-
-		session_destroy();
-		$this->session->sess_destroy();
-
+		if(session_status() == PHP_SESSION_ACTIVE)
+		{
+			$this->session->sess_destroy();
+			session_destroy();
+			session_unset();
+		}
 
 
 		$this->notify(LOGOUT, array());

@@ -194,6 +194,8 @@ class Measure extends ObservableModel {
 			$wasArray = true;
 		}
 
+		$watchMeasure->accuracy = 0.0;
+
 		//Compute the accuracy if all the data are available
 		//Both measure have been performed
 		if(is_numeric($watchMeasure->accuracyUserTime)

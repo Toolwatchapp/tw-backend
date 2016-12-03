@@ -103,7 +103,7 @@ m.parentNode.insertBefore(a,m)
 <?php
 foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'">';}
 foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}
-if(is_array($metas)){foreach ($metas as $meta) {echo $meta;}}
+if(isset($metas) && is_array($metas)){foreach ($metas as $meta) {echo $meta;}}
 ?>
     <!--[if lt IE 8]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

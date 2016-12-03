@@ -22,6 +22,7 @@
                             <?php
                                 foreach($watches as $watch)
                                 {
+                                  $selected = "";
                                   if(isset($selected_watch)){
                                     $selected = ($watch->watchId === $selected_watch) ? "selected" : "";
                                   }
