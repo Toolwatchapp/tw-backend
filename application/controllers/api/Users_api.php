@@ -55,9 +55,18 @@ class Users_api extends REST_Controller {
     public function index_put()
     {
         if(!$this->throttleIP('index_put')){
+          
           $email = $this->put('email');
           $password = $this->put('password');
-          $this->loginAndAuth($email, $password);
+
+          if($email !== NULL && $password !== NULL && $password != "0"){
+
+            $user = $this->user->login($email, $password);
+            $this->loginResponse($user);
+
+          }else{
+            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
+          }
         }else{
           $this->response(["message" => "api limit reached"],
           REST_Controller::HTTP_UNAUTHORIZED);
@@ -107,20 +116,9 @@ class Users_api extends REST_Controller {
     }
 
     /**
-     * Fetches an user according to $email and $password.
-     * Create or refresh API key for the given user.
-     *
-     * @param  String $email
-     * @param  String $password
-     * @return HTTP_OK
-     * @return HTTP_UNAUTHORIZED (login failed)
-     * @return HTTP_BAD_REQUEST (if $email or $password is missing)
-     */
-    private function loginAndAuth($email, $password){
-
-      if($email !== NULL && $password !== NULL){
-
-        $user = $this->user->login($email, $password);
+    * Generates an API key and returns a rest response
+    */
+    private function loginResponse($user){
 
         if($user !== false){
 
@@ -135,10 +133,6 @@ class Users_api extends REST_Controller {
         }else{
           $this->response(NULL, REST_Controller::HTTP_UNAUTHORIZED);
         }
-      }else{
-        $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
-      }
-
     }
 
     /**
@@ -156,20 +150,44 @@ class Users_api extends REST_Controller {
         $firstname   = $this->post('name');
         $country     = $this->post('country');
 
-        //If the email isn't already in used
-        if (!$this->user->checkUserEmail($email)) {
+        if($email !== NULL && $password !== NULL && $password != "0"){
 
-          // Create the account
-          if ($this->user->signup($email, $password, $lastname, $firstname, $country)) {
+            //If the email isn't already in used
+            if (!$this->user->checkUserEmail($email)) {
 
-            $this->loginAndAuth($email, $password);
-          }
-        //The email is already in use
-        } else {
-          $this->response(["message" => "email taken"],
-            REST_Controller::HTTP_UNAUTHORIZED);
+              // Create the account
+              if ($this->user->signup($email, $password, $lastname, $firstname, $country)) {
+
+                 $user = $this->user->login($email, $password);
+                 $this->loginResponse($user);
+              }
+            }
+            // The email was already in the db, so we try to log the user
+            // using a potentially existing account
+            else if(($user = $this->user->login($email, $password)) !== false){
+
+              $this->loginResponse($user);
+            } 
+            // The email was already in the db, so we try to log the user
+            // using a potentially existing FB account
+            else if(($user = $this->user->login($email, "FB_"+$password)) !== false){
+
+              $this->loginResponse($user);
+            } 
+            //We tried everything, giving up
+            else {
+              $this->response(["message" => "email taken"],
+                REST_Controller::HTTP_UNAUTHORIZED);
+            }
+
         }
-      }else{
+        //$email == NULL || $password == NULL
+        else{
+            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
+        }
+      }
+      //sapmmer
+      else{
          $this->response(["message" => "api limit reached"],
           REST_Controller::HTTP_UNAUTHORIZED);
       }

@@ -56,7 +56,7 @@ class Ajax extends MY_Controller {
 			 * as this are fb user that must use the fb login button
 			 * @see facebookSignup
 			 */
-			if(startsWith($password, "FB_")){
+			if(startsWith($password, "FB_") || $password == "0"){
 
 				$result['success'] = false;
 
