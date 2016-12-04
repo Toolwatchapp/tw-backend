@@ -32,9 +32,9 @@ class User extends ObservableModel {
 	function login($email, $password) {
 		$res = false;
 
-		$user = $this->select('userId, email, name, firstname,
+		$user = $this->select('userId, lower(email) as email, name, firstname,
 		 	timezone, country, registerDate')
-		     ->where('email', $email)
+		     ->where('lower(email)', strtolower($email))
 		     ->where('password', hash('sha256', $password))
 				 ->find_all();
 
@@ -43,7 +43,6 @@ class User extends ObservableModel {
 		if (strrpos($password, 'FB_') === 0) {
 			$event = LOGIN_FB;
 		}
-
 
 		if (is_array($user)
 		//That's not a mistake, the tranformation from array
@@ -145,7 +144,7 @@ class User extends ObservableModel {
 	function checkUserEmail($email) {
 		$res = false;
 
-		if ($this->find_by('email', $email)) {
+		if ($this->find_by('lower(email)', strtolower($email))) {
 			$res = true;
 		}
 
@@ -183,7 +182,7 @@ class User extends ObservableModel {
 
 		$res  = false;
 		$data = array(
-			'email'        => $email,
+			'email'        => strtolower($email),
 			'password'     => hash('sha256', $password),
 			'name'         => $name,
 			'firstname'    => $firstname,
@@ -223,7 +222,7 @@ class User extends ObservableModel {
 
 		if(
 			$this->checkUserEmail($email) === true &&
-			$this->update_where('email', $email, array('resetToken' => $resetToken))
+			$this->update_where('lower(email)', strtolower($email), array('resetToken' => $resetToken))
 			&& $this->affected_rows() === 1){
 			$this->notify(RESET_PASSWORD,  array('email' => $email, 'token'=>$resetToken));
 			$this->deleteActiveSessions($email);
@@ -242,7 +241,7 @@ class User extends ObservableModel {
 
 		$sessionsIdsForUser = $this->users_session->select('session_id, userId')
 							->join('user', 'user.userId = users_sessions.user_id')
-							->find_all_by('email', $email);
+							->find_all_by('lower(email)', strtolower($email));
 
 		if(is_array($sessionsIdsForUser) && sizeof($sessionsIdsForUser) !== 0){
 
