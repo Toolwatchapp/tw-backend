@@ -20,7 +20,7 @@ class Ajax_test extends TestCase {
 			'POST',
 			['Ajax', 'reportClientError'],
 			[
-				'error' => 'qzdqzd'
+				'error' => 'A test error from a test user'
 			]
 		);
 
