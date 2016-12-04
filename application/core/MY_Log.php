@@ -72,6 +72,10 @@ class MY_Log {
             return FALSE;
         }
 
+        if (strpos($msg, 'Cannot modify header information') !== false) {
+            return FALSE;
+        }
+
 
         file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
 
@@ -90,8 +94,6 @@ class MY_Log {
           );
 
           $result = curl_exec($ch);
-
-          log_message("info", "slack exception:".print_r($result, true));
         }
 
         return TRUE;

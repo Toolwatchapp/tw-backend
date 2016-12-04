@@ -144,8 +144,6 @@ class User_test extends TestCase {
 
 	public function test_askResetPassword() {
 
-		log_message('info', '============================');
-
 		$this->obj->login(
 			'mathieu@gmail.com',
 			'azerty'
@@ -165,13 +163,6 @@ class User_test extends TestCase {
 					'data'=>"adhkawjhdkd"
 				)
 		); 
-
-		// $this->assertEquals("bla", var_dump($users_session, true));
-		// $this->assertEquals("bla", $users_session->db->last_query());
-
-		echo $this->session->session_id;
-
-		log_message('error', $sessionId);
 
 		$users_session->insert(
 				array(

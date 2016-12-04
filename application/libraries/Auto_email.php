@@ -244,7 +244,6 @@ class Auto_email {
 				}
 
 				echo '\n'; var_dump($email['mandrill']); echo '\n';
-				echo $email['content'];
 			}
 		}
 	}
@@ -344,17 +343,15 @@ class Auto_email {
 	 * @param int $emailType
 	 * @param long $time
 	 * @param int $idTitle
-	 * @param html $content
 	 * @param array $mandrillResponse
 	 */
 	private function addEmailToQueue(&$queue, $userId, $emailType, $time,
-		$idTitle, $content, $mandrillResponse) {
+		$idTitle,  $mandrillResponse) {
 		array_push($queue,
 			array(
 				$idTitle    => $userId,
 				'sentTime'  => $time,
 				'emailType' => $emailType,
-				'content'	=> $content,
 				'mandrill'  => $mandrillResponse
 			)
 		);
@@ -425,7 +422,6 @@ class Auto_email {
 					$this->COMEBACK,
 					$this->time,
 					'userId',
-					$emailcontent,
 					$this->sendMandrillEmail(
 						'We haven\'t seen you for a while ? ⌚',
 						comebackContent(
@@ -471,7 +467,6 @@ class Auto_email {
 					$this->ADD_FIRST_WATCH,
 					$this->time,
 					'userId',
-					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s add a watch and start measuring! ⌚',
 						addFirstWatchContent(
@@ -522,7 +517,6 @@ class Auto_email {
 					$this->START_FIRST_MEASURE,
 					$this->time,
 					'watchId',
-					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s start measuring! ⌚',
 						makeFirstMeasureContent(
@@ -579,7 +573,6 @@ class Auto_email {
 					$this->ADD_SECOND_WATCH,
 					$this->time,
 					'userId',
-					$emailcontent,
 					$this->sendMandrillEmail(
 						'Add another watch ? ⌚',
 							addSecondWatchContent(
@@ -635,7 +628,6 @@ class Auto_email {
 					$this->CHECK_ACCURACY,
 					$this->time,
 					'measureId',
-					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
 						checkAccuracyContent(
@@ -690,7 +682,6 @@ class Auto_email {
 					$this->CHECK_ACCURACY_1_WEEK,
 					$this->time,
 					'measureId',
-					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s check your watch accuracy! ⌚',
 						oneWeekAccuracyContent(
@@ -746,7 +737,6 @@ class Auto_email {
 					$this->START_NEW_MEASURE,
 					$this->time,
 					'watchId',
-					$emailcontent,
 					$this->sendMandrillEmail(
 						'Let’s start a new measure! ⌚',
 						oneMonthAccuracyContent(
@@ -859,6 +849,7 @@ class Auto_email {
 					) == null
 				)
 			){
+
 				if($watches === false){
 					$watches = array(
 						$this->CI->user->select()
@@ -872,9 +863,14 @@ class Auto_email {
 
 				//A supported watch was created less than one hour ago,
 				//schedule the mail to be sent later
+
+				
 				if(
 					is_array($watches) && 
-					sizeof($watches) >= 1 && time() - $watches[1]["creationDate"] < 3600){
+					sizeof($watches) >= 1 && 
+					array_key_exists("creationDate", $watches[0]) &&
+					time() - $watches[0]["creationDate"] < 3600)
+				{
 					$time = $time + 3600;
 				}
 
@@ -1005,8 +1001,8 @@ class Auto_email {
 	 */
 	private function newResult($measure) {
 
-
-		if($this->CI->emailpreferences->select('result')->find_by("userId", $measure->userId) == 1){
+		
+		if($this->CI->emailpreferences->select('result')->find_by("userId", $measure->userId)->result == 1){
 
 			$attachments = array();
 

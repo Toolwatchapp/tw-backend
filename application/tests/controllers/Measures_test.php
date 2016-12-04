@@ -230,8 +230,6 @@ class Measures_test extends TestCase {
 			]
 		);
 
-		log_message('error', print_r($output, true));
-
 		$this->assertContains('true', $output);
 
 	}
