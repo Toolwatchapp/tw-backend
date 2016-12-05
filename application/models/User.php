@@ -84,6 +84,8 @@ class User extends ObservableModel {
 	 */
 	function isLoggedIn() {
 
+		log_message('error', $this->session->userdata('userId'));
+
 		return !empty($this->session->userdata('userId'));
 	}
 
