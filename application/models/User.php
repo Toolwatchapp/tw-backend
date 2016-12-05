@@ -60,6 +60,8 @@ class User extends ObservableModel {
 
 			$this->update_where('userId', $user->userId, array('lastLogin' => time()));
 
+			log_message('error', print_r($this->session->all_userdata(), true));
+
 			$this->notify($event, $user);
 
 			if($this->session->session_id){
