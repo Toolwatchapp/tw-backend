@@ -29,20 +29,13 @@ class User extends ObservableModel {
 	 * @param  String $password The passwod
 	 * @return User           	The user
 	 */
-	function login($email, $password) {
-		$res = false;
+	function login($email, $password, $event = LOGIN_EMAIL) {
 
 		$user = $this->select('userId, lower(email) as email, name, firstname,
 		 	timezone, country, registerDate')
 		     ->where('lower(email)', strtolower($email))
 		     ->where('password', hash('sha256', $password))
 				 ->find_all();
-
-		$event = LOGIN_EMAIL;
-
-		if (strrpos($password, 'FB_') === 0) {
-			$event = LOGIN_FB;
-		}
 
 		if (is_array($user)
 		//That's not a mistake, the tranformation from array
@@ -76,6 +69,48 @@ class User extends ObservableModel {
 		}
 
 		return $user;
+	}
+
+	/**
+	 * Login. Tries to log a facebook user
+	 *
+	 * @param  String $email    The email password
+	 * @param  String $password The facebook id
+	 * @return User           	The user
+	 */
+	function login_facebook($email, $password){
+
+		if(($user = $this->login($email, getenv("FB_PW").$password, LOGIN_FB)) != false){
+
+			return $user;
+		} 
+		// Fb accounts created from the app before 1.0.3
+		else if(
+			($user = $this->login($email,"FB_"+$password, LOGIN_FB)) != false ||
+			($user = $this->login($email, $password, LOGIN_FB)) != false
+		){
+			$this->update_legacy_facebook($user->userId, $password);
+			return $user;
+		} 
+		//Tried everything giving up
+		else {
+			return false;
+		}
+	}
+
+	/**
+	* Transform facebook accounts created before 1.0.3 to new, more
+	* secure schema 
+	*/
+	private function update_legacy_facebook($userId, $password){
+		$this->update_where(
+			'userId', 
+			$userId, 
+			array(
+				'password' => hash('sha256', getenv("FB_PW").$password),
+				'facebook' => 1
+			)
+		);
 	}
 
 	/**
@@ -172,11 +207,11 @@ class User extends ObservableModel {
 	 * @param  String $country
 	 * @return boolean   false an faillure
 	 */
-	function signup($email, $password, $name, $firstname, $country) {
+	function signup($email, $password, $name, $firstname, $country, $facebook = 0) {
 
 		$event = SIGN_UP;
 
-		if (strrpos($password, 'FB_') === 0) {
+		if ($facebook === 1) {
 			$event = SIGN_UP_FB;
 		}
 
@@ -187,6 +222,7 @@ class User extends ObservableModel {
 			'name'         => $name,
 			'firstname'    => $firstname,
 			'country'      => $country,
+			'facebook'	   => $facebook,
 			'registerDate' => time(),
 			'lastLogin'    => time()
 		);

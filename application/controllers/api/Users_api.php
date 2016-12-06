@@ -17,6 +17,7 @@ class Users_api extends REST_Controller {
       'index_put' => ['key' => false, 'limit' => 20],
       'index_post' => ['key' => false, 'limit' => 20],
       'index_delete' => ['key' => true, 'limit' => 20],
+      'facebook_post' => ['key' => false, 'limit' => 20],
       'index_options' => ['key' => false],
      ];
      /**
@@ -136,6 +137,47 @@ class Users_api extends REST_Controller {
     }
 
     /**
+    * Facebook login enpoint
+    */
+    public function facebook_post(){
+      if(!$this->throttleIP('index_post')){
+
+        $email       = $this->post('email');
+        $password    = $this->post('password');
+        $lastname    = $this->post('lastname');
+        $firstname   = $this->post('name');
+        $country     = $this->post('country');
+
+        if($email !== NULL && $password !== NULL && $password != "0"){
+
+            //If the email isn't already in used
+            if (!$this->user->checkUserEmail($email)) {
+
+              // Create the account
+              if ($this->user->signup($email, getenv("FB_PW").$password, $lastname, $firstname, $country, 1)) {
+
+                 $user = $this->user->login_facebook($email, $password);
+                 $this->loginResponse($user);
+              }
+            }
+            //Try to login
+            else if(($user = $this->user->login_facebook($email, $password)) != false){
+              $this->loginResponse($user);
+            } 
+            //Can't create, can't log. Giving up
+            else {
+              $this->response(["message" => "email taken"],
+              REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+      }
+      //sapmmer
+      else{
+         $this->response(["message" => "api limit reached"],REST_Controller::HTTP_UNAUTHORIZED);
+      }
+    }
+
+    /**
      * Signup enpoints
      * @return HTTP_BAD_REQUEST if email is taken
      */
@@ -162,22 +204,14 @@ class Users_api extends REST_Controller {
                  $this->loginResponse($user);
               }
             }
-            // The email was already in the db, so we try to log the user
-            // using a potentially existing account
-            else if(($user = $this->user->login($email, $password)) !== false){
-
+            //try facebook login as user with mobile versions app before 1.0.3
+            //will hit this endpoint for fb
+            else if(($user = $this->user->login_facebook($email, $password)) != false){
               $this->loginResponse($user);
             } 
-            // The email was already in the db, so we try to log the user
-            // using a potentially existing FB account
-            else if(($user = $this->user->login($email, "FB_"+$password)) !== false){
-
-              $this->loginResponse($user);
-            } 
-            //We tried everything, giving up
+            //Can't create, can't log. Giving up
             else {
-              $this->response(["message" => "email taken"],
-                REST_Controller::HTTP_UNAUTHORIZED);
+              $this->response(["message" => "email taken"], REST_Controller::HTTP_UNAUTHORIZED);
             }
 
         }

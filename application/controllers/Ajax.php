@@ -143,7 +143,6 @@ class Ajax extends MY_Controller {
 			 * Email + password login are forbidden
 			 * @see login
 			 */
-			$password  = "FB_"+$this->input->post('id');
 
 			// If the email doesn't exists yet
 			if (!$this->user->checkUserEmail($this->email)) {
@@ -154,21 +153,21 @@ class Ajax extends MY_Controller {
 				 * remove the if, if yes, provide a else with a dedicated response
 				 * code.
 				 */
-				if ($this->user->signup($this->email, $password, $this->firstname, $this->last_name, "")) {
+				if ($this->user->signup($this->email, $this->input->post('id'), $this->firstname, $this->last_name, "", 1)) {
 
 					$result['success'] = "signup";
 					$result['thanks'] = $this->load->view('modal/sign-up-success', null, true);
-					$this->user->login($this->email, $password);
+					$this->user->login_facebook($this->email, $this->input->post('id'));
 
 				}
 
 			// The email was already in the db, so we try to log the user
 			// using a potentially existing account
-			} else if ($this->user->login($this->email, $password)) {
+			} else if ($this->user->login_facebook($this->email, $this->input->post('id'))) {
 
+			
 				$result['success'] = "signin";
-
-			// The email is already taken by a classical account
+			
 			} else {
 
 				$result['success'] = "email";

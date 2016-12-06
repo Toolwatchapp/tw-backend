@@ -82,7 +82,8 @@ class Users_api_test extends TestCase {
   }
 
   public function test_loginFacebook(){
-     
+
+      //Old facebook
       self::$user->insert(
         array(
           'email'       => 'mathieu_fb@gmail.com',
@@ -106,7 +107,7 @@ class Users_api_test extends TestCase {
         ]
       );
 
-      $this->assertResponseCode(400, "Can't login with fb reserved 0");
+      $this->assertResponseCode(400, "Can't login  0");
 
     	$output = $this->request(
         'POST',
@@ -120,11 +121,11 @@ class Users_api_test extends TestCase {
         ]
       );
 
-      $this->assertResponseCode(400, "Can't create an account with fb reserved 0");
+     $this->assertResponseCode(400, "Can't create an account with 0");
 
-      $output = $this->request(
+     $output = $this->request(
         'POST',
-        'api/users',
+        'api/users/facebook',
         [
           'email'       => 'mathieu_fb@gmail.com',
           'password'    => 'random_fb_id',
@@ -135,7 +136,63 @@ class Users_api_test extends TestCase {
       );
 
      $this->assertContains('"email":"mathieu_fb@gmail.com"', $output);
+		 $this->assertContains('"key"', $output, "successful deprecated facebook account login");
+
+     $user = self::$user->find_by('email', 'mathieu_fb@gmail.com');
+
+     $this->assertEquals(
+      $user->password, 
+      hash('sha256', getenv("FB_PW").'random_fb_id'),
+      "Facebook password should be updated"
+     );
+
+     $this->assertEquals($user->facebook, 1,"Facebook tag should be one");
+
+     $output = $this->request(
+        'POST',
+        'api/users/facebook',
+        [
+          'email'       => 'mathieu_fb@gmail.com',
+          'password'    => 'random_fb_id',
+          'lastname'    => 'lastname',
+          'name'        => 'firstname',
+          'country'     => 'country'
+        ]
+      );
+
+     $this->assertContains('"email":"mathieu_fb@gmail.com"', $output);
+		 $this->assertContains('"key"', $output, "successful updated facebook account login");
+
+     $output = $this->request(
+        'POST',
+        'api/users/facebook',
+        [
+          'email'       => 'mathieu_fb_2@gmail.com',
+          'password'    => 'random_fb_id',
+          'lastname'    => 'lastname',
+          'name'        => 'firstname',
+          'country'     => 'country'
+        ]
+      );
+
+     $this->assertContains('"email":"mathieu_fb_2@gmail.com"', $output);
 		 $this->assertContains('"key"', $output);
+
+    $output = $this->request(
+        'POST',
+        'api/users/facebook',
+        [
+          'email'       => 'mathieu_fb_2@gmail.com',
+          'password'    => 'random_fb_id2',
+          'lastname'    => 'lastname',
+          'name'        => 'firstname',
+          'country'     => 'country'
+        ]
+      );
+
+    $this->assertContains('email taken', $output);
+    $this->assertResponseCode(401);
+
   }
 
   public function test_login(){
@@ -263,7 +320,7 @@ class Users_api_test extends TestCase {
     $this->test_create();
 
    
-    for ($i = 1; $i <= 10; $i++) {
+    for ($i = 1; $i <= 7; $i++) {
 
 
       $this->test_login();
@@ -283,6 +340,20 @@ class Users_api_test extends TestCase {
     $output = $this->request(
 			'POST',
 			'api/users',
+			[
+        'email'       => 'mathieu2@gmail.com',
+				'password'    => 'password',
+				'lastname'    => 'lastname',
+				'name'        => 'firstname',
+				'country'     => 'country'
+			]
+		);
+
+    $this->assertResponseCode(401);
+
+    $output = $this->request(
+			'POST',
+			'api/users/facebook',
 			[
         'email'       => 'mathieu2@gmail.com',
 				'password'    => 'password',

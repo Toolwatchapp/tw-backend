@@ -72,6 +72,7 @@ $route['contact'] = "home/contact";
 */
 
 $route['api/(:any)'] = 'api/$1_api';
+$route['api/(:any)/(:any)'] = 'api/$1_api/$2';
 $route['api/(:any)/(:any)/(:any)'] = 'api/$1_api/$2/$3';
 $route['api/(:any)/(:any)/(:any)/(:any)'] = 'api/$1_api/$2/$3/$4';
 
