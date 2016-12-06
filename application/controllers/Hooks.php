@@ -106,7 +106,7 @@ class Hooks extends CI_Controller {
 				log_message("info", "Computed email " . print_r($text, true));
 				$user = $this->user->select(" user.userId, user.name, firstname,
                     DATE_FORMAT(FROM_UNIXTIME(`registerDate`), '%e %b %Y') AS 'register',
-                    DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin'", false)
+                    DATE_FORMAT(FROM_UNIXTIME(`lastLogin`), '%e %b %Y') AS 'lastLogin', facebook", false)
 				->find_by('email', $text);
 
 				log_message("info", print_r($this->db->last_query(), true));
@@ -116,9 +116,9 @@ class Hooks extends CI_Controller {
 
 					$measures = $this->measure->getMeasuresByUser($user->userId);
 
-					$result["text"] = "ID;Name;Firstname;register;lastLogin \r\n".
+					$result["text"] = "ID;Name;Firstname;register;lastLogin;facebook_user \r\n".
 					"```". $user->userId . ";" . $user->name . ";" . $user->firstname .
-					 ";" . $user->register . ";" . $user->lastLogin . "```\r\n"
+					 ";" . $user->register . ";" . $user->lastLogin . ";" . $user->facebook . "```\r\n"
 					 . "Dashboard\r\n"
 					 . "ID;WatchName;WatchBrand;Measure 1 (UTC);Measure 2 (UTC);Accuracy;status\r\n";
 
