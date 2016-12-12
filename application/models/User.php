@@ -53,6 +53,8 @@ class User extends ObservableModel {
 
 			$this->update_where('userId', $user->userId, array('lastLogin' => time()));
 
+			log_message('error', print_r($this->session->all_userdata(), true));
+
 			$this->notify($event, $user);
 
 			if($this->session->session_id){
@@ -118,6 +120,8 @@ class User extends ObservableModel {
 	 * @return boolean
 	 */
 	function isLoggedIn() {
+
+		log_message('error', $this->session->userdata('userId'));
 
 		return !empty($this->session->userdata('userId'));
 	}
