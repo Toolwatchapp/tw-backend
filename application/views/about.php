@@ -74,6 +74,19 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <br>
+        <br>
+        <div class="col-md-12" style="text-align:center;">
+        Toolwatch is free to use but you can <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type ='text/javascript'>kofiwidget2.init('Buy Us a Coffee', '#46b798', 'A872I1N');kofiwidget2.draw();</script>            
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+
     <div class="row">
         <div class="col-md-8 col-md-offset-2"><center><h1>Hall of fame</h1></center><span class="line black"></span></div>
     </div>
