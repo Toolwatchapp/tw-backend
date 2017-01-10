@@ -65,7 +65,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 copyright">
-                    <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; 2016.</p>
+                    <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; 2017.</p>
                 </div>
             </div>
         </div>
