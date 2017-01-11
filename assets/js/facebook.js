@@ -1,3 +1,15 @@
+
+$(document).ready(function() {
+        $.ajaxSetup({ cache: true });
+        $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+            FB.init({
+            appId: '{807383452677000}',
+            version: 'v2.7' // or v2.1, v2.2, v2.3, ...
+            });     
+            FB.getLoginStatus(statusChangeCallback);
+        });
+  });
+
 var userInitiatedFbLogin = false;
 
 // This is called with the results from from FB.getLoginStatus().
@@ -39,25 +51,6 @@ var userInitiatedFbLogin = false;
       statusChangeCallback(response);
     });
   }
-
-  // Now that we've initialized the JavaScript SDK, we call 
-  // FB.getLoginStatus().  This function gets the state of the
-  // person visiting this page and can return one of three states to
-  // the callback you provide.  They can be:
-  //
-  // 1. Logged into your app ('connected')
-  // 2. Logged into Facebook, but not your app ('not_authorized')
-  // 3. Not logged into Facebook and can't tell if they are logged into
-  //    your app or not.
-  //
-  // These three cases are handled in the callback function.
-window.fbAsyncInit = function() {
-
-  FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-  });
-
-};
 
 // Here we run a very simple test of the Graph API after login is
 // successful.  See statusChangeCallback() for when this call is made.

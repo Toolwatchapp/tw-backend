@@ -74,15 +74,6 @@ a.src=g;
 m.parentNode.insertBefore(a,m)
           })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-         (function(d, s, id){
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement(s);
- js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js#version=v2.2&appId=807383452677000&status=true&cookie=true&xfbml=true";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-
           ga('create', 'UA-59148878-1', 'auto');
           ga('send', 'pageview');
     </script>
