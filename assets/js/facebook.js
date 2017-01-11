@@ -1,11 +1,12 @@
-
 $(document).ready(function() {
         $.ajaxSetup({ cache: true });
         $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+
             FB.init({
-            appId: '{807383452677000}',
-            version: 'v2.7' // or v2.1, v2.2, v2.3, ...
-            });     
+              appId: '807383452677000',
+              version: 'v2.7' // or v2.1, v2.2, v2.3, ...
+            }); 
+            
             FB.getLoginStatus(statusChangeCallback);
         });
   });
@@ -55,9 +56,10 @@ var userInitiatedFbLogin = false;
 // Here we run a very simple test of the Graph API after login is
 // successful.  See statusChangeCallback() for when this call is made.
 function sendLoginFb() {
-  FB.api('/me', function(response) {
+  FB.api('me/?fields=id,email,last_name,first_name', function(response) {
 
-    $.post('/ajax/facebookSignup', {email: response.email, last_name: response.last_name, firstname: response.first_name, timezone: response.timezone, country: response.country}, function(data)
+    $.post('/ajax/facebookSignup', 
+      {email: response.email, last_name: response.last_name, firstname: response.first_name}, function(data)
     {
           var result = $.parseJSON(data);
           if(result.success == "signup")
