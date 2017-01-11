@@ -192,7 +192,6 @@ class Users_api_test extends TestCase {
 
     $this->assertContains('email taken', $output);
     $this->assertResponseCode(401);
-
   }
 
   public function test_login(){
@@ -206,9 +205,25 @@ class Users_api_test extends TestCase {
 			]
     );
 
+    $user = self::$user->find_by('email', 'mathieu@gmail.com');
+
     $this->assertContains('"email":"mathieu@gmail.com"', $output);
 		$this->assertContains('"key"', $output);
     self::$userKey = json_decode($output)->key;
+  }
+
+  public function test_oldFacebook(){
+    $output = $this->request(
+        'POST',
+        'api/users',
+        [
+          'email'       => 'mathieu_fb@gmail.com',
+				  'password'    => getenv("FB_PW").'random_fb_id'
+        ]
+    );
+
+    $this->assertContains('"email":"mathieu_fb@gmail.com"', $output);
+		$this->assertContains('"key"', $output);
   }
 
   public function testLoginFail(){
@@ -320,7 +335,7 @@ class Users_api_test extends TestCase {
     $this->test_create();
 
    
-    for ($i = 1; $i <= 7; $i++) {
+    for ($i = 1; $i <= 6; $i++) {
 
 
       $this->test_login();
