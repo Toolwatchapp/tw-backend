@@ -762,7 +762,14 @@ class Auto_email {
 	 */
 	private function signup($user) {
 
-		$this->CI->mcapi->listSubscribe('7f94c4aa71', $user->email, '');
+		$this->CI->mcapi->listSubscribe(
+			'7f94c4aa71', 
+			$user->email, 
+			array(
+				'FNAME'     => $user->firstname,
+				'LNAME'     => $user->name
+			)
+		);
 
 		return $this->sendMandrillEmail(
 			'Welcome to Toolwatch! ⌚',
