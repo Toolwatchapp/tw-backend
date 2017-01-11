@@ -312,7 +312,7 @@ class Measure extends ObservableModel {
 
 			$watchMeasure = $this
 			->select("measure.*, watch.name as model, watch.brand, user.email,
-				user.firstname, user.name, user.userId")
+				user.firstname, user.name, user.userId, ROUND(AVG(percentile), 2) as percentile")
 			->join("watch", "watch.watchId = measure.watchId")
 			->join("user", "user.userId = watch.userId")
 			->find($measureId);

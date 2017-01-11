@@ -19,7 +19,10 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <span>'.$success.'</span></div>';
             }
+            
             ?>
+
+            
 
             <table class="table table-bordered table-striped table-condensed">
                 <thead>
@@ -40,7 +43,7 @@
                                 echo '<td>'.$measure->brand.'</td>';
                                 echo '<td>'.$measure->name.'</td>';
 
-                                $this->load->view("measure/dashboard/call-to-action.php", $measure);
+                                $this->load->view("measure/dashboard/call-to-action.php", (array) $measure);
 
                                 $this->load->view("measure/dashboard/start-action-button");
 

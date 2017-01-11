@@ -1,4 +1,6 @@
-<?php if(is_null($statusId) || $statusId == '0')
+<?php 
+var_dump($statusId);
+if(is_null($statusId) || $statusId == '0')
 {
 
   echo '<td><a href="#" class="submitNewMeasure" data-watch="'.$watchId.'">Measure me!</a>' .
