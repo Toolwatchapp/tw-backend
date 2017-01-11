@@ -54,10 +54,11 @@
                         <a href="https://www.pinterest.com/toolwatch/" target="_blank" title="Pinterest"><span class="fa fa-pinterest-p"></span></a>
                         <a href="https://www.facebook.com/Toolwatch" target="_blank" title="Facebook"><span class="fa fa-facebook-square"></span></a>
                         <a href="https://twitter.com/ToolwatchApp" target="_blank" title="Twitter"><span class="fa fa-twitter"></span></a>
+                        <a href="https://m.me/297656450437407" target="_blank" title="Facebook Messenger"><img style="margin-top: -12px; margin-left: 10px;" width='27px' height='auto' src="/assets/img/messenger.png"/></a>
 
-                        <a class='fb-messengermessageus' id='fb-messengermessageus' messenger_app_id='1678638095724206' page_id='297656450437407' color='white' size='xlarge'></a><script> window.fbAsyncInit = function() { FB.init({ appId : '1678638095724206', xfbml : true, version : 'v2.6' }); }; (function(d, s, id){ var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = '//connect.facebook.net/en_US/sdk.js'; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-
-
+                    </div>
+                    <div style="margin-top: 20px;" class="social col-sm-12">
+                        <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type ='text/javascript'>kofiwidget2.init('Buy Us a Coffee', '#298ee8', 'A872I1N');kofiwidget2.draw();</script>
                     </div>
 
                 </div>
@@ -65,7 +66,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 copyright">
-                    <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; 2016.</p>
+                    <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; 2017.</p>
                 </div>
             </div>
         </div>

@@ -55,6 +55,7 @@ class Users_api extends REST_Controller {
      */
     public function index_put()
     {
+        log_message('INFO', 'login put');
         if(!$this->throttleIP('index_put')){
           
           $email = $this->put('email');
@@ -204,18 +205,19 @@ class Users_api extends REST_Controller {
                  $this->loginResponse($user);
               }
             }
-            //try facebook login as user with mobile versions app before 1.0.3
+            //try to login
+            //Also, try facebook login as user with mobile versions app before 1.0.3
             //will hit this endpoint for fb
-            else if(($user = $this->user->login_facebook($email, $password)) != false){
+            else if(($user = $this->user->login($email, $password)) != false
+            || ($user = $this->user->login_facebook($email, $password)) != false){
               $this->loginResponse($user);
-            } 
+            }
             //Can't create, can't log. Giving up
             else {
               $this->response(["message" => "email taken"], REST_Controller::HTTP_UNAUTHORIZED);
             }
 
         }
-        //$email == NULL || $password == NULL
         else{
             $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
         }
