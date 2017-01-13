@@ -1388,7 +1388,7 @@ class CI_Loader {
 			{
 				unset($vars[$key]);
 			}
-		}
+		} 
 
 		return $vars;
 	}
