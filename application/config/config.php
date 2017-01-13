@@ -216,7 +216,7 @@ $config['directory_trigger']    = 'd';
 | your log files will fill up very fast.
 |
  */
-$config['log_threshold'] = defined('PHPUNIT_TESTSUITE') == false ? 4 : 1;
+$config['log_threshold'] = 1;
 
 /*
 |--------------------------------------------------------------------------
