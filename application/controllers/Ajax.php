@@ -48,20 +48,7 @@ class Ajax extends MY_Controller {
 
 			$result = array();
 
-			$email    = $this->input->post('email');
-			$password = $this->input->post('password');
-
-			/**
-			 * We disallow login with password beginning by FB_
-			 * as this are fb user that must use the fb login button
-			 * @see facebookSignup
-			 */
-			if(startsWith($password, "FB_") || $password == "0"){
-
-				$result['success'] = false;
-
-			//Login atttempt
-			}else if ($this->user->login($email, $password)) {
+			if ($this->user->login($this->email, $this->password)) {
 
 				$result['success'] = true;
 
@@ -130,22 +117,11 @@ class Ajax extends MY_Controller {
 	function facebookSignup() {
 		$result['success'] = false;
 
-		if ($this->expectsPost(array('email', 'last_name',
-			'firstname'))) {
-
-			/**
-			 * For fb user, we don't have their fb password (obviously).
-			 * Yet, having a password is mandatory in tw and I don't feel
-			 * like having a specialized type of user for facebook users.
-			 * So, we use as password FB_ concatenated with the FB id of
-			 * the user.
-			 *
-			 * Email + password login are forbidden
-			 * @see login
-			 */
+		if ($this->expectsPost(array('email', 'lastname',
+			'firstname', 'token'))) {
 
 			// If the email doesn't exists yet
-			if (!$this->user->checkUserEmail($this->email)) {
+			if (!$this->userfb->checkUserEmail($this->email)) {
 
 				/**
 				 * Signup attempt
@@ -153,23 +129,18 @@ class Ajax extends MY_Controller {
 				 * remove the if, if yes, provide a else with a dedicated response
 				 * code.
 				 */
-				if ($this->user->signup($this->email, $this->input->post('id'), $this->firstname, $this->last_name, "", 1)) {
+				if ($this->userfb->signup($this->email, $this->lastname, $this->firstname, $this->token)) {
 
 					$result['success'] = "signup";
 					$result['thanks'] = $this->load->view('modal/sign-up-success', null, true);
-					$this->user->login_facebook($this->email, $this->input->post('id'));
-
 				}
 
 			// The email was already in the db, so we try to log the user
 			// using a potentially existing account
-			} else if ($this->user->login_facebook($this->email, $this->input->post('id'))) {
+			} else if ($this->userfb->login($this->email, $this->token)) {
 
-			
 				$result['success'] = "signin";
-			
 			} else {
-
 				$result['success'] = "email";
 			}
 		}
@@ -211,9 +182,6 @@ class Ajax extends MY_Controller {
 
 					$result['success'] = true;
 					$result['thanks'] = $this->load->view('modal/sign-up-success', null, true);
-
-					//Log the user will create his session and so on
-					$this->user->login($this->email, $this->password);
 
 				}
 

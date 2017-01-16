@@ -128,31 +128,34 @@ class Ajax_test extends TestCase {
 
 	public function test_facebookSignup() {
 
+		Facebook::$is_valid = true;
+
 		$output = $this->request(
 			'POST',
 			['Ajax', 'facebookSignup'],
 			[
 				'email'       => 'mathieu_fb@gmail.com',
-				'id'          => '10',
-				'last_name'        => 'name',
-				'firstname'   => 'firstname',
-				'country'     => 'country',
-				'mailingList' => 'false',
+				'token'       => '10',
+				'lastname'    => 'name',
+				'firstname'   => 'firstname'
 			]
 		);
 
 		$this->assertContains('signup', $output);
 
+		Facebook::$is_valid = false;
+
 	}
 
 	public function test_facebookSignin() {
+		Facebook::$is_valid = true;
 		$output = $this->request(
 			'POST',
 			['Ajax', 'facebookSignup'],
 			[
 				'email'       => 'mathieu_fb@gmail.com',
-				'id'          => '10',
-				'last_name'   => 'name',
+				'token'          => '10',
+				'lastname'   => 'name',
 				'firstname'   => 'firstname',
 				'country'     => 'country',
 				'mailingList' => 'false',
@@ -160,6 +163,7 @@ class Ajax_test extends TestCase {
 		);
 
 		$this->assertContains('signin', $output);
+		Facebook::$is_valid = false;
 
 	}
 
@@ -170,8 +174,8 @@ class Ajax_test extends TestCase {
 			['Ajax', 'facebookSignup'],
 			[
 				'email'       => 'mathieu_fb@gmail.com',
-				'id'          => '11',
-				'last_name'   => 'name',
+				'token'          => '11',
+				'lastname'   => 'name',
 				'firstname'   => 'firstname',
 				'country'     => 'country',
 				'mailingList' => 'email',

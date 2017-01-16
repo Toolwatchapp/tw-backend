@@ -30,7 +30,7 @@ class User_test extends TestCase {
 			'Canada'
 		);
 
-		$this->assertEquals(true, $result);
+		$this->assertEquals(true, is_object($result));
 
 	}
 
@@ -43,7 +43,7 @@ class User_test extends TestCase {
 			'Canada'
 		);
 
-		$this->assertEquals(true, $result);
+		$this->assertEquals(true, is_object($result));
 	}
 
 	public function test_login_fb() {
