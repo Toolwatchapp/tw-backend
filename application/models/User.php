@@ -250,7 +250,7 @@ class User extends ObservableModel {
 
 		if(
 			$this->checkUserEmail($email) === true &&
-			$this->update_where('lower(email)', strtolower($email), array('resetToken' => $resetToken))
+			$this->update_where('lower(email)', strtolower($email), array('resetToken' => $resetToken, 'facebook' => 0))
 			&& $this->affected_rows() === 1){
 			$this->notify(RESET_PASSWORD,  array('email' => $email, 'token'=>$resetToken));
 			$this->deleteActiveSessions($email);
