@@ -18,7 +18,8 @@ class Users_api extends REST_Controller {
       'index_post' => ['key' => false, 'limit' => 20],
       'index_delete' => ['key' => true, 'limit' => 20],
       'facebook_post' => ['key' => false, 'limit' => 20],
-      'index_options' => ['key' => false],
+      'reset_post' => ['key' => false, 'limit' => 20],
+      'index_options' => ['key' => false]
      ];
      /**
       * Default constructor
@@ -144,25 +145,23 @@ class Users_api extends REST_Controller {
       if(!$this->throttleIP('index_post')){
 
         $email       = $this->post('email');
-        $password    = $this->post('password');
+        $token       = $this->post('token');
         $lastname    = $this->post('lastname');
         $firstname   = $this->post('name');
-        $country     = $this->post('country');
 
-        if($email !== NULL && $password !== NULL && $password != "0"){
+        if($email !== NULL && $token !== NULL){
 
             //If the email isn't already in used
-            if (!$this->user->checkUserEmail($email)) {
+            if (!$this->userfb->checkUserEmail($email)) {
 
               // Create the account
-              if ($this->user->signup($email, getenv("FB_PW").$password, $lastname, $firstname, $country, 1)) {
-
-                 $user = $this->user->login_facebook($email, $password);
+              if (($user = $this->userfb->signup($email, $lastname, $firstname, $token))) {
+ 
                  $this->loginResponse($user);
               }
             }
             //Try to login
-            else if(($user = $this->user->login_facebook($email, $password)) != false){
+            else if(($user = $this->userfb->login($email, $token)) != false){
               $this->loginResponse($user);
             } 
             //Can't create, can't log. Giving up
@@ -170,9 +169,11 @@ class Users_api extends REST_Controller {
               $this->response(["message" => "email taken"],
               REST_Controller::HTTP_UNAUTHORIZED);
             }
+        }else{
+          $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
         }
       }
-      //sapmmer
+      //spammer
       else{
          $this->response(["message" => "api limit reached"],REST_Controller::HTTP_UNAUTHORIZED);
       }
@@ -199,24 +200,20 @@ class Users_api extends REST_Controller {
             if (!$this->user->checkUserEmail($email)) {
 
               // Create the account
-              if ($this->user->signup($email, $password, $lastname, $firstname, $country)) {
+              if (($user = $this->user->signup($email, $password, $lastname, $firstname, $country))) {
 
-                 $user = $this->user->login($email, $password);
                  $this->loginResponse($user);
               }
             }
-            //try to login
-            //Also, try facebook login as user with mobile versions app before 1.0.3
+            //Try facebook login as user with mobile versions app before 1.0.3
             //will hit this endpoint for fb
-            else if(($user = $this->user->login($email, $password)) != false
-            || ($user = $this->user->login_facebook($email, $password)) != false){
+            else if(($user = $this->userfb->deprecated_login($email, $password)) != false){
               $this->loginResponse($user);
             }
             //Can't create, can't log. Giving up
             else {
               $this->response(["message" => "email taken"], REST_Controller::HTTP_UNAUTHORIZED);
             }
-
         }
         else{
             $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
@@ -246,6 +243,36 @@ class Users_api extends REST_Controller {
       }
 
       $this->response(NULL, $responseCode);
+    }
+
+    /**
+    * Reset a password
+    */
+    public function reset_post(){
+
+      if(!$this->throttleIP('reset_post')){
+
+        $email = $this->post('email');
+
+        if($email !== NULL){
+
+          $resetToken = $this->user->askResetPassword($email);
+          
+          if ($resetToken) {
+            $this->response(["message" => "email sent"], REST_Controller::HTTP_OK);
+          } else {
+            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
+          }
+        }else{
+          $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
+        }
+
+      } 
+      //spammer
+      else{
+         $this->response(["message" => "api limit reached"],
+          REST_Controller::HTTP_UNAUTHORIZED);
+      }
     }
 
 }

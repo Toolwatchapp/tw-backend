@@ -77,11 +77,10 @@ class Users_api_test extends TestCase {
 			]
 		);
 
-    $this->assertContains('"email":"mathieu@gmail.com"', $output);
-		$this->assertContains('"key"', $output);
+    $this->assertContains('email taken', $output);
   }
 
-  public function test_loginFacebook(){
+  public function test_loginFacebookOld(){
 
       //Old facebook
       self::$user->insert(
@@ -91,7 +90,8 @@ class Users_api_test extends TestCase {
           'password'    => '5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9',
           'name'    => 'lastname',
           'firstname'        => 'firstname',
-          'country'     => 'country'
+          'country'     => 'country',
+          'facebook' => 1
         )
       );
 
@@ -99,99 +99,116 @@ class Users_api_test extends TestCase {
       $this->assertEquals("5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9", $user->password);
 
       $output = $this->request(
-        'PUT',
-        'api/users',
-        [
-          'email'       => 'mathieu_fb@gmail.com',
-          'password'    => '0'
-        ]
-      );
-
-      $this->assertResponseCode(400, "Can't login  0");
-
-    	$output = $this->request(
         'POST',
         'api/users',
         [
           'email'       => 'mathieu_fb@gmail.com',
-          'password'    => '0',
-          'lastname'    => 'lastname',
-          'name'        => 'firstname',
-          'country'     => 'country'
-        ]
-      );
-
-     $this->assertResponseCode(400, "Can't create an account with 0");
-
-     $output = $this->request(
-        'POST',
-        'api/users/facebook',
-        [
-          'email'       => 'mathieu_fb@gmail.com',
-          'password'    => 'random_fb_id',
-          'lastname'    => 'lastname',
-          'name'        => 'firstname',
-          'country'     => 'country'
+          'password'    => 'zsdzsdszd'
         ]
       );
 
      $this->assertContains('"email":"mathieu_fb@gmail.com"', $output);
-		 $this->assertContains('"key"', $output, "successful deprecated facebook account login");
 
-     $user = self::$user->find_by('email', 'mathieu_fb@gmail.com');
+     self::$user->insert(
+        array(
+          'email'       => 'mathieu_fb2@gmail.com',
+          'password'    =>  hash('sha256', getenv("FB_PW")."1234"),
+          'name'    => 'lastname',
+          'firstname'        => 'firstname',
+          'country'     => 'country',
+          'facebook' => 1
+        )
+      );
 
-     $this->assertEquals(
-      $user->password, 
-      hash('sha256', getenv("FB_PW").'random_fb_id'),
-      "Facebook password should be updated"
-     );
+      $user = self::$user->find_by('email', 'mathieu_fb2@gmail.com');
+      $this->assertEquals(hash('sha256', getenv("FB_PW")."1234"), $user->password);
 
-     $this->assertEquals($user->facebook, 1,"Facebook tag should be one");
-
-     $output = $this->request(
+       $output = $this->request(
         'POST',
-        'api/users/facebook',
+        'api/users',
         [
-          'email'       => 'mathieu_fb@gmail.com',
-          'password'    => 'random_fb_id',
-          'lastname'    => 'lastname',
-          'name'        => 'firstname',
-          'country'     => 'country'
+          'email'       => 'mathieu_fb2@gmail.com',
+          'password'    => '1234'
         ]
       );
 
-     $this->assertContains('"email":"mathieu_fb@gmail.com"', $output);
-		 $this->assertContains('"key"', $output, "successful updated facebook account login");
+      $this->assertContains('"email":"mathieu_fb2@gmail.com"', $output);
+      $user = self::$user->find_by('email', 'mathieu_fb2@gmail.com');
+      $this->assertEquals("5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9", $user->password);
 
-     $output = $this->request(
+      Facebook::$is_valid = true;
+
+      $output = $this->request(
         'POST',
         'api/users/facebook',
         [
-          'email'       => 'mathieu_fb_2@gmail.com',
-          'password'    => 'random_fb_id',
-          'lastname'    => 'lastname',
-          'name'        => 'firstname',
-          'country'     => 'country'
+          'email'       => 'mathieu_fb2@gmail.com',
+          'token'    => '1234'
         ]
       );
 
-     $this->assertContains('"email":"mathieu_fb_2@gmail.com"', $output);
-		 $this->assertContains('"key"', $output);
+      Facebook::$is_valid = false;
+      $this->assertContains('"email":"mathieu_fb2@gmail.com"', $output);
+  }
 
-    $output = $this->request(
+  public function test_fbApiPost(){
+      
+      Facebook::$is_valid = true;
+
+      $output = $this->request(
         'POST',
         'api/users/facebook',
         [
-          'email'       => 'mathieu_fb_2@gmail.com',
-          'password'    => 'random_fb_id2',
-          'lastname'    => 'lastname',
-          'name'        => 'firstname',
-          'country'     => 'country'
+          'email'       => 'mathieu_fb2@gmail.com',
+          'token'    => '1234'
         ]
       );
 
-    $this->assertContains('email taken', $output);
-    $this->assertResponseCode(401);
+      Facebook::$is_valid = false;
+      $this->assertContains('"email":"mathieu_fb2@gmail.com"', $output);
+
+      Facebook::$is_valid = true;
+
+      $output = $this->request(
+        'POST',
+        'api/users/facebook',
+        [
+          'email'       => 'mathieu_fb3@gmail.com',
+          'token'    => '1234'
+        ]
+      );
+
+      Facebook::$is_valid = false;
+      $this->assertContains('"email":"mathieu_fb3@gmail.com"', $output);
+  }
+
+  public function test_fbApiFail(){
+      
+
+      $output = $this->request(
+        'POST',
+        'api/users/facebook',
+        [
+          'email'       => 'mathieu_fb2@gmail.com',
+          'token'    => '1234'
+        ]
+      );
+
+      $this->assertResponseCode(401);
+  }
+
+  public function test_fbAPIBadRequest(){
+      
+
+      $output = $this->request(
+        'POST',
+        'api/users/facebook',
+        [
+          'email'       => 'mathieu_fb2@gmail.com'
+        ]
+      );
+
+      $this->assertResponseCode(400);
   }
 
   public function test_login(){
@@ -330,12 +347,46 @@ class Users_api_test extends TestCase {
     $this->assertResponseCode(204);
   }
 
+  public function test_password(){
+      $output = $this->request(
+        'POST',
+        'api/users/reset',
+        [
+          'email'       => 'mathieu_fb2@gmail.com',
+        ]
+      );
+
+      $this->assertResponseCode(200);
+  }
+
+  public function test_passwordFail(){
+      $output = $this->request(
+        'POST',
+        'api/users/reset',
+        [
+          'email'       => 'fsefsefsfe@gmail.com',
+        ]
+      );
+
+      $this->assertResponseCode(400);
+
+      $output = $this->request(
+        'POST',
+        'api/users/reset',
+        [
+          'ssdawd'       => 'fsefsefsfe@gmail.com',
+        ]
+      );
+
+      $this->assertResponseCode(400);
+  }
+
   public function testLimit(){
 
     $this->test_create();
 
    
-    for ($i = 1; $i <= 6; $i++) {
+    for ($i = 1; $i <= 2; $i++) {
 
 
       $this->test_login();
@@ -375,6 +426,16 @@ class Users_api_test extends TestCase {
 				'lastname'    => 'lastname',
 				'name'        => 'firstname',
 				'country'     => 'country'
+			]
+		);
+
+    $this->assertResponseCode(401);
+
+    $output = $this->request(
+			'POST',
+			'api/users/reset',
+			[
+        'email'       => 'mathieu2@gmail.com'
 			]
 		);
 

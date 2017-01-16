@@ -31,38 +31,22 @@ class User extends ObservableModel {
 	 */
 	function login($email, $password, $event = LOGIN_EMAIL) {
 
-		$user = $this->select('userId, lower(email) as email, name, firstname,
-		 	timezone, country, registerDate')
-		     ->where('lower(email)', strtolower($email))
-		     ->where('password', hash('sha256', $password))
-				 ->find_all();
-
-		if (is_array($user)
-		//That's not a mistake, the tranformation from array
-		//to a single user is made here.
-		//Not super intuitive nor conform to coding rules
-		&& $user = $user[0]) {
-
-			$this->session->set_userdata('userId', $user->userId);
-			$this->session->set_userdata('email', $user->email);
-			$this->session->set_userdata('name', $user->name);
-			$this->session->set_userdata('firstname', $user->firstname);
-			$this->session->set_userdata('timezone', $user->timezone);
-			$this->session->set_userdata('country', $user->country);
-			$this->session->set_userdata('registerDate', $user->registerDate);
-
-			$this->update_where('userId', $user->userId, array('lastLogin' => time()));
-
-			$this->notify($event, $user);
-
-			if($this->session->session_id){
-				$this->users_session->insert(
-					array(
-						'user_id' => $user->userId, 
-						'session_id'=> $this->session->session_id
-					)
+		$user = $this->select(
+					'userId, 
+					lower(email) as email,
+					name, 
+					firstname,
+					timezone, 
+					country, 
+					registerDate')
+				->find_by(
+					$this->construct_user_for_login($email, $password)
 				);
-			}
+
+		if ($user) {
+			
+			$this->notify($event, $user);
+			$this->set_userdata($user);
 
 		} else {
 			$this->notify($event.'_FAIL', $user);
@@ -71,46 +55,45 @@ class User extends ObservableModel {
 		return $user;
 	}
 
-	/**
-	 * Login. Tries to log a facebook user
-	 *
-	 * @param  String $email    The email password
-	 * @param  String $password The facebook id
-	 * @return User           	The user
-	 */
-	function login_facebook($email, $password){
+	/*
+	* Convenient method that can be overriden when specializing users;
 
-		if(($user = $this->login($email, getenv("FB_PW").$password, LOGIN_FB)) != false){
+	* @param  String $email
+	* @param  String $password
+	* @return array  An array for database selection 
+	*/
+	protected function construct_user_for_login($email, $password){
 
-			return $user;
-		} 
-		// Fb accounts created from the app before 1.0.3
-		else if(
-			($user = $this->login($email,"FB_"+$password, LOGIN_FB)) != false ||
-			($user = $this->login($email, $password, LOGIN_FB)) != false
-		){
-			$this->update_legacy_facebook($user->userId, $password);
-			return $user;
-		} 
-		//Tried everything giving up
-		else {
-			return false;
-		}
+		return array(
+			"lower(email)" => strtolower($email),
+			"password" => hash('sha256', $password),
+			"facebook" => 0
+		);
 	}
 
 	/**
-	* Transform facebook accounts created before 1.0.3 to new, more
-	* secure schema 
-	*/
-	private function update_legacy_facebook($userId, $password){
-		$this->update_where(
-			'userId', 
-			$userId, 
-			array(
-				'password' => hash('sha256', getenv("FB_PW").$password),
-				'facebook' => 1
-			)
-		);
+	* @param User user
+	* 
+	* Set userdata for logged in users.
+	**/
+	protected function set_userdata($user){
+		$this->session->set_userdata('userId', $user->userId);
+		$this->session->set_userdata('email', $user->email);
+		$this->session->set_userdata('name', $user->name);
+		$this->session->set_userdata('firstname', $user->firstname);
+		$this->session->set_userdata('country', $user->country);
+		$this->session->set_userdata('registerDate', $user->registerDate);
+
+		$this->update_where('userId', $user->userId, array('lastLogin' => time()));
+
+		if($this->session->session_id){
+			$this->users_session->insert(
+				array(
+					'user_id' => $user->userId, 
+					'session_id'=> $this->session->session_id
+				)
+			);
+		}
 	}
 
 	/**
@@ -207,27 +190,11 @@ class User extends ObservableModel {
 	 * @param  String $country
 	 * @return boolean   false an faillure
 	 */
-	function signup($email, $password, $name, $firstname, $country, $facebook = 0) {
-
-		$event = SIGN_UP;
-
-		if ($facebook === 1) {
-			$event = SIGN_UP_FB;
-		}
+	function signup($email, $password, $name, $firstname, $country, $event = SIGN_UP) {
 
 		$res  = false;
-		$data = array(
-			'email'        => strtolower($email),
-			'password'     => hash('sha256', $password),
-			'name'         => $name,
-			'firstname'    => $firstname,
-			'country'      => $country,
-			'facebook'	   => $facebook,
-			'registerDate' => time(),
-			'lastLogin'    => time()
-		);
-
-
+		$data = $this->contruct_user_for_insert($email, $password, $name, $firstname, $country);
+		
 		if ($this->insert($data)) {
 
 			//So we don't have to fetch it.
@@ -239,11 +206,36 @@ class User extends ObservableModel {
 
 			$this->load->model("emailPreferences");
 			$this->emailPreferences->newUser($user->userId);
+			$this->set_userdata($user);
+			unset($user->password);
 
-			$res = true;
+			$res = $user;
 		}
 
 		return $res;
+	}
+
+	/*
+	* Convenient method that can be overriden when specializing users;
+
+	* @param  String $email
+	* @param  String $password
+	* @param  String $name
+	* @param  String $firstname
+	* @param  String $timezone
+	* @param  String $country
+	* @return array  An array for database insertion 
+	*/
+	protected function contruct_user_for_insert($email, $password, $name, $firstname, $country){
+		return array(
+			'email'        => strtolower($email),
+			'password'     => hash('sha256', $password),
+			'name'         => $name,
+			'firstname'    => $firstname,
+			'country'      => $country,
+			'registerDate' => time(),
+			'lastLogin'    => time()
+		);
 	}
 
 	/**
@@ -273,7 +265,7 @@ class User extends ObservableModel {
 	 * https://hackerone.com/reports/162128
 	 * @param String $email
 	 */
-	private function deleteActiveSessions($email){
+	protected function deleteActiveSessions($email){
 
 		$sessionsIdsForUser = $this->users_session->select('session_id, userId')
 							->join('user', 'user.userId = users_sessions.user_id')
