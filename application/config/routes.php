@@ -64,6 +64,7 @@ $route['result'] = "home/result";
 $route['about'] = "home/about";
 $route['help'] = "home/help";
 $route['contact'] = "home/contact";
+$route['watch-accuracy-app'] = "home";
 
 /*
 | -------------------------------------------------------------------------
