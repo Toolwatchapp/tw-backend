@@ -28,6 +28,10 @@ class Home extends MY_Controller {
 		$this->_headerData["meta_img"] = img_url("accuracy.jpg");
 		$this->index();
 	}
+	
+	function mobile() {
+		$this->load->view('mobile-landing', $this->_headerData);	
+	}
 
 	private function homeMessage() {
 
