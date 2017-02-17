@@ -1008,23 +1008,8 @@ class Auto_email {
 	 */
 	private function newResult($measure) {
 
-		
 		if($this->CI->emailpreferences->select('result')->find_by("userId", $measure->userId)->result == 1){
-
-			$attachments = array();
-
-			// @codeCoverageIgnoreStart
-			try{
-				array_push($attachments, array(
-					'type'    => 'text/calendar',
-					'name'    => 'Check my watch accuracy.ics',
-					'content' =>  $this->createGoogleEvent($measure)
-				));
-			}catch(Exception $e){
-				log_message('error', $e);
-			}
-			// @codeCoverageIgnoreEnd
-
+			
 			$this->sendMandrillEmail(
 				'The result of your watch\'s accuracy ! ⌚',
 				watchResultContent(
@@ -1038,8 +1023,7 @@ class Auto_email {
 				$measure->name.' '.$measure->firstname,
 				$measure->email,
 				'result_email',
-				$this->sendAtString(time()),
-				$attachments
+				$this->sendAtString(time())
 			);
 		}
 	}
