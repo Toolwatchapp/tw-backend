@@ -295,9 +295,7 @@ class Auto_email {
 			)
 		);
 
-		if ($attachments !== null) {
-			$message['attachments'] = $attachments;
-		}
+		if ($attachments !== null) { $message['attachments'] = $attachments; }
 
 		$async   = false;
 		$ip_pool = 'Main Pool';
