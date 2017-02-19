@@ -7,7 +7,6 @@
               <a target="_blank" href="http://www.producthunt.com/tech/toolwatch"><img src="<?php echo img_url('product-hunt-logo-horizontal-orange.png');?>"></a>
               <a target="_blank" href="http://www.hebdo.ch/hebdo/montres-passion/detail/precision-testez-votre-montre-en-ligne"><img src="<?php echo img_url('logo_hebdo_2014.png');?>"></a>
               <a target="_blank" href="<?php echo base_url();?>assets/pdf/ToolwatchEuropastar.pdf"><img src="<?php echo img_url('Europa-star-logo-blanc.jpg');?>"></a>
-              <a target="_blank" href="https://theoandharris.com/how-accurate-is-accurate/"><img src="<?php echo img_url('tw.jpg');?>"></a>
         </div>
      <?php } ?>
         <div class="container container-fluid">
