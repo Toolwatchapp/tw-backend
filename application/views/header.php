@@ -74,8 +74,9 @@ a.src=g;
 m.parentNode.insertBefore(a,m)
           })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-          ga('create', 'UA-59148878-1', 'auto');
-          ga('send', 'pageview');
+          ga('create', 'UA-59148878-1', 'auto', {'allowLinker': true});
+	  ga('require', 'linker');
+	  ga('linker:autoLink', ['toolwatchapp.io'] );
     </script>
     <script type="application/ld+json">
     { "@context" : "http://schema.org",
