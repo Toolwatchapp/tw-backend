@@ -7,6 +7,9 @@ services:
   
 before_script:
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
+  - wget https://phar.phpunit.de/phpunit.phar
+  - chmod +x phpunit.phar
+  - mv phpunit.phar /usr/local/bin/phpunit
   
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
