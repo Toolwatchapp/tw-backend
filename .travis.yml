@@ -7,11 +7,7 @@ sudo: required
 
 services:
   - mysql
-
-before_install:
-  -  chmod +x travis_mysql_5.7.sh
-  - ./travis_mysql_5.7.sh
-
+  
 before_script:
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
   
