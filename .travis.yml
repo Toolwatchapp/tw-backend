@@ -2,12 +2,19 @@ dist: trusty
 language: php
 php:
   - '7.0'
+  
+sudo: required
 
 services:
   - mysql
 
+before_install:
+  -  chmod +x travis_mysql_5.7.sh
+  - ./travis_mysql_5.7.sh
+
 before_script:
   - "curl -u ${DATABASE_USER}:${DATABASE_PW} \"${DATABASE_URL}\" > database.sql && mysql -u root -e 'source database.sql'"
+  
 notifications:
   slack: toolwatchapp:AfvHCPE9Em1MY3j04gdlqbYe
   email: false
