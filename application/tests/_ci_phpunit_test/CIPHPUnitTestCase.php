@@ -8,6 +8,8 @@
  * @link       https://github.com/kenjis/ci-phpunit-test
  */
 
+require_once ('PHPUnit/Framework/TestCase.php');
+
 class CIPHPUnitTestCase extends PHPUnit_Framework_TestCase
 {
 	protected $_error_reporting = -1;
