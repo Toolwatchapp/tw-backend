@@ -292,3 +292,4 @@ switch (ENVIRONMENT)
  */
 require __DIR__ . '/_ci_phpunit_test/CIPHPUnitTest.php';
 CIPHPUnitTest::init();
+require_once ('PHPUnit/Framework/TestCase.php');
