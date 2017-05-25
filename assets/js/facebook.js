@@ -1,14 +1,21 @@
-$(document).ready(function() {
-        $.ajaxSetup({ cache: true });
-        $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
 
+$(document).ready(function() {
+        
+          window.fbAsyncInit = function() {
             FB.init({
-              appId: '807383452677000',
-              version: 'v2.7' // or v2.1, v2.2, v2.3, ...
-            }); 
-            
+              appId      : '807383452677000',
+              version    : 'v2.7'
+            });
+            FB.AppEvents.logPageView();
             FB.getLoginStatus(statusChangeCallback);
-        });
+          };
   });
 
 var userInitiatedFbLogin = false;
