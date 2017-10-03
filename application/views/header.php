@@ -161,6 +161,9 @@ if(isset($metas) && is_array($metas)){foreach ($metas as $meta) {echo $meta;}}
                         <div style="margin-top: 10px; width: auto" class="col-md-1  text-center">
 						  <a href="https://blog.toolwatch.io/watch-tips">Watch Tips</a>
                         </div>
+			<div style="margin-top: 10px; width: auto" class="col-md-1  text-center">
+			   <a href="https://shop.toolwatch.io/" target="_blank">Shop</a>
+                        </div>
 <?php
 if ($userIsLoggedIn) {
 	echo '<div style="margin-top: 10px" class="col-md-1  text-center">
