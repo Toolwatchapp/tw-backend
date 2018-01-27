@@ -1071,25 +1071,25 @@ class MY_Model extends CI_Model {
 	 *
 	 * @return array The options for the dropdown.
 	 */
-	public function format_dropdown() {
-		$args = &func_get_args();
-		if (count($args) == 2) {
-			list($key, $value) = $args;
-		} else {
-			$key   = $this->key;
-			$value = $args[0];
-		}
+	// public function format_dropdown() {
+	// 	$args = &func_get_args();
+	// 	if (count($args) == 2) {
+	// 		list($key, $value) = $args;
+	// 	} else {
+	// 		$key   = $this->key;
+	// 		$value = $args[0];
+	// 	}
 
-		$query = $this->db->select(array($key, $value))
-		              ->get($this->table_name);
+	// 	$query = $this->db->select(array($key, $value))
+	// 	              ->get($this->table_name);
 
-		$options = array();
-		foreach ($query->result() as $row) {
-			$options[$row->{ $key}] = $row->{ $value};
-		}
+	// 	$options = array();
+	// 	foreach ($query->result() as $row) {
+	// 		$options[$row->{ $key}] = $row->{ $value};
+	// 	}
 
-		return $options;
-	}//end format_dropdown()
+	// 	return $options;
+	// }//end format_dropdown()
 
 	//--------------------------------------------------------------------
 	// !CHAINABLE UTILITY METHODS
