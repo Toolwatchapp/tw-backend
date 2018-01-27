@@ -825,7 +825,22 @@ class Auto_email {
 		);
 
 		$this->brand = strtolower($watch->brand);
-		
+		$user = $this->CI->user->getUser($watch->userId);
+		$bloomSafe = false;
+
+		if($this->CI->watch->count_by("watch.userId", $watch->userId) === 3
+			&& $user !== false){
+			
+			$bloomSafe = $this->sendMandrillEmail(
+				'You are serious about watches ⌚',
+				blumsafeContent(),
+				"",
+				$user->email,
+				'blumsafe',
+				$this->sendAtString(time())
+			);
+		}
+
 		//The added watch is one of the watch that have a custom email
 		if(in_array($this->brand, $supportedBrands)){
 
@@ -868,13 +883,13 @@ class Auto_email {
 
 				//A supported watch was created less than one hour ago,
 				//schedule the mail to be sent later
-
-				
+				//or we sent a bloomsafe ad
 				if(
-					is_array($watches) && 
+					(is_array($watches) && 
 					sizeof($watches) >= 1 && 
 					array_key_exists("creationDate", $watches[0]) &&
-					time() - $watches[0]["creationDate"] < 3600)
+					time() - $watches[0]["creationDate"] < 3600) || 
+					$bloomSafe !== false)
 				{
 					$time = $time + 3600;
 				}

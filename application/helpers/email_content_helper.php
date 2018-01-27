@@ -313,6 +313,14 @@ function signupContent($firstName, $alphaId){
   );
 }
 
+function blumsafeContent(){
+
+  return constructReturnArray(
+    "blumsafe", 
+    array()
+  );
+}
+
 function resetPasswordConfirmationContent(){
 
   return constructReturnArray(
