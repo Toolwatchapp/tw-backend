@@ -59,7 +59,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.3",
+        "php": "7.1.9",
         "ext-bcmath": "*"
     },
     "platform-dev": []
