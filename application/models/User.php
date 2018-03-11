@@ -97,7 +97,7 @@ class User extends ObservableModel {
 
 		if(
 			//not set
-			$user->country == null || $user->country == "" 
+			$user->country == null || $user->country == "" || $user->country == "none"
 			//Not provided or Tor
 			|| $user->country == "XX" || $user->country == "T1"
 		){
