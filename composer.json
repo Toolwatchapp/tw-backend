@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "require" : {
         "php": ">=5.3.3",
@@ -7,3 +8,14 @@
       "heroku/heroku-buildpack-php": "*"
   }
 }
+=======
+{
+    "require" : {
+        "php": "7.1.13",
+        "ext-bcmath": "*"
+  },
+  "require-dev": {
+      "heroku/heroku-buildpack-php": "*"
+  }
+}
+>>>>>>> 323623928bd65df186a1374f41e0bf166ad5f416
