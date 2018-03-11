@@ -94,6 +94,21 @@ class User extends ObservableModel {
 				)
 			);
 		}
+
+		if(
+			//not set
+			$user->country == null || $user->country == "" || $user->country == "none"
+			//Not provided or Tor
+			|| $user->country == "XX" || $user->country == "T1"
+		){
+			
+			$user->country = $_SERVER["HTTP_CF_IPCOUNTRY"]; 
+			$this->session->set_userdata('country', $user->country);
+
+			$this->update($user->userId, array(
+				'country' => $user->country
+			));
+		}
 	}
 
 	/**

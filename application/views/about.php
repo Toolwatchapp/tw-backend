@@ -10,7 +10,7 @@
                 <br>
                 Accuracy has always been the holy grail of watchmaking.
                 Throughout the ages, watchmakers have been competing for building the most accurate and precise watch movement but the consumers do not have the tools to appreciate that effort.
-                Now, with Toolwatch, every watch enthusiast is able to keep an eye on the accuracy of his watch(es)!<br><br>
+                Now, with Toolwatch, any watch enthusiast can keep an eye on the accuracy of their watches!<br><br>
         </div>
     </div>
     <div class="row">
@@ -94,7 +94,7 @@
         <div class="col-md-8 col-md-offset-2">
                 <strong>About the hall of fame</strong>
                 <br>
-                The toolwatch hall of fame lists users that helped us build a better service for watch aficionados around the world by reporting bug. If you see something that seems out of place, don't hesitate to contact us using our online chat.
+                The toolwatch hall of fame lists users that helped us build a better service for watch aficionados around the world by reporting bug. If you see something that seems out of place, feel free to contact us using our online chat.
                 <br>
         </div>
     </div>

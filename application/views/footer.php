@@ -65,7 +65,11 @@
             </div>
             <div class="row">
                 <div class="col-md-12 copyright">
-                    <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; 2017.</p>
+                    <p>Handcrafted with love in Lausanne, Switzerland, near the Watch Valley. Copyright &copy; <?php 
+$copyYear = 2015; 
+$curYear = date('Y'); 
+echo $copyYear . (($copyYear != $curYear) ? '-' . $curYear : '');
+?>.</p>
                 </div>
             </div>
         </div>
