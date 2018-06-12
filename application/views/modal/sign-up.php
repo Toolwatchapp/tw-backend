@@ -297,6 +297,9 @@
 		</div>
 	</fieldset>
 	<div class="form-group">
-		  <center>Actually, I have an account. <br>Let me <a data-modal-update="true" data-href="/login/">log in!</a></center>
+		  <center>
+		  	<b><a href="https://www.iubenda.com/privacy-policy/316683/legal">Privacy Policies</a></b>
+    		<br>
+		  </center>
 	</div>
 </form>
