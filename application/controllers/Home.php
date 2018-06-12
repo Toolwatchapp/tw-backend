@@ -84,10 +84,10 @@ class Home extends MY_Controller {
 
 	function about() {
 		$this->_headerData['headerClass'] = 'blue';
-		$this->_headerData['title']       = 'About Toolwatch';
-		$this->_headerData['meta_description'] = 'Toolwatch is where
-		watch aficionados measure the accuracy and precision of their watch.
-		More than 5000 people use Toolwatch to take care of their watch.';
+		$this->_headerData['title']       = 'Toolwatch • About Toolwatch watch accuracy';
+		$this->_headerData['meta_description'] = 'Toolwatch is where watch aficionados 
+		measure the accuracy and precision of their watch. 
+		More than 50\'000 people use Toolwatch to take care of their watch.';
 		$this->load->view('header', $this->_headerData);
 		$this->load->view('about');
 		$this->load->view('footer');
