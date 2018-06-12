@@ -11,6 +11,11 @@
                 Accuracy has always been the holy grail of watchmaking.
                 Throughout the ages, watchmakers have been competing for building the most accurate and precise watch movement but the consumers do not have the tools to appreciate that effort.
                 Now, with Toolwatch, any watch enthusiast can keep an eye on the accuracy of their watches!<br><br>
+                <br>
+                One of our users has made a video on his YouTube channel explaining how to use Toolwatch; Thanks Chris.
+                <br>                
+                <iframe class="col-md-5 col-md-offset-3" src="https://www.youtube.com/embed/TvmQc6FTcDw?rel=0&amp;showinfo=0&amp;start=101" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <br>
         </div>
     </div>
     <div class="row">
