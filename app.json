@@ -1,6 +1,7 @@
 {
   "name": "tw-review",
   "description": "",
+  "stack": "heroku-20"
   "scripts": {
   },
   "env": {
