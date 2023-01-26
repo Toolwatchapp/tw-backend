@@ -433,9 +433,9 @@ function logout(){
 
     $.post('/logout', {}, function(data)
     {
-        FB.logout(function(response) {
-            console.info(response, 'FB LOGOUT');
-        }); 
+        // FB.logout(function(response) {
+        //     console.info(response, 'FB LOGOUT');
+        // }); 
         window.location.replace('/');
     });
 }
