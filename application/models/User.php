@@ -136,13 +136,12 @@ class User extends ObservableModel {
 
 		$this->session_model->delete($sessionId);
 		
-		if(session_status() == PHP_SESSION_ACTIVE)
-		{
-			$this->session->sess_destroy();
-			session_destroy();
-			session_unset();
-		}
-
+		// if(session_status() == PHP_SESSION_ACTIVE)
+		// {
+		// 	$this->session->sess_destroy();
+		// 	session_destroy();
+		// 	session_unset();
+		// }
 
 		$this->notify(LOGOUT, array());
 
