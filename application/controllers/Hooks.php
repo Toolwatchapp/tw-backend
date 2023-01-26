@@ -39,11 +39,14 @@ class Hooks extends CI_Controller {
 		"Not all treasure is silver and gold mate",
 		"My spirit will live on"
 	);
+	
+	private $api_key = "";
 
 	function __construct() {
 		parent::__construct();
 		$this->load->model('watch');
 		$this->load->model('measure');
+		$this->api_key = getenv('hook_api_key');
 	}
 
 	/**
@@ -64,8 +67,7 @@ class Hooks extends CI_Controller {
 	 */
 	function index() {
 
-		//FIXME: The token has to be env value
-		if ($this->input->post('token') === "bPiAi9XNEa3p9FF1lQnZfuUY") {
+		if ($this->input->post('token') === $this->api_key) {
 
 			$text           = $this->input->post('text');
 			$quote          = $this->quotes[rand(0, 18)];
@@ -173,8 +175,7 @@ class Hooks extends CI_Controller {
 	 */
 	public function email($key, $time = 0){
 
-		//FIXME: The token has to be env value
-		if ($key === "bPiAi9XNEa3p9FF1lQnZfuUY") {
+		if ($key === $this->api_key) {
 
 			$this->load->library("auto_email");
 			$this->auto_email->cronCheck(60*60*$time);
@@ -183,8 +184,7 @@ class Hooks extends CI_Controller {
 
 	public function reset_email($key){
 
-		//FIXME: The token has to be env value
-		if ($key === "bPiAi9XNEa3p9FF1lQnZfuUY") {
+		if ($key === $this->api_key) {
 
 			$emailBatch = new MY_MODEL("email_batch");
 			$emailBatch->truncate();
