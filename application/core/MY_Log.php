@@ -76,9 +76,8 @@ class MY_Log {
             return FALSE;
         }
 
-        echo date($this->_date_fmt) . $level . ' ' . $msg;
-
-        file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
+        // file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
+        file_put_contents('php://stdout', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
 
         if($level === 'ERROR'){
 
