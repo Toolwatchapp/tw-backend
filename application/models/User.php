@@ -101,13 +101,15 @@ class User extends ObservableModel {
 			//Not provided or Tor
 			|| $user->country == "XX" || $user->country == "T1"
 		){
-			
-			$user->country = $_SERVER["HTTP_CF_IPCOUNTRY"]; 
-			$this->session->set_userdata('country', $user->country);
 
-			$this->update($user->userId, array(
-				'country' => $user->country
-			));
+			if(array_key_exists("HTTP_CF_IPCOUNTRY", $_SERVER)) {
+				$user->country = $_SERVER["HTTP_CF_IPCOUNTRY"]; 
+				$this->session->set_userdata('country', $user->country);
+	
+				$this->update($user->userId, array(
+					'country' => $user->country
+				));
+			}
 		}
 	}
 
