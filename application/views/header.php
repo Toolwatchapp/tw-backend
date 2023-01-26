@@ -102,7 +102,7 @@ if(isset($metas) && is_array($metas)){foreach ($metas as $meta) {echo $meta;}}
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
       window.onerror = function(message, file, line) {
         $.post( "https://"+window.location.hostname+ "/ajax/reportClientError", { error:  file + "(" + line + "): "
           + message + " ["+navigator.userAgent+","+navigator.platform+"]" })
@@ -110,9 +110,9 @@ if(isset($metas) && is_array($metas)){foreach ($metas as $meta) {echo $meta;}}
           console.log("logged");
         });
       }
-    </script>
+    </script> -->
 
-<?php $this->load->view('ajax_csrf'); ?>
+<?php // $this->load->view('ajax_csrf'); ?>
 
 <?php if(!$this->agent->is_mobile()){?>
 
