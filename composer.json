@@ -1,6 +1,6 @@
 {
     "require" : {
-        "php": "7.3.27",
+        "php": "8.2.1",
         "ext-bcmath": "*"
   },
   "require-dev": {
