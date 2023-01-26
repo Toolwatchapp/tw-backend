@@ -37,6 +37,9 @@
     },
     "ALPHAID_HASH":{
       "required":true
+    },
+    "HOOK_API_KEY":{
+      "required":true
     }
   },
   "addons": [

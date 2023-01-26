@@ -46,7 +46,7 @@ class Hooks extends CI_Controller {
 		parent::__construct();
 		$this->load->model('watch');
 		$this->load->model('measure');
-		$this->api_key = getenv('hook_api_key');
+		$this->api_key = getenv('HOOK_API_KEY');
 	}
 
 	/**
