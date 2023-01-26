@@ -82,7 +82,7 @@ class MY_Controller extends CI_Controller {
 		//Entry logging
 		$begin = new DateTime();
 		log_message('info', 'Entering ' . get_class($this).':'
-			.$method .'->'.print_r($param, true));
+			.$method .'->'.print_r($params, true));
 
 		//method execution
 		$result = call_user_func_array(array($this, $method), $params);
