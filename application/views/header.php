@@ -92,6 +92,21 @@ ga('send', 'pageview');
     }
     </script>
 
+<script
+  src="https://js.sentry-cdn.com/81101200a4a446e792d0d2e614510487.min.js"
+  crossorigin="anonymous"
+></script>
+
+<script>
+  Sentry.onLoad(function() {
+    Sentry.init({
+      release: "1.0",
+      environment: "prod"
+    });
+    // etc.
+  });
+</script>
+
 <?php
 foreach ($styleSheets as $css) {echo '<link rel="stylesheet" href="'.css_url($css).'">';}
 foreach ($javaScripts as $js) {echo '<script src="'.js_url($js).'"></script>';}

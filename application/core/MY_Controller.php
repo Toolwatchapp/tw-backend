@@ -25,6 +25,11 @@ class MY_Controller extends CI_Controller {
 		$this->_headerData['javaScripts']    = array('jquery.min', 'bootstrap.min', 'application', 'MediaElement/mediaelement-and-player.min',"js.cookie");
 		$this->_headerData['headerClass'] = '';
 
+		 // include manually module library - SendInBlue API
+		require_once (APPPATH . '../vendor/autoload.php');
+
+		\Sentry\init(['dsn' => 'https://80282b24dff94e1cb70f7b477951be25@o4504401871241216.ingest.sentry.io/4504684074893312' ]);
+
 		if ($this->_needLoggedIn && !$this->user->isLoggedIn()) {
 			redirect(base_url());
 		}
