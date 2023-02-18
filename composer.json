@@ -1,7 +1,9 @@
 {
     "require" : {
-        "php": "8.2.1",
-        "ext-bcmath": "*"
+        "php": "8.2.2",
+        "ext-bcmath": "*",
+        "sendinblue/api-v3-sdk": "8.x.x",
+        "sentry/sdk": "^3.3"
   },
   "require-dev": {
       "heroku/heroku-buildpack-php": "*"

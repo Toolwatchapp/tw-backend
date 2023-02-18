@@ -1,5 +1,10 @@
 <?php
 
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+// include manually module library - SendInBlue API
+require_once (APPPATH . '../vendor/autoload.php');
+
 /**
  * Email
  *
@@ -71,6 +76,24 @@ class Auto_email {
 	private $lastBatchDate  = 0;
 	private $emailBatchModel;
 
+	// Send In Blue template ids
+	private const SIB_BLUMSAFE = 1; // - sent - to be adjusted
+	private const SIB_ADD_WATCH_SEIKO = 2; // -sent - ok
+	private const SIB_ADD_WATCH_OMEGA = 3; // -sent - ok
+	private const SIB_ADD_WATCH_ROLEX = 4; // -sent - ok
+	private const SIB_ADD_WATCH_JLC = 5; // -sent - ok
+	private const SIB_WATCH_RESULT = 7; // -sent - ok
+	private const SIB_ADD_FIRST_WATCH = 14; // -sent - ok
+	private const SIB_ADD_SECOND_WATCH = 13; // -sent - ok
+	private const SIB_COMEBACK = 12; // -sent - ok
+	private const SIB_SIGNUP = 9;
+	private const SIB_RESET_PASSWORD = 15; // -sent - ok
+	private const SIB_MAKE_FIST_MEASURE = 17; // -sent -ok
+	private const SIB_CHECK_ACCURACY = 18; // -sent -ok
+	private const SIB_ONE_WEEK_ACCURACY = 19; // -sent -ok
+	private const SIB_ONE_MONTH_ACCURACY = 20; // -sent -ok
+	private const SIB_RESET_PASSWORD_CONFIRMATION = 16; // -sent -ok
+
 	/**
 	 * Load model, library and helpers
 	 */
@@ -78,16 +101,24 @@ class Auto_email {
 
 		$this->CI =& get_instance();
 
-		$this->CI->load->library("mandrill");
 		$this->CI->load->library("__");
 		$this->CI->load->model("watch");
 		$this->CI->load->model("measure");
 		$this->CI->load->model("user");
 		$this->CI->load->model("emailpreferences");
-		$this->CI->load->helper("email_content");
 		$this->CI->load->helper("alphaid");
-		$this->CI->load->library("mcapi");
 		$this->CI->config->load('config');
+
+		$sendInBlueConfig = SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', getenv('SIB_API_KEY'));
+
+		$this->sendInBlueEmailsAPI = new SendinBlue\Client\Api\TransactionalEmailsApi(
+			new GuzzleHttp\Client(),
+			$sendInBlueConfig
+		);
+		$this->sendInBlueContactsAPI = new SendinBlue\Client\Api\ContactsApi(
+			new GuzzleHttp\Client(),
+			$sendInBlueConfig
+		);
 	}
 
 	/**
@@ -243,68 +274,9 @@ class Auto_email {
 					echo 'TO ' . $this->CI->user->find_by('userId', $email['userId'])->email;
 				}
 
-				echo '\n'; var_dump($email['mandrill']); echo '\n';
+				echo '<br/>'; var_dump($email['sib']); echo '<br/>';
 			}
 		}
-	}
-
-	/**
-	 * Send an email throught the mandrill api
-	 *
-	 * @param  String $subject
-	 * @param  html 	$content
-	 * @param  String $recipientName
-	 * @param  String $recipientEmail
-	 * @param  String $tags One tag for the email to see it in the
-	 * Mandrill backend
-	 * @param  String $sendAt The date at which to send the email
-	 * @see sendAtString
-	 * @param  Base64 $attachments  A Base64 representation of
-	 * an attachment
-	 * @return Array  Mandrill API Response
-	 */
-	private function sendMandrillEmail($subject, $template, $recipientName,
-		$recipientEmail, $tags, $sendAt, $attachments = null) {
-
-		$message = array(
-			'subject'    => $subject,
-			'from_email' => 'hello@toolwatch.io',
-			'from_name'  => 'Toolwatch',
-			'to'         => array(
-				array(
-					'email' => $recipientEmail,
-					'name'  => $recipientName,
-					'type'  => 'to',
-				)
-			),
-			'headers'   => array(
-				'Reply-To' => 'hello@toolwatch.io',
-			),
-			'merge'						=> true,
-			'merge_vars'				=> 
-				array((object) ['rcpt'=>$recipientEmail, 'vars'=>$template['templateValue']]),
-			'important'                 => false,
-			'track_opens'               => true,
-			'track_clicks'              => true,
-			'inline_css'				=> true,
-			'tags'                      => array($tags),
-			'google_analytics_campaign' => $tags,
-			'google_analytics_domains'  => array('toolwatch.io'),
-			'metadata'                  => array(
-				'website'                  => 'toolwatch.io',
-			)
-		);
-
-		if ($attachments !== null) { $message['attachments'] = $attachments; }
-
-		$async   = false;
-		$ip_pool = 'Main Pool';
-		$send_at = $sendAt;
-		$mandrillResponse =  $this->CI->mandrill->messages->sendTemplate($template['templateName'], $template['templateValue'], $message, $async, $ip_pool, $send_at);
-		log_message('info', 'Mandrill email: '
-			. print_r($mandrillResponse, true) .
-			' at ' . $sendAt);
-		return $mandrillResponse;
 	}
 
 	/**
@@ -316,21 +288,9 @@ class Auto_email {
 	 */
 	private function sendAtString($scheduleTime) {
 
-		//We remove $this->timeOffset to $scheduleTime in
-		//order to send emails right away when exploring
-		//computation in the future / past
 		$scheduleTime = $scheduleTime - $this->timeOffset;
-		$scheduleTime = $scheduleTime-48*60*60;
 
-		log_message('info', 'Date ' . print_r($scheduleTime, true));
-
-		$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
-		.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
-		.(date('i', $scheduleTime)).':'.(date('s', $scheduleTime));
-
-		log_message('info', 'Date ' . print_r($returnValue, true));
-
-		return $returnValue;
+		return date("c", strtotime(gmdate('r', $scheduleTime)));
 	}
 
 	/**
@@ -341,16 +301,16 @@ class Auto_email {
 	 * @param int $emailType
 	 * @param long $time
 	 * @param int $idTitle
-	 * @param array $mandrillResponse
+	 * @param array $sibResponse
 	 */
 	private function addEmailToQueue(&$queue, $userId, $emailType, $time,
-		$idTitle,  $mandrillResponse) {
+		$idTitle,  $sibResponse) {
 		array_push($queue,
 			array(
 				$idTitle    => $userId,
 				'sentTime'  => $time,
 				'emailType' => $emailType,
-				'mandrill'  => $mandrillResponse
+				'sib'  => $sibResponse
 			)
 		);
 	}
@@ -420,17 +380,17 @@ class Auto_email {
 					$this->COMEBACK,
 					$this->time,
 					'userId',
-					$this->sendMandrillEmail(
+					$this->sendSIBEmail(
 						'We haven\'t seen you for a while ? ⌚',
-						comebackContent(
-							$user->firstname,
-							$this->CI->measure->getMeasuresByUser($user->userId),
-							alphaID($user->userId)
+						array(
+							"email" =>$user->email,
+							'unsub' => $this->unsub(alphaID($user->userId)),
+							'firstname' => $user->firstname,
 						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'comeback_100d',
-						$this->sendAtString($this->time)
+						self::SIB_COMEBACK
 					)
 				);
 			}
@@ -465,16 +425,17 @@ class Auto_email {
 					$this->ADD_FIRST_WATCH,
 					$this->time,
 					'userId',
-					$this->sendMandrillEmail(
+					$this->sendSIBEmail(
 						'Let’s add a watch and start measuring! ⌚',
-						addFirstWatchContent(
-							$user->firstname,
-							alphaID($user->userId)
+						array(
+							"email" =>$user->email,
+							'unsub' => $this->unsub(alphaID($user->userId)),
+							'firstname' => $user->firstname,
 						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'add_first_watch_email',
-						$this->sendAtString($this->time)
+						self::SIB_ADD_FIRST_WATCH
 					)
 				);
 			}
@@ -509,24 +470,27 @@ class Auto_email {
 
 			foreach ($userWithWatchWithoutMeasure as $user) {
 
+				print_r($user);
+				print_r($this->constructContentWatches($user));
+
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['watchId'],
 					$this->START_FIRST_MEASURE,
 					$this->time,
 					'watchId',
-					$this->sendMandrillEmail(
+					$this->sendSIBEmail(
 						'Let’s start measuring! ⌚',
-						makeFirstMeasureContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]['userId']),
-							alphaID($user[0]['userId'])
+						array(
+							"email" =>$user[0]['email'],
+							'unsub' => $this->unsub(alphaID($user[0]["userId"])),
+							'firstname' => $user[0]['firstname'],
+							'watches' => $this->constructContentWatches($user),
 						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'make_first_measure_email',
-						$this->sendAtString($this->time)
+						self::SIB_MAKE_FIST_MEASURE
 					)
 				);
 			}
@@ -555,6 +519,8 @@ class Auto_email {
 					and measure.accuracyReferenceTime > '.$this->getBatchLowerBound($this->day*2). ') = ', 1)
 			->find_all();
 
+		print_r([$this->getBatchUpperBound($this->day*2), $this->getBatchLowerBound($this->day*2)]);
+
 		if ($userWithOneCompleteMeasureAndOneWatch !== FALSE) {
 
 			foreach ($userWithOneCompleteMeasureAndOneWatch as $user) {
@@ -571,18 +537,18 @@ class Auto_email {
 					$this->ADD_SECOND_WATCH,
 					$this->time,
 					'userId',
-					$this->sendMandrillEmail(
+					$this->sendSIBEmail(
 						'Add another watch ? ⌚',
-							addSecondWatchContent(
-							$user->firstname,
-							$watch->brand . " " . $watch->name,
-							$this->CI->measure->getMeasuresByUser($user->userId),
-							alphaID($user->userId)
+						array(
+							"email" =>$user->email,
+							'unsub' => $this->unsub(alphaID($user->userId)),
+							'firstname' => $user->firstname,
+							'firstwatch' => $watch->brand . " " . $watch->name
 						),
 						$user->name.' '.$user->firstname,
 						$user->email,
 						'add_another_watch_email',
-						$this->sendAtString($this->time)
+						self::SIB_ADD_SECOND_WATCH
 					)
 				);
 			}
@@ -626,18 +592,18 @@ class Auto_email {
 					$this->CHECK_ACCURACY,
 					$this->time,
 					'measureId',
-					$this->sendMandrillEmail(
+					$this->sendSIBEmail(
 						'Let’s check your watch accuracy! ⌚',
-						checkAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
-							alphaID($user[0]["userId"])
+						array(
+							"email" =>$user[0]['email'],
+							'unsub' => $this->unsub(alphaID($user[0]["userId"])),
+							'firstname' => $user[0]['firstname'],
+							'watches' => $this->constructContentWatches($user),
 						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'check_accuracy_email',
-						$this->sendAtString($this->time)
+						self::SIB_CHECK_ACCURACY,
 					)
 				);
 			}
@@ -680,18 +646,18 @@ class Auto_email {
 					$this->CHECK_ACCURACY_1_WEEK,
 					$this->time,
 					'measureId',
-					$this->sendMandrillEmail(
+					$this->sendSIBEmail(
 						'Let’s check your watch accuracy! ⌚',
-						oneWeekAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
-							alphaID($user[0]["userId"])
+						array(
+							"email" =>$user[0]['email'],
+							'unsub' => $this->unsub(alphaID($user[0]["userId"])),
+							'firstname' => $user[0]['firstname'],
+							'watches' => $this->constructContentWatches($user),
 						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'check_accuracy_email',
-						$this->sendAtString($this->time)
+						self::SIB_ONE_WEEK_ACCURACY
 					)
 				);
 			}
@@ -735,18 +701,18 @@ class Auto_email {
 					$this->START_NEW_MEASURE,
 					$this->time,
 					'watchId',
-					$this->sendMandrillEmail(
+					$this->sendSIBEmail(
 						'Let’s start a new measure! ⌚',
-						oneMonthAccuracyContent(
-							$user[0]['firstname'],
-							$user,
-							$this->CI->measure->getMeasuresByUser($user[0]["userId"]),
-							alphaID($user[0]["userId"])
+						array(
+							"email" =>$user[0]['email'],
+							'unsub' => $this->unsub(alphaID($user[0]["userId"])),
+							'firstname' => $user[0]['firstname'],
+							'watches' => $this->constructContentWatches($user),
 						),
 						$user[0]['lastname'].' '.$user[0]['firstname'],
 						$user[0]['email'],
 						'start_new_measure_email',
-						$this->sendAtString($this->time)
+						self::SIB_ONE_MONTH_ACCURACY
 					)
 				);
 			}
@@ -760,23 +726,31 @@ class Auto_email {
 	 */
 	private function signup($user) {
 
-		$this->CI->mcapi->listSubscribe(
-			'7f94c4aa71', 
-			$user->email, 
-			array(
-				'FNAME'     => $user->firstname,
-				'LNAME'     => $user->name
-			)
-		);
+		$this->sendInBlueContactsAPI->createContact(new \SendinBlue\Client\Model\CreateContact([
+			'email' => $user->email,
+			'updateEnabled' => true,
+			'attributes' => array(
+				'FIRSTNAME' => $user->firstname, 'PRENOM' =>  $user->firstname,
+				'LASTNAME' => $user->name, 'NOM' => $user->name,
+				'DATE ADDED' => $this->sendAtString(time()),
+				'SUBSCRIBED' => true
+			),
+			'listIds' => [3]
+	   	]));
 
-		return $this->sendMandrillEmail(
+		return $this->sendSIBEmail(
 			'Welcome to Toolwatch! ⌚',
-			signupContent($user->firstname, alphaID($user->userId)),
+			array(
+				"email" =>$user->email,
+				'unsub' => $this->unsub(alphaID($user->userId)),
+				'firstname' => $user->firstname
+			),
 			$user->name.' '.$user->firstname,
 			$user->email,
 			'signup',
-			$this->sendAtString(time())
+			self::SIB_SIGNUP
 		);
+		return true;
 	}
 
 	/**
@@ -786,14 +760,72 @@ class Auto_email {
 	 * @param String $token
 	 */
 	private function resetPassword($email, $token) {
-		return $this->sendMandrillEmail(
+
+		$result = $this->sendSIBEmail(
 			'Your Toolwatch password ⌚',
-			resetPasswordContent($token),
+			array(
+				"reset" =>$token,
+				"email" =>$email
+			),
 			"",
 			$email,
 			'reset_password',
-			$this->sendAtString(time())
+			self::SIB_RESET_PASSWORD,
 		);
+
+		return $result;
+	}
+
+	private function sendSIBEmail($subject, $params, $recipientName,
+	$recipientEmail, $tag, $templateId, $scheduledAt = null, $attachments = null) {
+
+		if ($recipientName == "") {
+			$recipientName = "watch friend";
+		}
+
+		$sendSmtpEmail = new \SendinBlue\Client\Model\SendSmtpEmail([
+			'subject' => $subject,
+			'sender' => ['name' => 'Toolwatch', 'email' => 'hello@toolwatch.io'],
+			'replyTo' => ['name' => 'Toolwatch', 'email' => 'hello@toolwatch.io'],
+			'to' => [[ 'name' => $recipientName, 'email' => $recipientEmail]],
+			'params' => $params,
+			'templateId' => $templateId
+	   	]);
+
+		if ($scheduledAt !== null) {
+			$sendSmtpEmail->setScheduledAt($scheduledAt);
+		}
+
+		try {
+			$result = $this->sendInBlueEmailsAPI->sendTransacEmail($sendSmtpEmail);
+
+			error_log(json_encode([
+				'result' => $result,
+				'subject' => $subject,
+				'sender' => ['name' => 'Toolwatch', 'email' => 'hello@toolwatch.io'],
+				'replyTo' => ['name' => 'Toolwatch', 'email' => 'hello@toolwatch.io'],
+				'to' => [[ 'name' => $recipientName, 'email' => $recipientEmail]],
+				'params' => $params,
+				'scheduledAt' => $scheduledAt,
+				'templateId' => $templateId
+		   ]));
+
+		   return $result;
+
+		} catch (Exception $e) {
+			echo $e->getMessage(), print_r(
+				[
+					'subject' => $subject,
+					'sender' => ['name' => 'Toolwatch', 'email' => 'hello@toolwatch.io'],
+					'replyTo' => ['name' => 'Toolwatch', 'email' => 'hello@toolwatch.io'],
+					'to' => [[ 'name' => $recipientName, 'email' => $recipientEmail]],
+					'params' => $params,
+					'scheduledAt' => $scheduledAt,
+					'templateId' => $templateId
+			   ]
+			), PHP_EOL;
+		}
+		
 	}
 
 	/**
@@ -803,13 +835,15 @@ class Auto_email {
 	 * @param String $token
 	 */
 	private function resetPasswordUse($email) {
-		return $this->sendMandrillEmail(
+		return $this->sendSIBEmail(
 			'Your Toolwatch password has been changed ⌚',
-			resetPasswordConfirmationContent(),
-			"",
+			array(
+				"email" => $email
+			),
+			'',
 			$email,
 			'reset_password_confirmation',
-			$this->sendAtString(time())
+			self::SIB_RESET_PASSWORD_CONFIRMATION,
 		);
 	}
 
@@ -818,10 +852,10 @@ class Auto_email {
 
 		$supportedBrands = array("omega", "rolex", "jaeger-lecoultre", "seiko");
 		$supportedBrandsSubject = array(
-			"omega" => array("add_watch_omega", "Omegafan too?"),
-			"rolex" => array("add_watch_rolex", "My guess is that you are a Rolexophile too!"),
-			"jaeger-lecoultre" => array("add_watch_jlc", "So you like the Grande Maison too?"),
-			"seiko"=> array("add_watch_seiko", "Everyone loves Seiko!")
+			"omega" => array("add_watch_omega", "Omegafan too?", self::SIB_ADD_WATCH_OMEGA),
+			"rolex" => array("add_watch_rolex", "My guess is that you are a Rolexophile too!", self::SIB_ADD_WATCH_ROLEX),
+			"jaeger-lecoultre" => array("add_watch_jlc", "So you like the Grande Maison too?", self::SIB_ADD_WATCH_JLC),
+			"seiko"=> array("add_watch_seiko", "Everyone loves Seiko!", self::SIB_ADD_WATCH_SEIKO)
 		);
 
 		$this->brand = strtolower($watch->brand);
@@ -831,13 +865,17 @@ class Auto_email {
 		if($this->CI->watch->count_by("watch.userId", $watch->userId) === 3
 			&& $user !== false){
 			
-			$bloomSafe = $this->sendMandrillEmail(
+			$bloomSafe = $this->sendSIBEmail(
 				'You are serious about watches ⌚',
-				blumsafeContent(),
-				"",
+				array(
+					"firstname" => $user->firstname,
+					'email' => $user->email,
+					'unsub' => $this->unsub(alphaID($user->userId))
+				),
+				$user->firstname,
 				$user->email,
 				'blumsafe',
-				$this->sendAtString(time())
+				self::SIB_BLUMSAFE,
 			);
 		}
 
@@ -878,8 +916,8 @@ class Auto_email {
 						);
 				}
 				
-				// Add hours removed on sendAtString + 30
-				$time = time() + 48*60*60 + 30*60;
+				// Add 30 min
+				$time = time() + 30*60;
 
 				//A supported watch was created less than one hour ago,
 				//schedule the mail to be sent later
@@ -894,15 +932,17 @@ class Auto_email {
 					$time = $time + 3600;
 				}
 
-				return $this->sendMandrillEmail(
+				return $this->sendSIBEmail(
 					$supportedBrandsSubject[$this->brand][1],
-					customBrandContent(
-						$supportedBrandsSubject[$this->brand][0], 
-						$watches[0]["firstname"]
+					array(
+						"firstname" => $watches[0]["firstname"],
+						'email' => $user->email,
+						'unsub' => $this->unsub(alphaID($user->userId))
 					),
-					$watches[0]["firstname"] . " " . $watches[0]["name"],
+					$watches[0]["firstname"],
 					$watches[0]["email"],
 					$supportedBrandsSubject[$this->brand][0],
+					$supportedBrandsSubject[$this->brand][2],
 					$this->sendAtString($time)
 				);
 
@@ -910,108 +950,6 @@ class Auto_email {
 		}
 
 		return false;
-	}
-
-
-	/**
-	 * Create a google reminder
-	 *
-	 * @param  Measure $measure
-	 * @return Base64String A googe reminder (.ics) as a Base64String.
-	 * @codeCoverageIgnore
-	 */
-	private function createGoogleEvent($measure){
-
-			/**
-			 * FIXME: Worst hack ever.
-			 *
-			 * When running phpunit, the proc doesn't have the right to /tmp
-			 * which result in the following exception:
-			 *
-			 * write on Google_Cache_Exception: Could not create storage directory: /tmp/Google_Client/a4
-			 *
-			 * A mock is not doable (at least I don't know how) because
-			 * this method is called by the notify mechanism of observer/ovbersee
-			 * pattern. Auto_email is an observer of almost all models throught
-			 * ObservableModel and $_observers in ObservableModel is private static.
-			 *
-			 * I might be able to do something better #123 (https://github.com/MathieuNls/tw/issues/123)
-			 * Like open the circuit breaker when calling addAccuracyMesure of
-			 * the measureModel...
-			 */
-			if(ENVIRONMENT !== "testing"){
-				// Create the date and description
-				$description = "Check the accuracy of my ".$measure->brand.' '.$measure->model;
-				
-				//rounding to next half hour
-				//http://stackoverflow.com/a/9639719/1871890
-				$currentTime = time();
-				$prev = $currentTime - ($currentTime % 1800);
-				$next = $currentTime + 1800;
-
-				$in30days = $next + 30*24*60*60;
-				$in30daysAndOneHour = $next + 30*24*60*60+(60*60);
-				$date = new DateTime("@".$in30days);
-				$dateEnd = new DateTime("@".$in30daysAndOneHour);
-
-				require_once(APPPATH.'libraries/Google/autoload.php');
-
-				//A google event as defined https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-				$event = new Google_Service_Calendar_Event(array(
-				  'summary' => "Check the accuracy of my ".$measure->brand.' '.$measure->model,
-				  'location' => 'https://toolwatch.io',
-				  'description' => "Check the accuracy of my ".$measure->brand.' '.$measure->model,
-				  'start' => array(
-				    'dateTime' =>  $date->format('Y-m-d').'T'.$date->format("H:i:s").'-00:00',
-				    'timeZone' => 'Europe/London',
-				  ),
-				  'end' => array(
-				    'dateTime' => $dateEnd->format('Y-m-d').'T'.$dateEnd->format("H:i:s").'-00:00',
-				    'timeZone' => 'Europe/London',
-				  ),
-				  'attendees' => array(
-				    array('email' => $measure->email)
-				  )
-				));
-
-				//Create a google client an authenticate it
-				$client = new Google_Client();
-				$client->setApplicationName("Client_Calendar_Toolwatch");
-				$service = new Google_Service_Calendar($client);
-
-				$key = file_get_contents($this->CI->config->item('google_api_key'));
-				$cred = new Google_Auth_AssertionCredentials(
-				    $this->CI->config->item('google_api_account'),
-				    array('https://www.googleapis.com/auth/calendar'),
-				    $key
-				);
-
-				$client->setAssertionCredentials($cred);
-				if ($client->getAuth()->isAccessTokenExpired()) {
-				  $client->getAuth()->refreshTokenWithAssertion($cred);
-				}
-
-				//Create the event
-				$event = $service->events->insert('primary', $event);
-
-				//Generate the base64String representing the .ics file
-				//using the returned event and processed variable
-
-				$this->CI->load->helper('ics');
-
-				return generateBase64Ics(
-					$in30days,
-					$in30daysAndOneHour,
-					$event->displayName,
-					$event->email,
-					$description,
-					$event->iCalUID
-				);
-			}else{
-				//"A google event" encoded in base 64
-				return "QSBnb29nbGUgZXZlbnQ=";
-			}
-
 	}
 
 	/**
@@ -1023,21 +961,86 @@ class Auto_email {
 
 		if($this->CI->emailpreferences->select('result')->find_by("userId", $measure->userId)->result == 1){
 			
-			$this->sendMandrillEmail(
+			$this->sendSIBEmail(
 				'The result of your watch\'s accuracy ! ⌚',
-				watchResultContent(
-					$measure->firstname,
-					$measure->brand,
-					$measure->model,
-					$measure->accuracy,
-					$this->CI->measure->getMeasuresByUser($measure->userId),
-					alphaID($measure->userId)
+				array(
+					'fistname' => $measure->firstname,
+					'watch' => $measure->brand . ' ' . $measure->model,
+					'accuracy' => $measure->accuracy,
+					'watches'=> $this->constructDashboardWatches($this->CI->measure->getMeasuresByUser($measure->userId)),
+					'email' => $measure->email,
+					'unsub' => $this->unsub(alphaID($measure->userId))
 				),
-				$measure->name.' '.$measure->firstname,
+				$measure->firstname,
 				$measure->email,
 				'result_email',
-				$this->sendAtString(time())
+				self::SIB_WATCH_RESULT,
 			);
 		}
 	}
+
+	private function unsub($alphaId) {
+		return base_url() . 'Unsubscribe/index/'.$alphaId;
+	}
+
+	private function constructDashboardWatches($watches){
+
+		$emailWatches = array();
+	  
+		if($watches && is_array($watches)){
+	  
+		  foreach ($watches as $watch) {
+			$watch = (object) $watch;
+			
+			if($watch->statusId === 1.5){
+	  
+			  array_push($emailWatches, (object) array(
+				'name' => $watch->brand.' '.$watch->name,
+				'action' => 'Check accuracy in '.$watch->accuracy.' hours',
+				'link' => base_url().'/measures'
+			  ));
+	  
+			}else if($watch->statusId == 1){
+	  
+			  array_push($emailWatches, (object) array(
+				'name' => $watch->brand.' '.$watch->name,
+				'action' => 'Check accuracy now',
+				'link' => base_url().'/measures'
+			  ));
+	  
+			}else if($watch->statusId == null){
+	  
+			  array_push($emailWatches, (object) array(
+				'name' => $watch->brand.' '.$watch->name,
+				'action' => 'Measure now',
+				'link' => base_url().'/measures'
+			  ));
+	  
+			}else{
+	  
+			  array_push($emailWatches, (object) array(
+				'name' => $watch->brand.' '.$watch->name,
+				'action' => 'Runs at ' . $watch->accuracy . ' spd (' . (($watch->accuracyAge == 0) ? 'today).' : $watch->accuracyAge  . ' day(s) ago).'),
+				'link' => base_url().'/measures'
+			  ));
+			}
+		  }
+		}
+	  
+		return $emailWatches;
+	  }
+	  
+	  private function constructContentWatches($watches){
+	  
+		$emailWatches = array();
+	  
+		foreach ($watches as $watch) {
+			$watch = (object) $watch;
+			array_push($emailWatches, (object) array(
+				'name' => $watch->brand.' '.$watch->watchName,
+			));
+		}
+		
+		return $emailWatches;
+	  }
 }
