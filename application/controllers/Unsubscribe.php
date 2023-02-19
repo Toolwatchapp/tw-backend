@@ -7,6 +7,8 @@ class Unsubscribe extends MY_Controller
 		parent::__construct();
     $this->load->helper("alphaid");
     $this->load->model("Emailpreferences");
+    $this->load->model("User");
+    $this->load->library("auto_email");
 	}
 
   public function index($code = 0){
@@ -46,12 +48,13 @@ class Unsubscribe extends MY_Controller
 
   public function update(){
 
-    if($this->expectsPost(array('dayAccuracy', 'weekAccuracy', 'result', 'newMeasure', 'tips', 'userId'))
+    if($this->expectsPost(array('dayAccuracy', 'weekAccuracy', 'result', 'newMeasure', 'tips', 'platformAnnonces', 'userId'))
     && is_bool((bool)$this->dayAccuracy) &&
     is_bool((bool)$this->weekAccuracy) &&
     is_bool((bool)$this->result) &&
     is_bool((bool)$this->newMeasure) &&
     is_bool((bool)$this->tips) &&
+    is_bool((bool)$this->platformAnnonces) &&
     is_string($this->userId) &&
     is_int(($this->userId = alphaid($this->userId, true)))){
 
@@ -70,7 +73,10 @@ class Unsubscribe extends MY_Controller
       $this->secondWatch = $this->tips;
       $this->comeback = $this->tips;
 
-      if($this->Emailpreferences->updateEmailPreferences($this->dayAccuracy, $this->weekAccuracy, $this->result, $this->newMeasure, $this->firstMeasure, $this->firstWatch, $this->secondWatch, $this->comeback, $this->userId)){
+      if($this->Emailpreferences->updateEmailPreferences($this->dayAccuracy, $this->weekAccuracy, $this->result, $this->newMeasure, $this->firstMeasure, $this->firstWatch, $this->secondWatch, $this->comeback, $this->platformAnnonces, $this->userId)){
+
+        $user = $this->User->getUser($this->userId);
+        $this->auto_email->updateSIBContact($user, $this->platformAnnonces);
 
         $this->_headerData['headerClass'] = 'blue';
         $this->load->view('header', $this->_headerData);

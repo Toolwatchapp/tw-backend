@@ -111,7 +111,16 @@
             <p class="col-md-11">Once in a while, a tip for better using Toolwatch.</p>
           </div>
 
-         
+          <div class="row">
+
+          <input class="col-md-1"
+          <?php if($platformAnnonces == 1){echo "checked ";}?>
+          type="checkbox"
+          id="platformAnnonces-chkbox">
+          <input type="hidden" name="userId" value="<?php echo $userId;?>">
+          <input id="platformAnnonces" type="hidden" name="platformAnnonces" value="<?php echo $platformAnnonces;?>">
+          <p class="col-md-11">Important Toolwatch news.</p>
+          </div>
 
           <br>
           <br>

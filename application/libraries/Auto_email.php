@@ -470,9 +470,6 @@ class Auto_email {
 
 			foreach ($userWithWatchWithoutMeasure as $user) {
 
-				print_r($user);
-				print_r($this->constructContentWatches($user));
-
 				$this->addEmailToQueue(
 					$queuedEmail,
 					$user[0]['watchId'],
@@ -518,8 +515,6 @@ class Auto_email {
 					and measure.accuracyReferenceTime < '.$this->getBatchUpperBound($this->day*2).'
 					and measure.accuracyReferenceTime > '.$this->getBatchLowerBound($this->day*2). ') = ', 1)
 			->find_all();
-
-		print_r([$this->getBatchUpperBound($this->day*2), $this->getBatchLowerBound($this->day*2)]);
 
 		if ($userWithOneCompleteMeasureAndOneWatch !== FALSE) {
 
@@ -726,17 +721,7 @@ class Auto_email {
 	 */
 	private function signup($user) {
 
-		$this->sendInBlueContactsAPI->createContact(new \SendinBlue\Client\Model\CreateContact([
-			'email' => $user->email,
-			'updateEnabled' => true,
-			'attributes' => array(
-				'FIRSTNAME' => $user->firstname, 'PRENOM' =>  $user->firstname,
-				'LASTNAME' => $user->name, 'NOM' => $user->name,
-				'DATE ADDED' => $this->sendAtString(time()),
-				'SUBSCRIBED' => true
-			),
-			'listIds' => [3]
-	   	]));
+		$this->updateSIBContact($user);
 
 		return $this->sendSIBEmail(
 			'Welcome to Toolwatch! ⌚',
@@ -750,7 +735,22 @@ class Auto_email {
 			'signup',
 			self::SIB_SIGNUP
 		);
-		return true;
+	}
+
+	public function updateSIBContact($user, $subscribe = true) {
+		$this->sendInBlueContactsAPI->createContact(new \SendinBlue\Client\Model\CreateContact([
+			'email' => $user->email,
+			'updateEnabled' => true,
+			'attributes' => array(
+				'FIRSTNAME' => $user->firstname, 'PRENOM' =>  $user->firstname,
+				'LASTNAME' => $user->name, 'NOM' => $user->name,
+				'DATE ADDED' => $this->sendAtString(time()),
+				'SUBSCRIBED' => ($subscribe == '0') ? false : true,
+				'BLOCKLISTED' => ($subscribe == '0') ? true : false,
+				'PLATFORMNEWS' => ($subscribe == '0') ? false : true
+			),
+			'listIds' => [3]
+	   	]));
 	}
 
 	/**
