@@ -1,22 +1,6 @@
 <div class="form-group">
   Login in allows you to access and track all your measures in one place.
 </div>
-<div class="form-group">
-   <center>
-
-     <a style="padding:15px; color:white; background-color: #36528c; width:100%;"
-     href="#" onclick="fb_login();" class="col-md-12">
-       <i class="fa fa-facebook" aria-hidden="true"></i>&nbsp;&nbsp;Log in with Facebook
-     </a>
-
-     <br>
-     <br>
-     <br>
-   </center>
-   <span id="fb_error" class="signup-error login-error"></span>
-     <strong class="line-thru">or with email</strong>
-</div>
-
 
 <?php echo form_open('', array('name'=>'login'));?>
 
