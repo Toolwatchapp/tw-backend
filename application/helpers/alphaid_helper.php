@@ -88,13 +88,12 @@
  *
  * @return mixed string or long
  */
-function alphaID($in, $to_num = false, $pad_up = 10)
+function alphaID($code, $to_num = false)
 {
-	$out   =   '';
-	$index = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	$base  = strlen($index);
+    $alphabets = array('', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
+	$base  = count($alphabets);
 
-  $pass_key = getenv("ALPHAID_HASH");
+  	$pass_key = getenv("ALPHAID_HASH");
 
 	if ($pass_key !== null) {
 		// Although this function's purpose is to just make the
@@ -103,54 +102,102 @@ function alphaID($in, $to_num = false, $pad_up = 10)
 		// you can optionally supply a password to make it harder
 		// to calculate the corresponding numeric ID
 
-		for ($n = 0; $n < strlen($index); $n++) {
-			$i[] = substr($index, $n, 1);
+		$hashAlplhabets = array();
+
+		for ($n = 0; $n < $base; $n++) {
+			array_push($hashAlplhabets, $alphabets[$n]);
 		}
 
 		$pass_hash = hash('sha256',$pass_key);
-		$pass_hash = (strlen($pass_hash) < strlen($index) ? hash('sha512', $pass_key) : $pass_hash);
+		$pass_hash = (strlen($pass_hash) < $base ? hash('sha512', $pass_key) : $pass_hash);
 
-		for ($n = 0; $n < strlen($index); $n++) {
+		for ($n = 0; $n < $base; $n++) {
 			$p[] =  substr($pass_hash, $n, 1);
 		}
 
-		array_multisort($p, SORT_DESC, $i);
-		$index = implode($i);
+		array_multisort($p, SORT_DESC, $hashAlplhabets);
+		$alphabets = $hashAlplhabets;
 	}
 
 	if ($to_num) {
-		// Digital number  <<--  alphabet letter code
-		$len = strlen($in) - 1;
+		
+		$sumval = 0;
 
-		for ($t = $len; $t >= 0; $t--) {
-			$bcp = bcpow($base, $len - $t);
-			$out = $out + strpos($index, substr($in, $t, 1)) * $bcp;
+		$code = strtolower(trim($code));
+	
+		$arr = str_split($code);
+		$arr_length = count($arr);
+	
+		for($i = 0, $j = $arr_length-1; $i < $arr_length; $i++, $j--)
+		{
+			$arr_value = array_search($arr[$i], $alphabets);
+			$sumval = $sumval + ($arr_value * pow(26, $j));
 		}
-
-		if (is_numeric($pad_up)) {
-			$pad_up--;
-
-			if ($pad_up > 0) {
-				$out -= pow($base, $pad_up);
-			}
-		}
+	
+		return $sumval;
 	} else {
-		// Digital number  -->>  alphabet letter code
-		if (is_numeric($pad_up)) {
-			$pad_up--;
 
-			if ($pad_up > 0) {
-				$in += pow($base, $pad_up);
-			}
-		}
+		$res = "";
 
-		for ($t = ($in != 0 ? floor(log($in, $base)) : 0); $t >= 0; $t--) {
-			$bcp = bcpow($base, $t);
-			$a   = floor($in / $bcp) % $base;
-			$out = $out . substr($index, $a, 1);
-			$in  = $in - ($a * $bcp);
+		$division = floor($code / 26);
+		$remainder = $code % 26; 
+	
+		if($remainder == 0)
+		{
+			$division = $division - 1;
+			$res .= 'z';
 		}
+		else
+			$res .= $alphabets[$remainder];
+	
+		if($division > 26)
+			return number_to_alpha($division, $res);   
+		else
+			$res .= $alphabets[$division];    
+			
+		return strrev($res);
 	}
+}
 
-	return $out;
+function number_to_alpha($num, $code)
+{   
+    $alphabets = array('', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
+
+    $division = floor($num / 26);
+    $remainder = $num % 26; 
+
+    if($remainder == 0)
+    {
+        $division = $division - 1;
+        $code .= 'z';
+    }
+    else
+        $code .= $alphabets[$remainder];
+
+    if($division > 26)
+        return number_to_alpha($division, $code);   
+    else
+        $code .= $alphabets[$division];     
+
+    return strrev($code);
+}
+
+function alpha_to_number($code)
+{
+    $alphabets = array('', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
+
+    $sumval = 0;
+
+    $code = strtolower(trim($code));
+
+    $arr = str_split($code);
+    $arr_length = count($arr);
+
+    for($i = 0, $j = $arr_length-1; $i < $arr_length; $i++, $j--)
+    {
+        $arr_value = array_search($arr[$i], $alphabets);
+        $sumval = $sumval + ($arr_value * pow(26, $j));
+    }
+
+    return $sumval;
 }

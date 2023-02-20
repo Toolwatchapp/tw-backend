@@ -266,55 +266,40 @@ class Ajax extends MY_Controller {
 
 		if ($this->expectsPost(array('name', 'email', 'message'))) {
 
-			$result['success'] = false;
+			// include manually module library - SendInBlue API
+			require_once (APPPATH . '../vendor/autoload.php');
 
-			$tags 	 = "contact";
+			$sendInBlueConfig = SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', getenv('SIB_API_KEY'));
 
-			$this->load->library('mandrill');
-
-			$messageMandrill = array(
-				'html'       => $this->message,
-				'subject'    => "Contact information",
-				'from_email' => 'contact@toolwatch.io',
-				'from_name'  => $this->name . ' [' . $this->email . ']',
-				'to'         => array(
-					array(
-						'email' => 'marc@toolwatch.io',
-						'name'  => 'Marc',
-						'type'  => 'to',
-					)
-				),
-				'headers'   => array(
-					'Reply-To' => $this->email,
-				),
-				'important'                 => false,
-				'track_opens'               => true,
-				'track_clicks'              => true,
-				'tags'                      => array($tags),
-				'google_analytics_campaign' => $tags,
-				'google_analytics_domains'  => array('toolwatch.io'),
-				'metadata'                  => array(
-					'website'                  => 'toolwatch.io',
-				)
+			$this->sendInBlueEmailsAPI = new SendinBlue\Client\Api\TransactionalEmailsApi(
+				new GuzzleHttp\Client(),
+				$sendInBlueConfig
 			);
 
-			$async   = false;
-			$ip_pool = 'Main Pool';
+			$result['success'] = false;
 
-			$scheduleTime = time() - 86400;
-
-			$returnValue =  date('Y-', $scheduleTime).date('m-', $scheduleTime)
-			.(date('d', $scheduleTime)).' '.(date('H', $scheduleTime)).':'
-			.(date('i', $scheduleTime)).':'.(date('s', $scheduleTime));
-
-			$mandrillResponse =  $this->mandrill->messages->send($messageMandrill, $async, $ip_pool, $returnValue);
-			log_message('info', 'Mandrill email: ' . print_r($mandrillResponse, true));
-
-
-			if ($mandrillResponse[0]['status'] === 'sent') {
+			try {
+				$sibResponse = $this->sendInBlueEmailsAPI->sendTransacEmail(new \SendinBlue\Client\Model\SendSmtpEmail([
+					'subject' => "Contact information",
+					'sender' => ['name' => $this->name . ' [' . $this->email . ']', 'email' => 'contact@toolwatch.io'],
+					'replyTo' => ['name' => $this->name, 'email' => $this->email],
+					'to' => [[ 'name' => 'Marc Montagne', 'email' => 'marc@toolwatch.io']],
+					'htmlContent' => $this->message
+				 ]));
+	
+				log_message('info', 'SIB email: ' . print_r($sibResponse, true));
+				
 				$result['success'] = true;
+				
+			} catch (Exception $e) {
+				error_log(json_encode(['subject' => "Contact information",
+					'sender' => ['name' => $this->name . ' [' . $this->email . ']', 'email' => 'contact@toolwatch.io'],
+					'replyTo' => ['name' => $this->name, 'email' => $this->email],
+					'to' => [[ 'name' => 'Marc Montagne', 'email' => 'marc@toolwatch.io']],
+					'htmlContent' => $this->message
+				]));
 			}
-
+			
 			echo json_encode($result);
 		}
 	}

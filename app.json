@@ -20,12 +20,6 @@
     "NEW_RELIC_CONFIG_FILE": {
       "required": true
     },
-    "MANDRILL_APIKEY":{
-      "required":true
-    },
-    "MC_APIKEY": {
-      "required":true
-    },
     "GOOGLE_API_ACCOUNT":{
       "required":true
     },
@@ -39,6 +33,9 @@
       "required":true
     },
     "HOOK_API_KEY":{
+      "required":true
+    },
+    "SIB_API_KEY":{
       "required":true
     }
   },

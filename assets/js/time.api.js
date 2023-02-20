@@ -66,8 +66,6 @@ function getTimeDiff(){
             var medianOffset = median(offsets);
             window.syncedDate = new Date(Date.now()-medianOffset);
             window.syncedDataAnchor = window.perfNow();
-            console.log(window.syncedDate);
-            console.log("median offset:" + medianOffset);
             window.offset = (medianOffset/1000).toFixed(2);
           }
 

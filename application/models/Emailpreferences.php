@@ -40,7 +40,7 @@ class Emailpreferences extends ObservableModel {
      * @param  int       $userId
      * @return true|false
      */
-    function updateEmailPreferences($dayAccuracy, $weekAccuracy, $result, $newMeasure, $firstMeasure,  $firstWatch, $secondWatch, $comeback, $userId){
+    function updateEmailPreferences($dayAccuracy, $weekAccuracy, $result, $newMeasure, $firstMeasure,  $firstWatch, $secondWatch, $comeback, $plaformAnnounces, $userId){
 
       $data = array(
         "dayAccuracy"  => $dayAccuracy,
@@ -50,7 +50,8 @@ class Emailpreferences extends ObservableModel {
         "firstMeasure" => $firstMeasure,
         "firstWatch"   => $firstWatch,
         "secondWatch"  => $secondWatch,
-        "comeback"     => $comeback
+        "comeback"     => $comeback,
+        'platformAnnonces' => $plaformAnnounces,
       );
 
       return $this->update_where('userId', $userId, $data)
