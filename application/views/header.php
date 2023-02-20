@@ -100,7 +100,7 @@ ga('send', 'pageview');
 <script>
   Sentry.onLoad(function() {
     Sentry.init({
-      release: "1.0",
+      release: "1.0.1",
       environment: "prod"
     });
     // etc.
