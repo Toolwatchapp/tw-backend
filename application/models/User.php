@@ -31,6 +31,8 @@ class User extends ObservableModel {
 	 */
 	function login($email, $password, $event = LOGIN_EMAIL) {
 
+		log_message('ERROR', 'login put model login ' . $email . ' ' . $password);
+
 		$user = $this->select(
 					'userId, 
 					lower(email) as email,
@@ -43,12 +45,20 @@ class User extends ObservableModel {
 					$this->construct_user_for_login($email, $password)
 				);
 
+		log_message('ERROR', 'login put model login select done' . $email . ' ' . $password);
+
 		if ($user) {
+
+			log_message('ERROR', 'login put model notify ' . $email . ' ' . $password);
 			
 			$this->notify($event, $user);
+
+			log_message('ERROR', 'login put set userdata ' . $email . ' ' . $password);
+
 			$this->set_userdata($user);
 
 		} else {
+			log_message('ERROR', 'login put notify fail ' . $email . ' ' . $password);
 			$this->notify($event.'_FAIL', $user);
 		}
 
@@ -64,11 +74,17 @@ class User extends ObservableModel {
 	*/
 	protected function construct_user_for_login($email, $password){
 
-		return array(
+		log_message('ERROR', 'login put construct_user_for_login ' . $email . ' ' . $password);
+
+		$ret =  array(
 			"lower(email)" => strtolower($email),
 			"password" => hash('sha256', $password),
 			"facebook" => 0
 		);
+
+		log_message('ERROR', 'login put construct_user_for_login ' . $email . ' ' . $ret['password']);
+
+		return $ret;
 	}
 
 	/**
