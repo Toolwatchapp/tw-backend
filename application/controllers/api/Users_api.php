@@ -66,7 +66,12 @@ class Users_api extends REST_Controller {
 
           if($email !== NULL && $password !== NULL && $password != "0"){
 
+            log_message('ERROR', 'login put user login ' . $this->put('email') . ' ' . $this->put('password'));
+
             $user = $this->user->login($email, $password);
+
+            log_message('ERROR', 'login response ' . $this->put('email') . ' ' . $this->put('password'));
+
             $this->loginResponse($user);
 
           }else{
@@ -144,12 +149,19 @@ class Users_api extends REST_Controller {
 
         if($user !== false){
 
+          log_message('ERROR', 'login key');
           $key = $this->key->generate_key($user);
+
 
           if($key !== false){
 
+            
+          log_message('ERROR', 'login key done');
+
             $user->key = $key;
             $user->watches = $this->measure->getNLastMeasuresByUserByWatch($user->userId);
+            log_message('ERROR', 'login getNLastMeasuresByUserByWatch');
+
             $this->response($user, REST_Controller::HTTP_OK);
           } else {
             log_message('ERROR', 'no key');
