@@ -56,7 +56,7 @@ class Users_api extends REST_Controller {
      */
     public function index_put()
     {
-        log_message('INFO', 'login put');
+        log_message('ERROR', 'login put ' . $this->put('email') . ' ' . $this->put('password'));
         if(!$this->throttleIP('index_put')){
           
           $email = $this->put('email');
@@ -122,6 +122,21 @@ class Users_api extends REST_Controller {
     * Generates an API key and returns a rest response
     */
     private function loginResponse($user){
+
+      						// 2023-01-26 19:19:16.018 [toolwatchapp] web.1 [26-Jan-2023 19:19:16]  [pool www] pid 206
+						// 2023-01-26 19:19:16.018 [toolwatchapp] web.1 script_filename = /app/index.php
+						// 2023-01-26 19:19:16.018 [toolwatchapp] web.1 [0x00007fe4e1213a20] query() /app/system/database/drivers/mysqli/mysqli_driver.php:305
+						// 2023-01-26 19:19:16.018 [toolwatchapp] web.1 [0x00007fe4e12139b0] _execute() /app/system/database/DB_driver.php:791
+						// 2023-01-26 19:19:16.018 [toolwatchapp] web.1 [0x00007fe4e1213940] simple_query() /app/system/database/DB_driver.php:654
+						// 2023-01-26 19:19:16.018 [toolwatchapp] web.1 [0x00007fe4e1213810] query() /app/system/database/DB_query_builder.php:1407
+						// 2023-01-26 19:19:16.019 [toolwatchapp] web.1 [0x00007fe4e1213730] count_all_results() /app/application/core/MY_Model.php:1033
+						// 2023-01-26 19:19:16.019 [toolwatchapp] web.1 [0x00007fe4e12136a0] count_by() /app/application/models/Key.php:58
+						// 2023-01-26 19:19:16.019 [toolwatchapp] web.1 [0x00007fe4e1213620] key_exists() /app/application/models/Key.php:34
+						// 2023-01-26 19:19:16.019 [toolwatchapp] web.1 [0x00007fe4e1213550] generate_key() /app/application/controllers/api/Users_api.php:128
+						// 2023-01-26 19:19:16.019 [toolwatchapp] web.1 [0x00007fe4e12134d0] loginResponse() /app/application/controllers/api/Users_api.php:205
+						// 2023-01-26 19:19:16.019 [toolwatchapp] web.1 [0x00007fe4e1213410] index_post() /app/application/libraries/REST_Controller.php:699
+						// 2023-01-26 19:19:16.020 [toolwatchapp] web.1 [0x00007fe4e12132d0] _remap() /app/system/core/CodeIgniter.php:532
+						// 2023-01-26 19:19:16.020 [toolwatchapp] web.1 [0x00007fe4e12130d0] [INCLUDE_OR_EVAL]() /app/index.php:279
 
         if($user !== false){
 

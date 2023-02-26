@@ -76,8 +76,9 @@ class MY_Log {
             return FALSE;
         }
 
-        // file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
-        file_put_contents('php://stdout', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n");
+        $request_id = isset($_SERVER['HTTP_X_REQUEST_ID']) ? "request_id:" . $_SERVER['HTTP_X_REQUEST_ID'] . " " : "";
+
+        file_put_contents('php://stderr', $level.' '.(($level == 'INFO') ? ' -' : '-').' '.$request_id.date($this->_date_fmt). ' --> '.$msg."\n");
 
         if($level === 'ERROR'){
 
