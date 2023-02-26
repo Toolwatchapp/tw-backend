@@ -120,8 +120,7 @@ class Measure extends ObservableModel {
 						// //Eleminates null measures resulting from the
 						// //right join 
 						$measures = $this->__->reject($watch, function($watch){
-
-							return $watch['statusId'] == null;
+							return $watch === false || $watch['statusId'] == null;
 						});
 
 						$totalCompleteMeasures = sizeof($measures);
@@ -159,12 +158,12 @@ class Measure extends ObservableModel {
 						//Construct and return the final array
 						return array(
 							// Same here
-							"watchId"=> (int)$watch[0]["watchId"],
-							"brand"=>$watch[0]["brand"],
-							"name"=>$watch[0]["name"],
-							"yearOfBuy"=>(int)$watch[0]["yearOfBuy"],
-							"serial"=>$watch[0]["serial"],
-							"caliber"=>$watch[0]["caliber"],
+							"watchId"=> ($watch[0] == false)? 0 : (int)$watch[0]["watchId"],
+							"brand"=>($watch[0] == false)? 'brand' : $watch[0]["brand"],
+							"name"=>($watch[0] == false)? 'name' : $watch[0]["name"],
+							"yearOfBuy"=>($watch[0] == false)? 0 : (int)$watch[0]["yearOfBuy"],
+							"serial"=>($watch[0] == false)? 'serial' : $watch[0]["serial"],
+							"caliber"=>($watch[0] == false)? 'caliber' : $watch[0]["caliber"],
 							"historySize"=>$totalCompleteMeasures,
 							"measures" => $measures
 							);
