@@ -58,6 +58,8 @@ class Users_api extends REST_Controller {
     {
         log_message('ERROR', 'login put ' . $this->put('email') . ' ' . $this->put('password'));
         if(!$this->throttleIP('index_put')){
+
+          log_message('ERROR', 'login put throttle ' . $this->put('email') . ' ' . $this->put('password'));
           
           $email = $this->put('email');
           $password = $this->put('password');
@@ -68,9 +70,11 @@ class Users_api extends REST_Controller {
             $this->loginResponse($user);
 
           }else{
+            log_message('ERROR', 'login bad password ' . $this->put('email') . ' ' . $this->put('password'));
             $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
           }
         }else{
+          log_message('ERROR', 'login api limit reached ' . $this->put('email') . ' ' . $this->put('password'));
           $this->response(["message" => "api limit reached"],
           REST_Controller::HTTP_UNAUTHORIZED);
         }
@@ -147,8 +151,12 @@ class Users_api extends REST_Controller {
             $user->key = $key;
             $user->watches = $this->measure->getNLastMeasuresByUserByWatch($user->userId);
             $this->response($user, REST_Controller::HTTP_OK);
+          } else {
+            log_message('ERROR', 'no key');
+
           }
         }else{
+          log_message('ERROR', 'no user');
           $this->response(NULL, REST_Controller::HTTP_UNAUTHORIZED);
         }
     }
